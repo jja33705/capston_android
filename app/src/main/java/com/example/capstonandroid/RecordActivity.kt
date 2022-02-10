@@ -17,6 +17,8 @@ class RecordActivity : AppCompatActivity(), OnMapReadyCallback {
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+        //상단 액션바 변경
+        setTitle("Track")
     }
 
     override fun onMapReady(gMap: GoogleMap) {
