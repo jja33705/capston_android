@@ -3,10 +3,6 @@ package com.example.capstonandroid
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.MenuItem
-import android.view.View
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.setupWithNavController
 import com.example.capstonandroid.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -42,10 +38,9 @@ class MainActivity : AppCompatActivity() {
             true
         }
 
-        // 처음 들어왔을때는 homefragment
+        // 처음 들어왔을때는 homeFragment
         binding.bottomNav.selectedItemId = R.id.homeFragment
     }
-//    }
 
     override fun onDestroy() {
         _binding = null
