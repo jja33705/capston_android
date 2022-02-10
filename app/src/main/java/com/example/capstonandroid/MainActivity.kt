@@ -26,17 +26,24 @@ class MainActivity : AppCompatActivity() {
             when (it.itemId) {
                 R.id.homeFragment -> {
                     supportFragmentManager.beginTransaction().replace(R.id.fragment_container, HomeFragment()).commit()
+                    //상단 액션바 변경
+                    setTitle("Home")
                 }
                 R.id.trackFragment -> {
                     supportFragmentManager.beginTransaction().replace(R.id.fragment_container, TrackFragment()).commit()
+                    //상단 액션바 변경
+                    setTitle("Track")
                 }
                 R.id.recordActivity -> {
                     val intent: Intent = Intent(this, RecordActivity::class.java)
                     startActivity(intent)
                     return@setOnItemSelectedListener false
+
                 }
                 R.id.meFragment -> {
                     supportFragmentManager.beginTransaction().replace(R.id.fragment_container, MeFragment()).commit()
+                    //상단 액션바 변경
+                    setTitle("Me")
                 }
             }
             true
