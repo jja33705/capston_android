@@ -47,6 +47,7 @@ class MainActivity : AppCompatActivity() {
     }
 //    }
 
+    // 프래그먼트가 삭제 될 시
     override fun onDestroy() {
         _binding = null
         super.onDestroy()
