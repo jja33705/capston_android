@@ -14,7 +14,6 @@
         android:id="@+id/recordActivity"
         android:icon="@drawable/ic_launcher_foreground"
         android:enabled="true"
-        android:checkable="false"
         android:title="Record" />
     <item
         android:id="@+id/meFragment"
