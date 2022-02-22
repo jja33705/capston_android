@@ -31,6 +31,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.recordActivity -> {
                     val intent: Intent = Intent(this, RecordActivity::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT) // 액티비티 스택 내에 있으면 재실행 함
                     startActivity(intent)
                     return@setOnItemSelectedListener false
                 }
@@ -48,5 +49,9 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
     }
 }

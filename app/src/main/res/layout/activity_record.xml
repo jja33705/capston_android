@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".RecordActivity">
+    tools:context=".activity.RecordActivity">
 
     <fragment
         android:id="@+id/map"
@@ -18,71 +18,147 @@
     </fragment>
 
     <TextView
-        android:id="@+id/latitude"
+        android:id="@+id/st_distance"
         android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:text="위도"
-        android:textSize="30sp"
-        app:layout_constraintBottom_toTopOf="@+id/start_button"
+        android:layout_height="wrap_content"
+        android:text="거리"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.177"
+        app:layout_constraintHorizontal_bias="0.226"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/map"
-        app:layout_constraintVertical_bias="0.261">
-    </TextView>
+        app:layout_constraintVertical_bias="0.059"></TextView>
 
     <TextView
-        android:id="@+id/tv_lat"
+        android:id="@+id/tv_distance"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
-        android:text=""
+        android:text="0"
         android:textSize="30sp"
-        app:layout_constraintBottom_toTopOf="@+id/start_button"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.686"
+        app:layout_constraintHorizontal_bias="0.147"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/map"
-        app:layout_constraintVertical_bias="0.261"></TextView>
+        app:layout_constraintVertical_bias="0.237"></TextView>
 
     <TextView
-        android:id="@+id/longitude"
+        android:id="@+id/km"
         android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:text="경도"
-        android:textSize="30sp"
-        app:layout_constraintBottom_toTopOf="@+id/start_button"
+        android:layout_height="wrap_content"
+        android:text="km"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.177"
+        app:layout_constraintHorizontal_bias="0.382"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/latitude"
-        app:layout_constraintVertical_bias="1.0"></TextView>
+        app:layout_constraintTop_toBottomOf="@+id/map"
+        app:layout_constraintVertical_bias="0.279"></TextView>
 
     <TextView
-        android:id="@+id/tv_lng"
+        android:id="@+id/st_avg_speed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="평균 속도"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.045"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/map"
+        app:layout_constraintVertical_bias="0.563"></TextView>
+
+    <TextView
+        android:id="@+id/tv_avg_speed"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
-        android:text=""
+        android:text="0"
         android:textSize="30sp"
-        app:layout_constraintBottom_toTopOf="@+id/start_button"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.687"
+        app:layout_constraintHorizontal_bias="0.312"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/longitude"
-        app:layout_constraintVertical_bias="1.0"></TextView>
+        app:layout_constraintTop_toBottomOf="@+id/map"
+        app:layout_constraintVertical_bias="0.543"></TextView>
+
+    <TextView
+        android:id="@+id/km_h"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="km/h"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/map"
+        app:layout_constraintVertical_bias="0.601"></TextView>
+
+    <TextView
+        android:id="@+id/st_kcal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="칼로리"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.743"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/map"
+        app:layout_constraintVertical_bias="0.063"></TextView>
+
+    <TextView
+        android:id="@+id/tv_kcal"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:text="0"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.601"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/map"
+        app:layout_constraintVertical_bias="0.237"></TextView>
+
+    <TextView
+        android:id="@+id/kcal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="kcal"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.872"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/map"
+        app:layout_constraintVertical_bias="0.279"></TextView>
+
+    <TextView
+        android:id="@+id/tv_time"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_marginBottom="84dp"
+        android:text="00:00:00"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.885"
+        app:layout_constraintStart_toStartOf="parent"></TextView>
 
     <Button
         android:id="@+id/start_button"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:enabled="false"
         android:text="시작"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_percent="0.07"
+        app:layout_constraintHorizontal_bias="0.454"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/map"
-        app:layout_constraintVertical_bias="0.797"
-        app:layout_constraintWidth_percent="0.3">
-    </Button>
+        app:layout_constraintVertical_bias="0.921"
+        app:layout_constraintWidth_percent="0.3"></Button>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
