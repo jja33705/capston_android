@@ -4,41 +4,42 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.CompleteRecordActivity">
-
-    <EditText
-        android:id="@+id/et_title"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:hint="제목"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.065"
-        app:layout_constraintWidth_percent="0.8"
-        ></EditText>
-
-    <EditText
-        android:id="@+id/editText"
-        android:layout_width="0dp"
-        android:layout_height="300dp"
-        android:hint="내용"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_title"
-        app:layout_constraintVertical_bias="0.064"
-        app:layout_constraintWidth_percent="0.8"></EditText>
+    tools:context=".fragment.RunningFragment">
 
     <Button
-        android:id="@+id/bt_post"
+        android:id="@+id/normal"
         android:layout_width="100dp"
-        android:layout_height="50dp"
-        android:text="작성"
+        android:layout_height="100dp"
+        android:text="일반"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.202"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText"></Button>
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.167"></Button>
+
+    <Button
+        android:id="@+id/friendly_match"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:text="친선"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.202"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.499"></Button>
+
+    <Button
+        android:id="@+id/rank_match"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:text="랭크"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.202"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.814"></Button>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

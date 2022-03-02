@@ -1,4 +1,4 @@
-package com.example.capstonandroid
+package com.example.capstonandroid.network
 
 import com.google.gson.GsonBuilder
 import retrofit2.Retrofit

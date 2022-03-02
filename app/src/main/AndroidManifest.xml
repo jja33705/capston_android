@@ -16,6 +16,9 @@
         android:theme="@style/Theme.CapstonAndroid"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".activity.SelectTrackActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.CompleteRecordActivity"
             android:exported="false" />
 

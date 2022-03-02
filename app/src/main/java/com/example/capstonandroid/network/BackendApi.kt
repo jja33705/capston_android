@@ -1,5 +1,7 @@
-package com.example.capstonandroid
+package com.example.capstonandroid.network
 
+import com.example.capstonandroid.dto.Record
+import com.example.capstonandroid.dto.Test
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.Field

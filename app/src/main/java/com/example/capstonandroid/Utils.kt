@@ -48,5 +48,13 @@ class Utils {
                 "%1$02d:%2$02d:%3$02d".format(h, m, s)
             }
         }
+
+        fun distanceToText(distance: Double): String {
+            return "%.2f".format(distance / 1000)
+        }
+
+        fun avgSpeedToText(avgSpeed: Double): String {
+            return "%.2f".format(avgSpeed)
+        }
     }
 }

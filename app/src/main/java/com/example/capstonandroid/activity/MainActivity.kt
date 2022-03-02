@@ -1,9 +1,16 @@
 package com.example.capstonandroid.activity
 
+import android.app.Dialog
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Window
+import android.widget.Button
+import androidx.preference.PreferenceManager
 import com.example.capstonandroid.R
+import com.example.capstonandroid.Utils
 import com.example.capstonandroid.databinding.ActivityMainBinding
 import com.example.capstonandroid.fragment.HomeFragment
 import com.example.capstonandroid.fragment.MeFragment
@@ -11,13 +18,32 @@ import com.example.capstonandroid.fragment.TrackFragment
 
 class MainActivity : AppCompatActivity() {
     private var _binding: ActivityMainBinding? = null
-    private val binding: ActivityMainBinding get() = _binding!!
+    private val binding get() = _binding!!
+
+    private lateinit var selectKindDialog: Dialog // 커스텀 다이얼로그
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // 커스텀 다이얼로그 초기화
+        selectKindDialog = Dialog(this)
+        selectKindDialog.requestWindowFeature(Window.FEATURE_NO_TITLE) // 타이틀 제거
+        selectKindDialog.setContentView(R.layout.select_kind_dialog)
+
+        // 다이얼로그에서 라이딩 버튼 클릭했을 때
+        val ridingButton: Button = selectKindDialog.findViewById(R.id.bt_riding)
+        ridingButton.setOnClickListener{
+            startRecordActivity("riding")
+        }
+
+        // 다이얼로그에서 러닝 버튼 클릭했을 때
+        val runningButton: Button = selectKindDialog.findViewById(R.id.bt_running)
+        runningButton.setOnClickListener {
+            startRecordActivity("running")
+        }
 
         // 바텀 네비게이션에서 선택한 메뉴 아이디에 따라 표시할 화면 분기처리 (나중에 addToBackStack 부분 찾아보고 Transaction 관리해 줘야 할 것 같음.)
         binding.bottomNav.setOnItemSelectedListener {
@@ -30,9 +56,7 @@ class MainActivity : AppCompatActivity() {
                     supportFragmentManager.beginTransaction().replace(R.id.fragment_container, TrackFragment()).commit()
                 }
                 R.id.recordActivity -> {
-                    val intent: Intent = Intent(this, RecordActivity::class.java)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT) // 액티비티 스택 내에 있으면 재실행 함
-                    startActivity(intent)
+                    showSelectKindDialog()
                     return@setOnItemSelectedListener false
                 }
                 R.id.meFragment -> {
@@ -44,7 +68,38 @@ class MainActivity : AppCompatActivity() {
 
         // 처음 들어왔을때는 homeFragment
         binding.bottomNav.selectedItemId = R.id.homeFragment
+
+        // 레코드 중이면 레코드 액티비티로 이동
+        if (PreferenceManager.getDefaultSharedPreferences(applicationContext).getBoolean("IS_RECORDING", false)) {
+            println("실행 중")
+
+            val intent: Intent = Intent(this, RecordActivity::class.java)
+            intent.putExtra("kind", PreferenceManager.getDefaultSharedPreferences(applicationContext).getString("KIND", "running"))
+            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT) // 액티비티 스택 내에 있으면 재실행 함
+            startActivity(intent)
+        }
     }
+
+    // 어떤 종류인지 선택하는 다이얼로그 띄움
+    private fun showSelectKindDialog() {
+        selectKindDialog.show()
+        selectKindDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT)) // 모서리 둥글게 하기 위해서
+    }
+
+    // 선택한 운동 종류에 맞게 값을 넣고 실행
+    private fun startRecordActivity(kind: String) {
+        PreferenceManager.getDefaultSharedPreferences(application)
+            .edit()
+            .putString("KIND", kind)
+            .apply()
+
+        val intent: Intent = Intent(this, RecordActivity::class.java)
+        intent.putExtra("kind", kind)
+        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT) // 액티비티 스택 내에 있으면 재실행 함
+        startActivity(intent)
+        selectKindDialog.dismiss() // 닫기
+    }
+
 
     override fun onDestroy() {
         super.onDestroy()

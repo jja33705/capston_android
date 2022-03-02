@@ -1,4 +1,4 @@
-package com.example.capstonandroid
+package com.example.capstonandroid.dto
 
 data class Record(
     val altitude: Int,
