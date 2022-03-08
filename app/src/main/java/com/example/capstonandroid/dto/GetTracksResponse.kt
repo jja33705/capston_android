@@ -1,6 +1,6 @@
 package com.example.capstonandroid.dto
 
-data class TracksResponse(
+data class GetTracksResponse(
     val message: String,
     val result: ArrayList<Track>,
     val zoom: String

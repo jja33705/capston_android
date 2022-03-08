@@ -48,9 +48,9 @@ class RunningFragment : Fragment(), View.OnClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.normal.setOnClickListener(this)
-        binding.friendlyMatch.setOnClickListener(this)
-        binding.rankMatch.setOnClickListener(this)
+        binding.runningNormalMatch.setOnClickListener(this)
+        binding.runningFriendlyMatch.setOnClickListener(this)
+        binding.runningRankMatch.setOnClickListener(this)
     }
 
     companion object {
@@ -74,6 +74,20 @@ class RunningFragment : Fragment(), View.OnClickListener {
     }
 
     override fun onClick(view: View?) {
+        val text = ""
+
+        when (view?.id) {
+            R.id.running_normal_match -> {
+                println("normal")
+            }
+            R.id.running_friendly_match -> {
+                println("friendly")
+            }
+            R.id.running_rank_match -> {
+                println("rank")
+            }
+        }
+
         val intent = Intent(activity, SelectTrackActivity::class.java)
         startActivity(intent)
     }

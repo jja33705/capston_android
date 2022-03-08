@@ -1,7 +1,7 @@
 package com.example.capstonandroid.network
 
+import com.example.capstonandroid.dto.GetTracksResponse
 import com.example.capstonandroid.dto.Test
-import com.example.capstonandroid.dto.TracksResponse
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.*
@@ -19,5 +19,5 @@ interface BackendApi {
 //    fun storePost(@Body record: Track) : Call<Track>
 
     @GET // 트랙 리스트 받기
-    suspend fun getTracks(@Url url: String, @Query("bounds") bounds1: Double, @Query("bounds") bounds2: Double, @Query("bounds") bounds3: Double, @Query("bounds") bounds4: Double, @Query("zoom") zoom: Int, @Query("event") event: String) : Response<TracksResponse>
+    suspend fun getTracks(@Url url: String, @Query("bounds") bounds1: Double, @Query("bounds") bounds2: Double, @Query("bounds") bounds3: Double, @Query("bounds") bounds4: Double, @Query("zoom") zoom: Int, @Query("event") event: String) : Response<GetTracksResponse>
 }
