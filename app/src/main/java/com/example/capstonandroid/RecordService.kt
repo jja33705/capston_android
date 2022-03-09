@@ -295,7 +295,7 @@ class RecordService : Service() {
     }
 
     // 바인드됐을 때 호출
-    override fun onBind(p0: Intent?): IBinder? {
+    override fun onBind(intent: Intent?): IBinder? {
         return null
     }
 }

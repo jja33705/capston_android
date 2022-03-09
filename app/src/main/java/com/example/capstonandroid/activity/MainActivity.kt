@@ -105,8 +105,4 @@ class MainActivity : AppCompatActivity() {
         super.onDestroy()
         _binding = null
     }
-
-    override fun onBackPressed() {
-        super.onBackPressed()
-    }
 }

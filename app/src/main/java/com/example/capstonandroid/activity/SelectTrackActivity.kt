@@ -2,6 +2,7 @@ package com.example.capstonandroid.activity
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.location.Location
@@ -44,8 +45,6 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.O
 
     private lateinit var mLocation: Location // 내 위치
 
-    private var mLocationMarker: Marker? = null // 내 위치 마커
-
     private lateinit var job: Job // 코루틴 동작을 제어하기 위한 job
 
     private lateinit var tracks: ArrayList<Track> // 트랙 리스트
@@ -54,7 +53,14 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.O
 
     private lateinit var markerList: ArrayList<Marker>
 
+    private lateinit var exerciseKind: String // 운동 종류
+
+    private lateinit var matchType: String // 매치 타입
+
+    private var mLocationMarker: Marker? = null // 내 위치 마커
+
     private var updateTrack = false // 트랙을 새로 불러올지 말지를 결정하는 불린 변수
+    private var updatingTrack = false // 트랙 정보를 업데이트 중인지를 알려주는 불린 함수
 
     private var selectedTrackIndex: Int? = null // 선택된 트랙 인덱스
 
@@ -73,6 +79,11 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.O
             }
         }
 
+        // intent 로 받아온 변수 초기화
+        val intent = intent
+        exerciseKind = intent.getStringExtra("exerciseKind")!!
+        matchType = intent.getStringExtra("matchType")!!
+
         job = Job() // job 생성
 
         tracks = ArrayList<Track>()
@@ -85,7 +96,13 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.O
 
         // 시작 버튼 초기화
         binding.btnStart.setOnClickListener {
+            val intent = Intent(this@SelectTrackActivity, TrackRecordActivity::class.java)
+            intent.putExtra("exerciseKind", exerciseKind)
+            intent.putExtra("matchType", matchType)
+            intent.putExtra("trackId", tracks[selectedTrackIndex!!]._id)
 
+            startActivity(intent)
+            finish()
         }
 
         val mapFragment = supportFragmentManager
@@ -94,10 +111,21 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.O
     }
 
     // 보이는 지도에 맞게 트랙 가져와 지도에 그려 줌
-    private fun drawTracks(bounds1: Double, bounds2: Double, bounds3: Double, bounds4: Double) {
-        CoroutineScope(Dispatchers.Main + job).launch {
+    private fun initTracks(bounds: List<Double>) {
+        if (updatingTrack) {
+            println("이미 업데이트 중")
+            return
+        }
 
-            // 현재 있는 폴리라인 다 지워놓음
+        CoroutineScope(Dispatchers.Main + job).launch {
+            println("실행됨")
+            updatingTrack = true
+
+            println(tracks.size)
+            println(polylineList.size)
+            println(markerList.size)
+
+            // 현재 있는 폴리라인, 마커 지움
             for (i in 0 until tracks.size) {
                 polylineList[i].remove()
                 markerList[i].remove()
@@ -107,7 +135,7 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.O
             println("다 지움")
 
             // track 리스트 가져오는 api 호출
-            val tracksResponse = supplementService.getTracks("http://13.124.24.179/api/track/search", bounds1, bounds2, bounds3, bounds4, 16, "B")
+            val tracksResponse = supplementService.getTracks("http://13.124.24.179/api/track/search", bounds, 16, "B")
 
             if (tracksResponse.isSuccessful) {
                 // 1개 이상 응답이 오면 데이터 보관하고 맵에 그린다.
@@ -144,9 +172,9 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.O
             }
 
             println("다 그림")
+            updatingTrack = false
         }
     }
-
 
     override fun onDestroy() {
         super.onDestroy()
@@ -231,6 +259,8 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.O
                 }
             }
             selectedTrackIndex = newSelectedIndex
+
+            binding.slidingLayout.panelHeight = 1000 // 하단 바 올려줌
         } else {
             markerList[selectedTrackIndex!!].alpha = 0.3F
             polylineList[selectedTrackIndex!!].color = R.color.selected_polyline_color
@@ -240,8 +270,6 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.O
 
             selectedTrackIndex = newSelectedIndex
         }
-
-        binding.slidingLayout.panelHeight = 1000 // 하단 바 올려줌
 
         binding.trackTitle.text = tracks[selectedTrackIndex!!].trackName
         binding.trackDescription.text = tracks[selectedTrackIndex!!].description
@@ -316,7 +344,9 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.O
             }
             GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE -> { // 사용자 제스처
                 println("move reason: REASON_GESTURE")
-                updateTrack = true
+
+                // 선택된 트랙이 있으면 새로 불러오지 말고 없으면 새로 불러옴
+                updateTrack = selectedTrackIndex == null
             }
         }
     }
@@ -328,10 +358,10 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.O
             val latLngBounds = mGoogleMap.projection.visibleRegion.latLngBounds
 
             println("위치 경계: ${latLngBounds.southwest.longitude} ${latLngBounds.southwest.latitude} ${latLngBounds.northeast.longitude} ${latLngBounds.northeast.latitude}")
-            drawTracks(latLngBounds.southwest.longitude, latLngBounds.southwest.latitude, latLngBounds.northeast.longitude, latLngBounds.northeast.latitude)
-        }
+            initTracks(listOf(latLngBounds.southwest.longitude, latLngBounds.southwest.latitude, latLngBounds.northeast.longitude, latLngBounds.northeast.latitude))
 
-        selectedTrackIndex = null
+            selectedTrackIndex = null
+        }
     }
 
     override fun onMarkerClick(marker: Marker): Boolean {
