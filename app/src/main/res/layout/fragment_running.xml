@@ -10,7 +10,7 @@
         android:id="@+id/running_normal_match"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:text="일반"
+        android:text="혼자"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.202"

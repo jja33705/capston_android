@@ -16,12 +16,12 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
+import java.util.*
+import kotlin.collections.ArrayList
 
 class TrackRecordService : Service() {
 
     private lateinit var mNotificationManager: NotificationManager // 상단바에 뜨는 노티피케이션 매니저
-
-    private lateinit var updateTimer: Runnable // 타이머 업데이트
 
     private lateinit var mFusedLocationClient: FusedLocationProviderClient // 통합 위치 제공자 핸들
 
@@ -33,9 +33,9 @@ class TrackRecordService : Service() {
 
     private val locationList = ArrayList<Location>() // 위치 리스트
 
-    private val mHandler= Handler(Looper.getMainLooper()) // 타이머를 위한 핸들러 (메인루퍼와 연결함)
-
     private var sumAltitude: Double = 0.0 // 누적 상승 고도
+
+    private val timer = Timer() // 시간 업데이트를 위한 타이머
 
     private var second: Int = 0 // 시간 (초)
 
@@ -44,6 +44,36 @@ class TrackRecordService : Service() {
     private var avgSpeed = 0.0 // 평균 속도
 
     private var isStarted = false // 시작했는지
+
+    companion object {
+        private const val PREFIX = "com.example.capstonandroid.track"
+
+        const val ACTION_BROADCAST = "${PREFIX}.BROADCAST"
+
+        const val NOTIFICATION_CHANNEL_ID: String = PREFIX
+        const val NOTIFICATION_CHANNEL_NAME: String = PREFIX
+        const val NOTIFICATION_ID: Int = 1234
+
+        // command
+        const val START_RECORD = "${PREFIX}.STOP_RECORD"
+        const val STOP_SERVICE = "${PREFIX}.STOP_SERVICE"
+        const val START_PROCESS = "${PREFIX}.STOP_PROCESS"
+        const val COMPLETE_RECORD = "${PREFIX}.COMPLETE_RECORD"
+        const val RECORD_START_LOCATION = "${PREFIX}.RECORD_START_LOCATION"
+        
+        // flag
+        const val BEFORE_START_LOCATION_UPDATE = "${PREFIX}.BEFORE_START_LOCATION_UPDATE"
+        const val LAST_LOCATION = "LAST_LOCATION"
+        const val AFTER_START_UPDATE = "AFTER_START_UPDATE"
+        const val IS_STARTED = "IS_STARTED"
+
+        // intent keyword
+        const val LOCATION_LIST = "${PREFIX}.LOCATION_LIST"
+        const val LOCATION = "${PREFIX}.LOCATION"
+        const val SECOND = "${PREFIX}.SECOND"
+        const val DISTANCE = "${PREFIX}.DISTANCE"
+        const val AVG_SPEED = "${PREFIX}.AVG_SPEED"
+    }
 
     // 제일 처음 호출 (1회성으로 서비스가 이미 실행중이면 호출되지 않는다)
     override fun onCreate() {
@@ -60,9 +90,9 @@ class TrackRecordService : Service() {
                 if (!isStarted) {
 
                     // 로컬 프로드캐스트를 통해 위치를 보낸다.
-                    val intent = Intent(RecordService.ACTION_BROADCAST)
-                    intent.putExtra("flag", RecordService.BEFORE_START_LOCATION_UPDATE)
-                    intent.putExtra(RecordService.LOCATION, mLocation)
+                    val intent = Intent(ACTION_BROADCAST)
+                    intent.putExtra("flag", BEFORE_START_LOCATION_UPDATE)
+                    intent.putExtra(LOCATION, mLocation)
                     LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intent)
                 }
             }
@@ -76,7 +106,7 @@ class TrackRecordService : Service() {
         val activityIntent = Intent(applicationContext, RecordActivity::class.java)
         val activityPendingIntent = PendingIntent.getActivity(this, 0, activityIntent, PendingIntent.FLAG_IMMUTABLE)
 
-        val builder = NotificationCompat.Builder(this, RecordService.NOTIFICATION_CHANNEL_ID)
+        val builder = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
             .setContentText("${Utils.timeToText(second)}    ${Utils.distanceToText(distance)}km")
             .setContentTitle("페이스메이커")
             .setOngoing(true) //종료 못하게 막음

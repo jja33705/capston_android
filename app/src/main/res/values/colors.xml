@@ -8,6 +8,8 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="blue">#0000FF</color>
-    <color name="main_color">#1890ff</color>
+    <color name="main_color">#1890FF</color>
     <color name="selected_polyline_color">#20FF0000</color>
+    <color name="red">#FF0000</color>
+    <color name="area_color">#D395D4FF</color>
 </resources>

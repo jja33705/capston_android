@@ -1,4 +1,4 @@
-package com.example.capstonandroid.dto
+package com.example.capstonandroid.network.dto
 
 data class User(
     val name: String,

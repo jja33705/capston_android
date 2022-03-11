@@ -20,12 +20,12 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.tasks.Task
+import java.util.*
+import kotlin.collections.ArrayList
 
 class RecordService : Service() {
 
     private lateinit var mNotificationManager: NotificationManager // 상단바에 뜨는 노티피케이션 매니저
-
-    private lateinit var updateTimer: Runnable // 타이머 업데이트
 
     private lateinit var mFusedLocationClient: FusedLocationProviderClient // 통합 위치 제공자 핸들
 
@@ -37,7 +37,7 @@ class RecordService : Service() {
 
     private val locationList = ArrayList<Location>() // 위치 리스트
 
-    private val mHandler= Handler(Looper.getMainLooper()) // 타이머를 위한 핸들러 (메인루퍼와 연결함)
+    private val timer = Timer() // 시간 업데이트를 위한 타이머
 
     private var sumAltitude: Double = 0.0 // 누적 상승 고도
 
@@ -50,33 +50,33 @@ class RecordService : Service() {
     private var isStarted = false // 시작했는지
 
     companion object {
-        private const val PREFIX = "com.example.capstonandroid"
+        private const val PREFIX = "com.example.capstonandroid.recordservice"
 
         const val NOTIFICATION_CHANNEL_ID: String = PREFIX
-        const val NOTIFICATION_CHANNEL_NAME: String = "test"
+        const val NOTIFICATION_CHANNEL_NAME: String = PREFIX
         const val NOTIFICATION_ID: Int = 1234
 
-        const val ACTION_BROADCAST = "$PREFIX.broadcast"
+        const val ACTION_BROADCAST = "$PREFIX.BROADCAST"
 
         // command
-        const val START_RECORD = "$PREFIX.stoprecord"
-        const val STOP_SERVICE = "$PREFIX.stopforeground"
-        const val START_PROCESS = "$PREFIX.startprocess"
-        const val COMPLETE_RECORD = "$PREFIX.completerecord"
-        const val RECORD_START_LOCATION = "$PREFIX.recordstartlocation"
+        const val START_RECORD = "$PREFIX.STOP_RECORD"
+        const val STOP_SERVICE = "$PREFIX.STOP_SERVICE"
+        const val START_PROCESS = "$PREFIX.STOP_PROCESS"
+        const val COMPLETE_RECORD = "$PREFIX.COMPLETE_RECORD"
+        const val RECORD_START_LOCATION = "$PREFIX.RECORD_START_LOCATION"
 
         // flag
-        const val BEFORE_START_LOCATION_UPDATE = "BEFORE_START_LOCATION_UPDATE"
+        const val BEFORE_START_LOCATION_UPDATE = "$PREFIX.BEFORE_START_LOCATION_UPDATE"
         const val LAST_LOCATION = "LAST_LOCATION"
         const val AFTER_START_UPDATE = "AFTER_START_UPDATE"
         const val IS_STARTED = "IS_STARTED"
 
         // intent keyword
-        const val LOCATION_LIST = "$PREFIX.locationlist"
-        const val LOCATION = "$PREFIX.location"
-        const val SECOND = "$PREFIX.second"
-        const val DISTANCE = "$PREFIX.distance"
-        const val AVG_SPEED = "$PREFIX.avgspeed"
+        const val LOCATION_LIST = "$PREFIX.LOCATION_LIST"
+        const val LOCATION = "$PREFIX.LOCATION"
+        const val SECOND = "$PREFIX.SECOND"
+        const val DISTANCE = "$PREFIX.DISTANCE"
+        const val AVG_SPEED = "$PREFIX.AVG_SPEED"
     }
 
     // 제일 처음 호출 (1회성으로 서비스가 이미 실행중이면 호출되지 않는다)
@@ -102,13 +102,20 @@ class RecordService : Service() {
             }
         }
 
-        // 타이머 업데이트 러너블
-        updateTimer = object : Runnable {
+        mNotificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager // 노티피케이션 매니저 초기롸
+
+        createNotificationChannel() // 노티피케이션 채널 생성
+
+        startForeground(NOTIFICATION_ID, getNotification()) // 포그라운드 서비스 시작
+
+        createLocationRequest() // 위치 업데이트 시작
+    }
+
+    // 타이머 시작
+    private fun startTimer() {
+        timer.schedule(object : TimerTask() {
             override fun run() {
                 second ++
-
-                // 1초 후 또 실행
-                mHandler.postDelayed(this, 1000)
 
                 // 위치 달라졌으면 관련 값 갱신
                 if ((beforeLocation.latitude != mLocation.latitude) || (beforeLocation.longitude != mLocation.longitude)) {
@@ -145,15 +152,8 @@ class RecordService : Service() {
                 intent.putExtra(AVG_SPEED, avgSpeed)
                 LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intent)
             }
-        }
 
-        mNotificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager // 노티피케이션 매니저 초기롸
-
-        createNotificationChannel() // 노티피케이션 채널 생성
-
-        startForeground(NOTIFICATION_ID, getNotification()) // 포그라운드 서비스 시작
-
-        createLocationRequest() // 위치 업데이트 시작
+        }, 1000, 1000) // 1초 후 시작, 1초 간격
     }
 
     // notification 만들기
@@ -217,8 +217,8 @@ class RecordService : Service() {
                 intent.putExtra(LOCATION, mLocation)
                 LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intent)
 
-
-                mHandler.postDelayed(updateTimer, 1000)
+                // 타이머 시작
+                startTimer()
             }
             COMPLETE_RECORD -> { // 기록 끝
                 val intent = Intent(this@RecordService, CompleteRecordActivity::class.java)
@@ -276,7 +276,7 @@ class RecordService : Service() {
 
     private fun stopService() {
         mFusedLocationClient.removeLocationUpdates(mLocationCallback) // 위치 업데이트 제거
-        mHandler.removeCallbacks(updateTimer) // 시간 업데이트 제거
+        timer.cancel() // 타이머 제거
 
         // 내부 저장소에 중지된 것 기록
         PreferenceManager.getDefaultSharedPreferences(application)

@@ -1,8 +1,8 @@
-package com.example.capstonandroid.network
+package com.example.capstonandroid.network.api
 
-import com.example.capstonandroid.dto.GetTracksResponse
-import com.example.capstonandroid.dto.Test
-import com.example.capstonandroid.dto.Track
+import com.example.capstonandroid.network.dto.GetTracksResponse
+import com.example.capstonandroid.network.dto.Test
+import com.example.capstonandroid.network.dto.Track
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.*

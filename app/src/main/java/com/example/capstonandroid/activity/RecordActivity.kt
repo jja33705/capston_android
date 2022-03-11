@@ -93,7 +93,7 @@ class RecordActivity : AppCompatActivity(), OnMapReadyCallback {
         LocalBroadcastManager.getInstance(this).registerReceiver(mBroadcastReceiver, IntentFilter(RecordService.ACTION_BROADCAST))
 
         // 서비스 시작
-        val intent: Intent = Intent(this@RecordActivity, RecordService::class.java)
+        val intent = Intent(this@RecordActivity, RecordService::class.java)
         intent.action = RecordService.START_PROCESS
         startForegroundService(intent)
     }
