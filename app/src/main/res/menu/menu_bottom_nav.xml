@@ -2,22 +2,23 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/homeFragment"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/icon_main2"
         android:enabled="true"
-        android:title="Home" />
+        android:title="SNS" />
     <item
         android:id="@+id/trackFragment"
-        android:icon="@drawable/ic_launcher_background"
+        android:icon="@drawable/track"
         android:enabled="true"
-        android:title="Track" />
+        android:title="트랙" />
     <item
         android:id="@+id/recordActivity"
-        android:icon="@drawable/ic_launcher_foreground"
+        android:icon="@drawable/record"
         android:enabled="true"
-        android:title="Record" />
+        android:checkable="false"
+        android:title="레코딩" />
     <item
         android:id="@+id/meFragment"
-        android:icon="@mipmap/ic_launcher_round"
+        android:icon="@drawable/me_personal"
         android:enabled="true"
-        android:title="Me" />
+        android:title="유저" />
 </menu>

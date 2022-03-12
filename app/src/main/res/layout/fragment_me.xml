@@ -1,20 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragment.MeFragment">
+    android:orientation="vertical"
+    tools:context="fragment.MeFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Me"
-        android:textSize="100sp"
+
+
+    <!-- 버튼으로 구현 자기 프레그먼트 안에-->
+
+    <!--        <Button-->
+    <!--            android:id="@+id/btn_profile_view"-->
+    <!--            android:layout_width="0dp"-->
+    <!--            android:layout_height="match_parent"-->
+    <!--            android:layout_weight="1"-->
+    <!--            android:text="프로필" />-->
+
+    <!--        <Button-->
+    <!--            android:id="@+id/two"-->
+    <!--            android:layout_width="0dp"-->
+    <!--            android:layout_height="match_parent"-->
+    <!--            android:layout_weight="1"-->
+    <!--            android:text="개인 목표" />-->
+
+    <!--        <Button-->
+    <!--            android:id="@+id/three"-->
+    <!--            android:layout_width="0dp"-->
+    <!--            android:layout_height="match_parent"-->
+    <!--            android:layout_weight="1"-->
+    <!--            android:text="개인 활동" />  -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:id="@+id/me_top_nav"
+        android:background="#FFFFFF"
+        app:menu="@menu/menu_me_top_nav"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:labelVisibilityMode="labeled"
+        android:layout_alignParentBottom="true"
+        app:itemBackground="@color/colorPrimary"
+        app:itemIconTint="@color/colorNavIcon"
+        app:itemTextColor="@color/colorNavIcon"
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+        />
+    <FrameLayout
+        android:id="@+id/mefragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+    </FrameLayout>
+
+    <!--    <com.google.android.material.bottomnavigation.BottomNavigationView-->
+    <!--        android:id="@+id/bottom_nav"-->
+    <!--        app:menu="@menu/menu_bottom_nav"-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        android:layout_width="0dp"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        app:labelVisibilityMode="labeled" >-->
+    <!--    </com.google.android.material.bottomnavigation.BottomNavigationView>-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</LinearLayout>

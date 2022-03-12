@@ -1,26 +1,31 @@
 package com.example.capstonandroid.activity
 
-import android.app.Dialog
 import android.content.Intent
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.Window
-import android.widget.Button
-import androidx.preference.PreferenceManager
 import com.example.capstonandroid.R
-import com.example.capstonandroid.Utils
 import com.example.capstonandroid.databinding.ActivityMainBinding
+import com.example.capstonandroid.dto.Login
+import com.example.capstonandroid.dto.LoginResponse
 import com.example.capstonandroid.fragment.HomeFragment
 import com.example.capstonandroid.fragment.MeFragment
 import com.example.capstonandroid.fragment.TrackFragment
+import com.example.capstonandroid.network.BackendApi
+import com.example.capstonandroid.network.RetrofitClient
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import java.lang.Exception
 
 class MainActivity : AppCompatActivity() {
-    private var _binding: ActivityMainBinding? = null
-    private val binding get() = _binding!!
 
-    private lateinit var selectKindDialog: Dialog // 커스텀 다이얼로그
+    private var _binding: ActivityMainBinding? = null
+    private val binding: ActivityMainBinding get() = _binding!!
+
+
+    private  lateinit var  retrofit: Retrofit  //레트로핏
+    private  lateinit var supplementService: BackendApi // api
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,35 +33,94 @@ class MainActivity : AppCompatActivity() {
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // 커스텀 다이얼로그 초기화
-        selectKindDialog = Dialog(this)
-        selectKindDialog.requestWindowFeature(Window.FEATURE_NO_TITLE) // 타이틀 제거
-        selectKindDialog.setContentView(R.layout.select_kind_dialog)
+//      함수 초기화
+        initRetrofit()
 
-        // 다이얼로그에서 라이딩 버튼 클릭했을 때
-        val ridingButton: Button = selectKindDialog.findViewById(R.id.bt_riding)
-        ridingButton.setOnClickListener{
-            startRecordActivity("riding")
-        }
+        val sharedPreference = getSharedPreferences("other", 0)
 
-        // 다이얼로그에서 러닝 버튼 클릭했을 때
-        val runningButton: Button = selectKindDialog.findViewById(R.id.bt_running)
-        runningButton.setOnClickListener {
-            startRecordActivity("running")
-        }
+//      이 타입이 디폴트 값
+        var TOKEN = "Bearer " + sharedPreference.getString("TOKEN","")
+        println(TOKEN)
 
+
+            supplementService.userGet(TOKEN.toString()).enqueue(object : Callback<Int> {
+                override fun onResponse(call: Call<Int>, response: Response<Int>) {
+
+                    if(response.isSuccessful){
+                        println("성공 프래그먼트")
+//                  콜백 응답으로 온것
+                        println(response.body())
+
+
+                    }else {
+                        println("갔지만 실패")
+                        println(response.body())
+                        println(response.message())
+                        println(response.code())
+                    }
+                }
+
+                override fun onFailure(call: Call<Int>, t: Throwable) {
+
+                }
+
+            })
+
+
+//      토큰 불러오기
+
+
+
+
+//        var email = intent.getStringExtra("email").toString()
+//        var password = intent.getStringExtra("password").toString()
+//
+//        println(email)
+//        println(password)
+//
+//        val login = Login(
+//            email = email,
+//            password = password
+//        )
+//        supplementService.loginPost(login).enqueue(object : Callback<LoginResponse> {
+//            override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
+//
+//                if(response.isSuccessful){
+//                    println("성공 프래그먼트")
+////                  콜백 응답으로 온것
+//                    println(response.body())
+//
+//
+//                }else {
+//                    println("갔지만 실패")
+//                    println(response.body())
+//                    println(response.message())
+//                    println(response.code())
+//                }
+//            }
+//
+//
+//            override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
+//
+//                println("실패")
+//                println(t.message)
+//            }
+//
+//        })
         // 바텀 네비게이션에서 선택한 메뉴 아이디에 따라 표시할 화면 분기처리 (나중에 addToBackStack 부분 찾아보고 Transaction 관리해 줘야 할 것 같음.)
         binding.bottomNav.setOnItemSelectedListener {
             println(it.itemId)
             when (it.itemId) {
                 R.id.homeFragment -> {
+
                     supportFragmentManager.beginTransaction().replace(R.id.fragment_container, HomeFragment()).commit()
                 }
                 R.id.trackFragment -> {
                     supportFragmentManager.beginTransaction().replace(R.id.fragment_container, TrackFragment()).commit()
                 }
                 R.id.recordActivity -> {
-                    showSelectKindDialog()
+                    val intent: Intent = Intent(this, RecordActivity::class.java)
+                    startActivity(intent)
                     return@setOnItemSelectedListener false
                 }
                 R.id.meFragment -> {
@@ -69,44 +133,18 @@ class MainActivity : AppCompatActivity() {
         // 처음 들어왔을때는 homeFragment
         binding.bottomNav.selectedItemId = R.id.homeFragment
 
-        // 레코드 중이면 레코드 액티비티로 이동
-        if (PreferenceManager.getDefaultSharedPreferences(applicationContext).getBoolean("IS_RECORDING", false)) {
-            println("실행 중")
 
-            val intent: Intent = Intent(this, RecordActivity::class.java)
-            intent.putExtra("kind", PreferenceManager.getDefaultSharedPreferences(applicationContext).getString("KIND", "running"))
-            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT) // 액티비티 스택 내에 있으면 재실행 함
-            startActivity(intent)
-        }
-    }
 
-    // 어떤 종류인지 선택하는 다이얼로그 띄움
-    private fun showSelectKindDialog() {
-        selectKindDialog.show()
-        selectKindDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT)) // 모서리 둥글게 하기 위해서
-    }
-
-    // 선택한 운동 종류에 맞게 값을 넣고 실행
-    private fun startRecordActivity(kind: String) {
-        PreferenceManager.getDefaultSharedPreferences(application)
-            .edit()
-            .putString("KIND", kind)
-            .apply()
-
-        val intent: Intent = Intent(this, RecordActivity::class.java)
-        intent.putExtra("kind", kind)
-        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT) // 액티비티 스택 내에 있으면 재실행 함
-        startActivity(intent)
-        selectKindDialog.dismiss() // 닫기
     }
 
 
+    private fun initRetrofit(){
+        retrofit = RetrofitClient.getInstance()
+        supplementService = retrofit.create(BackendApi::class.java);
+    }
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
     }
 
-    override fun onBackPressed() {
-        super.onBackPressed()
-    }
 }

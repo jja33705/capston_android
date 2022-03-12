@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/gradation">
+
+    <EditText
+        android:layout_marginTop="50dp"
+        android:id="@+id/et_register_name"
+        android:layout_width="200dp"
+        android:layout_height="45dp"
+        android:ems="10"
+        android:hint="이름"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+    <EditText
+        android:layout_marginTop="5dp"
+        android:id="@+id/et_register_email"
+        android:layout_width="200dp"
+        android:layout_height="45dp"
+        android:ems="10"
+        android:hint="이메일 unique()"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="@+id/et_register_name"
+        app:layout_constraintStart_toStartOf="@+id/et_register_name"
+        app:layout_constraintTop_toBottomOf="@+id/et_register_name" />
+
+    <EditText
+        android:id="@+id/et_register_password"
+
+        android:layout_marginTop="5dp"
+        android:layout_width="200dp"
+        android:layout_height="45dp"
+        android:ems="10"
+        android:hint="패스워드"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="@+id/et_register_email"
+        app:layout_constraintStart_toStartOf="@+id/et_register_email"
+        app:layout_constraintTop_toBottomOf="@+id/et_register_email" />
+
+    <EditText
+        android:id="@+id/et_register_sex"
+        android:layout_marginTop="5dp"
+        android:layout_width="200dp"
+        android:layout_height="45dp"
+        android:ems="10"
+        android:hint="성별"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="@+id/et_register_password"
+        app:layout_constraintStart_toStartOf="@+id/et_register_password"
+        app:layout_constraintTop_toBottomOf="@+id/et_register_password" />
+
+    <EditText
+        android:id="@+id/et_register_weight"
+        android:layout_marginTop="5dp"
+        android:layout_width="200dp"
+        android:layout_height="45dp"
+        android:ems="10"
+        android:hint="몸무게"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="@+id/et_register_sex"
+        app:layout_constraintStart_toStartOf="@+id/et_register_sex"
+        app:layout_constraintTop_toBottomOf="@+id/et_register_sex" />
+
+    <EditText
+        android:id="@+id/et_register_profile"
+        android:layout_marginTop="5dp"
+        android:layout_width="200dp"
+        android:layout_height="45dp"
+        android:ems="10"
+        android:hint="프로필 사진 (nullable)"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="@+id/et_register_weight"
+        app:layout_constraintStart_toStartOf="@+id/et_register_weight"
+        app:layout_constraintTop_toBottomOf="@+id/et_register_weight" />
+
+    <EditText
+        android:id="@+id/et_register_birth"
+        android:layout_marginTop="5dp"
+        android:layout_width="200dp"
+        android:layout_height="45dp"
+        android:ems="10"
+        android:hint="생년"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="@+id/et_register_profile"
+        app:layout_constraintStart_toStartOf="@+id/et_register_profile"
+        app:layout_constraintTop_toBottomOf="@+id/et_register_profile" />
+    <EditText
+        android:id="@+id/et_register_introduce"
+        android:layout_marginTop="5dp"
+        android:layout_width="200dp"
+        android:layout_height="45dp"
+        android:ems="10"
+        android:hint="자기소개 (nullable)"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="@+id/et_register_birth"
+        app:layout_constraintStart_toStartOf="@+id/et_register_birth"
+        app:layout_constraintTop_toBottomOf="@+id/et_register_birth" />
+
+    <EditText
+        android:id="@+id/et_register_location"
+        android:layout_marginTop="5dp"
+        android:layout_width="200dp"
+        android:layout_height="45dp"
+        android:ems="10"
+        android:hint="지역"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="@+id/et_register_introduce"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/et_register_introduce"
+        app:layout_constraintTop_toBottomOf="@+id/et_register_introduce" />
+
+
+    <Button
+        android:id="@+id/btn_register"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_marginRight="50dp"
+        android:text="회원가입"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/et_register_location"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_register_location"/>
+
+    <Button
+        android:id="@+id/backButton"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="50dp"
+        android:text="뒤로가기"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/et_register_location"
+        app:layout_constraintTop_toBottomOf="@+id/et_register_location"
+ />
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,6 +4,7 @@ import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.capstonandroid.databinding.ActivityCompleteRecordBinding
+import com.example.capstonandroid.dto.Record
 import com.example.capstonandroid.network.BackendApi
 import com.example.capstonandroid.network.RetrofitClient
 import retrofit2.Call
@@ -88,24 +89,24 @@ class CompleteRecordActivity : AppCompatActivity() {
 //
 //            })
 
-//            val record: Track = Track(sumAltitude.toInt(), altitudes, avgSpeed, 99.99, coordinates, distance, kind, "public", speeds, second, seconds)
-//            supplementService.storePost(record).enqueue(object : Callback<Track> {
-//                override fun onResponse(call: Call<Track>, response: Response<Track>) {
-//
-//                    println(response.code())
-//                    if (response.isSuccessful) {
-//                        println("성공")
-//                        println(response.body())
-//                    } else {
-//                        println("갔는데 망함")
-//                    }
-//                }
-//
-//                override fun onFailure(call: Call<Track>, t: Throwable) {
-//                    println("실패")
-//                    println(t.message)
-//                }
-//            })
+            val record: Record = Record(sumAltitude.toInt(), altitudes, avgSpeed, 99.99, coordinates, distance, kind, "public", speeds, second, seconds)
+            supplementService.storePost(record).enqueue(object : Callback<Record> {
+                override fun onResponse(call: Call<Record>, response: Response<Record>) {
+
+                    println(response.code())
+                    if (response.isSuccessful) {
+                        println("성공")
+                        println(response.body())
+                    } else {
+                        println("갔는데 망함")
+                    }
+                }
+
+                override fun onFailure(call: Call<Record>, t: Throwable) {
+                    println("실패")
+                    println(t.message)
+                }
+            })
         }
     }
 

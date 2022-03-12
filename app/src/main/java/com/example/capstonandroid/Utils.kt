@@ -32,10 +32,11 @@ class Utils {
             }
         }
 
-        //
+        // 없어두 됨
         fun getLocationTitle(context: Context): String {
-            return context.getString(R.string.location_updated,
-                DateFormat.getDateTimeInstance().format(Date()))
+            return "abcd"
+//            return context.getString(R.string.location_updated,
+//                DateFormat.getDateTimeInstance().format(Date()))
         }
 
         fun timeToText(time: Int): String {
