@@ -2,23 +2,15 @@ package com.example.capstonandroid
 
 import android.annotation.SuppressLint
 import android.app.*
-import android.content.Context
 import android.content.Intent
 import android.location.Location
-import android.os.Binder
-import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
 import androidx.core.app.NotificationCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import androidx.preference.PreferenceManager
 import com.example.capstonandroid.activity.CompleteRecordActivity
 import com.example.capstonandroid.activity.RecordActivity
 import com.google.android.gms.location.*
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.tasks.Task
 import java.util.*
 import kotlin.collections.ArrayList
@@ -201,11 +193,6 @@ class RecordService : Service() {
             }
             START_RECORD -> { // 기록 시작
                 isStarted = true
-                // 내부 저장소에 시작된 것 기록
-                PreferenceManager.getDefaultSharedPreferences(application)
-                    .edit()
-                    .putBoolean("IS_RECORDING", true)
-                    .apply()
 
                 mLocation.time = second.toLong()
                 locationList.add(mLocation)

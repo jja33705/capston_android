@@ -8,7 +8,6 @@ import android.os.IBinder
 import android.os.Looper
 import androidx.core.app.NotificationCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import androidx.preference.PreferenceManager
 import com.example.capstonandroid.activity.CompleteRecordActivity
 import com.example.capstonandroid.activity.RecordActivity
 import com.google.android.gms.location.*
@@ -194,11 +193,6 @@ class TrackRecordService : Service() {
             }
             START_RECORD -> { // 기록 시작
                 isStarted = true
-                // 내부 저장소에 시작된 것 기록
-                PreferenceManager.getDefaultSharedPreferences(application)
-                    .edit()
-                    .putBoolean("IS_RECORDING", true)
-                    .apply()
 
                 mLocation.time = second.toLong()
                 locationList.add(mLocation)
@@ -270,12 +264,6 @@ class TrackRecordService : Service() {
     private fun stopService() {
         mFusedLocationClient.removeLocationUpdates(mLocationCallback) // 위치 업데이트 제거
         timer.cancel() // 타이머 제거
-
-        // 내부 저장소에 중지된 것 기록
-        PreferenceManager.getDefaultSharedPreferences(application)
-            .edit()
-            .putBoolean("IS_RECORDING", false)
-            .apply()
 
         stopForeground(true)
         stopSelf()

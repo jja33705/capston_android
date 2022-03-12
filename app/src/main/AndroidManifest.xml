@@ -4,7 +4,7 @@
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -19,7 +19,21 @@
         <service
             android:name=".TrackRecordService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true"
+            android:foregroundServiceType="location" />
+
+        <service
+            android:name=".RecordService"
+            android:enabled="true"
+            android:exported="true"
+            android:foregroundServiceType="location" />
+
+        <activity
+            android:name=".activity.SelectTrackActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.CompleteRecordActivity"
+            android:exported="false" />
 
         <activity
             android:name=".activity.TrackRecordActivity"
@@ -41,15 +55,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".activity.RecordActivity"
-            android:exported="false" />
+
         <activity
             android:name=".activity.MainActivity"
             android:exported="true"></activity>
-<!--        <activity-->
-<!--            android:name=".AuthActivity"-->
-<!--            android:exported="true" />-->
+
+        <activity
+            android:name=".activity.RecordActivity"
+            android:exported="false"
+            android:launchMode="singleTask" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
