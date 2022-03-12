@@ -3,6 +3,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import com.example.capstonandroid.R
+import com.example.capstonandroid.network.dto.ListViewItem
 import kotlinx.android.synthetic.main.custom_list_item.view.*
 
 class ListViewAdapter(private val items: MutableList<ListViewItem>): BaseAdapter()

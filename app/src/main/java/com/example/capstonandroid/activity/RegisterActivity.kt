@@ -4,9 +4,9 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.capstonandroid.databinding.ActivityRegisterBinding
-import com.example.capstonandroid.dto.Register
-import com.example.capstonandroid.dto.RegisterResponse
-import com.example.capstonandroid.network.BackendApi
+import com.example.capstonandroid.network.dto.Register
+import com.example.capstonandroid.network.dto.RegisterResponse
+import com.example.capstonandroid.network.api.BackendApi
 import com.example.capstonandroid.network.RetrofitClient
 import retrofit2.Call
 import retrofit2.Callback

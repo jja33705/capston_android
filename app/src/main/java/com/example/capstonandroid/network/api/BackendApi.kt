@@ -1,6 +1,6 @@
-package com.example.capstonandroid.network
+package com.example.capstonandroid.network.api
 
-import com.example.capstonandroid.dto.*
+import com.example.capstonandroid.network.dto.*
 import retrofit2.Call
 import retrofit2.http.*
 

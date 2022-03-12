@@ -2,12 +2,11 @@ package com.example.capstonandroid.activity
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import com.example.capstonandroid.databinding.ActivityLoginBinding
-import com.example.capstonandroid.dto.Login
-import com.example.capstonandroid.dto.LoginResponse
-import com.example.capstonandroid.network.BackendApi
+import com.example.capstonandroid.network.dto.Login
+import com.example.capstonandroid.network.dto.LoginResponse
+import com.example.capstonandroid.network.api.BackendApi
 import com.example.capstonandroid.network.RetrofitClient
 import retrofit2.Call
 import retrofit2.Callback

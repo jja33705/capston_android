@@ -4,8 +4,8 @@ import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.capstonandroid.databinding.ActivityCompleteRecordBinding
-import com.example.capstonandroid.dto.Record
-import com.example.capstonandroid.network.BackendApi
+import com.example.capstonandroid.network.dto.Record
+import com.example.capstonandroid.network.api.BackendApi
 import com.example.capstonandroid.network.RetrofitClient
 import retrofit2.Call
 import retrofit2.Callback

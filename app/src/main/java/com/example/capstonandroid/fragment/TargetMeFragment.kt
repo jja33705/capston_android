@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.capstonandroid.R
 import com.example.capstonandroid.databinding.FragmentTargetMeBinding
-import com.example.capstonandroid.network.BackendApi
+import com.example.capstonandroid.network.api.BackendApi
 import com.example.capstonandroid.network.RetrofitClient
 import retrofit2.Retrofit
 

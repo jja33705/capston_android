@@ -1,7 +1,7 @@
 package com.example.capstonandroid.fragment
 
 import ListViewAdapter
-import ListViewItem
+import com.example.capstonandroid.network.dto.ListViewItem
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -9,14 +9,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.ListAdapter
 import com.example.capstonandroid.R
 import com.example.capstonandroid.databinding.FragmentActivityMeBinding
-import com.example.capstonandroid.dto.Login
-import com.example.capstonandroid.dto.LoginResponse
-import com.example.capstonandroid.dto.Post
-import com.example.capstonandroid.dto.User
-import com.example.capstonandroid.network.BackendApi
+import com.example.capstonandroid.network.dto.Login
+import com.example.capstonandroid.network.dto.LoginResponse
+import com.example.capstonandroid.network.dto.User
+import com.example.capstonandroid.network.api.BackendApi
 import com.example.capstonandroid.network.RetrofitClient
 import kotlinx.android.synthetic.main.fragment_activity_me.*
 import retrofit2.Call
@@ -111,10 +109,12 @@ class ActivityMeFragment : Fragment() {
                     println(user!!.posts.size) //2
                      var usersize : Int = user!!.posts.size
                     for (i in usersize downTo 1){
-                        items.add(ListViewItem(ContextCompat.getDrawable(requireContext(),
+                        items.add(
+                            ListViewItem(ContextCompat.getDrawable(requireContext(),
                             R.drawable.sakai)!!,
                             user!!.posts[usersize-1].title,
-                            "작성일자 : " + user!!.posts[usersize-1].updated_at))
+                            "작성일자 : " + user!!.posts[usersize-1].updated_at)
+                        )
                             --usersize
 
 

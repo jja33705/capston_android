@@ -1,6 +1,5 @@
 package com.example.capstonandroid.fragment
 
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,10 +10,10 @@ import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.example.capstonandroid.R
 import com.example.capstonandroid.databinding.FragmentProfileMeBinding
-import com.example.capstonandroid.dto.Login
-import com.example.capstonandroid.dto.LoginResponse
-import com.example.capstonandroid.dto.User
-import com.example.capstonandroid.network.BackendApi
+import com.example.capstonandroid.network.dto.Login
+import com.example.capstonandroid.network.dto.LoginResponse
+import com.example.capstonandroid.network.dto.User
+import com.example.capstonandroid.network.api.BackendApi
 import com.example.capstonandroid.network.RetrofitClient
 import retrofit2.Call
 import retrofit2.Callback

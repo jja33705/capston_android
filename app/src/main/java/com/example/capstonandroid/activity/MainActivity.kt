@@ -5,18 +5,15 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.capstonandroid.R
 import com.example.capstonandroid.databinding.ActivityMainBinding
-import com.example.capstonandroid.dto.Login
-import com.example.capstonandroid.dto.LoginResponse
 import com.example.capstonandroid.fragment.HomeFragment
 import com.example.capstonandroid.fragment.MeFragment
 import com.example.capstonandroid.fragment.TrackFragment
-import com.example.capstonandroid.network.BackendApi
+import com.example.capstonandroid.network.api.BackendApi
 import com.example.capstonandroid.network.RetrofitClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
-import java.lang.Exception
 
 class MainActivity : AppCompatActivity() {
 

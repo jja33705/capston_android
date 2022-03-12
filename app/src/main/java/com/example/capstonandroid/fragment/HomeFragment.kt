@@ -9,9 +9,9 @@ import androidx.fragment.app.Fragment
 import com.example.capstonandroid.R
 import com.example.capstonandroid.activity.MainActivity
 import com.example.capstonandroid.databinding.FragmentHomeBinding
-import com.example.capstonandroid.dto.Login
-import com.example.capstonandroid.dto.LogoutResponse
-import com.example.capstonandroid.network.BackendApi
+import com.example.capstonandroid.network.dto.Login
+import com.example.capstonandroid.network.dto.LogoutResponse
+import com.example.capstonandroid.network.api.BackendApi
 import com.example.capstonandroid.network.RetrofitClient
 import retrofit2.Call
 import retrofit2.Callback
