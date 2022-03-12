@@ -37,6 +37,10 @@ interface BackendApi {
     @POST("logout") // 유저 로그아웃
     fun logOut(@Header("Authorization") token: String): Call<LogoutResponse>
 
+    @POST("post/index") // SNS 메인화면~
+    fun postIndex(@Header("Authorization") token: String): Call<IndexResponse>
+
+
     //    @POST("post/store") // 기록 저장
     //    fun storePost(@Body record: Track) : Call<Track>
 

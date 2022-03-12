@@ -44,8 +44,6 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
 
 
-// asdasd
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -102,6 +100,13 @@ class HomeFragment : Fragment() {
 //      이 타입이 디폴트 값
         var TOKEN = "Bearer " + sharedPreference.getString("TOKEN","")
         println(TOKEN)
+
+
+
+
+
+
+
         bindinghome.logout.setOnClickListener {
             supplementService.logOut(TOKEN.toString()).enqueue(object : Callback<LogoutResponse> {
                 override fun onResponse(
@@ -112,6 +117,9 @@ class HomeFragment : Fragment() {
                         println("로그아웃이 성공되었습니다! 성공 ")
 //                  콜백 응답으로 온것
                         println(response.body())
+
+
+
 
 
                     } else {

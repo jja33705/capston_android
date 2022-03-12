@@ -6,9 +6,10 @@ plugins {
 
     id 'com.google.gms.google-services'
 }
-androidExtensions {
-    experimental = true
-}
+
+//androidExtensions {
+//    experimental = true
+//}
 
 
 android {
