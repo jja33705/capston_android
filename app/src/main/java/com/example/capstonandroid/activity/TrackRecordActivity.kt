@@ -17,7 +17,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.example.capstonandroid.R
-import com.example.capstonandroid.RecordService
+import com.example.capstonandroid.TrackRecordService
 import com.example.capstonandroid.Utils
 import com.example.capstonandroid.databinding.ActivityTrackRecordBinding
 import com.example.capstonandroid.network.dto.Track
@@ -59,16 +59,17 @@ class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var canStartCircle: Circle // 시작 가능한 반경 원
 
-    private var mLocationMarker: Marker? = null // 내 위치 마커
-
-    private var started: Boolean = false // 기록 시작됐는지
-
-    private var inCanStartArea: Boolean = false // 시작 가능한 범위 내에 있는지
-
-    private var initializedTrack: Boolean = false // 트랙 정보 불러와 다 그리고 초기화 완료했는지
-
     private lateinit var job: Job // 코루틴 동작을 제어하기 위한 job
 
+    private var mLocationMarker: Marker? = null // 내 위치 마커
+
+    private var started = false // 기록 시작됐는지
+
+    private var inCanStartArea = false // 시작 가능한 범위 내에 있는지
+
+    private var isStarted = false // 시작 했는지
+
+    @SuppressLint("NewApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -88,9 +89,61 @@ class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback {
 
         initRetrofit()
 
+        // 시작 버튼 초기화
+        binding.startButton.setOnClickListener{
+            println("시작 버튼 클릭함")
+
+            if (inCanStartArea) {
+                // 커맨드 보냄 (서비스는 한번 더 실행 안되니 커맨드가 보내진다.)
+                val intent = Intent(this@TrackRecordActivity, TrackRecordService::class.java)
+                intent.action = TrackRecordService.START_RECORD
+                startForegroundService(intent)
+
+                isStarted = true
+
+                // 시작한 상태 저장
+                getSharedPreferences("trackRecord", MODE_PRIVATE)
+                    .edit()
+                    .putString("exerciseKind", exerciseKind)
+                    .putString("matchType", matchType)
+                    .putBoolean("isStarted", true)
+                    .commit()
+
+                // 버튼 바꿈
+                binding.startButton.visibility = View.GONE
+                binding.stopButton.visibility = View.VISIBLE
+            } else {
+                Toast.makeText(this@TrackRecordActivity, "시작 가능 위치가 아닙니다.", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        // 종료 버튼 초기화
+        binding.stopButton.setOnClickListener {
+            println("종료 버튼 클릭함")
+            val intent = Intent(this@TrackRecordActivity, TrackRecordService::class.java)
+            intent.action = TrackRecordService.COMPLETE_RECORD
+            startForegroundService(intent)
+
+            finish()
+        }
+
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+    }
+
+    @SuppressLint("NewApi")
+    override fun onBackPressed() {
+        println("onBackPressed 호출")
+
+        // 달리기중 아닐떄만 뒤로 갈 수 있게 함
+        if (!isStarted) {
+            // 서비스 종료하라고 커맨드 보냄
+            val intent = Intent(this@TrackRecordActivity, TrackRecordService::class.java)
+            intent.action = TrackRecordService.STOP_SERVICE
+            startForegroundService(intent)
+            super.onBackPressed()
+        }
     }
 
     override fun onDestroy() {
@@ -102,16 +155,24 @@ class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback {
 
     @SuppressLint("NewApi")
     private fun startProcess() {
-        initTrack()
+        CoroutineScope(Dispatchers.Main + job).launch {
+            val initTrackJob = launch {
+                initTrack()
+            }
+            initTrackJob.join()
 
-        // 브로드캐스트 리시버 초기화
-        mBroadcastReceiver = MBroadcastReceiver()
-        LocalBroadcastManager.getInstance(this).registerReceiver(mBroadcastReceiver, IntentFilter(RecordService.ACTION_BROADCAST))
+            binding.tvInformation.setBackgroundColor(R.color.green)
+            binding.tvInformation.text = "위치 정보 불러오는 중"
 
-        // 서비스 시작
-        val intent = Intent(this@TrackRecordActivity, RecordService::class.java)
-        intent.action = RecordService.START_PROCESS
-        startForegroundService(intent)
+            // 브로드캐스트 리시버 초기화
+            mBroadcastReceiver = MBroadcastReceiver()
+            LocalBroadcastManager.getInstance(this@TrackRecordActivity).registerReceiver(mBroadcastReceiver, IntentFilter(TrackRecordService.ACTION_BROADCAST))
+
+            // 서비스 시작
+            val intent = Intent(this@TrackRecordActivity, TrackRecordService::class.java)
+            intent.action = TrackRecordService.START_PROCESS
+            startForegroundService(intent)
+        }
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -121,74 +182,58 @@ class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     // 트랙 정보 가져와서 그림
-    private fun initTrack() {
-        CoroutineScope(Dispatchers.Main + job).launch {
-            binding.tvInformation.setBackgroundColor(Color.YELLOW)
-            binding.tvInformation.text = "트랙 정보 받아오는 중"
+    private suspend fun initTrack() {
+        val trackResponse = supplementService.getTrack("http://13.124.24.179/api/track/${trackId}")
+        println("응답코드: ${trackResponse.code()}")
 
-            val trackResponse = supplementService.getTrack("http://13.124.24.179/api/track/${trackId}")
-            println("응답코드: ${trackResponse.code()}")
+        if (trackResponse.isSuccessful) {
+            println("응답: ${trackResponse.body()}")
+            track = trackResponse.body()!!
+            startPoint = Location("startPoint")
+            startPoint.latitude = track.start_latlng[1]
+            startPoint.longitude = track.start_latlng[0]
 
-            if (trackResponse.isSuccessful) {
-                println("응답: ${trackResponse.body()}")
-                track = trackResponse.body()!!
-                startPoint = Location("startPoint")
-                startPoint.latitude = track.start_latlng[1]
-                startPoint.longitude = track.start_latlng[0]
-
-                // 경로 그림
-                val latLngList = ArrayList<LatLng>()
-                for (coordinate in track.gps.coordinates) {
-                    latLngList.add(LatLng(coordinate[1], coordinate[0]))
-                    println("${coordinate[1]}, ${coordinate[0]}")
-                }
-                mGoogleMap.addPolyline(PolylineOptions()
-                    .clickable(true)
-                    .addAll(latLngList)
-                    .color(R.color.main_color)
-                    .width(10F))
-
-                // 출발점 마커 추가
-                mGoogleMap.addMarker(MarkerOptions()
-                    .position(LatLng(startPoint.latitude, startPoint.longitude))
-                    .title("출발점")
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.start_marker))
-                    .anchor(0.5F, 1F))
-
-                // 시작 가능 반경 그림
-                canStartCircle = mGoogleMap.addCircle(CircleOptions()
-                    .center(LatLng(startPoint.latitude, startPoint.longitude))
-                    .radius(20.0)
-                    .fillColor(R.color.area_color)
-                    .strokeWidth(0F))
-
-                // 도착점 마커 추가
-                mGoogleMap.addMarker(MarkerOptions()
-                    .position(LatLng(track.end_latlng[1], track.end_latlng[0]))
-                    .title("도착점")
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.goal_flag))
-                    .anchor(0F, 1F))
-
-                binding.tvInformation.setBackgroundColor(Color.RED)
-                binding.tvInformation.text = "시작 가능 영역이 아닙니다."
-                mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(track.start_latlng[1], track.start_latlng[0]), 18.0f)) // 화면 이동
-
-                println("다 그림")
-                initializedTrack = true
-            } else {
-                println("경로 초기화 실패")
+            // 경로 그림
+            val latLngList = ArrayList<LatLng>()
+            for (coordinate in track.gps.coordinates) {
+                latLngList.add(LatLng(coordinate[1], coordinate[0]))
+                println("${coordinate[1]}, ${coordinate[0]}")
             }
-            
-            println("다 그림")
+            mGoogleMap.addPolyline(PolylineOptions()
+                .clickable(true)
+                .addAll(latLngList)
+                .color(R.color.main_color)
+                .width(10F))
 
-            
-//            // 도착 인정 영역 그림
-//            mGoogleMap.addCircle(CircleOptions()
-//                .center(LatLng(track.end_latlng[1], track.end_latlng[0]))
-//                .radius(20.0)
-//                .fillColor(R.color.area_color)
-//                .strokeWidth(0F))
+            // 출발점 마커 추가
+            mGoogleMap.addMarker(MarkerOptions()
+                .position(LatLng(startPoint.latitude, startPoint.longitude))
+                .title("출발점")
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.start_marker))
+                .anchor(0.5F, 1F))
+
+            // 시작 가능 반경 그림
+            canStartCircle = mGoogleMap.addCircle(CircleOptions()
+                .center(LatLng(startPoint.latitude, startPoint.longitude))
+                .radius(20.0)
+                .fillColor(R.color.area_color)
+                .strokeWidth(0F))
+
+            // 도착점 마커 추가
+            mGoogleMap.addMarker(MarkerOptions()
+                .position(LatLng(track.end_latlng[1], track.end_latlng[0]))
+                .title("도착점")
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.goal_flag))
+                .anchor(0F, 1F))
+
+            mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(track.start_latlng[1], track.start_latlng[0]), 18.0f)) // 화면 이동
+
+            println("다 그림")
+        } else {
+            println("경로 초기화 실패")
         }
+
+        println("다 그림")
     }
 
     // 권한 확인
@@ -241,6 +286,17 @@ class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
+    // 시작 가능한 위치인지 확인
+    private fun checkCanStartLocation() {
+        inCanStartArea = mLocation.distanceTo(startPoint) < 20.0
+        println("시작 가능 위치 내인지: $inCanStartArea")
+        if (inCanStartArea) {
+            binding.tvInformation.visibility = View.GONE
+        } else {
+            binding.tvInformation.visibility = View.VISIBLE
+        }
+    }
+
     // 레트로핏 초기화
     private fun initRetrofit() {
         retrofit = RetrofitClient.getInstance()
@@ -253,48 +309,46 @@ class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback {
 
             // flag 에 따라 분기처리
             when (intent?.getStringExtra("flag")) {
-                RecordService.LAST_LOCATION -> { // 마지막 위치
-                    mLocation = intent?.getParcelableExtra(RecordService.LOCATION)!!
+                TrackRecordService.LAST_LOCATION -> { // 마지막 위치
+                    mLocation = intent?.getParcelableExtra(TrackRecordService.LOCATION)!!
                     println("마지막 위치 잘 받음 ${mLocation.latitude} ${mLocation.longitude}")
                     // 내 위치 마커 생성
                     mLocationMarker = mGoogleMap.addMarker(
                         MarkerOptions().position(LatLng(mLocation.latitude, mLocation.longitude)).icon(
                             BitmapDescriptorFactory.fromResource(R.drawable.round_circle_black_24dp)))
 
-                    binding.startButton.isEnabled = true
+                    binding.tvInformation.text = "시작 가능 위치로 이동하세요."
+                    binding.tvInformation.setBackgroundColor(R.color.red)
+
+                    checkCanStartLocation() // 시작 가능 위치인지 확인
                 }
 
-                RecordService.BEFORE_START_LOCATION_UPDATE -> { // 시작 전 위치 업데이트
-                    mLocation = intent?.getParcelableExtra(RecordService.LOCATION)!!
+                TrackRecordService.BEFORE_START_LOCATION_UPDATE -> { // 시작 전 위치 업데이트
+                    mLocation = intent?.getParcelableExtra(TrackRecordService.LOCATION)!!
                     println("리시버로 위치 받음 ${mLocation.latitude}, ${mLocation.longitude}")
 
                     mLocationMarker?.position = LatLng(mLocation.latitude, mLocation.longitude) // 마커 이동
 
-                    if (initializedTrack) { // 트랙 초기화 완료돼서 시작 위치가 존재할 때
-                        // 시작 가능 위치인지 아닌지에 따라 처리
-                        inCanStartArea = mLocation.distanceTo(startPoint) < 20.0
-                        println("시작 가능 위치 내인지: $inCanStartArea")
-                        if (inCanStartArea) {
-                            binding.tvInformation.visibility = View.GONE
-                        } else {
-                            binding.tvInformation.visibility = View.VISIBLE
-                        }
-                    }
+                    checkCanStartLocation() // 시작 가능 위치인지 확인
                 }
 
-                RecordService.IS_STARTED -> { // 시작 중인데 액티비티 재실행 시
+                TrackRecordService.IS_STARTED -> { // 시작 중인데 액티비티 재실행 시
                     started = true
 
-                    val second = intent?.getIntExtra(RecordService.SECOND, 0)
+                    // 버튼 바꿈
+                    binding.startButton.visibility = View.GONE
+                    binding.stopButton.visibility = View.VISIBLE
+
+                    val second = intent?.getIntExtra(TrackRecordService.SECOND, 0)
                     binding.tvTime.text = Utils.timeToText(second)
 
-                    val distance = intent?.getDoubleExtra(RecordService.DISTANCE, 0.0)
+                    val distance = intent?.getDoubleExtra(TrackRecordService.DISTANCE, 0.0)
                     binding.tvDistance.text = Utils.distanceToText(distance)
 
-                    val avgSpeed = intent?.getDoubleExtra(RecordService.AVG_SPEED, 0.0)
+                    val avgSpeed = intent?.getDoubleExtra(TrackRecordService.AVG_SPEED, 0.0)
                     binding.tvAvgSpeed.text = Utils.avgSpeedToText(avgSpeed)
 
-                    val locationList = intent?.getParcelableArrayListExtra<Location>(RecordService.LOCATION_LIST)!!
+                    val locationList = intent?.getParcelableArrayListExtra<Location>(TrackRecordService.LOCATION_LIST)!!
                     println("arrayList 크기: ${locationList.size}")
 
                     mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(locationList[locationList.size-1].latitude, locationList[locationList.size-1].longitude), 18.0f)) // 화면 이동
@@ -312,31 +366,28 @@ class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback {
                     }
 
                     println("다 그림")
-
-                    binding.startButton.setBackgroundResource(R.drawable.stop_button)
-                    binding.startButton.isEnabled = true
                 }
 
-                RecordService.RECORD_START_LOCATION -> { // 기록 시작 위치
+                TrackRecordService.RECORD_START_LOCATION -> { // 기록 시작 위치
                     println("업데이트 시작 위치 받음")
-                    val location = intent?.getParcelableExtra<Location>(RecordService.LOCATION)!!
+                    val location = intent?.getParcelableExtra<Location>(TrackRecordService.LOCATION)!!
                     beforeLocation = location
                 }
 
-                RecordService.AFTER_START_UPDATE -> { // 기록 시작 후 초마다 받는 업데이트
+                TrackRecordService.AFTER_START_UPDATE -> { // 기록 시작 후 초마다 받는 업데이트
                     println("시작 후  업데이트 받음")
 
-                    val second = intent?.getIntExtra(RecordService.SECOND, 0)
+                    val second = intent?.getIntExtra(TrackRecordService.SECOND, 0)
                     binding.tvTime.text = Utils.timeToText(second)
 
-                    val location = intent?.getParcelableExtra<Location>(RecordService.LOCATION)!!
+                    val location = intent?.getParcelableExtra<Location>(TrackRecordService.LOCATION)!!
 
                     // 위치 다르면 관련 정보 수정하고 마커 이동하고 선 그림
                     if ((location.latitude != beforeLocation.latitude) || (location.longitude != beforeLocation.longitude)) {
-                        val distance = intent?.getDoubleExtra(RecordService.DISTANCE, 0.0)
+                        val distance = intent?.getDoubleExtra(TrackRecordService.DISTANCE, 0.0)
                         binding.tvDistance.text = Utils.distanceToText(distance)
 
-                        val avgSpeed = intent?.getDoubleExtra(RecordService.AVG_SPEED, 0.0)
+                        val avgSpeed = intent?.getDoubleExtra(TrackRecordService.AVG_SPEED, 0.0)
                         binding.tvAvgSpeed.text = Utils.avgSpeedToText(avgSpeed)
 
                         mLocationMarker?.position = LatLng(location.latitude, location.longitude) // 마커 이동

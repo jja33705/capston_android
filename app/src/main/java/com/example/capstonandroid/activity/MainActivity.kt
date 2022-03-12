@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity() {
     private var _binding: ActivityMainBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var selectKindDialog: Dialog // 커스텀 다이얼로그
+    private lateinit var selectExerciseKindDialog: Dialog // 커스텀 다이얼로그
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,18 +29,18 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         // 커스텀 다이얼로그 초기화
-        selectKindDialog = Dialog(this)
-        selectKindDialog.requestWindowFeature(Window.FEATURE_NO_TITLE) // 타이틀 제거
-        selectKindDialog.setContentView(R.layout.select_kind_dialog)
+        selectExerciseKindDialog = Dialog(this)
+        selectExerciseKindDialog.requestWindowFeature(Window.FEATURE_NO_TITLE) // 타이틀 제거
+        selectExerciseKindDialog.setContentView(R.layout.select_kind_dialog)
 
         // 다이얼로그에서 라이딩 버튼 클릭했을 때
-        val ridingButton: Button = selectKindDialog.findViewById(R.id.bt_riding)
+        val ridingButton: Button = selectExerciseKindDialog.findViewById(R.id.bt_riding)
         ridingButton.setOnClickListener{
             startRecordActivity("riding")
         }
 
         // 다이얼로그에서 러닝 버튼 클릭했을 때
-        val runningButton: Button = selectKindDialog.findViewById(R.id.bt_running)
+        val runningButton: Button = selectExerciseKindDialog.findViewById(R.id.bt_running)
         runningButton.setOnClickListener {
             startRecordActivity("running")
         }
@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity() {
                     supportFragmentManager.beginTransaction().replace(R.id.fragment_container, TrackFragment()).commit()
                 }
                 R.id.recordActivity -> {
-                    showSelectKindDialog()
+                    showSelectExerciseKindDialog()
                     return@setOnItemSelectedListener false
                 }
                 R.id.meFragment -> {
@@ -70,34 +70,29 @@ class MainActivity : AppCompatActivity() {
         binding.bottomNav.selectedItemId = R.id.homeFragment
 
         // 레코드 중이면 레코드 액티비티로 이동
-        if (PreferenceManager.getDefaultSharedPreferences(applicationContext).getBoolean("IS_RECORDING", false)) {
+        if (getSharedPreferences("record", MODE_PRIVATE).getBoolean("isStarted", false)) {
             println("실행 중")
 
-            val intent: Intent = Intent(this, RecordActivity::class.java)
-            intent.putExtra("kind", PreferenceManager.getDefaultSharedPreferences(applicationContext).getString("KIND", "running"))
+            val intent = Intent(this, RecordActivity::class.java)
+            intent.putExtra("exerciseKind", PreferenceManager.getDefaultSharedPreferences(applicationContext).getString("exerciseKine", "running"))
             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT) // 액티비티 스택 내에 있으면 재실행 함
             startActivity(intent)
         }
     }
 
     // 어떤 종류인지 선택하는 다이얼로그 띄움
-    private fun showSelectKindDialog() {
-        selectKindDialog.show()
-        selectKindDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT)) // 모서리 둥글게 하기 위해서
+    private fun showSelectExerciseKindDialog() {
+        selectExerciseKindDialog.show()
+        selectExerciseKindDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT)) // 모서리 둥글게 하기 위해서
     }
 
     // 선택한 운동 종류에 맞게 값을 넣고 실행
-    private fun startRecordActivity(kind: String) {
-        PreferenceManager.getDefaultSharedPreferences(application)
-            .edit()
-            .putString("KIND", kind)
-            .apply()
-
-        val intent: Intent = Intent(this, RecordActivity::class.java)
-        intent.putExtra("kind", kind)
+    private fun startRecordActivity(exerciseKind: String) {
+        val intent = Intent(this, RecordActivity::class.java)
+        intent.putExtra("exerciseKind", exerciseKind)
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT) // 액티비티 스택 내에 있으면 재실행 함
         startActivity(intent)
-        selectKindDialog.dismiss() // 닫기
+        selectExerciseKindDialog.dismiss() // 닫기
     }
 
 

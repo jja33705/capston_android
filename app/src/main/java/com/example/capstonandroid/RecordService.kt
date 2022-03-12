@@ -54,7 +54,7 @@ class RecordService : Service() {
 
         const val NOTIFICATION_CHANNEL_ID: String = PREFIX
         const val NOTIFICATION_CHANNEL_NAME: String = PREFIX
-        const val NOTIFICATION_ID: Int = 1234
+        const val NOTIFICATION_ID: Int = 1111
 
         const val ACTION_BROADCAST = "$PREFIX.BROADCAST"
 
@@ -278,11 +278,11 @@ class RecordService : Service() {
         mFusedLocationClient.removeLocationUpdates(mLocationCallback) // 위치 업데이트 제거
         timer.cancel() // 타이머 제거
 
-        // 내부 저장소에 중지된 것 기록
-        PreferenceManager.getDefaultSharedPreferences(application)
+        // 중지한 상태 저장
+        getSharedPreferences("record", MODE_PRIVATE)
             .edit()
-            .putBoolean("IS_RECORDING", false)
-            .apply()
+            .putBoolean("isStarted", false)
+            .commit()
 
         stopForeground(true)
         stopSelf()

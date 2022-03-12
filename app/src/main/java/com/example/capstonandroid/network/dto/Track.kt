@@ -11,7 +11,7 @@ data class Track(
     val event: String,
     val gps: Gps,
     val start_latlng: List<Double>,
-    val totalDistance: Int,
+    val totalDistance: Double,
     val trackName: String,
     val user: User
 )

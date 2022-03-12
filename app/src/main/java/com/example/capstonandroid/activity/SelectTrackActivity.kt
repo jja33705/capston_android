@@ -51,11 +51,11 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.O
 
     private lateinit var job: Job // 코루틴 동작을 제어하기 위한 job
 
-    private lateinit var tracks: ArrayList<Track> // 트랙 리스트
+    private lateinit var trackMap: HashMap<String, Track> // 트랙 맵
 
-    private lateinit var polylineList: ArrayList<Polyline>
+    private lateinit var polylineMap: HashMap<String, Polyline> // 폴리라인 맵
 
-    private lateinit var markerList: ArrayList<Marker>
+    private lateinit var markerMap: HashMap<String, Marker>
 
     private lateinit var exerciseKind: String // 운동 종류
 
@@ -68,9 +68,8 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.O
     private var mLocationMarker: Marker? = null // 내 위치 마커
 
     private var updateTrack = false // 트랙을 새로 불러올지 말지를 결정하는 불린 변수
-    private var updatingTrack = false // 트랙 정보를 업데이트 중인지를 알려주는 불린 함수
 
-    private var selectedTrackIndex: Int? = null // 선택된 트랙 인덱스
+    private var selectedTrackId: String? = null // 선택된 트랙 인덱스
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -89,6 +88,7 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.O
         mLocationCallback = object: LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
                 mLocation = locationResult.lastLocation
+                mLocationMarker?.position = LatLng(mLocation.latitude, mLocation.longitude) // 마커 이동
             }
         }
 
@@ -99,11 +99,9 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.O
 
         job = Job() // job 생성
 
-        tracks = ArrayList<Track>()
-
-        polylineList = ArrayList<Polyline>()
-
-        markerList = ArrayList<Marker>()
+        trackMap = HashMap()
+        polylineMap = HashMap()
+        markerMap = HashMap()
 
         initRetrofit() // retrofit 인스턴스 초기화
 
@@ -112,7 +110,7 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.O
             val intent = Intent(this@SelectTrackActivity, TrackRecordActivity::class.java)
             intent.putExtra("exerciseKind", exerciseKind)
             intent.putExtra("matchType", matchType)
-            intent.putExtra("trackId", tracks[selectedTrackIndex!!]._id)
+            intent.putExtra("trackId", selectedTrackId)
 
             startActivity(intent)
             finish()
@@ -125,70 +123,55 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.O
 
     // 보이는 지도에 맞게 트랙 가져와 지도에 그려 줌
     private fun initTracks(bounds: List<Double>) {
-        if (updatingTrack) {
-            println("이미 업데이트 중")
-            return
-        }
 
         CoroutineScope(Dispatchers.Main + job).launch {
             println("실행됨")
-            updatingTrack = true
 
-            println(tracks.size)
-            println(polylineList.size)
-            println(markerList.size)
-
-            // 현재 있는 폴리라인, 마커 지움
-            for (i in 0 until tracks.size) {
-                polylineList[i].remove()
-                markerList[i].remove()
-            }
-            polylineList.clear()
-            markerList.clear()
-            println("다 지움")
-
-            // track 리스트 가져오는 api 호출
+            // 현재 지도상에 보이는 트랙 가져오는 api 호출
             val tracksResponse = supplementService.getTracks("http://13.124.24.179/api/track/search", bounds, 16, "B")
-
+            println("응답 옴 ${tracksResponse.body()}")
             if (tracksResponse.isSuccessful) {
-                // 1개 이상 응답이 오면 데이터 보관하고 맵에 그린다.
-                println("응답 옴 ${tracksResponse.body()}")
-                tracks = tracksResponse.body()!!.result
-                for ((index, track) in tracks.withIndex()) {
 
-                // 마커 생성하고 마커 리스트에 넣음
-                    trackMarkerTextView.text = track.trackName
-                    val marker = mGoogleMap.addMarker(MarkerOptions()
-                        .position(LatLng(track.start_latlng[1], track.start_latlng[0]))
-                        .title(track.trackName)
-                        .icon(BitmapDescriptorFactory.fromBitmap(createBitmapFromView()))
-                        .anchor(0.1F, 1F))
-                    marker?.tag = index
+                // 1개 이상 응답이 오면 맵에 데이터 보관하고 구글맵에 그린다.
+                for (track in tracksResponse.body()!!.result) {
 
-                    markerList.add(marker!!)
+                    if (!trackMap.containsKey(track._id)) { // 현재 없는 트랙이면 추가함
+                        trackMap[track._id] = track
 
-                    // 폴리라인 그리고 폴리라인 리스트에 넣음
-                    val latLngList = ArrayList<LatLng>()
+                        // 마커 생성하고 마커 맵에 넣음
+                        trackMarkerTextView.text = track.trackName
+                        val marker = mGoogleMap.addMarker(MarkerOptions()
+                            .position(LatLng(track.start_latlng[1], track.start_latlng[0]))
+                            .title(track.trackName)
+                            .icon(BitmapDescriptorFactory.fromBitmap(createBitmapFromView()))
+                            .anchor(0.1F, 1F))!!
+                        marker.tag = track._id
+                        markerMap[track._id] = marker
 
-                    for (coordinate in track.gps.coordinates) {
-                        latLngList.add(LatLng(coordinate[1], coordinate[0]))
-                        println("${coordinate[1]}, ${coordinate[0]}")
+                        // 폴리라인 그리고 폴리라인 맵에 넣음
+                        val latLngList = ArrayList<LatLng>()
+
+                        for (coordinate in track.gps.coordinates) {
+                            latLngList.add(LatLng(coordinate[1], coordinate[0]))
+                            println("${coordinate[1]}, ${coordinate[0]}")
+                        }
+
+                        val polyline = mGoogleMap.addPolyline(PolylineOptions()
+                            .clickable(true)
+                            .addAll(latLngList)
+                            .width(10F)
+                            .color(R.color.main_color))
+                        polyline.tag = track._id
+                        polylineMap[track._id] = polyline
+
+                        // 선택돼 있는 게 있으면 투명한 색으로 가져옴
+                        if (selectedTrackId != null) {
+                            marker.alpha = 0.3F
+                            polyline.color = R.color.selected_polyline_color
+                        }
                     }
-
-                    val polyline = mGoogleMap.addPolyline(PolylineOptions()
-                        .clickable(true)
-                        .addAll(latLngList)
-                        .width(10F)
-                        .color(R.color.main_color))
-                    polyline.tag = index
-
-                    polylineList.add(polyline)
-                    println("$index 끝남")
                 }
             }
-
-            println("다 그림")
-            updatingTrack = false
         }
     }
 
@@ -231,7 +214,10 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.O
                 mLocation = location
 
                 // 내 위치 마커 생성
-                mLocationMarker = mGoogleMap.addMarker(MarkerOptions().position(LatLng(location.latitude, location.longitude)).icon(BitmapDescriptorFactory.fromResource(R.drawable.round_circle_black_24dp)))
+                mLocationMarker = mGoogleMap.addMarker(MarkerOptions()
+                    .position(LatLng(location.latitude, location.longitude))
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.round_circle_black_24dp)))
+                mLocationMarker?.tag = "myLocation"
 
                 mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(location.latitude, location.longitude), 11.0f)) // 화면 이동
             }
@@ -264,37 +250,53 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.O
     }
 
     // 폴리라인이나 마커를 클릭해서 선택했을 때
-    private fun selectTrack(newSelectedIndex: Int) {
-        println("selectTrack 호출 $newSelectedIndex")
+    private fun selectTrack(newSelectedTrackId: String) {
+        println("selectTrack 호출 $newSelectedTrackId ${trackMap.size} ${markerMap.size} ${polylineMap.size}")
 
-        if (selectedTrackIndex == null) {
-            for (i in 0 until tracks.size) {
-                if (i != newSelectedIndex) {
-                    markerList[i].alpha = 0.3F
-                    polylineList[i].color = R.color.selected_polyline_color
+        if (selectedTrackId == null) {
+
+            // 선택되지 않은 마커, 폴리라인 색 투명하게 바꿈
+            for ((key, marker) in markerMap) {
+                if (key != newSelectedTrackId) {
+                    marker.alpha = 0.3F
+                    println(marker.tag)
                 }
             }
-            selectedTrackIndex = newSelectedIndex
+            for ((key, polyline) in polylineMap) {
+                if (key != newSelectedTrackId) {
+                    polyline.color = R.color.selected_polyline_color
+                }
+            }
+
+            selectedTrackId = newSelectedTrackId
 
             binding.slidingLayout.panelHeight = 1000 // 하단 바 올려줌
         } else {
-            markerList[selectedTrackIndex!!].alpha = 0.3F
-            polylineList[selectedTrackIndex!!].color = R.color.selected_polyline_color
+            markerMap[selectedTrackId]?.alpha = 0.3F
+            polylineMap[selectedTrackId]?.color = R.color.selected_polyline_color
 
-            markerList[newSelectedIndex].alpha = 1F
-            polylineList[newSelectedIndex].color = R.color.main_color
+            markerMap[newSelectedTrackId]?.alpha = 1F
+            polylineMap[newSelectedTrackId]?.color = R.color.main_color
 
-            selectedTrackIndex = newSelectedIndex
+            selectedTrackId = newSelectedTrackId
         }
 
-        binding.trackTitle.text = tracks[selectedTrackIndex!!].trackName
-        binding.trackDescription.text = tracks[selectedTrackIndex!!].description
-        binding.trackDistance.text = "${tracks[selectedTrackIndex!!].totalDistance}km"
+        binding.trackTitle.text = trackMap[selectedTrackId]?.trackName
+        binding.trackDescription.text = trackMap[selectedTrackId]?.description
+        binding.trackDistance.text = "${trackMap[selectedTrackId]?.totalDistance}km"
     }
 
     // 폴리라인 클릭 이벤트 처리
     override fun onPolylineClick(polyline: Polyline) {
-        selectTrack(polyline.tag as Int)
+        selectTrack("${polyline.tag}")
+    }
+
+    // 마커 클릭 처리
+    override fun onMarkerClick(marker: Marker): Boolean {
+        if (marker.tag != "myLocation") {
+            selectTrack("${marker.tag}")
+        }
+        return true // 기본 이벤트 발동 안함
     }
 
     // 권한 확인
@@ -360,9 +362,7 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.O
             }
             GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE -> { // 사용자 제스처
                 println("move reason: REASON_GESTURE")
-
-                // 선택된 트랙이 있으면 새로 불러오지 말고 없으면 새로 불러옴
-                updateTrack = selectedTrackIndex == null
+                updateTrack = true
             }
         }
     }
@@ -375,34 +375,33 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.O
 
             println("위치 경계: ${latLngBounds.southwest.longitude} ${latLngBounds.southwest.latitude} ${latLngBounds.northeast.longitude} ${latLngBounds.northeast.latitude}")
             initTracks(listOf(latLngBounds.southwest.longitude, latLngBounds.southwest.latitude, latLngBounds.northeast.longitude, latLngBounds.northeast.latitude))
-
-            selectedTrackIndex = null
         }
-    }
-
-    override fun onMarkerClick(marker: Marker): Boolean {
-        selectTrack(marker.tag as Int)
-        return true // 기본 이벤트 발동 안함
     }
 
     override fun onMapClick(latLng: LatLng) {
         println("onMapClick 호출")
 
         // 선택돼 있는 트랙이 있으면 취소함
-        if (selectedTrackIndex != null) {
+        if (selectedTrackId != null) {
             binding.slidingLayout.panelHeight = 0 // 하단 패널 내림
 
-            for (i in 0 until tracks.size) {
-                if (i != selectedTrackIndex) {
-                    markerList[i].alpha = 1F
-                    polylineList[i].color = R.color.main_color
+            // 선택되지 않은 마커, 폴리라인 정상으로 바꿈
+            for ((key, marker) in markerMap) {
+                if (key != selectedTrackId) {
+                    marker.alpha = 1F
+                }
+            }
+            for ((key, polyline) in polylineMap) {
+                if (key != selectedTrackId) {
+                    polyline.color = R.color.main_color
                 }
             }
 
-            selectedTrackIndex = null
+            selectedTrackId = null
         }
     }
 
+    // 비트맵 이미지 만드는 함수
     private fun createBitmapFromView(): Bitmap {
         trackMarker.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
         trackMarker.layout(0, 0, trackMarker.measuredWidth, trackMarker.measuredHeight)
