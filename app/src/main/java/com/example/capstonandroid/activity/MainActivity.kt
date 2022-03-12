@@ -8,20 +8,16 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Window
 import android.widget.Button
+import androidx.preference.PreferenceManager
+import androidx.preference.PreferenceManager.getDefaultSharedPreferences
 import com.example.capstonandroid.R
+import com.example.capstonandroid.Utils
 import com.example.capstonandroid.databinding.ActivityMainBinding
 import com.example.capstonandroid.fragment.HomeFragment
 import com.example.capstonandroid.fragment.MeFragment
 import com.example.capstonandroid.fragment.TrackFragment
-import com.example.capstonandroid.network.api.BackendApi
-import com.example.capstonandroid.network.RetrofitClient
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
 
 class MainActivity : AppCompatActivity() {
-
     private var _binding: ActivityMainBinding? = null
     private val binding get() = _binding!!
 
@@ -55,7 +51,6 @@ class MainActivity : AppCompatActivity() {
             println(it.itemId)
             when (it.itemId) {
                 R.id.homeFragment -> {
-
                     supportFragmentManager.beginTransaction().replace(R.id.fragment_container, HomeFragment()).commit()
                 }
                 R.id.trackFragment -> {
@@ -80,7 +75,7 @@ class MainActivity : AppCompatActivity() {
             println("실행 중")
 
             val intent = Intent(this, RecordActivity::class.java)
-            intent.putExtra("exerciseKind", PreferenceManager.getDefaultSharedPreferences(applicationContext).getString("exerciseKine", "running"))
+            intent.putExtra("exerciseKind", getSharedPreferences("record", MODE_PRIVATE).getString("exerciseKine", "running"))
             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT) // 액티비티 스택 내에 있으면 재실행 함
             startActivity(intent)
         }
