@@ -7,10 +7,10 @@
     tools:context=".fragment.RunningFragment">
 
     <Button
-        android:id="@+id/normal"
+        android:id="@+id/running_normal_match"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:text="일반"
+        android:text="혼자"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.202"
@@ -19,7 +19,7 @@
         app:layout_constraintVertical_bias="0.167"></Button>
 
     <Button
-        android:id="@+id/friendly_match"
+        android:id="@+id/running_friendly_match"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:text="친선"
@@ -31,7 +31,7 @@
         app:layout_constraintVertical_bias="0.499"></Button>
 
     <Button
-        android:id="@+id/rank_match"
+        android:id="@+id/running_rank_match"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:text="랭크"

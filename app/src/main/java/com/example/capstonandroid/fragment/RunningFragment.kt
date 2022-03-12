@@ -48,9 +48,9 @@ class RunningFragment : Fragment(), View.OnClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.normal.setOnClickListener(this)
-        binding.friendlyMatch.setOnClickListener(this)
-        binding.rankMatch.setOnClickListener(this)
+        binding.runningNormalMatch.setOnClickListener(this)
+        binding.runningFriendlyMatch.setOnClickListener(this)
+        binding.runningRankMatch.setOnClickListener(this)
     }
 
     companion object {
@@ -74,7 +74,27 @@ class RunningFragment : Fragment(), View.OnClickListener {
     }
 
     override fun onClick(view: View?) {
+        var matchType = ""
+
+        // 매치 방식에 따라 분기처리
+        when (view?.id) {
+            R.id.running_normal_match -> {
+                println("normal")
+                matchType = "normal"
+            }
+            R.id.running_friendly_match -> {
+                println("friendly")
+                matchType = "friendly"
+            }
+            R.id.running_rank_match -> {
+                println("rank")
+                matchType = "rank"
+            }
+        }
+
         val intent = Intent(activity, SelectTrackActivity::class.java)
+        intent.putExtra("exerciseKind", "running")
+        intent.putExtra("matchType", matchType)
         startActivity(intent)
     }
 }

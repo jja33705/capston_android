@@ -7,9 +7,6 @@ import com.example.capstonandroid.databinding.ActivityCompleteRecordBinding
 import com.example.capstonandroid.network.dto.Record
 import com.example.capstonandroid.network.api.BackendApi
 import com.example.capstonandroid.network.RetrofitClient
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import retrofit2.Retrofit
 
 class CompleteRecordActivity : AppCompatActivity() {
@@ -22,7 +19,7 @@ class CompleteRecordActivity : AppCompatActivity() {
 
     private lateinit var locationList: ArrayList<Location>
 
-    private lateinit var kind: String // 운동 종류
+    private lateinit var exerciseKind: String // 운동 종류
 
     private var second: Int = 0 // 시간
 
@@ -57,8 +54,8 @@ class CompleteRecordActivity : AppCompatActivity() {
 //        println("intent 넘어옴: $distance")
 //        avgSpeed = intent.getDoubleExtra("avgSpeed", 0.0)
 //        println("intent 넘어옴: $avgSpeed")
-//        kind = intent.getStringExtra("kind").toString()
-//        println(kind)
+//        exerciseKind = intent.getStringExtra("exerciseKind").toString()
+//        println(exerciseKind)
 
 
 
@@ -89,24 +86,24 @@ class CompleteRecordActivity : AppCompatActivity() {
 //
 //            })
 
-            val record: Record = Record(sumAltitude.toInt(), altitudes, avgSpeed, 99.99, coordinates, distance, kind, "public", speeds, second, seconds)
-            supplementService.storePost(record).enqueue(object : Callback<Record> {
-                override fun onResponse(call: Call<Record>, response: Response<Record>) {
-
-                    println(response.code())
-                    if (response.isSuccessful) {
-                        println("성공")
-                        println(response.body())
-                    } else {
-                        println("갔는데 망함")
-                    }
-                }
-
-                override fun onFailure(call: Call<Record>, t: Throwable) {
-                    println("실패")
-                    println(t.message)
-                }
-            })
+//            val record: Track = Track(sumAltitude.toInt(), altitudes, avgSpeed, 99.99, coordinates, distance, exerciseKind, "public", speeds, second, seconds)
+//            supplementService.storePost(record).enqueue(object : Callback<Track> {
+//                override fun onResponse(call: Call<Track>, response: Response<Track>) {
+//
+//                    println(response.code())
+//                    if (response.isSuccessful) {
+//                        println("성공")
+//                        println(response.body())
+//                    } else {
+//                        println("갔는데 망함")
+//                    }
+//                }
+//
+//                override fun onFailure(call: Call<Track>, t: Throwable) {
+//                    println("실패")
+//                    println(t.message)
+//                }
+//            })
         }
     }
 

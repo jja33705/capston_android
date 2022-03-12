@@ -2,11 +2,8 @@ package com.example.capstonandroid
 
 import android.annotation.SuppressLint
 import android.app.*
-import android.content.Context
 import android.content.Intent
 import android.location.Location
-import android.os.Binder
-import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
 import androidx.core.app.NotificationCompat
@@ -15,15 +12,11 @@ import androidx.preference.PreferenceManager
 import com.example.capstonandroid.activity.CompleteRecordActivity
 import com.example.capstonandroid.activity.RecordActivity
 import com.google.android.gms.location.*
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.tasks.Task
 import java.util.*
 import kotlin.collections.ArrayList
 
-class RecordService : Service() {
+class TrackRecordService : Service() {
 
     private lateinit var mNotificationManager: NotificationManager // 상단바에 뜨는 노티피케이션 매니저
 
@@ -50,11 +43,11 @@ class RecordService : Service() {
     private var isStarted = false // 시작했는지
 
     companion object {
-        private const val PREFIX = "com.example.capstonandroid.recordservice"
+        private const val PREFIX = "com.example.capstonandroid.trackrecordservice"
 
         const val NOTIFICATION_CHANNEL_ID: String = PREFIX
         const val NOTIFICATION_CHANNEL_NAME: String = PREFIX
-        const val NOTIFICATION_ID: Int = 1111
+        const val NOTIFICATION_ID: Int = 2222
 
         const val ACTION_BROADCAST = "$PREFIX.BROADCAST"
 
@@ -221,7 +214,7 @@ class RecordService : Service() {
                 startTimer()
             }
             COMPLETE_RECORD -> { // 기록 끝
-                val intent = Intent(this@RecordService, CompleteRecordActivity::class.java)
+                val intent = Intent(this@TrackRecordService, CompleteRecordActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
 
@@ -278,11 +271,11 @@ class RecordService : Service() {
         mFusedLocationClient.removeLocationUpdates(mLocationCallback) // 위치 업데이트 제거
         timer.cancel() // 타이머 제거
 
-        // 중지한 상태 저장
-        getSharedPreferences("record", MODE_PRIVATE)
+        // 내부 저장소에 중지된 것 기록
+        PreferenceManager.getDefaultSharedPreferences(application)
             .edit()
-            .putBoolean("isStarted", false)
-            .commit()
+            .putBoolean("IS_RECORDING", false)
+            .apply()
 
         stopForeground(true)
         stopSelf()

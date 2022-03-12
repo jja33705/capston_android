@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -27,7 +28,7 @@ class RecordActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mGoogleMap: GoogleMap // 구글맵 선언
 
-    private lateinit var kind: String // 운동 종류
+    private lateinit var exerciseKind: String // 운동 종류
 
     private lateinit var mBroadcastReceiver: MBroadcastReceiver // 브로드캐스트 리시버
 
@@ -35,7 +36,9 @@ class RecordActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private var mLocationMarker: Marker? = null // 내 위치 마커
 
-    private var isStarted: Boolean = false // 기록 시작됐는지
+    private var isStarted = false // 기록 시작됐는지
+
+    private var canStart = false // 서비스 다 초기화하고 위치정보 받아와서 시작 가능한 상태인지
 
     @SuppressLint("NewApi")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,27 +48,45 @@ class RecordActivity : AppCompatActivity(), OnMapReadyCallback {
         setContentView(binding.root)
 
         val intent: Intent = intent
-        kind = intent.getStringExtra("kind").toString()
-        println(kind)
+        exerciseKind = intent.getStringExtra("exerciseKind").toString()
+        println(exerciseKind)
 
         // 시작 버튼 초기화
         binding.startButton.setOnClickListener{
-            if (!isStarted) { // 아직 시작 안했을 때
-                println("버튼 클릭함")
+            println("시작 버튼 클릭함")
+
+            if (canStart) {
                 // 커맨드 보냄 (서비스는 한번 더 실행 안되니 커맨드가 보내진다.)
                 val intent = Intent(this@RecordActivity, RecordService::class.java)
                 intent.action = RecordService.START_RECORD
                 startForegroundService(intent)
 
                 isStarted = true
-                binding.startButton.setBackgroundResource(R.drawable.stop_button)
-            } else { // 시작 중일 때
-                val intent = Intent(this@RecordActivity, RecordService::class.java)
-                intent.action = RecordService.COMPLETE_RECORD
-                startForegroundService(intent)
 
-                finish()
+                // 시작한 상태 저장
+                getSharedPreferences("record", MODE_PRIVATE)
+                    .edit()
+                    .putString("exerciseKind", exerciseKind)
+                    .putBoolean("isStarted", true)
+                    .commit()
+
+                // 버튼 바꿈
+                binding.startButton.visibility = View.GONE
+                binding.stopButton.visibility = View.VISIBLE
+            } else {
+                Toast.makeText(this@RecordActivity, "위치 정보 초기화 중", Toast.LENGTH_SHORT).show()
             }
+
+        }
+
+        // 종료 버튼 초기화
+        binding.stopButton.setOnClickListener {
+            println("종료 버튼 클릭함")
+            val intent = Intent(this@RecordActivity, RecordService::class.java)
+            intent.action = RecordService.COMPLETE_RECORD
+            startForegroundService(intent)
+
+            finish()
         }
 
         val mapFragment = supportFragmentManager
@@ -93,7 +114,7 @@ class RecordActivity : AppCompatActivity(), OnMapReadyCallback {
         LocalBroadcastManager.getInstance(this).registerReceiver(mBroadcastReceiver, IntentFilter(RecordService.ACTION_BROADCAST))
 
         // 서비스 시작
-        val intent: Intent = Intent(this@RecordActivity, RecordService::class.java)
+        val intent = Intent(this@RecordActivity, RecordService::class.java)
         intent.action = RecordService.START_PROCESS
         startForegroundService(intent)
     }
@@ -203,7 +224,9 @@ class RecordActivity : AppCompatActivity(), OnMapReadyCallback {
                     // 내 위치 마커 생성
                     mLocationMarker = mGoogleMap.addMarker(MarkerOptions().position(LatLng(location.latitude, location.longitude)).icon(BitmapDescriptorFactory.fromResource(R.drawable.round_circle_black_24dp)))
 
-                    binding.startButton.isEnabled = true
+                    // 이떄부터 기록 시작 가능
+                    canStart = true
+                    binding.tvInformation.visibility = View.GONE
                 }
                 RecordService.BEFORE_START_LOCATION_UPDATE -> { // 시작 전 위치 업데이트
                     val location = intent?.getParcelableExtra<Location>(RecordService.LOCATION)!!
@@ -213,6 +236,12 @@ class RecordActivity : AppCompatActivity(), OnMapReadyCallback {
                 }
                 RecordService.IS_STARTED -> { // 시작 중인데 액티비티 재실행 시
                     isStarted = true
+
+                    binding.tvInformation.visibility = View.GONE
+
+                    // 버튼 바꿈
+                    binding.startButton.visibility = View.GONE
+                    binding.stopButton.visibility = View.VISIBLE
 
                     val second = intent?.getIntExtra(RecordService.SECOND, 0)
                     binding.tvTime.text = Utils.timeToText(second)
@@ -239,9 +268,6 @@ class RecordActivity : AppCompatActivity(), OnMapReadyCallback {
                     }
 
                     println("다 그림")
-
-                    binding.startButton.setBackgroundResource(R.drawable.stop_button)
-                    binding.startButton.isEnabled = true
                 }
                 RecordService.RECORD_START_LOCATION -> { // 기록 시작 위치
                     println("업데이트 시작 위치 받음")

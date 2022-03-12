@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import com.example.capstonandroid.R
 import com.example.capstonandroid.activity.SelectTrackActivity
 import com.example.capstonandroid.databinding.FragmentRidingBinding
@@ -48,9 +49,10 @@ class RidingFragment : Fragment(), View.OnClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.normal.setOnClickListener(this)
-        binding.friendlyMatch.setOnClickListener(this)
-        binding.rankMatch.setOnClickListener(this)
+        // 버튼 클릭 리스너 등록
+        binding.ridingNormalMatch.setOnClickListener(this)
+        binding.ridingFriendlyMatch.setOnClickListener(this)
+        binding.ridingRankMatch.setOnClickListener(this)
     }
 
     companion object {
@@ -74,7 +76,28 @@ class RidingFragment : Fragment(), View.OnClickListener {
     }
 
     override fun onClick(view: View?) {
+        var matchType = ""
+
+        // 매치 방식에 따라 분기처리
+        when (view?.id) {
+            R.id.riding_normal_match -> {
+                println("normal")
+                matchType = "normal"
+            }
+            R.id.riding_friendly_match -> {
+                println("friendly")
+                matchType = "friendly"
+            }
+            R.id.riding_rank_match -> {
+                println("rank")
+                matchType = "rank"
+            }
+        }
+
+
         val intent = Intent(activity, SelectTrackActivity::class.java)
+        intent.putExtra("exerciseKind", "riding")
+        intent.putExtra("matchType", matchType)
         startActivity(intent)
     }
 }
