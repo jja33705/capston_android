@@ -7,7 +7,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
-import android.graphics.Color
 import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -17,6 +16,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.example.capstonandroid.R
+import com.example.capstonandroid.R.color.red
 import com.example.capstonandroid.TrackRecordService
 import com.example.capstonandroid.Utils
 import com.example.capstonandroid.databinding.ActivityTrackRecordBinding
@@ -318,7 +318,7 @@ class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback {
                             BitmapDescriptorFactory.fromResource(R.drawable.round_circle_black_24dp)))
 
                     binding.tvInformation.text = "시작 가능 위치로 이동하세요."
-                    binding.tvInformation.setBackgroundColor(R.color.red)
+                    binding.tvInformation.setBackgroundColor(red)
 
                     checkCanStartLocation() // 시작 가능 위치인지 확인
                 }

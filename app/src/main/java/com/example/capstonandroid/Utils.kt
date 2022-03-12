@@ -2,26 +2,25 @@ package com.example.capstonandroid
 
 import android.content.Context
 import android.location.Location
-import androidx.preference.PreferenceManager
 import java.text.DateFormat
 import java.util.*
 
 class Utils {
     companion object {
         const val KEY_REQUESTING_LOCATION_UPDATES = "requesting_location_updates"
-
-        // location update 중인지 반환
-        fun requestingLocationUpdates(context: Context): Boolean {
-            return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(KEY_REQUESTING_LOCATION_UPDATES, false)
-        }
-
-        // location update 값 수정
-        fun setRequestingLocationUpdates(context: Context, requestingLocationUpdates: Boolean) {
-            PreferenceManager.getDefaultSharedPreferences(context)
-                .edit()
-                .putBoolean(KEY_REQUESTING_LOCATION_UPDATES, requestingLocationUpdates)
-                .apply()
-        }
+//
+//        // location update 중인지 반환
+//        fun requestingLocationUpdates(context: Context): Boolean {
+//            return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(KEY_REQUESTING_LOCATION_UPDATES, false)
+//        }
+//
+//        // location update 값 수정
+//        fun setRequestingLocationUpdates(context: Context, requestingLocationUpdates: Boolean) {
+//            PreferenceManager.getDefaultSharedPreferences(context)
+//                .edit()
+//                .putBoolean(KEY_REQUESTING_LOCATION_UPDATES, requestingLocationUpdates)
+//                .apply()
+//        }
 
         // location 받아서 위도 경도로 반환
         fun getLocationText(location: Location?): String {
