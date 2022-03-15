@@ -20,7 +20,7 @@
         ></EditText>
 
     <EditText
-        android:id="@+id/editText"
+        android:id="@+id/et_description"
         android:layout_width="0dp"
         android:layout_height="300dp"
         android:hint="내용"

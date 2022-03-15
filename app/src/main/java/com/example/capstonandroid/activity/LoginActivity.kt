@@ -77,6 +77,8 @@ class LoginActivity : AppCompatActivity() {
 
         })
 
+//        startActivity(nextIntent)
+
 
 
 

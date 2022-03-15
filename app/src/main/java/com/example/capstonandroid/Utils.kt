@@ -7,37 +7,6 @@ import java.util.*
 
 class Utils {
     companion object {
-        const val KEY_REQUESTING_LOCATION_UPDATES = "requesting_location_updates"
-//
-//        // location update 중인지 반환
-//        fun requestingLocationUpdates(context: Context): Boolean {
-//            return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(KEY_REQUESTING_LOCATION_UPDATES, false)
-//        }
-//
-//        // location update 값 수정
-//        fun setRequestingLocationUpdates(context: Context, requestingLocationUpdates: Boolean) {
-//            PreferenceManager.getDefaultSharedPreferences(context)
-//                .edit()
-//                .putBoolean(KEY_REQUESTING_LOCATION_UPDATES, requestingLocationUpdates)
-//                .apply()
-//        }
-
-        // location 받아서 위도 경도로 반환
-        fun getLocationText(location: Location?): String {
-            return if(location == null) {
-                "Unknown location"
-            } else {
-                "(${location.latitude}, ${location.longitude})"
-            }
-        }
-
-        // 없어두 됨
-        fun getLocationTitle(context: Context): String {
-            return "abcd"
-//            return context.getString(R.string.location_updated,
-//                DateFormat.getDateTimeInstance().format(Date()))
-        }
-
         fun timeToText(time: Int): String {
             return if (time == 0) {
                 "00:00:00"

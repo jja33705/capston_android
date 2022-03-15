@@ -281,6 +281,9 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.O
             selectedTrackId = newSelectedTrackId
         }
 
+        println(trackMap[selectedTrackId]?.trackName)
+        println(trackMap[selectedTrackId]?.description)
+        println("${trackMap[selectedTrackId]?.totalDistance}km")
         binding.trackTitle.text = trackMap[selectedTrackId]?.trackName
         binding.trackDescription.text = trackMap[selectedTrackId]?.description
         binding.trackDistance.text = "${trackMap[selectedTrackId]?.totalDistance}km"
