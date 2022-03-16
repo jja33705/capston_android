@@ -9,7 +9,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 object RetrofitClient {
     private var instance: Retrofit? = null
     private val gson = GsonBuilder().setLenient().create()
-    private const val BASE_URL = "http://3.35.239.14/api/"
+    private const val BASE_URL = "https://2yubi.shop/api/"
 
 
     fun getInstance(): Retrofit {

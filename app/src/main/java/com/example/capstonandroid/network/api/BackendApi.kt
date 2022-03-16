@@ -30,16 +30,17 @@ interface BackendApi {
     @POST("register") //회원가입 요청(Register) 하고 응답받는것
     fun registerPost(@Body register: Register): Call<RegisterResponse>
 
-
     @GET("user") // 유저확인 ()
-    fun userGet(@Header("Authorization") token: String): Call<Int>
+    fun userGet(@Header("Authorization") token: String): Call<LoginUserResponse>
 
     @POST("logout") // 유저 로그아웃
     fun logOut(@Header("Authorization") token: String): Call<LogoutResponse>
 
-    @POST("post/index") // SNS 메인화면~
-    fun postIndex(@Header("Authorization") token: String): Call<IndexResponse>
+    @GET("post/index") // SNS 메인화면~
+    fun SNSIndex(@Header("Authorization") token: String): Call<SNSResponse>
 
+    @GET("record/myIndex") // 내 기록 불러오기!
+    fun myIndex(@Header("Authorization")token: String): Call<IndexResponse>
 
     //    @POST("post/store") // 기록 저장
     //    fun storePost(@Body record: Track) : Call<Track>

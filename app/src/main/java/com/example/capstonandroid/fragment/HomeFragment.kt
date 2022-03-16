@@ -1,18 +1,24 @@
 package com.example.capstonandroid.fragment
 
+import ListViewAdapter2
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.capstonandroid.R
 import com.example.capstonandroid.activity.MainActivity
+import com.example.capstonandroid.activity.SNSDetailsActivity
 import com.example.capstonandroid.databinding.FragmentHomeBinding
-import com.example.capstonandroid.network.dto.Login
-import com.example.capstonandroid.network.dto.LogoutResponse
 import com.example.capstonandroid.network.api.BackendApi
 import com.example.capstonandroid.network.RetrofitClient
+import com.example.capstonandroid.network.dto.*
+import kotlinx.android.synthetic.main.fragment_home.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -56,17 +62,6 @@ class HomeFragment : Fragment() {
 
 
 
-//          edittext 이메일 값 받아 오기
-            var email = "test@gmail.com"
-//            println(email)
-
-//          edittext 비밀번호 값 받아오기
-            var password = "1234"
-
-            val login = Login(
-                email = email.toString(),
-                password = password.toString()
-            )
 
 
             val bindinghome = view?.let { it1 -> FragmentHomeBinding.bind(it1) }
@@ -88,9 +83,10 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val bindinghome = FragmentHomeBinding.bind(view)
-        bindinghome.fragmentHomeA.setText("")
 
         val activity = activity as MainActivity?
+
+        val nextIntent = Intent(requireContext(), SNSDetailsActivity::class.java)
 
 //      함수 초기화
         initRetrofit()
@@ -102,41 +98,108 @@ class HomeFragment : Fragment() {
         println(TOKEN)
 
 
+                supplementService.SNSIndex(TOKEN.toString()).enqueue(object : Callback<SNSResponse>{
+                    override fun onResponse(
+                        call: Call<SNSResponse>,
+                        response: Response<SNSResponse>
+                    ) {
 
+                        if(response.isSuccessful) {
+                            println(response.body())
 
+                            var SNSResponse: SNSResponse? = response.body()
 
+//                            println(SNSResponse!!.data[0].title)
 
+                            if (SNSResponse!!.data.count()==0){
+                                bindinghome.message.visibility = View.VISIBLE
+                                println("주행 한 기록이 없습니다.")
+                            }
 
-        bindinghome.logout.setOnClickListener {
-            supplementService.logOut(TOKEN.toString()).enqueue(object : Callback<LogoutResponse> {
-                override fun onResponse(
-                    call: Call<LogoutResponse>,
-                    response: Response<LogoutResponse>
-                ) {
-                    if (response.isSuccessful) {
-                        println("로그아웃이 성공되었습니다! 성공 ")
-//                  콜백 응답으로 온것
-                        println(response.body())
+                            val items2 = mutableListOf<ListViewItem2>()
 
+                            var usersize: Int = SNSResponse!!.data.size
+                            println(usersize)
 
+                            for (i in 1..usersize) {
+                                items2.add(
+                                    ListViewItem2(
+                                        ContextCompat.getDrawable(
+                                            requireContext(),
+                                            R.drawable.sakai
+                                        )!!,
+                                        SNSResponse!!.data[i-1].title,
+                                        "작성일자 : " + SNSResponse!!.data[i-1].updated_at
+                                    )
+                                )
 
+                            }
+                            val adapter2 = ListViewAdapter2(items2)
+                            listView2.adapter = adapter2
+                            listView2.setOnItemClickListener { parent: AdapterView<*>, view: View, position: Int, id: Long ->
+                                val item2 = parent.getItemAtPosition(position) as ListViewItem2
 
+                                nextIntent.putExtra("number", position.toString())
+                                println(position.toString())
+                                startActivity(nextIntent)
+                            }
+                        }
+//
 
-                    } else {
-                        println("갔지만 실패")
-                        println(response.body())
-                        println(response.message())
-                        println(response.code())
+//                    var user: User? = loginResponse!!.user
+////                        데이터 클래스 USER 사용방법
+////                        var user: User? = loginResponse!!.user
+////                        print(user!!.birth)
+//                    println(user!!.name)
+//                    println(user!!.posts[0].title)
+//
+//                    val items = mutableListOf<ListViewItem>()
+//
+//
+//                    println(user!!.posts[1].title)
+////                    for (i in user!!.posts.)
+//
+//                    println(user!!.posts.size) //2
+//                     var usersize : Int = user!!.posts.size
+//                    for (i in usersize downTo 1){
+//                        items.add(
+//                            ListViewItem(ContextCompat.getDrawable(requireContext(),
+//                            R.drawable.sakai)!!,
+//                            user!!.posts[usersize-1].title,
+//                            "작성일자 : " + user!!.posts[usersize-1].updated_at)
+//                        )
+//                            --usersize
+//
+//
+//                    }
+//
+//                    val adapter = ListViewAdapter(items)
+//                    listView.adapter = adapter
+//                    listView.setOnItemClickListener { parent: AdapterView<*>, view: View, position: Int, id: Long -> val item = parent.getItemAtPosition(position) as ListViewItem
+//                        Toast.makeText(requireContext(), item.title, Toast.LENGTH_SHORT).show() }
+//
+//                }
+//                else{
+//
+//                    println("갔지만 실패")
+//                    println(response.body())
+//                    println(response.message())
+//                    println(response.code())
+//                }
+
+                        else{
+
+                        }
                     }
-                }
 
-                override fun onFailure(call: Call<LogoutResponse>, t: Throwable) {
-                    TODO("Not yet implemented")
-                }
-            })
+                    override fun onFailure(call: Call<SNSResponse>, t: Throwable) {
+                        TODO("Not yet implemented")
+                    }
+                })
 
 
-            }
+
+
         }
 //        binding..setOnClickListener {
 //            val intent = Intent(this, SubActivity::class.java)

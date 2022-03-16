@@ -56,14 +56,28 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
-                android:text="로그인" />
+                android:text="Signin" />
 
-            <Button
-                android:id="@+id/registerbutton"
-
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_marginTop="15dp"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="회원가입" />
+                android:text="계정을 잊으셨나요?"></TextView>
+            <TextView
+                android:layout_marginTop="15dp"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="또는"></TextView>
+            <Button
+                android:layout_marginTop="15dp"
+                android:id="@+id/registerbutton"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="새로운 계정 생성" />
+
         </LinearLayout>
 
     </LinearLayout>
