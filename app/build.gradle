@@ -7,6 +7,8 @@ plugins {
     id 'com.google.gms.google-services'
 }
 
+apply plugin: 'kotlin-kapt'
+
 
 android {
     compileSdk 31
@@ -45,9 +47,15 @@ android {
 }
 
 dependencies {
+    // 안드로이드 내부 db (room 라이브러리)
+    def roomVersion = "2.4.2"
+    implementation("androidx.room:room-runtime:$roomVersion")
+    kapt("androidx.room:room-compiler:$roomVersion")
+    implementation("androidx.room:room-ktx:$roomVersion")
+
     implementation 'com.github.bumptech.glide:glide:4.12.0' // 이미지로딩 라이브러리
 
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9") // 코루틴
 
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'com.sothree.slidinguppanel:library:3.4.0'
@@ -57,6 +65,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:19.0.1'
     implementation 'com.google.android.gms:play-services-maps:18.0.1'
 
+    // http 통신 라이브러리 (retrofit2)
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     implementation 'com.google.code.gson:gson:2.8.7'

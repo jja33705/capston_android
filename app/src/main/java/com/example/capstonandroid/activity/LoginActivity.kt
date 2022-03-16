@@ -8,7 +8,6 @@ import com.example.capstonandroid.network.dto.Login
 import com.example.capstonandroid.network.dto.LoginResponse
 import com.example.capstonandroid.network.api.BackendApi
 import com.example.capstonandroid.network.RetrofitClient
-import com.example.capstonandroid.network.dto.LoginUserResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -36,6 +35,59 @@ class LoginActivity : AppCompatActivity() {
 
         // 함수 초기화
         initRetrofit()
+
+
+
+        val nextIntent = Intent(this, MainActivity::class.java)
+
+
+
+
+
+        val sharedPreference = getSharedPreferences("other", 0)
+
+//      이 타입이 디폴트 값
+        var TOKEN = "Bearer " + sharedPreference.getString("TOKEN","")
+        println(TOKEN)
+
+
+        supplementService.userGet(TOKEN.toString()).enqueue(object : Callback<Int> {
+            override fun onResponse(call: Call<Int>, response: Response<Int>) {
+
+                if(response.isSuccessful){
+                    println("다음 페이지 넘기기")
+//                  콜백 응답으로 온것
+                    println(response.body())
+
+
+                    startActivity(nextIntent)
+
+
+                }else {
+                    println("갔지만 실패")
+                    println(response.body())
+                    println(response.message())
+                    println(response.code())
+                }
+            }
+
+            override fun onFailure(call: Call<Int>, t: Throwable) {
+
+            }
+
+        })
+
+//        startActivity(nextIntent)
+
+
+
+
+
+
+
+
+
+
 
         // 변수 만들기
 

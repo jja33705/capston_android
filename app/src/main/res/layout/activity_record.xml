@@ -143,7 +143,7 @@
             >
         </androidx.appcompat.widget.AppCompatButton>
 
-        <androidx.appcompat.widget.AppCompatButton
+        <Button
             android:id="@+id/stop_button"
             android:layout_width="80dp"
             android:layout_height="80dp"
@@ -154,7 +154,7 @@
             android:textSize="20dp"
             android:visibility="gone"
             >
-        </androidx.appcompat.widget.AppCompatButton>
+        </Button>
 
     </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
