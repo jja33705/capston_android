@@ -47,37 +47,37 @@ class LoginActivity : AppCompatActivity() {
         val sharedPreference = getSharedPreferences("other", 0)
 
 //      이 타입이 디폴트 값
-        var TOKEN = "Bearer " + sharedPreference.getString("TOKEN","")
-        println(TOKEN)
+        var token = "Bearer " + sharedPreference.getString("TOKEN","")
+        println(token)
 
 
-        supplementService.userGet(TOKEN.toString()).enqueue(object : Callback<Int> {
-            override fun onResponse(call: Call<Int>, response: Response<Int>) {
+//        supplementService.userGet(token).enqueue(object : Callback<Int> {
+//            override fun onResponse(call: Call<Int>, response: Response<Int>) {
+//
+//                if(response.isSuccessful){
+//                    println("다음 페이지 넘기기")
+////                  콜백 응답으로 온것
+//                    println(response.body())
+//
+//
+//                    startActivity(nextIntent)
+//
+//
+//                }else {
+//                    println("갔지만 실패")
+//                    println(response.body())
+//                    println(response.message())
+//                    println(response.code())
+//                }
+//            }
+//
+//            override fun onFailure(call: Call<Int>, t: Throwable) {
+//
+//            }
+//
+//        })
 
-                if(response.isSuccessful){
-                    println("다음 페이지 넘기기")
-//                  콜백 응답으로 온것
-                    println(response.body())
-
-
-                    startActivity(nextIntent)
-
-
-                }else {
-                    println("갔지만 실패")
-                    println(response.body())
-                    println(response.message())
-                    println(response.code())
-                }
-            }
-
-            override fun onFailure(call: Call<Int>, t: Throwable) {
-
-            }
-
-        })
-
-//        startActivity(nextIntent)
+        startActivity(nextIntent)
 
 
 
@@ -144,12 +144,12 @@ class LoginActivity : AppCompatActivity() {
 //                        var user: User? = loginResponse!!.user
 //                        print(user!!.birth)
 
-                        var TOKEN: String = loginResponse!!.message
+                        var token: String = loginResponse!!.message
 
                         val sharedPreference = getSharedPreferences("other", 0)
                         val editor = sharedPreference.edit()
-                        editor.putString("TOKEN", TOKEN)
-                        println("로그인 부분 토큰 값"+ TOKEN)
+                        editor.putString("TOKEN", token)
+                        println("로그인 부분 토큰 값"+ token)
                         editor.apply()
 
 

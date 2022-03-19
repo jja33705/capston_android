@@ -44,7 +44,7 @@ class RecordActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private var mLocationMarker: Marker? = null // 내 위치 마커
 
-    private var canStart = false // 서비스 다 초기화하고 위치정보 받아와서 시작 가능한 상태인지
+    private var gotFirstLocation = false // 서비스 다 초기화하고 위치정보 받아와서 시작 가능한 상태인지
 
     @SuppressLint("NewApi")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,7 +67,7 @@ class RecordActivity : AppCompatActivity(), OnMapReadyCallback {
         binding.startButton.setOnClickListener{
             println("시작 버튼 클릭함")
 
-            if (canStart) {
+            if (gotFirstLocation) {
                 // 시작한 상태 저장
                 getSharedPreferences("record", MODE_PRIVATE)
                     .edit()
@@ -225,15 +225,6 @@ class RecordActivity : AppCompatActivity(), OnMapReadyCallback {
 
             // flag 에 따라 분기처리
             when (intent?.getStringExtra("flag")) {
-                RecordService.LAST_LAT_LNG -> { // 마지막 위치
-                    val lastLatLng = intent?.getParcelableExtra<LatLng>(RecordService.LAT_LNG)!!
-                    println("리시버로 마지막 위치 받음 ${lastLatLng.latitude}, ${lastLatLng.longitude}")
-
-                    mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(lastLatLng, 18.0f)) // 화면 이동
-
-                    // 내 위치 마커 생성
-                    mLocationMarker = mGoogleMap.addMarker(MarkerOptions().position(lastLatLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.round_circle_black_24dp)))
-                }
                 RecordService.BEFORE_START_LOCATION_UPDATE -> { // 시작 전 위치 업데이트
                     val latLng = intent?.getParcelableExtra<LatLng>(RecordService.LAT_LNG)!!
                     println("리시버로 위치 받음 ${latLng.latitude}, ${latLng.longitude}")
@@ -241,8 +232,14 @@ class RecordActivity : AppCompatActivity(), OnMapReadyCallback {
                     mLocationMarker?.position = latLng // 마커 이동
 
                     // 이떄부터 기록 시작 가능 (마지막 위치는 부정확안 경향이 있다.)
-                    if (!canStart) {
-                        canStart = true
+                    if (!gotFirstLocation) {
+                        gotFirstLocation = true
+
+                        mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 18.0f)) // 화면 이동
+
+                        // 내 위치 마커 생성
+                        mLocationMarker = mGoogleMap.addMarker(MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.round_circle_black_24dp)))
+
                         binding.tvInformation.visibility = View.GONE
                     }
                 }

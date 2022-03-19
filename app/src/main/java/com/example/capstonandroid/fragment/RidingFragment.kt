@@ -82,15 +82,15 @@ class RidingFragment : Fragment(), View.OnClickListener {
         when (view?.id) {
             R.id.riding_normal_match -> {
                 println("normal")
-                matchType = "normal"
+                matchType = "혼자하기"
             }
             R.id.riding_friendly_match -> {
                 println("friendly")
-                matchType = "friendly"
+                matchType = "친선"
             }
             R.id.riding_rank_match -> {
                 println("rank")
-                matchType = "rank"
+                matchType = "랭크전"
             }
         }
 

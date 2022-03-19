@@ -29,6 +29,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.android.gms.tasks.Task
+import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import kotlinx.coroutines.*
 import retrofit2.Retrofit
 
@@ -251,7 +252,11 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.O
 
     // 폴리라인이나 마커를 클릭해서 선택했을 때
     private fun selectTrack(newSelectedTrackId: String) {
-        println("selectTrack 호출 $newSelectedTrackId ${trackMap.size} ${markerMap.size} ${polylineMap.size}")
+        println("selectTrack 호출 $selectedTrackId $newSelectedTrackId ${trackMap.size} ${markerMap.size} ${polylineMap.size}")
+
+        if (selectedTrackId == newSelectedTrackId) { // 같은 것을 선택하면 그냥 리턴
+            return
+        }
 
         if (selectedTrackId == null) {
 
@@ -270,7 +275,7 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.O
 
             selectedTrackId = newSelectedTrackId
 
-            binding.slidingLayout.panelHeight = 1000 // 하단 바 올려줌
+            binding.slidingLayout.panelState = SlidingUpPanelLayout.PanelState.ANCHORED // 하단 바 올려줌
         } else {
             markerMap[selectedTrackId]?.alpha = 0.3F
             polylineMap[selectedTrackId]?.color = R.color.selected_polyline_color
@@ -281,9 +286,12 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.O
             selectedTrackId = newSelectedTrackId
         }
 
+        println("높이: ${binding.slidingLayout.panelHeight}")
+        println(selectedTrackId)
         println(trackMap[selectedTrackId]?.trackName)
         println(trackMap[selectedTrackId]?.description)
         println("${trackMap[selectedTrackId]?.totalDistance}km")
+        println(trackMap[selectedTrackId])
         binding.trackTitle.text = trackMap[selectedTrackId]?.trackName
         binding.trackDescription.text = trackMap[selectedTrackId]?.description
         binding.trackDistance.text = "${trackMap[selectedTrackId]?.totalDistance}km"
@@ -386,7 +394,9 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.O
 
         // 선택돼 있는 트랙이 있으면 취소함
         if (selectedTrackId != null) {
-            binding.slidingLayout.panelHeight = 0 // 하단 패널 내림
+            selectedTrackId = null
+
+            binding.slidingLayout.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
 
             // 선택되지 않은 마커, 폴리라인 정상으로 바꿈
             for ((key, marker) in markerMap) {
@@ -399,8 +409,6 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.O
                     polyline.color = R.color.main_color
                 }
             }
-
-            selectedTrackId = null
         }
     }
 

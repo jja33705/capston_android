@@ -66,7 +66,6 @@ class RecordService : Service() {
 
         // flag
         const val BEFORE_START_LOCATION_UPDATE = "$PREFIX.BEFORE_START_LOCATION_UPDATE"
-        const val LAST_LAT_LNG = "LAST_LAT_LNG"
         const val AFTER_START_UPDATE = "AFTER_START_UPDATE"
         const val IS_STARTED = "IS_STARTED"
         const val RECORD_START_LAT_LNG = "$PREFIX.RECORD_START_LAT_LNG"
@@ -207,23 +206,26 @@ class RecordService : Service() {
                 }
             }
             START_RECORD -> { // 기록 시작
-                isStarted = true
+                CoroutineScope(Dispatchers.Main).launch {
+                    isStarted = true
 
-                beforeLocation = mLocation
+                    beforeLocation = mLocation
 
-                // db에 저장하고 시작위치 보냄
-                CoroutineScope(Dispatchers.IO).launch {
-                    gpsDataDao.deleteAll()
-                    gpsDataDao.insertGpsData(GpsData(second, mLocation.latitude, mLocation.longitude, mLocation.speed, distance, mLocation.altitude))
+                    // 시작위치 db에 저장
+                    launch(Dispatchers.IO) {
+                        gpsDataDao.deleteAll()
+                        gpsDataDao.insertGpsData(GpsData(second, mLocation.latitude, mLocation.longitude, mLocation.speed, distance, mLocation.altitude))
+                    }
+
+                    // 시작 위치 보냄
+                    val intent = Intent(ACTION_BROADCAST)
+                    intent.putExtra("flag", RECORD_START_LAT_LNG)
+                    intent.putExtra(LAT_LNG, LatLng(mLocation.latitude, mLocation.longitude))
+                    LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intent)
+
+                    // 타이머 시작
+                    startTimer()
                 }
-
-                val intent = Intent(ACTION_BROADCAST)
-                intent.putExtra("flag", RECORD_START_LAT_LNG)
-                intent.putExtra(LAT_LNG, LatLng(mLocation.latitude, mLocation.longitude))
-                LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intent)
-
-                // 타이머 시작
-                startTimer()
             }
             COMPLETE_RECORD -> { // 기록 끝
                 val intent = Intent(this@RecordService, CompleteRecordActivity::class.java)
@@ -231,7 +233,6 @@ class RecordService : Service() {
                 intent.putExtra("avgSpeed", avgSpeed)
                 intent.putExtra("kcal", 30)
                 intent.putExtra("sumAltitude", sumAltitude)
-                intent.putExtra("distance", distance)
                 intent.putExtra("second", second)
 
                 startActivity(intent)
@@ -255,11 +256,6 @@ class RecordService : Service() {
             } else {
                 println("마지막 위치 잘 가져옴, 위도: ${location.latitude}, 경도: ${location.longitude}")
                 mLocation = location
-
-                val intent = Intent(ACTION_BROADCAST)
-                intent.putExtra("flag", LAST_LAT_LNG)
-                intent.putExtra(LAT_LNG, LatLng(mLocation.latitude, mLocation.longitude))
-                LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intent)
             }
         }
 
