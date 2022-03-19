@@ -3,28 +3,42 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:orientation="vertical"
     android:layout_height="match_parent"
-    android:background="@drawable/gradation">
+    android:background="@drawable/gradation"
+    tools:context=".activity.MainActivity">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
-        android:id="@+id/fragment_home_a"
-        android:layout_width="wrap_content"
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="home"
-        android:textSize="100sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:background="#2AC1BC"
+        android:gravity="center"
+        android:padding="16dp"
+        android:text="배달의 민족\n공지사항"
+        android:textColor="@color/white"
+        android:textSize="32sp"
+        android:textStyle="bold" />
 
-    <Button
-        android:id="@+id/logout"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_baemin_notice"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="8dp"/>
+
+    <TextView
+        android:id="@+id/message"
+        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="로그아웃"
+        android:text="SNS 기록이 없습니다!"
+        android:textSize="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"></Button>
+        app:layout_constraintTop_toTopOf="parent"></TextView>
+
+
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -41,51 +41,14 @@ class LoginActivity : AppCompatActivity() {
         val nextIntent = Intent(this, MainActivity::class.java)
 
 
-
-
-
-        val sharedPreference = getSharedPreferences("other", 0)
+        val sharedPreference = getSharedPreferences("other", MODE_PRIVATE)
 
 //      이 타입이 디폴트 값
         var token = "Bearer " + sharedPreference.getString("TOKEN","")
         println(token)
 
 
-//        supplementService.userGet(token).enqueue(object : Callback<Int> {
-//            override fun onResponse(call: Call<Int>, response: Response<Int>) {
-//
-//                if(response.isSuccessful){
-//                    println("다음 페이지 넘기기")
-////                  콜백 응답으로 온것
-//                    println(response.body())
-//
-//
-//                    startActivity(nextIntent)
-//
-//
-//                }else {
-//                    println("갔지만 실패")
-//                    println(response.body())
-//                    println(response.message())
-//                    println(response.code())
-//                }
-//            }
-//
-//            override fun onFailure(call: Call<Int>, t: Throwable) {
-//
-//            }
-//
-//        })
-
-        startActivity(nextIntent)
-
-
-
-
-
-
-
-
+//        startActivity(nextIntent)
 
 
 
@@ -144,7 +107,8 @@ class LoginActivity : AppCompatActivity() {
 //                        var user: User? = loginResponse!!.user
 //                        print(user!!.birth)
 
-                        var token: String = loginResponse!!.message
+                        var token: String = loginResponse!!.access_token
+                        println(token)
 
                         val sharedPreference = getSharedPreferences("other", 0)
                         val editor = sharedPreference.edit()
@@ -157,6 +121,7 @@ class LoginActivity : AppCompatActivity() {
                         startActivity(nextIntent)
 
                     }else {
+                        println("로그인 실패했찌만 "+ token)
                         println("갔지만 실패")
                         println(response.body())
                         println(response.message())

@@ -1,8 +1,6 @@
 package com.example.capstonandroid.network.dto
 
-import android.graphics.drawable.Drawable
-
-data class Post(
+data class PostX(
     val altitude: Int,
     val average_speed: Double,
     val calorie: Double,
@@ -13,6 +11,7 @@ data class Post(
     val gps_id: Int,
     val id: Int,
     val img: Any,
+    val kind: String,
     val mmr: Int,
     val range: String,
     val time: Int,

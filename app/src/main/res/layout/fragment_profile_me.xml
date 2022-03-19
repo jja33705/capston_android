@@ -215,7 +215,11 @@
 <!--            android:text="高度"></Button>-->
 
 
-
+        <Button
+            android:id="@+id/logout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="로그아웃"></Button>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

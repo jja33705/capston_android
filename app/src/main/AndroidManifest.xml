@@ -16,12 +16,25 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CapstonAndroid"
         android:usesCleartextTraffic="true">
+        <activity
+            android:name=".activity.IntroActivity"
+            android:exported="true" >
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activity.SNSDetailsActivity"
+            android:exported="false" />
+
         <service
             android:name=".TrackRecordService"
             android:enabled="true"
             android:exported="true"
             android:foregroundServiceType="location" />
-
         <service
             android:name=".RecordService"
             android:enabled="true"
@@ -34,7 +47,6 @@
         <activity
             android:name=".activity.CompleteRecordActivity"
             android:exported="false" />
-
         <activity
             android:name=".activity.TrackRecordActivity"
             android:exported="false"
@@ -50,17 +62,10 @@
         <activity
             android:name=".activity.LoginActivity"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
-
         <activity
             android:name=".activity.MainActivity"
-            android:exported="true"></activity>
-
+            android:exported="true" />
         <activity
             android:name=".activity.RecordActivity"
             android:exported="false"
