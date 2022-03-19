@@ -3,14 +3,11 @@ package com.example.capstonandroid.activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
-import android.util.Log
 import com.example.capstonandroid.R
 import com.example.capstonandroid.databinding.ActivityLoginBinding
 import com.example.capstonandroid.network.RetrofitClient
 import com.example.capstonandroid.network.api.BackendApi
 import com.example.capstonandroid.network.dto.LoginUserResponse
-import kotlinx.coroutines.delay
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -33,25 +30,30 @@ class IntroActivity : AppCompatActivity() {
 
         val mainIntent = Intent(this,MainActivity::class.java)
 
-        val sharedPreference = getSharedPreferences("other", 0)
+        val sharedPreference = getSharedPreferences("other", MODE_PRIVATE)
 
 //      이 타입이 디폴트 값
-        var TOKEN = " 여기는 인트로 입니다. Bearer " + sharedPreference.getString("TOKEN","")
-        println(TOKEN)
+        var token = "Bearer " + sharedPreference.getString("TOKEN","")
+        println(token)
 
 
 
-        supplementService.userGet(TOKEN.toString()).enqueue(object : Callback<LoginUserResponse> {
+        supplementService.userGet(token).enqueue(object : Callback<LoginUserResponse> {
 
             override fun onResponse(
                 call: Call<LoginUserResponse>,
                 response: Response<LoginUserResponse>
             ) {
                 if(response.isSuccessful){
+                    println(response.body())
+                    println("로그인이 되버렸어요")
 //                  로그인 토큰 인증이 되면???
                     startActivity(mainIntent)
                 }else {
+                    println("로그인이 되지않아요..")
 //                  로그인 토큰 인증이 되지않으면?????
+                    println(response.message())
+                    println(response.body())
                     startActivity(loginIntent)
                 }
             }

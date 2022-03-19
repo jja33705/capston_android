@@ -13,5 +13,5 @@ data class SNSResponse(
     val per_page: Int,
     val prev_page_url: Any,
     val to: Int,
-    val total: Int
+    val total: Int,
 )

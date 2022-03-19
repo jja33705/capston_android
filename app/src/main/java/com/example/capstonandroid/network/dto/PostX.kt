@@ -2,7 +2,7 @@ package com.example.capstonandroid.network.dto
 
 data class PostX(
     val altitude: Int,
-    val average_speed: Int,
+    val average_speed: Double,
     val calorie: Double,
     val content: String,
     val created_at: String,

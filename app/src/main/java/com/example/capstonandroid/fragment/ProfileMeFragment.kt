@@ -111,17 +111,17 @@ class ProfileMeFragment : Fragment(){
             ) {
                 println(response.body())
                 var loginuserResponse: LoginUserResponse? = response.body()
-                var user_name = loginuserResponse!!.name
-                    var user_followers = loginuserResponse!!.followers.count().toString()
-                    var user_followings = loginuserResponse!!.followings.count().toString()
-                    var user_mmr = loginuserResponse!!.mmr
+                var user_name = loginuserResponse?.name
+                    var user_followers = loginuserResponse?.followers?.count().toString()
+                    var user_followings = loginuserResponse?.followings?.count().toString()
+                    var user_mmr = loginuserResponse?.mmr
 
-                binding.tvProfileMeName.setText(user_name!!)
+                binding.tvProfileMeName.setText(user_name)
                     binding.tvProfileMeFollowers.setText("팔로워 : " + user_followers)
                     binding.tvProfileMeFollowings.setText("팔로윙 : "+user_followings)
                     binding.tvProfileMeMmr.setText("MMR : " + user_mmr)
 
-                if (loginuserResponse.profile.equals(null)||loginuserResponse.profile.equals("img")){
+                if (loginuserResponse?.profile.equals(null)||loginuserResponse?.profile.equals("img")){
                         binding.tvProfileMePicture.setImageResource(R.drawable.main_profile)
                     }else {
                         val url = "https://cdn.pixabay.com/photo/2021/08/03/07/03/orange-6518675_960_720.jpg"

@@ -15,5 +15,5 @@ data class User(
     val profile: String,
     val sex: String,
     val updated_at: String,
-    val weight: String
+    val weight: String,
 )

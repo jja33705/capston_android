@@ -11,13 +11,20 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.capstonandroid.R
 import com.example.capstonandroid.activity.MainActivity
 import com.example.capstonandroid.activity.SNSDetailsActivity
+import com.example.capstonandroid.databinding.ActivityMainBinding
 import com.example.capstonandroid.databinding.FragmentHomeBinding
 import com.example.capstonandroid.network.api.BackendApi
 import com.example.capstonandroid.network.RetrofitClient
 import com.example.capstonandroid.network.dto.*
+import com.example.capstonandroid.MainViewModel
+import com.example.capstonandroid.NoticeAdapter
 import kotlinx.android.synthetic.main.fragment_home.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -49,23 +56,15 @@ class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
 
+    private lateinit var model: MainViewModel
+    private lateinit var noticeAdapter: NoticeAdapter
+    private var page = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
-
-
-            initRetrofit()
-
-
-
-
-
-
-            val bindinghome = view?.let { it1 -> FragmentHomeBinding.bind(it1) }
-
 
         }
 
@@ -82,6 +81,9 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        initRetrofit()
+
+
         val bindinghome = FragmentHomeBinding.bind(view)
 
         val activity = activity as MainActivity?
@@ -94,11 +96,12 @@ class HomeFragment : Fragment() {
         val sharedPreference = requireActivity().getSharedPreferences("other", 0)
 
 //      이 타입이 디폴트 값
-        var TOKEN = "Bearer " + sharedPreference.getString("TOKEN","")
-        println(TOKEN)
+        var token = "Bearer " + sharedPreference.getString("TOKEN","")
+        println("홈 프레그먼트"+token)
 
 
-                supplementService.SNSIndex(TOKEN.toString()).enqueue(object : Callback<SNSResponse>{
+
+                supplementService.SNSIndex(token).enqueue(object : Callback<SNSResponse>{
                     override fun onResponse(
                         call: Call<SNSResponse>,
                         response: Response<SNSResponse>
@@ -107,42 +110,42 @@ class HomeFragment : Fragment() {
                         if(response.isSuccessful) {
                             println(response.body())
 
-                            var SNSResponse: SNSResponse? = response.body()
-
+//                            var SNSResponse: SNSResponse? = response.body()
+//
 //                            println(SNSResponse!!.data[0].title)
-
-                            if (SNSResponse!!.data.count()==0){
-                                bindinghome.message.visibility = View.VISIBLE
-                                println("주행 한 기록이 없습니다.")
-                            }
-
-                            val items2 = mutableListOf<ListViewItem2>()
-
-                            var usersize: Int = SNSResponse!!.data.size
-                            println(usersize)
-
-                            for (i in 1..usersize) {
-                                items2.add(
-                                    ListViewItem2(
-                                        ContextCompat.getDrawable(
-                                            requireContext(),
-                                            R.drawable.sakai
-                                        )!!,
-                                        SNSResponse!!.data[i-1].title,
-                                        "작성일자 : " + SNSResponse!!.data[i-1].updated_at
-                                    )
-                                )
-
-                            }
-                            val adapter2 = ListViewAdapter2(items2)
-                            listView2.adapter = adapter2
-                            listView2.setOnItemClickListener { parent: AdapterView<*>, view: View, position: Int, id: Long ->
-                                val item2 = parent.getItemAtPosition(position) as ListViewItem2
-
-                                nextIntent.putExtra("number", position.toString())
-                                println(position.toString())
-                                startActivity(nextIntent)
-                            }
+//
+//                            if (SNSResponse?.data?.count()==0){
+//                                bindinghome.message.visibility = View.VISIBLE
+//                                println("주행 한 기록이 없습니다.")
+//                            }
+//
+//                            val items2 = mutableListOf<ListViewItem2>()
+//
+//                            var usersize: Int = SNSResponse!!.data.size
+//                            println(usersize)
+//
+//                            for (i in 1..usersize) {
+//                                items2.add(
+//                                    ListViewItem2(
+//                                        ContextCompat.getDrawable(
+//                                            requireContext(),
+//                                            R.drawable.sakai
+//                                        )!!,
+//                                        SNSResponse!!.data[i-1].title,
+//                                        "작성일자 : " + SNSResponse!!.data[i-1].updated_at
+//                                    )
+//                                )
+//
+//                            }
+//                            val adapter2 = ListViewAdapter2(items2)
+//                            listView2.adapter = adapter2
+//                            listView2.setOnItemClickListener { parent: AdapterView<*>, view: View, position: Int, id: Long ->
+//                                val item2 = parent.getItemAtPosition(position) as ListViewItem2
+//
+//                                nextIntent.putExtra("number", position.toString())
+//                                println(position.toString())
+//                                startActivity(nextIntent)
+//                            }
                         }
 //
 
@@ -188,19 +191,50 @@ class HomeFragment : Fragment() {
 //                }
 
                         else{
-
+                        println("실패함ㅋㅋ")
+                            println(response.body())
+                            println(response.message())
                         }
                     }
 
                     override fun onFailure(call: Call<SNSResponse>, t: Throwable) {
                         TODO("Not yet implemented")
+                        
+                        println("아예 가지도 않음ㅋㅋ")
                     }
                 })
 
+        model = ViewModelProvider(this).get(MainViewModel::class.java)
 
-
-
+        model.loadBaeminNotice(page)
+        bindinghome.rvBaeminNotice.apply {
+            bindinghome.rvBaeminNotice.layoutManager = LinearLayoutManager(context)
+            noticeAdapter = NoticeAdapter()
+            bindinghome.rvBaeminNotice.adapter = noticeAdapter
         }
+
+        model.getAll().observe(requireActivity(), Observer{
+            noticeAdapter.setList(it.content)
+            noticeAdapter.notifyItemRangeInserted((page - 1) * 10, 10)
+        })
+
+        bindinghome.rvBaeminNotice.addOnScrollListener(object : RecyclerView.OnScrollListener(){
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                val lastVisibleItemPosition =
+                    (recyclerView.layoutManager as LinearLayoutManager?)!!.findLastCompletelyVisibleItemPosition()
+                val itemTotalCount = recyclerView.adapter!!.itemCount-1
+
+                if (bindinghome.rvBaeminNotice.canScrollVertically(1) && lastVisibleItemPosition == itemTotalCount) {
+                    noticeAdapter.deleteLoading()
+                    model.loadBaeminNotice(++page)
+                }
+            }
+        })
+
+
+    }
 //        binding..setOnClickListener {
 //            val intent = Intent(this, SubActivity::class.java)
 //            startActivity(intent)

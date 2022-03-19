@@ -87,6 +87,8 @@ class ActivityMeFragment : Fragment() {
 
             val items = mutableListOf<ListViewItem>()
 
+            println(LoginUserResponse?.posts?.size)
+
             var usersize: Int = LoginUserResponse!!.posts.size
 
             if (usersize==0){

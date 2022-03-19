@@ -4,7 +4,7 @@ import android.graphics.drawable.Drawable
 
 data class Post(
     val altitude: Int,
-    val average_speed: Int,
+    val average_speed: Double,
     val calorie: Double,
     val content: String,
     val created_at: String,
