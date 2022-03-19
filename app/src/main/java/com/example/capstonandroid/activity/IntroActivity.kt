@@ -36,6 +36,8 @@ class IntroActivity : AppCompatActivity() {
         var token = "Bearer " + sharedPreference.getString("TOKEN","")
         println(token)
 
+//        startActivity(mainIntent)
+
 
 
         supplementService.userGet(token).enqueue(object : Callback<LoginUserResponse> {
