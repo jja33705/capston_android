@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="bottom"
-    app:umanoPanelHeight="0dp"
+    app:umanoPanelHeight="200dp"
     app:umanoShadowHeight="4dp"
     tools:context=".activity.SelectTrackActivity"
     >

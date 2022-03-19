@@ -67,7 +67,6 @@ class TrackRecordService : Service() {
 
         // flag
         const val BEFORE_START_LOCATION_UPDATE = "${PREFIX}.BEFORE_START_LOCATION_UPDATE"
-        const val LAST_LAT_LNG = "LAST_LAT_LNG"
         const val AFTER_START_UPDATE = "AFTER_START_UPDATE"
         const val IS_STARTED = "IS_STARTED"
         const val RECORD_START_LAT_LNG = "${PREFIX}.RECORD_START_LAT_LNG"
@@ -157,6 +156,7 @@ class TrackRecordService : Service() {
                 intent.putExtra(SECOND, second)
                 intent.putExtra(DISTANCE, distance)
                 intent.putExtra(AVG_SPEED, avgSpeed)
+                intent.putExtra(LOCATION_CHANGED, locationChanged)
                 LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intent)
             }
 
@@ -168,7 +168,10 @@ class TrackRecordService : Service() {
 
         // 알람 누르면 액티비티 시작하게 하는 pendingIntent
         val activityIntent = Intent(applicationContext, TrackRecordActivity::class.java)
-        val activityPendingIntent = PendingIntent.getActivity(this, 0, activityIntent, PendingIntent.FLAG_IMMUTABLE)
+        activityIntent.putExtra("exerciseKind", getSharedPreferences("trackRecord", MODE_PRIVATE).getString("exerciseKind", ""))
+        activityIntent.putExtra("matchType", getSharedPreferences("trackRecord", MODE_PRIVATE).getString("matchType", ""))
+        activityIntent.putExtra("trackId", getSharedPreferences("trackRecord", MODE_PRIVATE).getString("trackId", ""))
+        val activityPendingIntent = PendingIntent.getActivity(this, 0, activityIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
 
         val builder = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
             .setContentText("${getSharedPreferences("trackRecord", MODE_PRIVATE).getString("trackName", "")}   ${Utils.timeToText(second)}    ${Utils.distanceToText(distance)}km")
@@ -205,24 +208,26 @@ class TrackRecordService : Service() {
                 }
             }
             START_RECORD -> { // 기록 시작
-                isStarted = true
+                CoroutineScope(Dispatchers.Main).launch {
+                    isStarted = true
 
-                beforeLocation = mLocation
+                    beforeLocation = mLocation
 
-                // db에 저장하고 시작위치 보냄
-                CoroutineScope(Dispatchers.IO).launch {
-                    gpsDataDao.deleteAll()
-                    gpsDataDao.insertGpsData(GpsData(second, mLocation.latitude, mLocation.longitude, mLocation.speed, distance, mLocation.altitude))
+                    // 시작위치 db에 저장
+                    launch(Dispatchers.IO) {
+                        gpsDataDao.deleteAll()
+                        gpsDataDao.insertGpsData(GpsData(second, mLocation.latitude, mLocation.longitude, mLocation.speed, distance, mLocation.altitude))
+                    }
+
+                    // 시작 위치 보냄
+                    val intent = Intent(ACTION_BROADCAST)
+                    intent.putExtra("flag", RECORD_START_LAT_LNG)
+                    intent.putExtra(LAT_LNG, LatLng(mLocation.latitude, mLocation.longitude))
+                    LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intent)
+
+                    // 타이머 시작
+                    startTimer()
                 }
-
-                // 시작 위치 보냄
-                val intent = Intent(ACTION_BROADCAST)
-                intent.putExtra("flag", RECORD_START_LAT_LNG)
-                intent.putExtra(LAT_LNG, LatLng(mLocation.latitude, mLocation.longitude))
-                LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intent)
-
-                // 타이머 시작
-                startTimer()
             }
             COMPLETE_RECORD -> { // 기록 끝
                 val intent = Intent(this@TrackRecordService, CompleteRecordActivity::class.java)
@@ -250,11 +255,6 @@ class TrackRecordService : Service() {
             } else {
                 println("마지막 위치 잘 가져옴, 위도: ${location.latitude}, 경도: ${location.longitude}")
                 mLocation = location
-
-                val intent = Intent(ACTION_BROADCAST)
-                intent.putExtra("flag", LAST_LAT_LNG)
-                intent.putExtra(LAT_LNG, LatLng(mLocation.latitude, mLocation.longitude))
-                LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intent)
             }
         }
 

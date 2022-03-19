@@ -63,9 +63,13 @@ class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var job: Job // 코루틴 동작을 제어하기 위한 job
 
+    private lateinit var checkpointList: ArrayList<Location> // 체크포인트 리스트
+
     private var mLocationMarker: Marker? = null // 내 위치 마커
 
     private var inCanStartArea = false // 시작 가능한 범위 내에 있는지
+
+    private var gotFirstLocation = false // 첫 번째 위치를 받아와 시작 가능한 상태인지
 
     @SuppressLint("NewApi")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -73,6 +77,8 @@ class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback {
 
         _binding = ActivityTrackRecordBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        getSharedPreferences("trackRecord", MODE_PRIVATE).edit().putBoolean("isStarted", false).commit()
 
         // 인텐트로 넘어온 옵션값 받음
         val intent = intent
@@ -99,9 +105,6 @@ class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback {
                 // 시작한 상태 저장
                 getSharedPreferences("trackRecord", MODE_PRIVATE)
                     .edit()
-                    .putString("exerciseKind", exerciseKind)
-                    .putString("matchType", matchType)
-                    .putString("trackName", track.trackName)
                     .putBoolean("isStarted", true)
                     .commit()
 
@@ -113,12 +116,12 @@ class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback {
                 // 버튼 바꿈
                 binding.startButton.visibility = View.GONE
                 binding.stopButton.visibility = View.VISIBLE
-                
+
                 // 시작 영역 없애고 도착 영역 그림
                 canStartAreaCircle.remove()
                 mGoogleMap.addCircle(CircleOptions()
                     .center(LatLng(endPoint.latitude, endPoint.longitude))
-                    .radius(20.0)
+                    .radius(15.0)
                     .fillColor(R.color.area_color)
                     .strokeWidth(0F))
 
@@ -172,7 +175,15 @@ class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback {
                 initTrack()
             }.join() // 트랙 초기화하는거 기다리고 다음 작업 수행함
 
-            binding.tvInformation.setBackgroundColor(R.color.green)
+            getSharedPreferences("trackRecord", MODE_PRIVATE)
+                .edit()
+                .putString("exerciseKind", exerciseKind)
+                .putString("matchType", matchType)
+                .putString("trackName", track.trackName)
+                .putString("trackId", trackId)
+                .commit()
+
+            binding.tvInformation.setBackgroundColor(resources.getColor(R.color.green))
             binding.tvInformation.text = "위치 정보 불러오는 중"
 
             // 브로드캐스트 리시버 초기화
@@ -223,6 +234,24 @@ class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback {
                 .color(R.color.main_color)
                 .width(10F))
 
+            // 체크포인트 추가
+            println("체크포인트")
+            println(track.checkPoint)
+
+            checkpointList = ArrayList()
+            for (i in track.checkPoint.indices) {
+                val location = Location("checkpoint")
+                location.latitude = track.checkPoint[i][1]
+                location.longitude = track.checkPoint[i][0]
+                checkpointList.add(location)
+
+                mGoogleMap.addMarker(MarkerOptions()
+                    .position(LatLng(location.latitude, location.longitude))
+                    .title("체크포인트 ${i + 1}")
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.checkpoint_before))
+                    .anchor(0.5F, 0.5F))
+            }
+
             // 출발점 마커 추가
             mGoogleMap.addMarker(MarkerOptions()
                 .position(LatLng(startPoint.latitude, startPoint.longitude))
@@ -233,7 +262,7 @@ class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback {
             // 시작 가능 반경 그림
             canStartAreaCircle = mGoogleMap.addCircle(CircleOptions()
                 .center(LatLng(startPoint.latitude, startPoint.longitude))
-                .radius(20.0)
+                .radius(15.0)
                 .fillColor(R.color.area_color)
                 .strokeWidth(0F))
 
@@ -317,31 +346,28 @@ class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback {
 
             // flag 에 따라 분기처리
             when (intent?.getStringExtra("flag")) {
-                TrackRecordService.LAST_LAT_LNG -> { // 마지막 위치
-                    val lastLatLng = intent?.getParcelableExtra<LatLng>(TrackRecordService.LAT_LNG)!!
-                    println("리시버로 마지막 위치 받음 ${lastLatLng.latitude}, ${lastLatLng.longitude}")
-
-                    mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(lastLatLng, 18.0f)) // 화면 이동
-
-                    // 내 위치 마커 생성
-                    mLocationMarker = mGoogleMap.addMarker(MarkerOptions().position(lastLatLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.round_circle_black_24dp)))
-                }
-
                 TrackRecordService.BEFORE_START_LOCATION_UPDATE -> { // 시작 전 위치 업데이트
                     val latLng = intent?.getParcelableExtra<LatLng>(TrackRecordService.LAT_LNG)!!
                     println("리시버로 위치 받음 ${latLng.latitude}, ${latLng.longitude}")
 
-                    mLocationMarker?.position = latLng // 마커 이동
+                    if (!gotFirstLocation) {
+                        gotFirstLocation = true
 
-                    binding.tvInformation.text = "시작 가능 위치로 이동하세요."
-                    binding.tvInformation.setBackgroundColor(R.color.red)
+                        // 내 위치 마커 생성
+                        mLocationMarker = mGoogleMap.addMarker(MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.round_circle_black_24dp)))
+
+                        binding.tvInformation.text = "시작 가능 위치로 이동하세요."
+                        binding.tvInformation.setBackgroundColor(resources.getColor(R.color.red))
+                    } else {
+                        mLocationMarker?.position = latLng // 마커 이동
+                    }
 
                     // 시작 가능 위치인지 확인
                     val mLocation = Location("myLocation")
                     mLocation.latitude = latLng.latitude
                     mLocation.longitude = latLng.longitude
 
-                    inCanStartArea = mLocation.distanceTo(startPoint) < 20.0
+                    inCanStartArea = mLocation.distanceTo(startPoint) < 15.0
                     println("시작 가능 위치 내인지: $inCanStartArea")
                     if (inCanStartArea) {
                         binding.tvInformation.visibility = View.GONE
@@ -431,7 +457,7 @@ class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback {
                         val currentLocation = Location("currentLocation")
                         currentLocation.latitude = latLng.latitude
                         currentLocation.longitude = latLng.longitude
-                        if (endPoint.distanceTo(currentLocation) < 20.0) {
+                        if (endPoint.distanceTo(currentLocation) < 15.0) {
                             // 서비스 종료하라고 커맨드 보냄
                             val intent = Intent(this@TrackRecordActivity, TrackRecordService::class.java)
                             intent.action = TrackRecordService.COMPLETE_RECORD
