@@ -36,7 +36,7 @@ class IntroActivity : AppCompatActivity() {
         var token = "Bearer " + sharedPreference.getString("TOKEN","")
         println(token)
 
-//        startActivity(mainIntent)
+        startActivity(mainIntent)
 
 
 

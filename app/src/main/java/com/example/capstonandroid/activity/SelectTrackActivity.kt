@@ -29,12 +29,13 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.android.gms.tasks.Task
+import com.google.maps.android.clustering.ClusterItem
+import com.google.maps.android.clustering.ClusterManager
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import kotlinx.coroutines.*
 import retrofit2.Retrofit
 
-class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnPolylineClickListener,
-    GoogleMap.OnMarkerClickListener, GoogleMap.OnCameraMoveStartedListener, GoogleMap.OnCameraIdleListener, GoogleMap.OnMapClickListener {
+class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnPolylineClickListener, GoogleMap.OnMapClickListener {
 
     private var _binding: ActivitySelectTrackBinding? = null
     private val binding get() = _binding!!
@@ -65,6 +66,8 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.O
     private lateinit var trackMarker: View // 커스텀 마커 뷰
 
     private lateinit var trackMarkerTextView: TextView // 커스텀 마커 텍스트 뷰
+
+    private lateinit var clusterManager: ClusterManager<TrackItem> // 클러스터 매니저
 
     private var mLocationMarker: Marker? = null // 내 위치 마커
 
@@ -189,17 +192,19 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.O
         // 폴리라인 클릭 리스너 등록
         mGoogleMap.setOnPolylineClickListener(this)
 
-        // 마커 클릭 리스너 등록
-        mGoogleMap.setOnMarkerClickListener(this)
-
         // 맵 클릭 리스너 등록
         mGoogleMap.setOnMapClickListener(this)
 
-        // 카메라 움직임이 시작 됐을 때 리스너
-        mGoogleMap.setOnCameraMoveStartedListener(this)
+        // 클러스터 리스너 등록
+        clusterManager = ClusterManager(this, mGoogleMap)
+        mGoogleMap.setOnCameraIdleListener(clusterManager)
+        mGoogleMap.setOnMarkerClickListener(clusterManager)
 
-        // 카메라 이동 끝났을때 콜백 리스너
-        mGoogleMap.setOnCameraIdleListener(this)
+        // 클러스터 아이템 클릭했을 때 리스너
+        clusterManager.setOnClusterItemClickListener { trackItem ->
+            println("가나다라마바사 ${trackItem.title}")
+            true
+        }
 
         checkPermission()
     }
@@ -302,14 +307,6 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.O
         selectTrack("${polyline.tag}")
     }
 
-    // 마커 클릭 처리
-    override fun onMarkerClick(marker: Marker): Boolean {
-        if (marker.tag != "myLocation") {
-            selectTrack("${marker.tag}")
-        }
-        return true // 기본 이벤트 발동 안함
-    }
-
     // 권한 확인
     private fun checkPermission() {
         when {
@@ -360,35 +357,6 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.O
         }
     }
 
-    // 카메라 이동 시작했을 때 리스너
-    override fun onCameraMoveStarted(reason: Int) {
-        when(reason) { // 어떻게 시작된 움직임인지 알 수 있다.
-            GoogleMap.OnCameraMoveStartedListener.REASON_API_ANIMATION -> { // 사용자 작업에 대한 응답으로 시작(마커 클릭 시 등..)
-                println("move reason: REASON_API_ANIMATION")
-                updateTrack = false
-            }
-            GoogleMap.OnCameraMoveStartedListener.REASON_DEVELOPER_ANIMATION -> { // 개발자가 프로그래밍적으로 시작
-                println("move reason: REASON_DEVELOPER_ANIMATION")
-                updateTrack = true
-            }
-            GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE -> { // 사용자 제스처
-                println("move reason: REASON_GESTURE")
-                updateTrack = true
-            }
-        }
-    }
-
-    // 카메라 이동 끝났을때 리스너
-    override fun onCameraIdle() {
-        println("camera idle")
-        if (updateTrack) {
-            val latLngBounds = mGoogleMap.projection.visibleRegion.latLngBounds
-
-            println("위치 경계: ${latLngBounds.southwest.longitude} ${latLngBounds.southwest.latitude} ${latLngBounds.northeast.longitude} ${latLngBounds.northeast.latitude}")
-            initTracks(listOf(latLngBounds.southwest.longitude, latLngBounds.southwest.latitude, latLngBounds.northeast.longitude, latLngBounds.northeast.latitude))
-        }
-    }
-
     override fun onMapClick(latLng: LatLng) {
         println("onMapClick 호출")
 
@@ -427,5 +395,25 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.O
         trackMarker.draw(canvas)
 
         return bitmap
+    }
+
+    inner class TrackItem(position: LatLng, title: String, snippet: String) : ClusterItem {
+
+        private val position: LatLng = position
+        private val title: String = title
+        private val snippet: String = snippet
+
+        override fun getPosition(): LatLng {
+            return position
+        }
+
+        override fun getTitle(): String? {
+            return title
+        }
+
+        override fun getSnippet(): String? {
+            return snippet
+        }
+
     }
 }
