@@ -71,8 +71,6 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.O
 
     private var mLocationMarker: Marker? = null // 내 위치 마커
 
-    private var updateTrack = false // 트랙을 새로 불러올지 말지를 결정하는 불린 변수
-
     private var selectedTrackId: String? = null // 선택된 트랙 인덱스
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -126,10 +124,14 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.O
     }
 
     // 보이는 지도에 맞게 트랙 가져와 지도에 그려 줌
-    private fun initTracks(bounds: List<Double>) {
-
+    private fun initTracks() {
         CoroutineScope(Dispatchers.Main + job).launch {
             println("실행됨")
+
+            // 보고있는 카메라 위치 측정
+            val latLngBounds = mGoogleMap.projection.visibleRegion.latLngBounds
+            println("위치 경계: ${latLngBounds.southwest.longitude} ${latLngBounds.southwest.latitude} ${latLngBounds.northeast.longitude} ${latLngBounds.northeast.latitude}")
+            val bounds = listOf(latLngBounds.southwest.longitude, latLngBounds.southwest.latitude, latLngBounds.northeast.longitude, latLngBounds.northeast.latitude)
 
             // 현재 지도상에 보이는 트랙 가져오는 api 호출
             val tracksResponse = supplementService.getTracks("http://13.124.24.179/api/track/search", bounds, 16, "B")
@@ -143,14 +145,16 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.O
                         trackMap[track._id] = track
 
                         // 마커 생성하고 마커 맵에 넣음
-                        trackMarkerTextView.text = track.trackName
-                        val marker = mGoogleMap.addMarker(MarkerOptions()
-                            .position(LatLng(track.start_latlng[1], track.start_latlng[0]))
-                            .title(track.trackName)
-                            .icon(BitmapDescriptorFactory.fromBitmap(createBitmapFromView()))
-                            .anchor(0.1F, 1F))!!
-                        marker.tag = track._id
-                        markerMap[track._id] = marker
+//                        trackMarkerTextView.text = track.trackName
+//                        val marker = mGoogleMap.addMarker(MarkerOptions()
+//                            .position(LatLng(track.start_latlng[1], track.start_latlng[0]))
+//                            .title(track.trackName)
+//                            .icon(BitmapDescriptorFactory.fromBitmap(createBitmapFromView()))
+//                            .anchor(0.1F, 1F))!!
+//                        marker.tag = track._id
+//                        markerMap[track._id] = marker
+                        clusterManager.addItem(TrackItem(LatLng(track.start_latlng[1], track.start_latlng[0]), track.trackName, track._id))
+
 
                         // 폴리라인 그리고 폴리라인 맵에 넣음
                         val latLngList = ArrayList<LatLng>()
@@ -167,12 +171,6 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.O
                             .color(R.color.main_color))
                         polyline.tag = track._id
                         polylineMap[track._id] = polyline
-
-                        // 선택돼 있는 게 있으면 투명한 색으로 가져옴
-                        if (selectedTrackId != null) {
-                            marker.alpha = 0.3F
-                            polyline.color = R.color.selected_polyline_color
-                        }
                     }
                 }
             }
@@ -202,7 +200,8 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.O
 
         // 클러스터 아이템 클릭했을 때 리스너
         clusterManager.setOnClusterItemClickListener { trackItem ->
-            println("가나다라마바사 ${trackItem.title}")
+            println("클릭된거 타이틀: ${trackItem.title}")
+            println("클릭된거 아이디: ${trackItem.snippet}")
             true
         }
 
@@ -397,6 +396,7 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.O
         return bitmap
     }
 
+    // 클러스팅하기 위한 마커 아이템
     inner class TrackItem(position: LatLng, title: String, snippet: String) : ClusterItem {
 
         private val position: LatLng = position

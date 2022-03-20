@@ -11,13 +11,33 @@
     tools:context=".activity.SelectTrackActivity"
     >
 
-    <fragment
-        android:id="@+id/map"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         >
-    </fragment>
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/button_search_track"
+            android:layout_width="182dp"
+            android:layout_height="40dp"
+            android:layout_gravity="top|center"
+            android:layout_marginTop="30dp"
+            android:paddingHorizontal="10dp"
+            android:gravity="center"
+            android:drawableLeft="@drawable/search_icon"
+            android:background="@drawable/round_button_background"
+            android:text="현재 지도에서 검색"
+            android:textSize="16dp"
+            >
+        </androidx.appcompat.widget.AppCompatButton>
+        <fragment
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >`
+        </fragment>
+    </FrameLayout>
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
