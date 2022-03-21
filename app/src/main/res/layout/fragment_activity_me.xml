@@ -8,13 +8,16 @@
     android:background="@drawable/gradation"
     tools:context="fragment.ActivityMeFragment">
 
-    <ListView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="8dp"
-        tools:layout_editor_absoluteX="0dp"
-        android:id="@+id/listView"
-        app:layout_constraintTop_toTopOf="parent"/>
+        android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/lstUser2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/message"

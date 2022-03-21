@@ -3,7 +3,6 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="app/src/main/res/drawable/checkpoint_before.xml" value="0.2765" />
         <entry key="..\:/Users/sakai/capston_android/app/src/main/res/layout/activity_intro.xml" value="0.25833333333333336" />
         <entry key="..\:/Users/sakai/capston_android/app/src/main/res/layout/activity_login.xml" value="0.4" />
         <entry key="..\:/Users/sakai/capston_android/app/src/main/res/layout/activity_main.xml" value="0.19166666666666668" />
@@ -18,6 +17,11 @@
         <entry key="..\:/Users/sakai/capston_android/app/src/main/res/layout/fragment_profile_me.xml" value="0.19166666666666668" />
         <entry key="..\:/Users/sakai/capston_android/app/src/main/res/layout/item_loading.xml" value="0.23645833333333333" />
         <entry key="..\:/Users/sakai/capston_android/app/src/main/res/layout/item_notice.xml" value="0.23645833333333333" />
+        <entry key="..\:/Users/sakai/capston_android/app/src/main/res/layout/item_recycler.xml" value="0.21666666666666667" />
+        <entry key="..\:/Users/sakai/capston_android/app/src/main/res/layout/item_view.xml" value="0.23645833333333333" />
+        <entry key="..\:/Users/sakai/capston_android/app/src/main/res/layout/layout_recycler_item.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/sakai/capston_android/app/src/main/res/layout/test.xml" value="0.23645833333333333" />
+        <entry key="..\:/Users/sakai/capston_android/app/src/main/res/layout/test2.xml" value="0.23645833333333333" />
         <entry key="..\:/Users/sakai/capston_android/app/src/main/res/layout/view_item_layout.xml" value="0.25" />
         <entry key="..\:/Users/sakai/capston_android/app/src/main/res/layout/view_toolbar.xml" value="0.13125" />
         <entry key="app/src/main/res/drawable/checkpoint_before.xml" value="0.2765" />

@@ -8,7 +8,7 @@
     android:layout_margin="5dp">
 
     <ImageView
-        android:id="@+id/userImg"
+        android:id="@+id/snsImage"
         android:layout_width="54dp"
         android:layout_height="54dp"
         android:layout_marginBottom="4dp"
@@ -20,35 +20,35 @@
         ></ImageView>
 
     <TextView
-        android:id="@+id/userNameTxt"
+        android:id="@+id/snsTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
         android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/userImg"
-        app:layout_constraintTop_toTopOf="@+id/userImg"
-        tools:text="홍킬동"/>
+        app:layout_constraintStart_toEndOf="@+id/snsImage"
+        app:layout_constraintTop_toTopOf="@+id/snsImage"
+        tools:text="트랙이름"/>
 
     <TextView
-        android:id="@+id/payTxt"
+        android:id="@+id/snsName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="17sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/userNameTxt"
-        app:layout_constraintBottom_toBottomOf="@+id/userImg"
-        tools:text="연봉"/>
+        app:layout_constraintStart_toStartOf="@+id/snsTitle"
+        app:layout_constraintBottom_toBottomOf="@+id/snsImage"
+        tools:text="작성자"/>
 
     <TextView
-        android:id="@+id/addressTxt"
+        android:id="@+id/snsDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
         android:textSize="17sp"
-        app:layout_constraintBottom_toBottomOf="@id/payTxt"
-        app:layout_constraintStart_toEndOf="@id/payTxt"
-        app:layout_constraintTop_toTopOf="@id/payTxt"
-        tools:text="주소"/>
+        app:layout_constraintBottom_toBottomOf="@+id/snsName"
+        app:layout_constraintStart_toEndOf="@+id/snsName"
+        app:layout_constraintTop_toTopOf="@+id/snsName"
+        tools:text="날짜"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -9,7 +9,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.core.content.ContextCompat
+import com.example.capstonandroid.DistanceItemDecorator
 import com.example.capstonandroid.R
+import com.example.capstonandroid.adapter.RecyclerUserAdapter
 import com.example.capstonandroid.databinding.FragmentActivityMeBinding
 import com.example.capstonandroid.network.api.BackendApi
 import com.example.capstonandroid.network.RetrofitClient
@@ -84,39 +86,26 @@ class ActivityMeFragment : Fragment() {
 
 //            println("여긴뭐여?"+LoginUserResponse!!.posts[0].title)
 
+            val list = ArrayList<UserData>()
 
-            val items = mutableListOf<ListViewItem>()
 
-            println(LoginUserResponse?.posts?.size)
-
-            var usersize: Int = LoginUserResponse!!.posts.size
-
-            if (usersize==0){
-                binding.message.visibility = View.VISIBLE
-                println("주행 한 기록이 없습니다.")
-            }else {
-                println(usersize)
-                for (i in usersize downTo 1) {
-                    items.add(
-                        ListViewItem(
-                            ContextCompat.getDrawable(
-                                requireContext(),
-                                R.drawable.sakai
-                            )!!,
-                            LoginUserResponse!!.posts[usersize - 1].title,
-                            "작성일자 : " + LoginUserResponse!!.posts[usersize - 1].updated_at
-                        )
+            for (i in 0..response.body()!!.posts.size-1) {
+                list.add(
+                    UserData(
+                        ContextCompat.getDrawable(
+                            requireContext(),
+                            R.drawable.sakai
+                        )!!,
+                        response.body()!!.posts[i]!!.title.toString(),
+                        response.body()!!.posts[i].created_at
                     )
-                    --usersize
-                }
+                )
+            }
+            val adapter = RecyclerUserAdapter(list)
+//          어댑터 마진 주는법!!
+            lstUser2.addItemDecoration(DistanceItemDecorator(15))
+            lstUser2.adapter = adapter
 
-
-            val adapter = ListViewAdapter(items)
-            listView.adapter = adapter
-            listView.setOnItemClickListener { parent: AdapterView<*>, view: View, position: Int, id: Long ->
-                val item = parent.getItemAtPosition(position) as ListViewItem
-
-            }}
         }else{
 
         }

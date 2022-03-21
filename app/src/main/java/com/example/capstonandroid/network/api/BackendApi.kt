@@ -18,10 +18,12 @@ interface BackendApi {
 
 //   테스트용..
 
-
-
     @GET("test") // 보낼 url
     fun test(): Call<String>
+
+
+    @GET("user") //　테스트 용
+    fun test1(@Header("Authorization") token: String,@Query("page") page: String): Call<String>
 
     @POST("login") //로그인 요청(Login) 하고 응답 받는것(LoginResponse)
     fun loginPost(@Body login: Login): Call<LoginResponse>

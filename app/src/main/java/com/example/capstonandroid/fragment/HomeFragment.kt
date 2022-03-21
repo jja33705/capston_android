@@ -1,32 +1,27 @@
 package com.example.capstonandroid.fragment
 
-import ListViewAdapter2
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.capstonandroid.R
-import com.example.capstonandroid.activity.MainActivity
 import com.example.capstonandroid.activity.SNSDetailsActivity
-import com.example.capstonandroid.databinding.ActivityMainBinding
+import com.example.capstonandroid.adapter.RecyclerUserAdapter
+import kotlinx.android.synthetic.main.fragment_me.*
 import com.example.capstonandroid.databinding.FragmentHomeBinding
-import com.example.capstonandroid.network.api.BackendApi
 import com.example.capstonandroid.network.RetrofitClient
-import com.example.capstonandroid.network.dto.*
-import com.example.capstonandroid.MainViewModel
-import com.example.capstonandroid.NoticeAdapter
-import com.example.capstonandroid.adapter.CustomAdapter
+import com.example.capstonandroid.network.api.BackendApi
+import com.example.capstonandroid.network.dto.SNSResponse
+import com.example.capstonandroid.network.dto.UserData
 import kotlinx.android.synthetic.main.fragment_home.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -41,26 +36,24 @@ private const val ARG_PARAM2 = "param2"
 
 private  lateinit var  retrofit: Retrofit  //레트로핏
 private  lateinit var supplementService: BackendApi // api
-/**
- * A simple [Fragment] subclass.
- * Use the [HomeFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
+
 
 class MyActivity : AppCompatActivity() {
     // ...
+    // 데이터를 담을 그릇 즉 배열
+
+
+
 }
 
-class HomeFragment : Fragment() {
-    // TODO: Rename and change types of parameters
+class HomeFragment : Fragment()  {
+
+
     private var param1: String? = null
     private var param2: String? = null
 
-    private var _binding: FragmentHomeBinding? = null
-
-    private lateinit var model: MainViewModel
-    private lateinit var noticeAdapter: NoticeAdapter
-    private var page = 1
+    // 바인딩 객체 타입에 ?를 붙여서 null을 허용 해줘야한다. ( onDestroy 될 때 완벽하게 제거를 하기위해 )
+    private var Binding: FragmentHomeBinding? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,7 +64,13 @@ class HomeFragment : Fragment() {
         }
 
 
+
+
+
     }
+
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -83,12 +82,8 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initRetrofit()
 
-
-        val bindinghome = FragmentHomeBinding.bind(view)
-
-        val activity = activity as MainActivity?
+//        val activity = activity as MainActivity?
 
         val nextIntent = Intent(requireContext(), SNSDetailsActivity::class.java)
 
@@ -102,30 +97,60 @@ class HomeFragment : Fragment() {
         println("홈 프레그먼트"+token)
 
 
+        val list = ArrayList<UserData>()
 
-                supplementService.SNSIndex(token).enqueue(object : Callback<SNSResponse>{
-                    override fun onResponse(
-                        call: Call<SNSResponse>,
-                        response: Response<SNSResponse>
-                    ) {
 
-                        if(response.isSuccessful) {
-                            println(response.body())
-                            var userList = arrayListOf<DataVo>(
+//        lstUser.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+//            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+//                super.onScrolled(recyclerView, dx, dy)
+//                // 마지막 스크롤된 항목 위치
+//                val lastVisibleItemPosition = (recyclerView.layoutManager as LinearLayoutManager?)!!.findLastCompletelyVisibleItemPosition()
+//                // 항목 전체 개수
+//                val itemTotalCount = recyclerView.adapter!!.itemCount - 1
+//                if (lastVisibleItemPosition == itemTotalCount) {
+//                    list.add(
+//                        UserData(
+//                            ContextCompat.getDrawable(
+//                                requireContext(),
+//                                R.drawable.sakai
+//                            )!!,
+//                        )
+//                    )
+//                }
+//            }
+//        })
 
-                                DataVo("아이유", "test1", "전주시", 30000000,"user_img_01"),
-                                DataVo("홍길동", "test2", "김해시", 50000000,"user_img_02"),
-                                DataVo("김", "test3", "안동시", 70000000,"user_img_03"),
-                                DataVo("이", "test4", "성주군", 90000000,"user_img_04"),
+        supplementService.SNSIndex(token).enqueue(object : Callback<SNSResponse>{
+            override fun onResponse(
+                call: Call<SNSResponse>,
+                response: Response<SNSResponse>
+            ) {
 
+
+
+                if(response.isSuccessful) {
+                    println(response.body())
+                    var SNSResponse: SNSResponse? = response.body()
+
+
+                    for (i in 0..response.body()!!.data.size-1) {
+                        list.add(
+                            UserData(
+                                ContextCompat.getDrawable(
+                                    requireContext(),
+                                    R.drawable.sakai
+                                )!!,
+                                response.body()!!.data[i]!!.title.toString(),
+                                response.body()!!.data[i].user.name
                             )
+                        )
+                    }
+                    val adapter = RecyclerUserAdapter(list)
+                    lstUser.adapter = adapter
 
-                            val mAdapter = CustomAdapter(requireContext(),userList)
-                            recycler_view.adapter = mAdapter
 
-                            val layout = LinearLayoutManager(requireContext())
-                            recycler_view.layoutManager = layout
-                            recycler_view.setHasFixedSize(true)
+
+
 //                            var SNSResponse: SNSResponse? = response.body()
 //
 //                            println(SNSResponse!!.data[0].title)
@@ -162,7 +187,7 @@ class HomeFragment : Fragment() {
 //                                println(position.toString())
 //                                startActivity(nextIntent)
 //                            }
-                        }
+                }
 //
 
 //                    var user: User? = loginResponse!!.user
@@ -206,56 +231,25 @@ class HomeFragment : Fragment() {
 //                    println(response.code())
 //                }
 
-                        else{
-                        println("실패함ㅋㅋ")
-                            println(response.body())
-                            println(response.message())
-                        }
-                    }
-
-                    override fun onFailure(call: Call<SNSResponse>, t: Throwable) {
-                        
-                        println("아예 가지도 않음ㅋㅋ")
-                        println(t.message)
-                    }
-                })
-
-        model = ViewModelProvider(this).get(MainViewModel::class.java)
-
-        model.loadBaeminNotice(page)
-        bindinghome.rvBaeminNotice.apply {
-            bindinghome.rvBaeminNotice.layoutManager = LinearLayoutManager(context)
-            noticeAdapter = NoticeAdapter()
-            bindinghome.rvBaeminNotice.adapter = noticeAdapter
-        }
-
-        model.getAll().observe(requireActivity(), Observer{
-            noticeAdapter.setList(it.content)
-            noticeAdapter.notifyItemRangeInserted((page - 1) * 10, 10)
-        })
-
-        bindinghome.rvBaeminNotice.addOnScrollListener(object : RecyclerView.OnScrollListener(){
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-
-                val lastVisibleItemPosition =
-                    (recyclerView.layoutManager as LinearLayoutManager?)!!.findLastCompletelyVisibleItemPosition()
-                val itemTotalCount = recyclerView.adapter!!.itemCount-1
-
-                if (bindinghome.rvBaeminNotice.canScrollVertically(1) && lastVisibleItemPosition == itemTotalCount) {
-                    noticeAdapter.deleteLoading()
-                    model.loadBaeminNotice(++page)
+                else{
+                    println("실패함ㅋㅋ")
+                    println(response.body())
+                    println(response.message())
                 }
+            }
+
+            override fun onFailure(call: Call<SNSResponse>, t: Throwable) {
+
+                println("아예 가지도 않음ㅋㅋ")
+                println(t.message)
             }
         })
 
 
 
+
+
     }
-//        binding..setOnClickListener {
-//            val intent = Intent(this, SubActivity::class.java)
-//            startActivity(intent)
-//        }
 
 
 
@@ -266,7 +260,7 @@ class HomeFragment : Fragment() {
     }
 
     override fun onDestroy() {
-        _binding = null
+        Binding = null
         super.onDestroy()
     }
 
@@ -289,4 +283,5 @@ class HomeFragment : Fragment() {
                     }
                 }
         }
+
     }
