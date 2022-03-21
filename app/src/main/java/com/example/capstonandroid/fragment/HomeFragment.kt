@@ -198,7 +198,6 @@ class HomeFragment : Fragment() {
                     }
 
                     override fun onFailure(call: Call<SNSResponse>, t: Throwable) {
-                        TODO("Not yet implemented")
                         
                         println("아예 가지도 않음ㅋㅋ")
                     }

@@ -50,10 +50,6 @@ class LoginActivity : AppCompatActivity() {
         println(token)
 
 
-//        startActivity(nextIntent)
-
-
-
         // 변수 만들기
 
         val registerIntent = Intent(this,RegisterActivity::class.java)
