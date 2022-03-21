@@ -95,23 +95,22 @@ class ActivityMeFragment : Fragment() {
                 binding.message.visibility = View.VISIBLE
                 println("주행 한 기록이 없습니다.")
             }
-
-            println(usersize)
-            for (i in usersize downTo 1) {
-                items.add(
-                    ListViewItem(
-                        ContextCompat.getDrawable(
-                            requireContext(),
-                            R.drawable.sakai
-                        )!!,
-                        LoginUserResponse!!.posts[usersize - 1].title,
-                        "작성일자 : " + LoginUserResponse!!.posts[usersize - 1].updated_at
+                println(usersize)
+                for (i in usersize downTo 1) {
+                    items.add(
+                        ListViewItem(
+                            ContextCompat.getDrawable(
+                                requireContext(),
+                                R.drawable.sakai
+                            )!!,
+                            LoginUserResponse!!.posts[usersize - 1].title,
+                            "작성일자 : " + LoginUserResponse!!.posts[usersize - 1].updated_at
+                        )
                     )
-                )
-                --usersize
+                    --usersize
+                }
 
 
-            }
             val adapter = ListViewAdapter(items)
             listView.adapter = adapter
             listView.setOnItemClickListener { parent: AdapterView<*>, view: View, position: Int, id: Long ->
@@ -121,7 +120,6 @@ class ActivityMeFragment : Fragment() {
         }else{
 
         }
-
 //
             }
 

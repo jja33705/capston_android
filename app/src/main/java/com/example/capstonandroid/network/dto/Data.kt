@@ -1,7 +1,7 @@
 package com.example.capstonandroid.network.dto
 
 data class Data(
-    val altitude: Int,
+    val altitude: Double,
     val average_speed: Double,
     val calorie: Double,
     val content: String,
