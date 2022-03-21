@@ -7,8 +7,6 @@ import com.example.capstonandroid.databinding.ActivityLoginBinding
 import com.example.capstonandroid.network.dto.Login
 import com.example.capstonandroid.network.api.BackendApi
 import com.example.capstonandroid.network.RetrofitClient
-import com.example.capstonandroid.network.dto.LoginResponse
-import com.example.capstonandroid.network.dto.LoginResponse2
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
