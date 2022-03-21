@@ -17,6 +17,7 @@ import com.example.capstonandroid.network.dto.Record
 import com.example.capstonandroid.network.api.BackendApi
 import com.example.capstonandroid.network.RetrofitClient
 import com.example.capstonandroid.network.dto.PostRecordActivity
+import com.example.capstonandroid.network.dto.PostRecordGpsData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -37,15 +38,23 @@ class CompleteRecordActivity : AppCompatActivity() {
 
     private lateinit var gpsDataList: List<GpsData>
 
+    private lateinit var speedList: ArrayList<Float>
+    private lateinit var gpsList: ArrayList<List<Double>>
+    private lateinit var altitudeList: ArrayList<Double>
+    private lateinit var distanceList: ArrayList<Double>
+    private lateinit var timeList: ArrayList<Int>
+
+    private lateinit var postRecordGpsData: PostRecordGpsData
+
     private var second: Int = 0 // 시간
 
-    private var sumAltitude: Int = 0 // 누적 상승 고도
+    private var sumAltitude = 0.0 // 누적 상승 고도
 
     private var distance = 0.0 // 거리
 
     private var avgSpeed = 0.0 // 평균 속도
 
-    private var kcal = 0 // 칼로리
+    private var kcal = 0.0 // 칼로리
 
     private var range = "public" // 공개범위
 
@@ -61,9 +70,26 @@ class CompleteRecordActivity : AppCompatActivity() {
         val db = Room.databaseBuilder(applicationContext, AppDatabase::class.java, "database").build()
         gpsDataDao = db.gpsDataDao()
 
+        speedList = ArrayList()
+        gpsList = ArrayList()
+        altitudeList = ArrayList()
+        distanceList = ArrayList()
+        timeList = ArrayList()
+
         // db에 저장돼 있는 gps 데이터 불러옴
         CoroutineScope(Dispatchers.IO).launch {
             gpsDataList = gpsDataDao.getAll()
+
+            for (gpsData in gpsDataList) {
+                speedList.add(gpsData.speed)
+                gpsList.add(listOf(gpsData.lng, gpsData.lat))
+                altitudeList.add(gpsData.altitude)
+                distanceList.add(gpsData.distance)
+                timeList.add(gpsData.second)
+            }
+
+            postRecordGpsData = PostRecordGpsData(speedList, gpsList, altitudeList, distanceList, timeList)
+
             loadedGpsData = true
         }
 
@@ -71,13 +97,13 @@ class CompleteRecordActivity : AppCompatActivity() {
         val intent = intent
         second = intent.getIntExtra("second", 0)
         println("intent 넘어옴: $second")
-        sumAltitude = intent.getDoubleExtra("sumAltitude", 0.0).toInt()
+        sumAltitude = intent.getDoubleExtra("sumAltitude", 0.0)
         println("intent 넘어옴: $sumAltitude")
         distance = intent.getDoubleExtra("distance", 0.0)
         println("intent 넘어옴: $distance")
         avgSpeed = intent.getDoubleExtra("avgSpeed", 0.0)
         println("intent 넘어옴: $avgSpeed")
-        kcal = intent.getIntExtra("kcal", 0)
+        kcal = intent.getDoubleExtra("kcal", 0.0)
         println("intent 넘어옴: $kcal")
         exerciseKind = getSharedPreferences("record", MODE_PRIVATE).getString("exerciseKind", "")!!
         println(exerciseKind)
@@ -99,10 +125,13 @@ class CompleteRecordActivity : AppCompatActivity() {
             }
         }
 
+        // 등록 버튼 눌렀을 때
         binding.btPost.setOnClickListener{
+
+            // db에 있는 gps 데이터 다 로딩했는지에 따라 분기처리
             if (loadedGpsData) {
                 CoroutineScope(Dispatchers.Main).launch {
-                    val postActivityResponse = supplementService.postRecordActivity("Bearer " + getSharedPreferences("other", MODE_PRIVATE).getString("TOKEN", "")!!, PostRecordActivity(sumAltitude, avgSpeed, kcal, binding.etDescription.text.toString(), distance, getSharedPreferences("trackRecord", MODE_PRIVATE).getString("exerciseKind", "")!!, "혼자하기", range, second, binding.etTitle.text.toString(), null, gpsDataList))
+                    val postActivityResponse = supplementService.postRecordActivity("Bearer " + getSharedPreferences("other", MODE_PRIVATE).getString("TOKEN", "")!!, PostRecordActivity(sumAltitude, avgSpeed, kcal, binding.etDescription.text.toString(), distance, getSharedPreferences("record", MODE_PRIVATE).getString("exerciseKind", "")!!, "혼자하기", range, second, binding.etTitle.text.toString(), null, postRecordGpsData))
 
                     println("Bearer ${getSharedPreferences("other", MODE_PRIVATE).getString("TOKEN", "")!!}")
                     println(gpsDataList)

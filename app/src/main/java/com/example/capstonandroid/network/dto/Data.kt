@@ -18,6 +18,6 @@ data class Data(
     val title: String,
     val track_id: Int,
     val updated_at: String,
-    val user: UserX,
+    val user: User,
     val user_id: Int
 )

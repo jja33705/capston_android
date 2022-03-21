@@ -4,20 +4,15 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.Canvas
-
 import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Looper
-import android.view.LayoutInflater
-import android.view.View
-import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.capstonandroid.R
+import com.example.capstonandroid.TrackClusterRenderer
 import com.example.capstonandroid.databinding.ActivitySelectTrackBinding
 import com.example.capstonandroid.network.dto.Track
 import com.example.capstonandroid.network.api.BackendApi
@@ -35,7 +30,7 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import kotlinx.coroutines.*
 import retrofit2.Retrofit
 
-class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnPolylineClickListener, GoogleMap.OnMapClickListener {
+class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapClickListener {
 
     private var _binding: ActivitySelectTrackBinding? = null
     private val binding get() = _binding!!
@@ -55,17 +50,9 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.O
 
     private lateinit var trackMap: HashMap<String, Track> // 트랙 맵
 
-    private lateinit var polylineMap: HashMap<String, Polyline> // 폴리라인 맵
-
-    private lateinit var markerMap: HashMap<String, Marker>
-
     private lateinit var exerciseKind: String // 운동 종류
 
     private lateinit var matchType: String // 매치 타입
-
-    private lateinit var trackMarker: View // 커스텀 마커 뷰
-
-    private lateinit var trackMarkerTextView: TextView // 커스텀 마커 텍스트 뷰
 
     private lateinit var clusterManager: ClusterManager<TrackItem> // 클러스터 매니저
 
@@ -78,9 +65,6 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.O
 
         _binding = ActivitySelectTrackBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        trackMarker = LayoutInflater.from(this).inflate(R.layout.track_and_name_marker, null)!! // 마커 레이아웃 파일 불러옴
-        trackMarkerTextView = trackMarker.findViewById(R.id.tv_marker) as TextView
 
         supportActionBar?.title = "트랙 선택" // 액션바 텍스트 수정
 
@@ -102,8 +86,6 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.O
         job = Job() // job 생성
 
         trackMap = HashMap()
-        polylineMap = HashMap()
-        markerMap = HashMap()
 
         initRetrofit() // retrofit 인스턴스 초기화
 
@@ -116,6 +98,11 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.O
 
             startActivity(intent)
             finish()
+        }
+
+        // 현재 위치에서 검색 버튼 초기화
+        binding.buttonSearchTrack.setOnClickListener {
+            initTracks()
         }
 
         val mapFragment = supportFragmentManager
@@ -144,17 +131,8 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.O
                     if (!trackMap.containsKey(track._id)) { // 현재 없는 트랙이면 추가함
                         trackMap[track._id] = track
 
-                        // 마커 생성하고 마커 맵에 넣음
-//                        trackMarkerTextView.text = track.trackName
-//                        val marker = mGoogleMap.addMarker(MarkerOptions()
-//                            .position(LatLng(track.start_latlng[1], track.start_latlng[0]))
-//                            .title(track.trackName)
-//                            .icon(BitmapDescriptorFactory.fromBitmap(createBitmapFromView()))
-//                            .anchor(0.1F, 1F))!!
-//                        marker.tag = track._id
-//                        markerMap[track._id] = marker
-                        clusterManager.addItem(TrackItem(LatLng(track.start_latlng[1], track.start_latlng[0]), track.trackName, track._id))
-
+                        val trackItem = TrackItem(LatLng(track.start_latlng[1], track.start_latlng[0]), track.trackName, track._id)
+                        clusterManager.addItem(trackItem)
 
                         // 폴리라인 그리고 폴리라인 맵에 넣음
                         val latLngList = ArrayList<LatLng>()
@@ -170,10 +148,10 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.O
                             .width(10F)
                             .color(R.color.main_color))
                         polyline.tag = track._id
-                        polylineMap[track._id] = polyline
                     }
                 }
             }
+            clusterManager.cluster() // 강제로 리 클러스터링 해 줘야 이미지가 렌더링 됨....
         }
     }
 
@@ -187,14 +165,12 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.O
     override fun onMapReady(googleMap: GoogleMap) {
         mGoogleMap = googleMap
 
-        // 폴리라인 클릭 리스너 등록
-        mGoogleMap.setOnPolylineClickListener(this)
-
         // 맵 클릭 리스너 등록
         mGoogleMap.setOnMapClickListener(this)
 
         // 클러스터 리스너 등록
         clusterManager = ClusterManager(this, mGoogleMap)
+        clusterManager.renderer = TrackClusterRenderer(this, mGoogleMap, clusterManager) // 마커 이미지 변경을 위한 것.
         mGoogleMap.setOnCameraIdleListener(clusterManager)
         mGoogleMap.setOnMarkerClickListener(clusterManager)
 
@@ -202,7 +178,12 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.O
         clusterManager.setOnClusterItemClickListener { trackItem ->
             println("클릭된거 타이틀: ${trackItem.title}")
             println("클릭된거 아이디: ${trackItem.snippet}")
-            true
+
+            clusterManager.markerCollection.markers.forEach { marker ->
+
+            }
+
+            true // 마커 클릭 기본 이벤트 발동 안하게 함
         }
 
         checkPermission()
@@ -224,7 +205,17 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.O
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.round_circle_black_24dp)))
                 mLocationMarker?.tag = "myLocation"
 
-                mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(location.latitude, location.longitude), 11.0f)) // 화면 이동
+                // 화면 이동하고 화면 이동 끝났을 때 맵 불러오는 콜백
+                mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(location.latitude, location.longitude), 11.0f), object : GoogleMap.CancelableCallback {
+                    override fun onCancel() {
+
+                    }
+
+                    override fun onFinish() {
+                        initTracks()
+                    }
+
+                } )
             }
         }
 
@@ -252,58 +243,6 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.O
     private fun initRetrofit() {
         retrofit = RetrofitClient.getInstance()
         supplementService = retrofit.create(BackendApi::class.java)
-    }
-
-    // 폴리라인이나 마커를 클릭해서 선택했을 때
-    private fun selectTrack(newSelectedTrackId: String) {
-        println("selectTrack 호출 $selectedTrackId $newSelectedTrackId ${trackMap.size} ${markerMap.size} ${polylineMap.size}")
-
-        if (selectedTrackId == newSelectedTrackId) { // 같은 것을 선택하면 그냥 리턴
-            return
-        }
-
-        if (selectedTrackId == null) {
-
-            // 선택되지 않은 마커, 폴리라인 색 투명하게 바꿈
-            for ((key, marker) in markerMap) {
-                if (key != newSelectedTrackId) {
-                    marker.alpha = 0.3F
-                    println(marker.tag)
-                }
-            }
-            for ((key, polyline) in polylineMap) {
-                if (key != newSelectedTrackId) {
-                    polyline.color = R.color.selected_polyline_color
-                }
-            }
-
-            selectedTrackId = newSelectedTrackId
-
-            binding.slidingLayout.panelState = SlidingUpPanelLayout.PanelState.ANCHORED // 하단 바 올려줌
-        } else {
-            markerMap[selectedTrackId]?.alpha = 0.3F
-            polylineMap[selectedTrackId]?.color = R.color.selected_polyline_color
-
-            markerMap[newSelectedTrackId]?.alpha = 1F
-            polylineMap[newSelectedTrackId]?.color = R.color.main_color
-
-            selectedTrackId = newSelectedTrackId
-        }
-
-        println("높이: ${binding.slidingLayout.panelHeight}")
-        println(selectedTrackId)
-        println(trackMap[selectedTrackId]?.trackName)
-        println(trackMap[selectedTrackId]?.description)
-        println("${trackMap[selectedTrackId]?.totalDistance}km")
-        println(trackMap[selectedTrackId])
-        binding.trackTitle.text = trackMap[selectedTrackId]?.trackName
-        binding.trackDescription.text = trackMap[selectedTrackId]?.description
-        binding.trackDistance.text = "${trackMap[selectedTrackId]?.totalDistance}km"
-    }
-
-    // 폴리라인 클릭 이벤트 처리
-    override fun onPolylineClick(polyline: Polyline) {
-        selectTrack("${polyline.tag}")
     }
 
     // 권한 확인
@@ -364,36 +303,7 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.O
             selectedTrackId = null
 
             binding.slidingLayout.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
-
-            // 선택되지 않은 마커, 폴리라인 정상으로 바꿈
-            for ((key, marker) in markerMap) {
-                if (key != selectedTrackId) {
-                    marker.alpha = 1F
-                }
-            }
-            for ((key, polyline) in polylineMap) {
-                if (key != selectedTrackId) {
-                    polyline.color = R.color.main_color
-                }
-            }
         }
-    }
-
-    // 비트맵 이미지 만드는 함수
-    private fun createBitmapFromView(): Bitmap {
-        trackMarker.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
-        trackMarker.layout(0, 0, trackMarker.measuredWidth, trackMarker.measuredHeight)
-
-        val bitmap = Bitmap.createBitmap(trackMarker.measuredWidth,
-            trackMarker.measuredHeight,
-            Bitmap.Config.ARGB_8888)
-
-        val canvas = Canvas(bitmap)
-
-        trackMarker.background?.draw(canvas)
-        trackMarker.draw(canvas)
-
-        return bitmap
     }
 
     // 클러스팅하기 위한 마커 아이템
@@ -416,4 +326,5 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.O
         }
 
     }
+
 }

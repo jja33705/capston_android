@@ -9,7 +9,7 @@ data class Following(
     val location: String,
     val mmr: Int,
     val name: String,
-    val pivot: PivotXX,
+    val pivot: Pivot,
     val profile: String,
     val sex: String,
     val updated_at: String,

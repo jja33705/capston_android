@@ -5,9 +5,10 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.capstonandroid.databinding.ActivityLoginBinding
 import com.example.capstonandroid.network.dto.Login
-import com.example.capstonandroid.network.dto.LoginResponse
 import com.example.capstonandroid.network.api.BackendApi
 import com.example.capstonandroid.network.RetrofitClient
+import com.example.capstonandroid.network.dto.LoginResponse
+import com.example.capstonandroid.network.dto.LoginResponse2
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -85,8 +86,8 @@ class LoginActivity : AppCompatActivity() {
 
 
 
-            supplementService.loginPost(login).enqueue(object : Callback<LoginResponse> {
-                override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
+            supplementService.loginPost(login).enqueue(object : Callback<LoginResponse2> {
+                override fun onResponse(call: Call<LoginResponse2>, response: Response<LoginResponse2>) {
 
                     if(response.isSuccessful){
                         println("성공")
@@ -97,9 +98,9 @@ class LoginActivity : AppCompatActivity() {
                         nextIntent.putExtra("password",login.password)
 
 
-                        var loginResponse: LoginResponse? = response.body()
+                        var loginResponse = response.body()
 
-//                        데이터 클래스 USER 사용방법
+//                        데이터 클래스 USER 사용방법å
 //                        var user: User? = loginResponse!!.user
 //                        print(user!!.birth)
 
@@ -126,7 +127,7 @@ class LoginActivity : AppCompatActivity() {
                 }
 
 
-                override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
+                override fun onFailure(call: Call<LoginResponse2>, t: Throwable) {
 
                     println("실패")
                     println(t.message)

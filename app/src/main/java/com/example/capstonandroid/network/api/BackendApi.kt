@@ -19,12 +19,12 @@ interface BackendApi {
 //   테스트용..
 
 
-    @FormUrlEncoded
-    @POST("test") // 보낼 url
-    fun test(@Field("test") test: String): Call<Test>
+
+    @GET("test") // 보낼 url
+    fun test(): Call<String>
 
     @POST("login") //로그인 요청(Login) 하고 응답 받는것(LoginResponse)
-    fun loginPost(@Body login: Login): Call<LoginResponse>
+    fun loginPost(@Body login: Login): Call<LoginResponse2>
 
     @POST("register") //회원가입 요청(Register) 하고 응답받는것
     fun registerPost(@Body register: Register): Call<RegisterResponse>
