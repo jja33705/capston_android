@@ -10,7 +10,7 @@ class BaeminRepository {
     var _notice = MutableLiveData<Data>()
 
     fun loadBaeminNotice(page: Int) {
-        //parameter["page"] = page.toString()
+//        parameter["page"] = page.toString()
         val call = BaeminApi.createApi().loadNotice(page.toString())
 
         call.enqueue(object : Callback<Baemin> {

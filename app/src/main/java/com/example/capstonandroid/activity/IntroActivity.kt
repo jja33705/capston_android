@@ -1,5 +1,7 @@
 package com.example.capstonandroid.activity
 
+// 앱 켜자마자 뜨는 액티비티
+
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -8,6 +10,7 @@ import com.example.capstonandroid.databinding.ActivityLoginBinding
 import com.example.capstonandroid.network.RetrofitClient
 import com.example.capstonandroid.network.api.BackendApi
 import com.example.capstonandroid.network.dto.LoginUserResponse
+import com.example.capstonandroid.network.dto.Test
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -36,6 +39,18 @@ class IntroActivity : AppCompatActivity() {
         var token = "Bearer " + sharedPreference.getString("TOKEN","")
         println(token)
 
+//        supplementService.test().enqueue(object : Callback<Test>{
+//            override fun onResponse(call: Call<Test>, response: Response<Test>) {
+//                TODO("Not yet implemented")
+//
+//                response.body()
+//            }
+//
+//            override fun onFailure(call: Call<Test>, t: Throwable) {
+//                TODO("Not yet implemented")
+//            }
+//
+//        })
 
 
         supplementService.userGet(token).enqueue(object : Callback<LoginUserResponse> {

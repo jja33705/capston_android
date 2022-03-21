@@ -1,5 +1,7 @@
 package com.example.capstonandroid.activity
 
+// 메인 액티비티
+
 import android.app.Dialog
 import android.content.Intent
 import android.graphics.Color

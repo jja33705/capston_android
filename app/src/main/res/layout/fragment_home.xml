@@ -8,17 +8,17 @@
     android:background="@drawable/gradation"
     tools:context=".activity.MainActivity">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#2AC1BC"
-        android:gravity="center"
-        android:padding="16dp"
-        android:text="배달의 민족\n공지사항"
-        android:textColor="@color/white"
-        android:textSize="32sp"
-        android:textStyle="bold" />
+<!--    <TextView-->
+<!--        android:id="@+id/textView"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:background="#2AC1BC"-->
+<!--        android:gravity="center"-->
+<!--        android:padding="16dp"-->
+<!--        android:text="배달의 민족\n공지사항"-->
+<!--        android:textColor="@color/white"-->
+<!--        android:textSize="32sp"-->
+<!--        android:textStyle="bold" />-->
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_baemin_notice"

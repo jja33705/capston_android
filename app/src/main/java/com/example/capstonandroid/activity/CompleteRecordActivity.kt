@@ -1,5 +1,7 @@
 package com.example.capstonandroid.activity
 
+// 레코드 완료 후 뜨는 액티비티
+
 import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -22,6 +24,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
+
+
 
 class CompleteRecordActivity : AppCompatActivity() {
 

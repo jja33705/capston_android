@@ -20,8 +20,8 @@ interface BackendApi {
 
 
     @FormUrlEncoded
-    @POST("test") // 보낼 url
-    fun test(@Field("test") test: String): Call<Test>
+    @GET("test") // 보낼 url
+    fun test(): Call<Test>
 
     @POST("login") //로그인 요청(Login) 하고 응답 받는것(LoginResponse)
     fun loginPost(@Body login: Login): Call<LoginResponse>
@@ -46,6 +46,7 @@ interface BackendApi {
 
     @POST("post/store") // 포스트 작성
     suspend fun postRecordActivity(@Header("Authorization") token: String, @Body postRecordActivity: PostRecordActivity): Response<ResponseMessage>
+
 
     @GET // 트랙 리스트 받기
     suspend fun getTracks(

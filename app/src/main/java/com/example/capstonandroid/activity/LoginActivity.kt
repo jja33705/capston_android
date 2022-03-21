@@ -1,5 +1,7 @@
 package com.example.capstonandroid.activity
 
+//로그인 액티비티
+
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

@@ -1,5 +1,7 @@
 package com.example.capstonandroid.activity
 
+//결과 액티비티
+
 import android.content.DialogInterface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

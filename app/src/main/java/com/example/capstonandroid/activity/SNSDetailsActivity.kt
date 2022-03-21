@@ -1,5 +1,7 @@
 package com.example.capstonandroid.activity
 
+// SNS 누르면 자세히 뜨는 것
+
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
