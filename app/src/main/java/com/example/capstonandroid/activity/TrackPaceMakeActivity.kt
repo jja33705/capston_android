@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -93,11 +94,11 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback {
 
         initRetrofit()
 
-        // 시작 버튼 초기화
-        binding.startButton.setOnClickListener{
-            println("시작 버튼 클릭함")
+        // 액티비티 이동 후 답을 받는 콜백
+        val activityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
 
-            if (inCanStartArea) {
+            // 정상적으로 카운트다운 다 지나오면 시작
+            if (result.resultCode == CountDownActivity.COUNT_DOWN_ACTIVITY_RESULT_CODE) {
                 // 시작한 상태 저장
                 getSharedPreferences("trackPaceMake", MODE_PRIVATE)
                     .edit()
@@ -115,13 +116,21 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback {
 
                 // 시작 영역 없애고 도착 영역 그림
                 canStartAreaCircle.remove()
-                mGoogleMap.addCircle(
-                    CircleOptions()
+                mGoogleMap.addCircle(CircleOptions()
                     .center(LatLng(endPoint.latitude, endPoint.longitude))
                     .radius(15.0)
                     .fillColor(R.color.area_color)
                     .strokeWidth(0F))
+            }
+        }
 
+        // 시작 버튼 초기화
+        binding.startButton.setOnClickListener{
+            println("시작 버튼 클릭함")
+
+            if (inCanStartArea) {
+                val intent = Intent(this, CountDownActivity::class.java)
+                activityResultLauncher.launch(intent)
             } else {
                 Toast.makeText(this@TrackPaceMakeActivity, "시작 가능 위치가 아닙니다.", Toast.LENGTH_SHORT).show()
             }

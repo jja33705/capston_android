@@ -36,13 +36,13 @@ class MainActivity : AppCompatActivity() {
         // 다이얼로그에서 라이딩 버튼 클릭했을 때
         val ridingButton: Button = selectExerciseKindDialog.findViewById(R.id.bt_riding)
         ridingButton.setOnClickListener{
-            startRecordActivity("R")
+            startRecordActivity("B")
         }
 
         // 다이얼로그에서 러닝 버튼 클릭했을 때
         val runningButton: Button = selectExerciseKindDialog.findViewById(R.id.bt_running)
         runningButton.setOnClickListener {
-            startRecordActivity("B")
+            startRecordActivity("R")
         }
 
         // 바텀 네비게이션에서 선택한 메뉴 아이디에 따라 표시할 화면 분기처리 (나중에 addToBackStack 부분 찾아보고 Transaction 관리해 줘야 할 것 같음.)

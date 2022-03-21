@@ -9,6 +9,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.activity.result.ActivityResultCallback
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
@@ -63,11 +66,11 @@ class RecordActivity : AppCompatActivity(), OnMapReadyCallback {
 
         job = Job()
 
-        // 시작 버튼 초기화
-        binding.startButton.setOnClickListener{
-            println("시작 버튼 클릭함")
+        // 액티비티 이동 후 답을 받는 콜백
+        val activityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
 
-            if (gotFirstLocation) {
+            // 정상적으로 카운트다운 다 지나오면 시작
+            if (result.resultCode == CountDownActivity.COUNT_DOWN_ACTIVITY_RESULT_CODE) {
                 // 시작한 상태 저장
                 getSharedPreferences("record", MODE_PRIVATE)
                     .edit()
@@ -82,10 +85,20 @@ class RecordActivity : AppCompatActivity(), OnMapReadyCallback {
                 // 버튼 바꿈
                 binding.startButton.visibility = View.GONE
                 binding.stopButton.visibility = View.VISIBLE
-            } else {
-                Toast.makeText(this@RecordActivity, "위치 정보 초기화 중", Toast.LENGTH_SHORT).show()
             }
+        }
 
+        // 시작 버튼 초기화
+        binding.startButton.setOnClickListener{
+            println("시작 버튼 클릭함")
+            if (gotFirstLocation) {
+                val intent = Intent(this, CountDownActivity::class.java)
+                activityResultLauncher.launch(intent)
+
+            } else {
+                Toast.makeText(this@RecordActivity, "위치 정보 초기화 중", Toast.LENGTH_SHORT)
+                    .show()
+            }
         }
 
         // 종료 버튼 초기화

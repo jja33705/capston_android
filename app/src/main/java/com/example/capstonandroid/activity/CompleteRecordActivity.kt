@@ -116,6 +116,11 @@ class CompleteRecordActivity : AppCompatActivity() {
         println("intent 넘어옴 (kcal): $kcal")
         trackId = intent.getStringExtra("trackId")
         println("intent 넘어옴 (trackId): $trackId")
+        matchType = intent.getStringExtra("matchType")!!
+        println("intent 넘어옴 (matchType): $matchType")
+        exerciseKind = intent.getStringExtra("exerciseKind")!!
+        println("intent 넘어옴 (exerciseKind): $exerciseKind")
+
 
 
         // 스피너 설정
