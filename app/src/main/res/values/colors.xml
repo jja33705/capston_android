@@ -27,4 +27,5 @@
     <color name="area_color">#D395D4FF</color>
     <color name="yellow">#FFFF00</color>
     <color name="green">#00FF00</color>
+    <color name="focused">#E0E0E0</color>
 </resources>

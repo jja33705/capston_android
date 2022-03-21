@@ -12,3 +12,4 @@ data class GpsData(
     val distance: Double,
     val altitude: Double,
 )
+

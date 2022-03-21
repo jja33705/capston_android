@@ -1,11 +1,9 @@
 package com.example.capstonandroid.network.dto
 
-import com.example.capstonandroid.db.entity.GpsData
-
 data class PostRecordActivity(
-    val altitude: Int,
+    val altitude: Double,
     val average_speed: Double,
-    val calorie: Int,
+    val calorie: Double,
     val content: String,
     val distance: Double,
     val event: String,
@@ -14,5 +12,5 @@ data class PostRecordActivity(
     val time: Int,
     val title: String,
     val track_id: Int?,
-    val gpsData: List<GpsData>
+    val gpsData: PostRecordGpsData
 )
