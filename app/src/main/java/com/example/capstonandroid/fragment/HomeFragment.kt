@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -25,6 +26,7 @@ import com.example.capstonandroid.network.RetrofitClient
 import com.example.capstonandroid.network.dto.*
 import com.example.capstonandroid.MainViewModel
 import com.example.capstonandroid.NoticeAdapter
+import com.example.capstonandroid.adapter.CustomAdapter
 import kotlinx.android.synthetic.main.fragment_home.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -109,7 +111,21 @@ class HomeFragment : Fragment() {
 
                         if(response.isSuccessful) {
                             println(response.body())
+                            var userList = arrayListOf<DataVo>(
 
+                                DataVo("아이유", "test1", "전주시", 30000000,"user_img_01"),
+                                DataVo("홍길동", "test2", "김해시", 50000000,"user_img_02"),
+                                DataVo("김", "test3", "안동시", 70000000,"user_img_03"),
+                                DataVo("이", "test4", "성주군", 90000000,"user_img_04"),
+
+                            )
+
+                            val mAdapter = CustomAdapter(requireContext(),userList)
+                            recycler_view.adapter = mAdapter
+
+                            val layout = LinearLayoutManager(requireContext())
+                            recycler_view.layoutManager = layout
+                            recycler_view.setHasFixedSize(true)
 //                            var SNSResponse: SNSResponse? = response.body()
 //
 //                            println(SNSResponse!!.data[0].title)
@@ -231,6 +247,7 @@ class HomeFragment : Fragment() {
                 }
             }
         })
+
 
 
     }

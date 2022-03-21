@@ -24,8 +24,13 @@
         android:id="@+id/rv_baemin_notice"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="8dp"
+        android:visibility="gone"/>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_marginTop="8dp"/>
-
     <TextView
         android:id="@+id/message"
         android:visibility="gone"

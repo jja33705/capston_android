@@ -47,6 +47,10 @@ android {
 }
 
 dependencies {
+
+
+
+
     // 안드로이드 내부 db (room 라이브러리)
     def roomVersion = "2.4.2"
     implementation("androidx.room:room-runtime:$roomVersion")
