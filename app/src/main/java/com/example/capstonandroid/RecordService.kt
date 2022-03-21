@@ -234,6 +234,7 @@ class RecordService : Service() {
                 intent.putExtra("kcal", 30.0)
                 intent.putExtra("sumAltitude", sumAltitude)
                 intent.putExtra("second", second)
+                intent.putExtra("exerciseKind", getSharedPreferences("record", MODE_PRIVATE).getString("exerciseKind", ""))
 
                 startActivity(intent)
 

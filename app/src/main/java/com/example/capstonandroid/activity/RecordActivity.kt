@@ -71,7 +71,6 @@ class RecordActivity : AppCompatActivity(), OnMapReadyCallback {
                 // 시작한 상태 저장
                 getSharedPreferences("record", MODE_PRIVATE)
                     .edit()
-                    .putString("exerciseKind", exerciseKind)
                     .putBoolean("isStarted", true)
                     .commit()
 
@@ -118,6 +117,12 @@ class RecordActivity : AppCompatActivity(), OnMapReadyCallback {
     @SuppressLint("NewApi") // 권한설정하라고 오류표시뜨는거 없애 줌
     private fun startProcess() {
         println("프로세스 시작함.")
+
+        // 운동 종류 저장
+        getSharedPreferences("record", MODE_PRIVATE)
+            .edit()
+            .putString("exerciseKind", exerciseKind)
+            .commit()
 
         // 브로드캐스트 설정
         mBroadcastReceiver = MBroadcastReceiver()

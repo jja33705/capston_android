@@ -30,7 +30,7 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import kotlinx.coroutines.*
 import retrofit2.Retrofit
 
-class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapClickListener {
+class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private var _binding: ActivitySelectTrackBinding? = null
     private val binding get() = _binding!!
@@ -91,12 +91,29 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.O
 
         // 시작 버튼 초기화
         binding.btnStart.setOnClickListener {
-            val intent = Intent(this@SelectTrackActivity, TrackRecordActivity::class.java)
-            intent.putExtra("exerciseKind", exerciseKind)
-            intent.putExtra("matchType", matchType)
-            intent.putExtra("trackId", selectedTrackId)
+            // 매치 타입에 따라 분기처리
+            when(matchType) {
+                "혼자하기" -> {
+                    val intent = Intent(this@SelectTrackActivity, TrackRecordActivity::class.java)
+                    intent.putExtra("exerciseKind", exerciseKind)
+                    intent.putExtra("matchType", matchType)
+                    intent.putExtra("trackId", selectedTrackId)
 
-            startActivity(intent)
+                    startActivity(intent)
+                }
+                "친선전" -> {
+
+                }
+                "랭크전" -> {
+                    val intent = Intent(this@SelectTrackActivity, TrackPaceMakeActivity::class.java)
+                    intent.putExtra("exerciseKind", exerciseKind)
+                    intent.putExtra("matchType", matchType)
+                    intent.putExtra("trackId", selectedTrackId)
+
+                    startActivity(intent)
+                }
+            }
+
             finish()
         }
 
@@ -165,9 +182,6 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.O
     override fun onMapReady(googleMap: GoogleMap) {
         mGoogleMap = googleMap
 
-        // 맵 클릭 리스너 등록
-        mGoogleMap.setOnMapClickListener(this)
-
         // 클러스터 리스너 등록
         clusterManager = ClusterManager(this, mGoogleMap)
         clusterManager.renderer = TrackClusterRenderer(this, mGoogleMap, clusterManager) // 마커 이미지 변경을 위한 것.
@@ -179,9 +193,12 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.O
             println("클릭된거 타이틀: ${trackItem.title}")
             println("클릭된거 아이디: ${trackItem.snippet}")
 
-            clusterManager.markerCollection.markers.forEach { marker ->
+            selectedTrackId = trackItem.snippet
 
-            }
+            binding.slidingLayout.panelState = SlidingUpPanelLayout.PanelState.ANCHORED
+            binding.tvTrackTitle.text = trackMap[trackItem.snippet]?.trackName
+            binding.tvTrackDescription.text = trackMap[trackItem.snippet]?.description
+            binding.tvTrackDistance.text = trackMap[trackItem.snippet]?.totalDistance.toString()
 
             true // 마커 클릭 기본 이벤트 발동 안하게 함
         }
@@ -295,17 +312,6 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.O
         }
     }
 
-    override fun onMapClick(latLng: LatLng) {
-        println("onMapClick 호출")
-
-        // 선택돼 있는 트랙이 있으면 취소함
-        if (selectedTrackId != null) {
-            selectedTrackId = null
-
-            binding.slidingLayout.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
-        }
-    }
-
     // 클러스팅하기 위한 마커 아이템
     inner class TrackItem(position: LatLng, title: String, snippet: String) : ClusterItem {
 
@@ -324,7 +330,5 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.O
         override fun getSnippet(): String? {
             return snippet
         }
-
     }
-
 }

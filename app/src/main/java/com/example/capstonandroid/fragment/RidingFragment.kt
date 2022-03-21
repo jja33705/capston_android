@@ -86,7 +86,7 @@ class RidingFragment : Fragment(), View.OnClickListener {
             }
             R.id.riding_friendly_match -> {
                 println("friendly")
-                matchType = "친선"
+                matchType = "친선전"
             }
             R.id.riding_rank_match -> {
                 println("rank")
@@ -96,7 +96,7 @@ class RidingFragment : Fragment(), View.OnClickListener {
 
 
         val intent = Intent(activity, SelectTrackActivity::class.java)
-        intent.putExtra("exerciseKind", "riding")
+        intent.putExtra("exerciseKind", "B")
         intent.putExtra("matchType", matchType)
         startActivity(intent)
     }

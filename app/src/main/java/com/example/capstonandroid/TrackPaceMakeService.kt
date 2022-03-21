@@ -10,8 +10,7 @@ import androidx.core.app.NotificationCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.room.Room
 import com.example.capstonandroid.activity.CompleteRecordActivity
-import com.example.capstonandroid.activity.RecordActivity
-import com.example.capstonandroid.activity.TrackRecordActivity
+import com.example.capstonandroid.activity.TrackPaceMakeActivity
 import com.example.capstonandroid.db.AppDatabase
 import com.example.capstonandroid.db.dao.GpsDataDao
 import com.example.capstonandroid.db.entity.GpsData
@@ -22,9 +21,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
-import kotlin.collections.ArrayList
 
-class TrackRecordService : Service() {
+class TrackPaceMakeService : Service() {
 
     private lateinit var mNotificationManager: NotificationManager // 상단바에 뜨는 노티피케이션 매니저
 
@@ -51,7 +49,7 @@ class TrackRecordService : Service() {
     private var isStarted = false // 시작했는지
 
     companion object {
-        private const val PREFIX = "com.example.capstonandroid.trackrecordservice"
+        private const val PREFIX = "com.example.capstonandroid.trackpacemakeservice"
 
         const val NOTIFICATION_CHANNEL_ID: String = PREFIX
         const val NOTIFICATION_CHANNEL_NAME: String = PREFIX
@@ -167,14 +165,14 @@ class TrackRecordService : Service() {
     private fun getNotification(): Notification {
 
         // 알람 누르면 액티비티 시작하게 하는 pendingIntent
-        val activityIntent = Intent(applicationContext, TrackRecordActivity::class.java)
-        activityIntent.putExtra("exerciseKind", getSharedPreferences("trackRecord", MODE_PRIVATE).getString("exerciseKind", ""))
-        activityIntent.putExtra("matchType", getSharedPreferences("trackRecord", MODE_PRIVATE).getString("matchType", ""))
-        activityIntent.putExtra("trackId", getSharedPreferences("trackRecord", MODE_PRIVATE).getString("trackId", ""))
+        val activityIntent = Intent(applicationContext, TrackPaceMakeActivity::class.java)
+        activityIntent.putExtra("exerciseKind", getSharedPreferences("trackPaceMake", MODE_PRIVATE).getString("exerciseKind", ""))
+        activityIntent.putExtra("matchType", getSharedPreferences("trackPaceMake", MODE_PRIVATE).getString("matchType", ""))
+        activityIntent.putExtra("trackId", getSharedPreferences("trackPaceMake", MODE_PRIVATE).getString("trackId", ""))
         val activityPendingIntent = PendingIntent.getActivity(this, 0, activityIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
 
         val builder = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
-            .setContentText("${getSharedPreferences("trackRecord", MODE_PRIVATE).getString("trackName", "")}   ${Utils.timeToText(second)}    ${Utils.distanceToText(distance)}km")
+            .setContentText("${getSharedPreferences("trackPaceMake", MODE_PRIVATE).getString("trackName", "")}   ${Utils.timeToText(second)}    ${Utils.distanceToText(distance)}km")
             .setContentTitle("페이스메이커")
             .setOngoing(true) //종료 못하게 막음
             .setPriority(NotificationCompat.PRIORITY_MAX)
@@ -230,15 +228,15 @@ class TrackRecordService : Service() {
                 }
             }
             COMPLETE_RECORD -> { // 기록 끝
-                val intent = Intent(this@TrackRecordService, CompleteRecordActivity::class.java)
+                val intent = Intent(this@TrackPaceMakeService, CompleteRecordActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 intent.putExtra("avgSpeed", avgSpeed)
                 intent.putExtra("kcal", 30.0)
                 intent.putExtra("sumAltitude", sumAltitude)
                 intent.putExtra("second", second)
-                intent.putExtra("matchType", getSharedPreferences("trackRecord", MODE_PRIVATE).getString("matchType", ""))
-                intent.putExtra("trackId", getSharedPreferences("trackRecord", MODE_PRIVATE).getString("trackId", ""))
-                intent.putExtra("exerciseKind", getSharedPreferences("trackRecord", MODE_PRIVATE).getString("exerciseKind", ""))
+                intent.putExtra("matchType", getSharedPreferences("trackPaceMake", MODE_PRIVATE).getString("matchType", ""))
+                intent.putExtra("trackId", getSharedPreferences("trackPaceMake", MODE_PRIVATE).getString("trackId", ""))
+                intent.putExtra("exerciseKind", getSharedPreferences("trackPaceMake", MODE_PRIVATE).getString("exerciseKind", ""))
 
                 startActivity(intent)
 

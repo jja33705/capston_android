@@ -8,7 +8,7 @@ data class Data(
     val created_at: String,
     val distance: Double,
     val event: String,
-    val gps_id: Int,
+    val gps_id: String,
     val id: Int,
     val img: Any,
     val likes: List<Any>,

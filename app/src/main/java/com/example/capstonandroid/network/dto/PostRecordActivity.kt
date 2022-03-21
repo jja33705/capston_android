@@ -11,6 +11,6 @@ data class PostRecordActivity(
     val range: String,
     val time: Int,
     val title: String,
-    val track_id: Int?,
+    val track_id: String?,
     val gpsData: PostRecordGpsData
 )

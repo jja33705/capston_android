@@ -16,7 +16,7 @@ data class Post(
     val range: String,
     val time: Int,
     val title: String,
-    val track_id: Any,
+    val track_id: String,
     val updated_at: String,
     val user_id: Int
 )

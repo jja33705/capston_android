@@ -80,20 +80,20 @@ class RunningFragment : Fragment(), View.OnClickListener {
         when (view?.id) {
             R.id.running_normal_match -> {
                 println("normal")
-                matchType = "normal"
+                matchType = "혼자하기"
             }
             R.id.running_friendly_match -> {
                 println("friendly")
-                matchType = "friendly"
+                matchType = "친선전"
             }
             R.id.running_rank_match -> {
                 println("rank")
-                matchType = "rank"
+                matchType = "랭크전"
             }
         }
 
         val intent = Intent(activity, SelectTrackActivity::class.java)
-        intent.putExtra("exerciseKind", "running")
+        intent.putExtra("exerciseKind", "R")
         intent.putExtra("matchType", matchType)
         startActivity(intent)
     }
