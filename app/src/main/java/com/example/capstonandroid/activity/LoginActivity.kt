@@ -9,6 +9,7 @@ import com.example.capstonandroid.databinding.ActivityLoginBinding
 import com.example.capstonandroid.network.dto.Login
 import com.example.capstonandroid.network.api.BackendApi
 import com.example.capstonandroid.network.RetrofitClient
+import com.example.capstonandroid.network.dto.LoginResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -86,8 +87,8 @@ class LoginActivity : AppCompatActivity() {
 
 
 
-            supplementService.loginPost(login).enqueue(object : Callback<LoginResponse2> {
-                override fun onResponse(call: Call<LoginResponse2>, response: Response<LoginResponse2>) {
+            supplementService.loginPost(login).enqueue(object : Callback<LoginResponse> {
+                override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
 
                     if(response.isSuccessful){
                         println("성공")
@@ -127,7 +128,7 @@ class LoginActivity : AppCompatActivity() {
                 }
 
 
-                override fun onFailure(call: Call<LoginResponse2>, t: Throwable) {
+                override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
 
                     println("실패")
                     println(t.message)
