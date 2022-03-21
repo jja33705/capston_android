@@ -216,6 +216,7 @@ class HomeFragment : Fragment() {
                     override fun onFailure(call: Call<SNSResponse>, t: Throwable) {
                         
                         println("아예 가지도 않음ㅋㅋ")
+                        println(t.message)
                     }
                 })
 

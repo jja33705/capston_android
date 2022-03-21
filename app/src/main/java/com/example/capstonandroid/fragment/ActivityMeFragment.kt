@@ -94,7 +94,7 @@ class ActivityMeFragment : Fragment() {
             if (usersize==0){
                 binding.message.visibility = View.VISIBLE
                 println("주행 한 기록이 없습니다.")
-            }
+            }else {
                 println(usersize)
                 for (i in usersize downTo 1) {
                     items.add(
@@ -116,7 +116,7 @@ class ActivityMeFragment : Fragment() {
             listView.setOnItemClickListener { parent: AdapterView<*>, view: View, position: Int, id: Long ->
                 val item = parent.getItemAtPosition(position) as ListViewItem
 
-            }
+            }}
         }else{
 
         }
