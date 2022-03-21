@@ -29,9 +29,6 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-//        startActivity(Intent(this@LoginActivity, CountDownActivity::class.java))
-//        finish()
-
 //        binding.btnRegister.setOnClickListener {
 //            println("hello")
 //            val intent : Intent = Intent(this,RegisterActivity::class.java);
