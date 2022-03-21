@@ -19,15 +19,13 @@ object RetrofitClient {
 //   https
 //private const val BASE_URL = "https://2yubi.shop/api/"
 //   http
-//    private const val BASE_URL = "http://3.35.239.14/api/"
+    private const val BASE_URL = "http://3.35.239.14/api/"
 
-//    private const val BASE_URL = "http://www.2yubi.shop/api/"
-
-    private const val BASE_URL = "http://10.0.2.2:8000/api/"
+//    private const val BASE_URL = "http://10.0.2.2:8000/api/"
 
     fun getInstance(): Retrofit {
         val interceptor = HttpLoggingInterceptor()
-        interceptor.level = HttpLoggingInterceptor.Level.HEADERS
+        interceptor.level = HttpLoggingInterceptor.Level.BODY
         val client = OkHttpClient.Builder()
             .addInterceptor(interceptor)
             .build()
@@ -35,6 +33,7 @@ object RetrofitClient {
             instance = Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(client)
                 .build()
         }
         return instance!!

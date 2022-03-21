@@ -231,7 +231,7 @@ class RecordService : Service() {
                 val intent = Intent(this@RecordService, CompleteRecordActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 intent.putExtra("avgSpeed", avgSpeed)
-                intent.putExtra("kcal", 30)
+                intent.putExtra("kcal", 30.0)
                 intent.putExtra("sumAltitude", sumAltitude)
                 intent.putExtra("second", second)
 

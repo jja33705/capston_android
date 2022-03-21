@@ -10,6 +10,7 @@ import com.example.capstonandroid.databinding.ActivityLoginBinding
 import com.example.capstonandroid.network.RetrofitClient
 import com.example.capstonandroid.network.api.BackendApi
 import com.example.capstonandroid.network.dto.LoginUserResponse
+import com.example.capstonandroid.network.dto.Test
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -36,9 +37,24 @@ class IntroActivity : AppCompatActivity() {
 
 //      이 타입이 디폴트 값
         var token = "Bearer " + sharedPreference.getString("TOKEN","")
-        println(token)
+        println("token: $token")
 
+//        startActivity(mainIntent)
 
+//        supplementService.test().enqueue(object : Callback<String> {
+//            override fun onResponse(call: Call<String>, response: Response<String>) {
+//                if (response.isSuccessful) {
+//                    println("성공 ${response.body()}")
+//                } else {
+//                    println("갔는데 실패")
+//                }
+//            }
+//
+//            override fun onFailure(call: Call<String>, t: Throwable) {
+//                println("실패")
+//            }
+//
+//        })
 
         supplementService.userGet(token).enqueue(object : Callback<LoginUserResponse> {
 

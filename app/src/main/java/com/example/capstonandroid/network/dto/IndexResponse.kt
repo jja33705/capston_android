@@ -7,7 +7,7 @@ data class IndexResponse(
     val from: Int,
     val last_page: Int,
     val last_page_url: String,
-    val links: List<Link>,
+//    val links: List<Link>,
     val next_page_url: Any,
     val path: String,
     val per_page: Int,
