@@ -232,6 +232,14 @@ class TrackRecordService : Service() {
             COMPLETE_RECORD -> { // 기록 끝
                 val intent = Intent(this@TrackRecordService, CompleteRecordActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                intent.putExtra("avgSpeed", avgSpeed)
+                intent.putExtra("kcal", 30.0)
+                intent.putExtra("sumAltitude", sumAltitude)
+                intent.putExtra("second", second)
+                intent.putExtra("matchType", getSharedPreferences("trackRecord", MODE_PRIVATE).getString("matchType", ""))
+                intent.putExtra("trackId", getSharedPreferences("trackRecord", MODE_PRIVATE).getString("trackId", ""))
+                intent.putExtra("exerciseKind", getSharedPreferences("trackRecord", MODE_PRIVATE).getString("exerciseKind", ""))
+
                 startActivity(intent)
 
                 stopService()

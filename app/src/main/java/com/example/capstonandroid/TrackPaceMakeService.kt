@@ -10,7 +10,7 @@ import androidx.core.app.NotificationCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.room.Room
 import com.example.capstonandroid.activity.CompleteRecordActivity
-import com.example.capstonandroid.activity.RecordActivity
+import com.example.capstonandroid.activity.TrackPaceMakeActivity
 import com.example.capstonandroid.db.AppDatabase
 import com.example.capstonandroid.db.dao.GpsDataDao
 import com.example.capstonandroid.db.entity.GpsData
@@ -21,9 +21,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
-import kotlin.collections.ArrayList
 
-class RecordService : Service() {
+class TrackPaceMakeService : Service() {
 
     private lateinit var mNotificationManager: NotificationManager // 상단바에 뜨는 노티피케이션 매니저
 
@@ -50,32 +49,32 @@ class RecordService : Service() {
     private var isStarted = false // 시작했는지
 
     companion object {
-        private const val PREFIX = "com.example.capstonandroid.recordservice"
+        private const val PREFIX = "com.example.capstonandroid.trackpacemakeservice"
 
         const val NOTIFICATION_CHANNEL_ID: String = PREFIX
         const val NOTIFICATION_CHANNEL_NAME: String = PREFIX
         const val NOTIFICATION_ID: Int = 1111
 
-        const val ACTION_BROADCAST = "$PREFIX.BROADCAST"
+        const val ACTION_BROADCAST = "${PREFIX}.BROADCAST"
 
         // command
-        const val START_RECORD = "$PREFIX.STOP_RECORD"
-        const val STOP_SERVICE = "$PREFIX.STOP_SERVICE"
-        const val START_PROCESS = "$PREFIX.STOP_PROCESS"
-        const val COMPLETE_RECORD = "$PREFIX.COMPLETE_RECORD"
+        const val START_RECORD = "${PREFIX}.STOP_RECORD"
+        const val STOP_SERVICE = "${PREFIX}.STOP_SERVICE"
+        const val START_PROCESS = "${PREFIX}.STOP_PROCESS"
+        const val COMPLETE_RECORD = "${PREFIX}.COMPLETE_RECORD"
 
         // flag
-        const val BEFORE_START_LOCATION_UPDATE = "$PREFIX.BEFORE_START_LOCATION_UPDATE"
+        const val BEFORE_START_LOCATION_UPDATE = "${PREFIX}.BEFORE_START_LOCATION_UPDATE"
         const val AFTER_START_UPDATE = "AFTER_START_UPDATE"
         const val IS_STARTED = "IS_STARTED"
-        const val RECORD_START_LAT_LNG = "$PREFIX.RECORD_START_LAT_LNG"
+        const val RECORD_START_LAT_LNG = "${PREFIX}.RECORD_START_LAT_LNG"
 
         // intent keyword
-        const val LAT_LNG = "$PREFIX.LAT_LNG"
-        const val SECOND = "$PREFIX.SECOND"
-        const val DISTANCE = "$PREFIX.DISTANCE"
-        const val AVG_SPEED = "$PREFIX.AVG_SPEED"
-        const val LOCATION_CHANGED = "$PREFIX.LOCATION_CHANGED"
+        const val LAT_LNG = "${PREFIX}.LAT_LNG"
+        const val SECOND = "${PREFIX}.SECOND"
+        const val DISTANCE = "${PREFIX}.DISTANCE"
+        const val AVG_SPEED = "${PREFIX}.AVG_SPEED"
+        const val LOCATION_CHANGED = "${PREFIX}.LOCATION_CHANGED"
     }
 
     // 제일 처음 호출 (1회성으로 서비스가 이미 실행중이면 호출되지 않는다)
@@ -139,7 +138,6 @@ class RecordService : Service() {
                         avgSpeed = (distance / 1000) / (second.toDouble() / 3600)
                     }
 
-
                     beforeLocation = mLocation
                 }
 
@@ -167,11 +165,14 @@ class RecordService : Service() {
     private fun getNotification(): Notification {
 
         // 알람 누르면 액티비티 시작하게 하는 pendingIntent
-        val activityIntent = Intent(applicationContext, RecordActivity::class.java)
-        val activityPendingIntent = PendingIntent.getActivity(this, 0, activityIntent, PendingIntent.FLAG_IMMUTABLE)
+        val activityIntent = Intent(applicationContext, TrackPaceMakeActivity::class.java)
+        activityIntent.putExtra("exerciseKind", getSharedPreferences("trackPaceMake", MODE_PRIVATE).getString("exerciseKind", ""))
+        activityIntent.putExtra("matchType", getSharedPreferences("trackPaceMake", MODE_PRIVATE).getString("matchType", ""))
+        activityIntent.putExtra("trackId", getSharedPreferences("trackPaceMake", MODE_PRIVATE).getString("trackId", ""))
+        val activityPendingIntent = PendingIntent.getActivity(this, 0, activityIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
 
         val builder = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
-            .setContentText("${Utils.timeToText(second)}    ${Utils.distanceToText(distance)}km")
+            .setContentText("${getSharedPreferences("trackPaceMake", MODE_PRIVATE).getString("trackName", "")}   ${Utils.timeToText(second)}    ${Utils.distanceToText(distance)}km")
             .setContentTitle("페이스메이커")
             .setOngoing(true) //종료 못하게 막음
             .setPriority(NotificationCompat.PRIORITY_MAX)
@@ -195,13 +196,12 @@ class RecordService : Service() {
 
         when(intent?.action) {
             START_PROCESS -> { // 액티비티 실행되고 프로세스 시작
-                if (isStarted) { // 이미 시작돼 있을 떄 (액티비티 재실행)
+                if (isStarted) { // 이미 시작돼 있을 때 (액티비티 재실행)
                     val intent = Intent(ACTION_BROADCAST)
                     intent.putExtra("flag", IS_STARTED)
                     intent.putExtra(SECOND, second)
                     intent.putExtra(DISTANCE, distance)
                     intent.putExtra(AVG_SPEED, avgSpeed)
-                    intent.putExtra(LAT_LNG, LatLng(mLocation.latitude, mLocation.longitude))
                     LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intent)
                 }
             }
@@ -228,14 +228,15 @@ class RecordService : Service() {
                 }
             }
             COMPLETE_RECORD -> { // 기록 끝
-                val intent = Intent(this@RecordService, CompleteRecordActivity::class.java)
+                val intent = Intent(this@TrackPaceMakeService, CompleteRecordActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 intent.putExtra("avgSpeed", avgSpeed)
                 intent.putExtra("kcal", 30.0)
                 intent.putExtra("sumAltitude", sumAltitude)
                 intent.putExtra("second", second)
-                intent.putExtra("exerciseKind", getSharedPreferences("record", MODE_PRIVATE).getString("exerciseKind", ""))
-                intent.putExtra("matchType", "혼자하기")
+                intent.putExtra("matchType", getSharedPreferences("trackPaceMake", MODE_PRIVATE).getString("matchType", ""))
+                intent.putExtra("trackId", getSharedPreferences("trackPaceMake", MODE_PRIVATE).getString("trackId", ""))
+                intent.putExtra("exerciseKind", getSharedPreferences("trackPaceMake", MODE_PRIVATE).getString("exerciseKind", ""))
 
                 startActivity(intent)
 
@@ -245,6 +246,8 @@ class RecordService : Service() {
                 stopService()
             }
         }
+
+
 
         return START_NOT_STICKY // 서비스 중단하면 재생성하지 않는다.
     }
@@ -281,16 +284,9 @@ class RecordService : Service() {
         }
     }
 
-    // 리소스 해제하고 서비스 종료
     private fun stopService() {
-        timer.cancel() // 타이머 제거
         mFusedLocationClient.removeLocationUpdates(mLocationCallback) // 위치 업데이트 제거
-
-        // 중지한 상태 저장
-        getSharedPreferences("record", MODE_PRIVATE)
-            .edit()
-            .putBoolean("isStarted", false)
-            .commit()
+        timer.cancel() // 타이머 제거
 
         stopForeground(true)
         stopSelf()

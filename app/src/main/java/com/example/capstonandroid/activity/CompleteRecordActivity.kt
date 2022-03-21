@@ -36,19 +36,18 @@ class CompleteRecordActivity : AppCompatActivity() {
     private lateinit var retrofit: Retrofit // 레트로핏 인스턴스
     private lateinit var supplementService: BackendApi // api
 
-    private lateinit var exerciseKind: String // 운동 종류
-
     private lateinit var gpsDataDao: GpsDataDao // db dao 핸들
 
     private lateinit var gpsDataList: List<GpsData>
 
+    // postRecordGpsData 에 넣을 하나하나의 리스트들
     private lateinit var speedList: ArrayList<Float>
     private lateinit var gpsList: ArrayList<List<Double>>
     private lateinit var altitudeList: ArrayList<Double>
     private lateinit var distanceList: ArrayList<Double>
     private lateinit var timeList: ArrayList<Int>
 
-    private lateinit var postRecordGpsData: PostRecordGpsData
+    private lateinit var postRecordGpsData: PostRecordGpsData // 총 합친 gps 데이터
 
     private var second: Int = 0 // 시간
 
@@ -61,6 +60,12 @@ class CompleteRecordActivity : AppCompatActivity() {
     private var kcal = 0.0 // 칼로리
 
     private var range = "public" // 공개범위
+
+    private var trackId: String? = null // 트랙 아이디
+
+    private var matchType = "혼자하기" // 매치 타입
+
+    private var exerciseKind = "R" // 운동 종류
 
     private var loadedGpsData = false // gps 데이터 로딩 완료했는지
 
@@ -100,17 +105,23 @@ class CompleteRecordActivity : AppCompatActivity() {
 
         val intent = intent
         second = intent.getIntExtra("second", 0)
-        println("intent 넘어옴: $second")
+        println("intent 넘어옴 (second): $second")
         sumAltitude = intent.getDoubleExtra("sumAltitude", 0.0)
-        println("intent 넘어옴: $sumAltitude")
+        println("intent 넘어옴 (sumAltitude): $sumAltitude")
         distance = intent.getDoubleExtra("distance", 0.0)
-        println("intent 넘어옴: $distance")
+        println("intent 넘어옴 (distance): $distance")
         avgSpeed = intent.getDoubleExtra("avgSpeed", 0.0)
-        println("intent 넘어옴: $avgSpeed")
+        println("intent 넘어옴 (avgSpeed): $avgSpeed")
         kcal = intent.getDoubleExtra("kcal", 0.0)
-        println("intent 넘어옴: $kcal")
-        exerciseKind = getSharedPreferences("record", MODE_PRIVATE).getString("exerciseKind", "")!!
-        println(exerciseKind)
+        println("intent 넘어옴 (kcal): $kcal")
+        trackId = intent.getStringExtra("trackId")
+        println("intent 넘어옴 (trackId): $trackId")
+        matchType = intent.getStringExtra("matchType")!!
+        println("intent 넘어옴 (matchType): $matchType")
+        exerciseKind = intent.getStringExtra("exerciseKind")!!
+        println("intent 넘어옴 (exerciseKind): $exerciseKind")
+
+
 
         // 스피너 설정
         binding.spinnerRange.adapter = ArrayAdapter.createFromResource(this, R.array.range, android.R.layout.simple_spinner_item)
@@ -135,7 +146,7 @@ class CompleteRecordActivity : AppCompatActivity() {
             // db에 있는 gps 데이터 다 로딩했는지에 따라 분기처리
             if (loadedGpsData) {
                 CoroutineScope(Dispatchers.Main).launch {
-                    val postActivityResponse = supplementService.postRecordActivity("Bearer " + getSharedPreferences("other", MODE_PRIVATE).getString("TOKEN", "")!!, PostRecordActivity(sumAltitude, avgSpeed, kcal, binding.etDescription.text.toString(), distance, getSharedPreferences("record", MODE_PRIVATE).getString("exerciseKind", "")!!, "혼자하기", range, second, binding.etTitle.text.toString(), null, postRecordGpsData))
+                    val postActivityResponse = supplementService.postRecordActivity("Bearer " + getSharedPreferences("other", MODE_PRIVATE).getString("TOKEN", "")!!, PostRecordActivity(sumAltitude, avgSpeed, kcal, binding.etDescription.text.toString(), distance, getSharedPreferences("record", MODE_PRIVATE).getString("exerciseKind", "")!!, "혼자하기", range, second, binding.etTitle.text.toString(), trackId, postRecordGpsData))
 
                     println("Bearer ${getSharedPreferences("other", MODE_PRIVATE).getString("TOKEN", "")!!}")
                     println(gpsDataList)

@@ -17,9 +17,15 @@
         android:theme="@style/Theme.CapstonAndroid"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".activity.CountDownActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.TrackPaceMakeActivity"
+            android:exported="false"
+            android:launchMode="singleTask" />
+        <activity
             android:name=".activity.IntroActivity"
-            android:exported="true" >
-
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -37,6 +43,11 @@
             android:foregroundServiceType="location" />
         <service
             android:name=".RecordService"
+            android:enabled="true"
+            android:exported="true"
+            android:foregroundServiceType="location" />
+        <service
+            android:name=".TrackPaceMakeService"
             android:enabled="true"
             android:exported="true"
             android:foregroundServiceType="location" />
@@ -61,8 +72,7 @@
 
         <activity
             android:name=".activity.LoginActivity"
-            android:exported="true">
-        </activity>
+            android:exported="true" />
         <activity
             android:name=".activity.MainActivity"
             android:exported="true" />

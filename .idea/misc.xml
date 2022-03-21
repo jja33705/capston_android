@@ -33,9 +33,11 @@
         <entry key="app/src/main/res/drawable/start_button_1.xml" value="0.3065" />
         <entry key="app/src/main/res/drawable/stop_button.xml" value="0.2929522705078125" />
         <entry key="app/src/main/res/layout/activity_complete_record.xml" value="0.234375" />
+        <entry key="app/src/main/res/layout/activity_count_down.xml" value="0.26197916666666665" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.19791666666666666" />
         <entry key="app/src/main/res/layout/activity_record.xml" value="0.22328338623046876" />
         <entry key="app/src/main/res/layout/activity_select_track.xml" value="0.37604166666666666" />
+        <entry key="app/src/main/res/layout/activity_track_pace_make.xml" value="0.37604166666666666" />
         <entry key="app/src/main/res/layout/activity_track_record.xml" value="0.25047607421875" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.19791666666666666" />
         <entry key="app/src/main/res/layout/fragment_me.xml" value="0.21197916666666666" />
@@ -43,7 +45,7 @@
         <entry key="app/src/main/res/layout/fragment_record.xml" value="0.19791666666666666" />
         <entry key="app/src/main/res/layout/fragment_riding.xml" value="0.3828125" />
         <entry key="app/src/main/res/layout/fragment_running.xml" value="0.3828125" />
-        <entry key="app/src/main/res/layout/fragment_track.xml" value="0.3887552897135416" />
+        <entry key="app/src/main/res/layout/fragment_track.xml" value="0.21186167399088535" />
         <entry key="app/src/main/res/layout/select_kind_dialog.xml" value="0.37604166666666666" />
         <entry key="app/src/main/res/layout/test.xml" value="0.42025451660156254" />
         <entry key="app/src/main/res/layout/test2.xml" value="0.37604166666666666" />
