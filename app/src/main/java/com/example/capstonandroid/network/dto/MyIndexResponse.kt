@@ -1,6 +1,6 @@
 package com.example.capstonandroid.network.dto
 
-data class IndexResponse(
+data class MyIndexResponse(
     val current_page: Int,
     val `data`: List<Data>,
     val first_page_url: String,

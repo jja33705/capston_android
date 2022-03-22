@@ -6,6 +6,7 @@ data class Post(
     val calorie: Double,
     val content: String,
     val created_at: String,
+    val date: String,
     val distance: Double,
     val event: String,
     val gps_id: String,

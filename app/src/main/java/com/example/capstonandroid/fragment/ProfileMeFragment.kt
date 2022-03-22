@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.example.capstonandroid.R
@@ -258,7 +259,6 @@ class ProfileMeFragment : Fragment(){
 //        })
         val loginActivity = Intent(requireContext(), LoginActivity::class.java)
         //
-//      사용자이름 바꾸기
         binding.logout.setOnClickListener {
             supplementService.logOut(TOKEN.toString()).enqueue(object : Callback<LogoutResponse> {
                 override fun onResponse(
@@ -267,6 +267,8 @@ class ProfileMeFragment : Fragment(){
                 ) {
                     if (response.isSuccessful) {
                         println("로그아웃이 성공되었습니다! 성공 ")
+                        Toast.makeText(requireContext(),"로그아웃 성공 했습니다!", Toast.LENGTH_SHORT).show()
+
 //                  콜백 응답으로 온것
                         println(response.body())
                         startActivity(loginActivity)

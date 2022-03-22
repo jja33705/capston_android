@@ -7,7 +7,6 @@ import com.example.capstonandroid.network.dto.*
 import retrofit2.Call
 import retrofit2.http.*
 import com.example.capstonandroid.network.dto.GetTracksResponse
-import com.example.capstonandroid.network.dto.Test
 import com.example.capstonandroid.network.dto.Track
 import retrofit2.Response
 
@@ -16,11 +15,8 @@ interface BackendApi {
 //    @POST("gps")
 //    fun uploadGpsData(@Body positions: Positions) : Call<Positions>
 
-//   테스트용..
-
     @GET("test") // 보낼 url
     fun test(): Call<String>
-
 
     @GET("user") //　테스트 용
     fun test1(@Header("Authorization") token: String,@Query("page") page: String): Call<String>
@@ -41,7 +37,7 @@ interface BackendApi {
     fun SNSIndex(@Header("Authorization") token: String): Call<SNSResponse>
 
     @GET("record/myIndex") // 내 기록 불러오기!
-    fun myIndex(@Header("Authorization")token: String): Call<IndexResponse>
+    fun myIndex(@Header("Authorization")token: String): Call<MyIndexResponse>
 
     //    @POST("post/store") // 기록 저장
     //    fun storePost(@Body record: Track) : Call<Track>

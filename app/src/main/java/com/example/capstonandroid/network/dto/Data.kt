@@ -19,5 +19,9 @@ data class Data(
     val track_id: String,
     val updated_at: String,
     val user: User,
-    val user_id: Int
+    val user_id: Int,
+    val loss_user_id: Int,
+    val post: Post,
+    val post_id: Int,
+    val win_user_id: Int
 )

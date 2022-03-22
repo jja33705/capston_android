@@ -1,6 +1,7 @@
 package com.example.capstonandroid.fragment
 
 import android.content.Intent
+import android.graphics.Rect
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,10 +10,13 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContentProviderCompat
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.capstonandroid.DistanceItemDecorator
 import com.example.capstonandroid.R
 import com.example.capstonandroid.activity.SNSDetailsActivity
 import com.example.capstonandroid.adapter.RecyclerUserAdapter
@@ -37,6 +41,9 @@ private const val ARG_PARAM2 = "param2"
 private  lateinit var  retrofit: Retrofit  //레트로핏
 private  lateinit var supplementService: BackendApi // api
 
+val indexnumber = ""
+
+var SNSResponse  = {}
 
 class MyActivity : AppCompatActivity() {
     // ...
@@ -85,8 +92,6 @@ class HomeFragment : Fragment()  {
 
 //        val activity = activity as MainActivity?
 
-        val nextIntent = Intent(requireContext(), SNSDetailsActivity::class.java)
-
 //      함수 초기화
         initRetrofit()
 
@@ -129,9 +134,9 @@ class HomeFragment : Fragment()  {
 
 
                 if(response.isSuccessful) {
-                    println(response.body())
-                    var SNSResponse: SNSResponse? = response.body()
 
+
+                    println(response.body()!!.data.size)
 
                     for (i in 0..response.body()!!.data.size-1) {
                         list.add(
@@ -140,13 +145,15 @@ class HomeFragment : Fragment()  {
                                     requireContext(),
                                     R.drawable.sakai
                                 )!!,
-                                response.body()!!.data[i]!!.title.toString(),
-                                response.body()!!.data[i].user.name
+                                response.body()!!.data[i]!!.id,
+                                response.body()!!.data[i].user.name,
+
                             )
                         )
                     }
-                    val adapter = RecyclerUserAdapter(list)
+                    val adapter = RecyclerUserAdapter(list, { data -> adapterOnClick(data) })
                     lstUser.adapter = adapter
+                    lstUser.addItemDecoration(DistanceItemDecorator(10))
 
 
 
@@ -189,7 +196,6 @@ class HomeFragment : Fragment()  {
 //                            }
                 }
 //
-
 //                    var user: User? = loginResponse!!.user
 ////                        데이터 클래스 USER 사용방법
 ////                        var user: User? = loginResponse!!.user
@@ -253,7 +259,28 @@ class HomeFragment : Fragment()  {
 
 
 
+    private fun adapterOnClick(data: UserData) {
+        Toast.makeText(requireContext(), "FunCall Clicked -> ID : ${data.id}, Name : ${data.name}", Toast.LENGTH_SHORT).show()
+        println(data.id)
 
+
+
+        val nextIntent = Intent(requireContext(), SNSDetailsActivity::class.java)
+        nextIntent.putExtra("indexnumber", indexnumber)
+        startActivity(nextIntent)
+
+    }
+    class DistanceItemDecorator(private val value: Int) : RecyclerView.ItemDecoration() {
+
+        override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+            super.getItemOffsets(outRect, view, parent, state)
+
+            outRect.top = value
+            outRect.left = value
+            outRect.bottom = value
+            outRect.right = value
+        }
+    }
     private fun initRetrofit(){
         retrofit = RetrofitClient.getInstance()
         supplementService = retrofit.create(BackendApi::class.java);

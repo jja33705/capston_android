@@ -5,6 +5,7 @@ package com.example.capstonandroid.activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import com.example.capstonandroid.R
 import com.example.capstonandroid.databinding.ActivityLoginBinding
 import com.example.capstonandroid.network.RetrofitClient
@@ -66,10 +67,12 @@ class IntroActivity : AppCompatActivity() {
                     println(response.body())
                     println("로그인이 되버렸어요")
 //                  로그인 토큰 인증이 되면???
+                    Toast.makeText(this@IntroActivity,"자동 로그인 성공 했습니다!",Toast.LENGTH_SHORT).show()
                     startActivity(mainIntent)
                 }else {
                     println("로그인이 되지않아요..")
 //                  로그인 토큰 인증이 되지않으면?????
+                    Toast.makeText(this@IntroActivity,"자동 로그인 실패했습니다.",Toast.LENGTH_SHORT).show()
                     println(response.message())
                     println(response.body())
                     startActivity(loginIntent)
