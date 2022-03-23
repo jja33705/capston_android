@@ -41,6 +41,6 @@ class TrackClusterRenderer(context: Context, map: GoogleMap, clusterManager: Clu
     override fun onBeforeClusterItemRendered(item: SelectTrackActivity.TrackItem, markerOptions: MarkerOptions) {
         trackMarkerTextView.text = item.title
         markerOptions.icon(BitmapDescriptorFactory.fromBitmap(createBitmapFromView()))
-            .anchor(0.08F, 1F)
+            .anchor(0.5F, 1F)
     }
 }

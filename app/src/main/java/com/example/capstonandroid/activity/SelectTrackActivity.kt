@@ -8,10 +8,13 @@ import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Looper
+import android.view.View
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.capstonandroid.R
+import com.example.capstonandroid.RecordService
 import com.example.capstonandroid.TrackClusterRenderer
 import com.example.capstonandroid.databinding.ActivitySelectTrackBinding
 import com.example.capstonandroid.network.dto.Track
@@ -28,6 +31,7 @@ import com.google.maps.android.clustering.ClusterItem
 import com.google.maps.android.clustering.ClusterManager
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import kotlinx.coroutines.*
+import org.angmarch.views.NiceSpinner
 import retrofit2.Retrofit
 
 class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -48,17 +52,17 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var job: Job // 코루틴 동작을 제어하기 위한 job
 
+    private lateinit var clusterManager: ClusterManager<TrackItem> // 클러스터 매니저
+
     private lateinit var trackMap: HashMap<String, Track> // 트랙 맵
 
-    private lateinit var exerciseKind: String // 운동 종류
-
-    private lateinit var matchType: String // 매치 타입
-
-    private lateinit var clusterManager: ClusterManager<TrackItem> // 클러스터 매니저
+    private lateinit var polylineList: ArrayList<Polyline> // 폴리라인 관리를 위한 리스트
 
     private var mLocationMarker: Marker? = null // 내 위치 마커
 
     private var selectedTrackId: String? = null // 선택된 트랙 인덱스
+
+    private var exerciseKind = "R" // 운동 종류
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,42 +82,37 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback {
             }
         }
 
-        // intent 로 받아온 변수 초기화
-        val intent = intent
-        exerciseKind = intent.getStringExtra("exerciseKind")!!
-        matchType = intent.getStringExtra("matchType")!!
-
         job = Job() // job 생성
-
-        trackMap = HashMap()
 
         initRetrofit() // retrofit 인스턴스 초기화
 
-        // 시작 버튼 초기화
-        binding.btnStart.setOnClickListener {
-            // 매치 타입에 따라 분기처리
-            when(matchType) {
-                "혼자하기" -> {
-                    val intent = Intent(this@SelectTrackActivity, TrackRecordActivity::class.java)
-                    intent.putExtra("exerciseKind", exerciseKind)
-                    intent.putExtra("matchType", matchType)
-                    intent.putExtra("trackId", selectedTrackId)
+        trackMap = HashMap() // 트랙 담아놓을 맵 초기화
 
-                    startActivity(intent)
+        polylineList = ArrayList() // 폴리라인 관리를 위한 리스트
+
+        // 스피너 초기 설정
+        val niceSpinner: NiceSpinner = binding.spinnerExerciseType
+        niceSpinner.attachDataSource(listOf("Running", "Riding"))
+        niceSpinner.setOnSpinnerItemSelectedListener { _, _, position, _ ->
+            when (position) {
+                0 -> {
+                    exerciseKind = "R"
+                    initTracks()
                 }
-                "친선전" -> {
-
-                }
-                "랭크전" -> {
-                    val intent = Intent(this@SelectTrackActivity, TrackPaceMakeActivity::class.java)
-                    intent.putExtra("exerciseKind", exerciseKind)
-                    intent.putExtra("matchType", matchType)
-                    intent.putExtra("trackId", selectedTrackId)
-
-                    startActivity(intent)
+                1 -> {
+                    exerciseKind = "B"
+                    initTracks()
                 }
             }
+        }
 
+        // 트랙 선택 버튼 초기화
+        binding.btnSelectTrack.setOnClickListener {
+            // 매치 타입에 따라 분기처리
+            val intent = Intent(this, SelectMatchTypeActivity::class.java)
+            intent.putExtra("trackId", selectedTrackId)
+            intent.putExtra("exerciseKind", exerciseKind)
+            startActivity(intent)
             finish()
         }
 
@@ -132,40 +131,48 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback {
         CoroutineScope(Dispatchers.Main + job).launch {
             println("실행됨")
 
+            // 초기화
+            trackMap.clear()
+            clusterManager.clearItems()
+            for (polyline in polylineList) {
+                polyline.remove()
+            }
+            polylineList.clear()
+
             // 보고있는 카메라 위치 측정
             val latLngBounds = mGoogleMap.projection.visibleRegion.latLngBounds
             println("위치 경계: ${latLngBounds.southwest.longitude} ${latLngBounds.southwest.latitude} ${latLngBounds.northeast.longitude} ${latLngBounds.northeast.latitude}")
             val bounds = listOf(latLngBounds.southwest.longitude, latLngBounds.southwest.latitude, latLngBounds.northeast.longitude, latLngBounds.northeast.latitude)
 
             // 현재 지도상에 보이는 트랙 가져오는 api 호출
-            val tracksResponse = supplementService.getTracks("http://13.124.24.179/api/track/search", bounds, 16, "B")
+            val tracksResponse = supplementService.getTracks("http://13.124.24.179/api/track/search", bounds, 16, exerciseKind)
             println("응답 옴 ${tracksResponse.body()}")
             if (tracksResponse.isSuccessful) {
 
                 // 1개 이상 응답이 오면 맵에 데이터 보관하고 구글맵에 그린다.
                 for (track in tracksResponse.body()!!.result) {
 
-                    if (!trackMap.containsKey(track._id)) { // 현재 없는 트랙이면 추가함
-                        trackMap[track._id] = track
+                    trackMap[track._id] = track
 
-                        val trackItem = TrackItem(LatLng(track.start_latlng[1], track.start_latlng[0]), track.trackName, track._id)
-                        clusterManager.addItem(trackItem)
+                    // 클러스터링에 마커 추가
+                    val trackItem = TrackItem(LatLng(track.start_latlng[1], track.start_latlng[0]), track.trackName, track._id)
+                    clusterManager.addItem(trackItem)
 
-                        // 폴리라인 그리고 폴리라인 맵에 넣음
-                        val latLngList = ArrayList<LatLng>()
+                    // 폴리라인 그림
+                    val latLngList = ArrayList<LatLng>()
 
+                    launch(Dispatchers.Default) {
                         for (coordinate in track.gps.coordinates) {
                             latLngList.add(LatLng(coordinate[1], coordinate[0]))
                             println("${coordinate[1]}, ${coordinate[0]}")
                         }
-
-                        val polyline = mGoogleMap.addPolyline(PolylineOptions()
-                            .clickable(true)
-                            .addAll(latLngList)
-                            .width(10F)
-                            .color(R.color.main_color))
-                        polyline.tag = track._id
-                    }
+                    }.join() // 오래걸릴수 있으니까 백그라운드 스레드로 넘겨봄...
+                   val polyLine = mGoogleMap.addPolyline(PolylineOptions()
+                        .clickable(true)
+                        .addAll(latLngList)
+                        .width(10F)
+                        .color(R.color.main_color))
+                    polylineList.add(polyLine)
                 }
             }
             clusterManager.cluster() // 강제로 리 클러스터링 해 줘야 이미지가 렌더링 됨....

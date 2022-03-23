@@ -17,6 +17,13 @@
         android:theme="@style/Theme.CapstonAndroid"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".activity.SelectMatchTypeActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".activity.RankMatchingActivity"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.Light.Dialog" />
+        <activity
             android:name=".activity.CountDownActivity"
             android:exported="false" />
         <activity

@@ -165,12 +165,12 @@ class TrackRecordService : Service() {
 
     // notification 만들기
     private fun getNotification(): Notification {
+        val sharedPreferences = getSharedPreferences("trackRecord", MODE_PRIVATE)
 
         // 알람 누르면 액티비티 시작하게 하는 pendingIntent
         val activityIntent = Intent(applicationContext, TrackRecordActivity::class.java)
-        activityIntent.putExtra("exerciseKind", getSharedPreferences("trackRecord", MODE_PRIVATE).getString("exerciseKind", ""))
-        activityIntent.putExtra("matchType", getSharedPreferences("trackRecord", MODE_PRIVATE).getString("matchType", ""))
-        activityIntent.putExtra("trackId", getSharedPreferences("trackRecord", MODE_PRIVATE).getString("trackId", ""))
+        activityIntent.putExtra("exerciseKind", sharedPreferences.getString("exerciseKind", ""))
+        activityIntent.putExtra("trackId", sharedPreferences.getString("trackId", ""))
         val activityPendingIntent = PendingIntent.getActivity(this, 0, activityIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
 
         val builder = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
@@ -230,15 +230,17 @@ class TrackRecordService : Service() {
                 }
             }
             COMPLETE_RECORD -> { // 기록 끝
+                val sharedPreferences = getSharedPreferences("trackRecord", MODE_PRIVATE)
+
                 val intent = Intent(this@TrackRecordService, CompleteRecordActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 intent.putExtra("avgSpeed", avgSpeed)
                 intent.putExtra("kcal", 30.0)
                 intent.putExtra("sumAltitude", sumAltitude)
                 intent.putExtra("second", second)
-                intent.putExtra("matchType", getSharedPreferences("trackRecord", MODE_PRIVATE).getString("matchType", ""))
-                intent.putExtra("trackId", getSharedPreferences("trackRecord", MODE_PRIVATE).getString("trackId", ""))
-                intent.putExtra("exerciseKind", getSharedPreferences("trackRecord", MODE_PRIVATE).getString("exerciseKind", ""))
+                intent.putExtra("matchType", sharedPreferences.getString("matchType", ""))
+                intent.putExtra("trackId", sharedPreferences.getString("trackId", ""))
+                intent.putExtra("exerciseKind", sharedPreferences.getString("exerciseKind", ""))
 
                 startActivity(intent)
 

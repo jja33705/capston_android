@@ -2,7 +2,6 @@ package com.example.capstonandroid.activity
 
 // 레코드 완료 후 뜨는 액티비티
 
-import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -15,7 +14,6 @@ import com.example.capstonandroid.databinding.ActivityCompleteRecordBinding
 import com.example.capstonandroid.db.AppDatabase
 import com.example.capstonandroid.db.dao.GpsDataDao
 import com.example.capstonandroid.db.entity.GpsData
-import com.example.capstonandroid.network.dto.Record
 import com.example.capstonandroid.network.api.BackendApi
 import com.example.capstonandroid.network.RetrofitClient
 import com.example.capstonandroid.network.dto.PostRecordActivity
@@ -23,10 +21,7 @@ import com.example.capstonandroid.network.dto.PostRecordGpsData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
-
-
 
 class CompleteRecordActivity : AppCompatActivity() {
 
@@ -49,6 +44,12 @@ class CompleteRecordActivity : AppCompatActivity() {
 
     private lateinit var postRecordGpsData: PostRecordGpsData // 총 합친 gps 데이터
 
+    private lateinit var range: String // 공개 범위
+
+    private lateinit var matchType: String // 매치 타입
+
+    private lateinit var exerciseKind: String // 운동 종류
+
     private var second: Int = 0 // 시간
 
     private var sumAltitude = 0.0 // 누적 상승 고도
@@ -59,13 +60,7 @@ class CompleteRecordActivity : AppCompatActivity() {
 
     private var kcal = 0.0 // 칼로리
 
-    private var range = "public" // 공개범위
-
     private var trackId: String? = null // 트랙 아이디
-
-    private var matchType = "혼자하기" // 매치 타입
-
-    private var exerciseKind = "R" // 운동 종류
 
     private var loadedGpsData = false // gps 데이터 로딩 완료했는지
 
@@ -75,6 +70,8 @@ class CompleteRecordActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         initRetrofit()
+
+        supportActionBar?.title = "활동 업로드" // 액션바 텍스트
 
         val db = Room.databaseBuilder(applicationContext, AppDatabase::class.java, "database").build()
         gpsDataDao = db.gpsDataDao()
@@ -146,10 +143,8 @@ class CompleteRecordActivity : AppCompatActivity() {
             // db에 있는 gps 데이터 다 로딩했는지에 따라 분기처리
             if (loadedGpsData) {
                 CoroutineScope(Dispatchers.Main).launch {
-                    val postActivityResponse = supplementService.postRecordActivity("Bearer " + getSharedPreferences("other", MODE_PRIVATE).getString("TOKEN", "")!!, PostRecordActivity(sumAltitude, avgSpeed, kcal, binding.etDescription.text.toString(), distance, getSharedPreferences("record", MODE_PRIVATE).getString("exerciseKind", "")!!, "혼자하기", range, second, binding.etTitle.text.toString(), trackId, postRecordGpsData))
-
-                    println("Bearer ${getSharedPreferences("other", MODE_PRIVATE).getString("TOKEN", "")!!}")
-                    println(gpsDataList)
+                    val token = "Bearer " + getSharedPreferences("other", MODE_PRIVATE).getString("TOKEN", "")!!
+                    val postActivityResponse = supplementService.postRecordActivity(token, PostRecordActivity(sumAltitude, avgSpeed, kcal, binding.etDescription.text.toString(), distance, exerciseKind, "혼자하기", range, second, binding.etTitle.text.toString(), trackId, postRecordGpsData))
 
                     println(postActivityResponse.code())
 

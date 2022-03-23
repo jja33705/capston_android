@@ -57,7 +57,7 @@ class RecordActivity : AppCompatActivity(), OnMapReadyCallback {
         setContentView(binding.root)
 
         val intent: Intent = intent
-        exerciseKind = intent.getStringExtra("exerciseKind").toString()
+        exerciseKind = intent.getStringExtra("exerciseKind")!!
         println(exerciseKind)
 
         // db 사용 설정
@@ -74,6 +74,7 @@ class RecordActivity : AppCompatActivity(), OnMapReadyCallback {
                 // 시작한 상태 저장
                 getSharedPreferences("record", MODE_PRIVATE)
                     .edit()
+                    .putBoolean("isRecodingTrack", false)
                     .putBoolean("isStarted", true)
                     .commit()
 
@@ -144,6 +145,7 @@ class RecordActivity : AppCompatActivity(), OnMapReadyCallback {
         // 서비스 시작
         val intent = Intent(this@RecordActivity, RecordService::class.java)
         intent.action = RecordService.START_PROCESS
+        intent.putExtra("exerciseKind", exerciseKind)
         startForegroundService(intent)
     }
 

@@ -40,7 +40,6 @@ class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback {
     private val binding get() = _binding!!
 
     private lateinit var exerciseKind: String
-    private lateinit var matchType: String
     private lateinit var trackId: String
 
     private lateinit var retrofit: Retrofit // 레트로핏 인스턴스
@@ -79,15 +78,11 @@ class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback {
         _binding = ActivityTrackRecordBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        getSharedPreferences("trackRecord", MODE_PRIVATE).edit().putBoolean("isStarted", false).commit()
-
         // 인텐트로 넘어온 옵션값 받음
         val intent = intent
         exerciseKind = intent.getStringExtra("exerciseKind")!!
-        matchType = intent.getStringExtra("matchType")!!
         trackId = intent.getStringExtra("trackId")!!
         println("exerciseKind $exerciseKind")
-        println("matchType $matchType")
         println("trackId $trackId")
 
         // db 사용 설정
@@ -122,7 +117,7 @@ class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback {
                 canStartAreaCircle.remove()
                 mGoogleMap.addCircle(CircleOptions()
                     .center(LatLng(endPoint.latitude, endPoint.longitude))
-                    .radius(15.0)
+                    .radius(20.0)
                     .fillColor(R.color.area_color)
                     .strokeWidth(0F))
             }
@@ -189,10 +184,11 @@ class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback {
                 initTrack()
             }.join() // 트랙 초기화하는거 기다리고 다음 작업 수행함
 
+            // 상태 저장
             getSharedPreferences("trackRecord", MODE_PRIVATE)
                 .edit()
                 .putString("exerciseKind", exerciseKind)
-                .putString("matchType", matchType)
+                .putString("matchType", "혼자하기")
                 .putString("trackName", track.trackName)
                 .putString("trackId", trackId)
                 .commit()
@@ -276,7 +272,7 @@ class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback {
             // 시작 가능 반경 그림
             canStartAreaCircle = mGoogleMap.addCircle(CircleOptions()
                 .center(LatLng(startPoint.latitude, startPoint.longitude))
-                .radius(15.0)
+                .radius(20.0)
                 .fillColor(R.color.area_color)
                 .strokeWidth(0F))
 
@@ -381,7 +377,7 @@ class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback {
                     mLocation.latitude = latLng.latitude
                     mLocation.longitude = latLng.longitude
 
-                    inCanStartArea = mLocation.distanceTo(startPoint) < 15.0
+                    inCanStartArea = mLocation.distanceTo(startPoint) < 20.0
                     println("시작 가능 위치 내인지: $inCanStartArea")
                     if (inCanStartArea) {
                         binding.tvInformation.visibility = View.GONE
@@ -471,7 +467,7 @@ class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback {
                         val currentLocation = Location("currentLocation")
                         currentLocation.latitude = latLng.latitude
                         currentLocation.longitude = latLng.longitude
-                        if (endPoint.distanceTo(currentLocation) < 15.0) {
+                        if (endPoint.distanceTo(currentLocation) < 20.0) {
                             // 서비스 종료하라고 커맨드 보냄
                             val intent = Intent(this@TrackRecordActivity, TrackRecordService::class.java)
                             intent.action = TrackRecordService.COMPLETE_RECORD
