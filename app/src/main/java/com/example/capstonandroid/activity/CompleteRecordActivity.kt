@@ -84,7 +84,7 @@ class CompleteRecordActivity : AppCompatActivity() {
 
         // db에 저장돼 있는 gps 데이터 불러옴
         CoroutineScope(Dispatchers.IO).launch {
-            gpsDataList = gpsDataDao.getAll()
+            gpsDataList = gpsDataDao.getAllGpsData()
 
             for (gpsData in gpsDataList) {
                 speedList.add(gpsData.speed)

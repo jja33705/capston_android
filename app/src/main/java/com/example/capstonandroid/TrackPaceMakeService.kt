@@ -13,9 +13,12 @@ import com.example.capstonandroid.activity.CompleteRecordActivity
 import com.example.capstonandroid.activity.TrackPaceMakeActivity
 import com.example.capstonandroid.db.AppDatabase
 import com.example.capstonandroid.db.dao.GpsDataDao
+import com.example.capstonandroid.db.dao.OpponentGpsDataDao
 import com.example.capstonandroid.db.entity.GpsData
+import com.example.capstonandroid.db.entity.OpponentGpsData
 import com.example.capstonandroid.network.RetrofitClient
 import com.example.capstonandroid.network.api.BackendApi
+import com.example.capstonandroid.network.dto.GpsDataId
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.tasks.Task
@@ -36,21 +39,23 @@ class TrackPaceMakeService : Service() {
 
     private lateinit var mLocationCallback: LocationCallback // 위치 정보 업데이트 콜백
 
-    private lateinit var gpsDataDao: GpsDataDao // db 사용을 위한 data access object
-
-    private lateinit var mLocation: Location // 내 위치
+    // db 사용을 위한 data access object
+    private lateinit var gpsDataDao: GpsDataDao
+    private lateinit var opponentGpsDataDao: OpponentGpsDataDao
 
     private lateinit var beforeLocation: Location // 비교를 위한 이전 위치
 
-    private val timer = Timer() // 시간 업데이트를 위한 타이머
-
+    // 내 관련 정보
+    private lateinit var mLocation: Location // 내 위치
     private var sumAltitude: Double = 0.0 // 누적 상승 고도
-
     private var second: Int = 0 // 시간 (초)
-
     private var distance = 0.0 // 거리 (m)
-
     private var avgSpeed = 0.0 // 평균 속도
+
+    // 상대 관련 정보
+    private lateinit var opponentLocation: Location // 상대 위치
+
+    private val timer = Timer() // 시간 업데이트를 위한 타이머
 
     private var isStarted = false // 시작했는지
 
@@ -70,6 +75,7 @@ class TrackPaceMakeService : Service() {
         const val COMPLETE_RECORD = "${PREFIX}.COMPLETE_RECORD"
 
         // flag
+        const val OPPONENT_START_LAT_LNG = "${PREFIX}.OPPONENT_START_LAT_LNG"
         const val BEFORE_START_LOCATION_UPDATE = "${PREFIX}.BEFORE_START_LOCATION_UPDATE"
         const val AFTER_START_UPDATE = "AFTER_START_UPDATE"
         const val IS_STARTED = "IS_STARTED"
@@ -81,6 +87,7 @@ class TrackPaceMakeService : Service() {
         const val DISTANCE = "${PREFIX}.DISTANCE"
         const val AVG_SPEED = "${PREFIX}.AVG_SPEED"
         const val LOCATION_CHANGED = "${PREFIX}.LOCATION_CHANGED"
+        const val OPPONENT_LAT_LNG = "${PREFIX}.OPPONENT_LAT_LNG"
     }
 
     // 제일 처음 호출 (1회성으로 서비스가 이미 실행중이면 호출되지 않는다)
@@ -111,24 +118,46 @@ class TrackPaceMakeService : Service() {
         // db 사용 설정
         val db = Room.databaseBuilder(applicationContext, AppDatabase::class.java, "database").build()
         gpsDataDao = db.gpsDataDao()
+        opponentGpsDataDao = db.opponentGpsDataDao()
 
         mNotificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager // 노티피케이션 매니저 초기롸
 
         createNotificationChannel() // 노티피케이션 채널 생성
 
         CoroutineScope(Dispatchers.Main).launch {
+
+            // 상대 gps 데이터 가져옴
             val token = "Bearer " + getSharedPreferences("other", MODE_PRIVATE).getString("TOKEN", "")!!
-            println(getSharedPreferences("trackPaceMake", MODE_PRIVATE).getString("gpsDataId", "")!!)
-            val gpsDataResponse = supplementService.getGpsData(token, getSharedPreferences("trackPaceMake", MODE_PRIVATE).getString("gpsDataId", "")!!)
-            println(gpsDataResponse.code())
+            val gpsDataResponse = supplementService.getGpsData(token, GpsDataId(getSharedPreferences("trackPaceMake", MODE_PRIVATE).getString("opponentGpsDataId", "")!!))
             if (gpsDataResponse.isSuccessful) {
-                val gpsData = gpsDataResponse.body()!!
-                println(gpsData)
+                val opponentGpsData = gpsDataResponse.body()!!.gpsData
+
+                launch(Dispatchers.IO) {
+                    // 모두 db에 저장
+                    opponentGpsDataDao.deleteAllOpponentGpsData()
+                    opponentGpsData.time.map { second ->
+                        opponentGpsDataDao.insertOpponentGpsData(OpponentGpsData(second, opponentGpsData.gps.coordinates[second][1], opponentGpsData.gps.coordinates[second][0], opponentGpsData.speed[second].toFloat(), opponentGpsData.distance[second], opponentGpsData.altitude[second]))
+                    }
+
+                    // 상대 시작 위치 가져오기
+                    opponentLocation = Location("opponentLocation")
+                    val opponentGpsData = opponentGpsDataDao.getOpponentGpsDataBySecond(second)
+                    opponentLocation.latitude = opponentGpsData.lat
+                    opponentLocation.longitude = opponentGpsData.lng
+
+                    println("다 넣었을까: ${opponentGpsDataDao.getAllOpponentGpsData()}")
+                }.join()
+
+                // 상대 시작위치 보냄
+                val intent = Intent(ACTION_BROADCAST)
+                intent.putExtra("flag", OPPONENT_START_LAT_LNG)
+                intent.putExtra(OPPONENT_LAT_LNG, LatLng(opponentLocation.latitude, opponentLocation.longitude))
+                LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intent)
+
+                startForeground(NOTIFICATION_ID, getNotification()) // 포그라운드 서비스 시작
+
+                createLocationRequest() // 위치 업데이트 시작
             }
-
-            startForeground(NOTIFICATION_ID, getNotification()) // 포그라운드 서비스 시작
-
-            createLocationRequest() // 위치 업데이트 시작
         }
     }
 
@@ -138,11 +167,11 @@ class TrackPaceMakeService : Service() {
             override fun run() {
                 second ++
 
-                var locationChanged = false
+                // 위치가 달라졌는지
+                var locationChanged = (beforeLocation.latitude != mLocation.latitude) || (beforeLocation.longitude != mLocation.longitude)
 
                 // 위치 달라졌으면 관련 값 갱신
-                if ((beforeLocation.latitude != mLocation.latitude) || (beforeLocation.longitude != mLocation.longitude)) {
-                    locationChanged = true
+                if (locationChanged) {
 
                     // 고도가 만약 더 크면 누적 상승 고도 더해줌
                     if (beforeLocation.altitude < mLocation.altitude) {
@@ -160,8 +189,13 @@ class TrackPaceMakeService : Service() {
                     beforeLocation = mLocation
                 }
 
-                // db에 저장
+                // 내 현재 상태 db에 저장
                 gpsDataDao.insertGpsData(GpsData(second, mLocation.latitude, mLocation.longitude, mLocation.speed, distance, mLocation.altitude))
+
+                // 상대 현재 상태 가져오기
+                val opponentGpsData = opponentGpsDataDao.getOpponentGpsDataBySecond(second)
+                opponentLocation.latitude = opponentGpsData.lat
+                opponentLocation.longitude = opponentGpsData.lng
 
                 // 노티피케이션 업데이트
                 mNotificationManager.notify(NOTIFICATION_ID, getNotification())
@@ -170,6 +204,7 @@ class TrackPaceMakeService : Service() {
                 val intent = Intent(ACTION_BROADCAST)
                 intent.putExtra("flag", AFTER_START_UPDATE)
                 intent.putExtra(LAT_LNG, LatLng(mLocation.latitude, mLocation.longitude))
+                intent.putExtra(OPPONENT_LAT_LNG, LatLng(opponentLocation.latitude, opponentLocation.longitude))
                 intent.putExtra(SECOND, second)
                 intent.putExtra(DISTANCE, distance)
                 intent.putExtra(AVG_SPEED, avgSpeed)
@@ -238,16 +273,17 @@ class TrackPaceMakeService : Service() {
 
                     beforeLocation = mLocation
 
-                    // 시작위치 db에 저장
                     launch(Dispatchers.IO) {
-                        gpsDataDao.deleteAll()
+                        // 시작위치 db에 저장
+                        gpsDataDao.deleteAllGpsData()
                         gpsDataDao.insertGpsData(GpsData(second, mLocation.latitude, mLocation.longitude, mLocation.speed, distance, mLocation.altitude))
-                    }
+                    }.join()
 
                     // 시작 위치 보냄
                     val intent = Intent(ACTION_BROADCAST)
                     intent.putExtra("flag", RECORD_START_LAT_LNG)
                     intent.putExtra(LAT_LNG, LatLng(mLocation.latitude, mLocation.longitude))
+                    intent.putExtra(OPPONENT_LAT_LNG, LatLng(opponentLocation.latitude, opponentLocation.longitude))
                     LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intent)
 
                     // 타이머 시작

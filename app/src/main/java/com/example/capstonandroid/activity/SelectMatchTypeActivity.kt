@@ -53,8 +53,8 @@ class SelectMatchTypeActivity : AppCompatActivity() {
                     intent.putExtra("matchType", "랭크전")
                     intent.putExtra("exerciseKind", exerciseKind)
                     intent.putExtra("trackId", trackId)
-                    intent.putExtra("gpsDataId", responseIntent.getStringExtra("gpsDataId"))
-                    intent.putExtra("postId", responseIntent.getIntExtra("postId", 0))
+                    intent.putExtra("opponentGpsDataId", responseIntent.getStringExtra("opponentGpsDataId"))
+                    intent.putExtra("opponentPostId", responseIntent.getIntExtra("postId", 0))
                     startActivity(intent)
                     finish()
                 } else {

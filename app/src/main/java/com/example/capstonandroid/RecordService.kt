@@ -118,6 +118,10 @@ class RecordService : Service() {
     private fun startTimer() {
         timer.schedule(object : TimerTask() {
             override fun run() {
+                CoroutineScope(Dispatchers.Default).launch {
+
+                }
+
                 second ++
 
                 var locationChanged = false
@@ -159,7 +163,6 @@ class RecordService : Service() {
                 intent.putExtra(LOCATION_CHANGED, locationChanged)
                 LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intent)
             }
-
         }, 1000, 1000) // 1초 후 시작, 1초 간격
     }
 
@@ -213,9 +216,9 @@ class RecordService : Service() {
 
                     // 시작위치 db에 저장
                     launch(Dispatchers.IO) {
-                        gpsDataDao.deleteAll()
+                        gpsDataDao.deleteAllGpsData()
                         gpsDataDao.insertGpsData(GpsData(second, mLocation.latitude, mLocation.longitude, mLocation.speed, distance, mLocation.altitude))
-                    }
+                    }.join()
 
                     // 시작 위치 보냄
                     val intent = Intent(ACTION_BROADCAST)
