@@ -20,6 +20,13 @@
             android:name=".activity.MeDetailsActivity"
             android:exported="false" />
         <activity
+            android:name=".activity.SelectMatchTypeActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".activity.RankMatchingActivity"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.Light.Dialog" />
+        <activity
             android:name=".activity.CountDownActivity"
             android:exported="false" />
         <activity
@@ -87,9 +94,6 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="${MAPS_API_KEY}" />
-        <meta-data
-            android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-3940256099942544~3347511713" />
     </application>
 
 </manifest>

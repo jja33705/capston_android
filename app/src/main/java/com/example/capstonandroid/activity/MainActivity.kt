@@ -53,7 +53,10 @@ class MainActivity : AppCompatActivity() {
                     supportFragmentManager.beginTransaction().replace(R.id.fragment_container, HomeFragment()).commit()
                 }
                 R.id.trackFragment -> {
-                    supportFragmentManager.beginTransaction().replace(R.id.fragment_container, TrackFragment()).commit()
+//                    supportFragmentManager.beginTransaction().replace(R.id.fragment_container, TrackFragment()).commit()
+                    val intent = Intent(this, SelectTrackActivity::class.java)
+                    startActivity(intent)
+                    return@setOnItemSelectedListener false
                 }
                 R.id.recordActivity -> {
                     showSelectExerciseKindDialog()

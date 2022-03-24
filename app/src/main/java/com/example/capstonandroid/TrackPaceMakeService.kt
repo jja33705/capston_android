@@ -14,15 +14,21 @@ import com.example.capstonandroid.activity.TrackPaceMakeActivity
 import com.example.capstonandroid.db.AppDatabase
 import com.example.capstonandroid.db.dao.GpsDataDao
 import com.example.capstonandroid.db.entity.GpsData
+import com.example.capstonandroid.network.RetrofitClient
+import com.example.capstonandroid.network.api.BackendApi
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.tasks.Task
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import retrofit2.Retrofit
 import java.util.*
 
 class TrackPaceMakeService : Service() {
+
+    private lateinit var retrofit: Retrofit // 레트로핏 인스턴스
+    private lateinit var supplementService: BackendApi // api
 
     private lateinit var mNotificationManager: NotificationManager // 상단바에 뜨는 노티피케이션 매니저
 
@@ -81,6 +87,8 @@ class TrackPaceMakeService : Service() {
     override fun onCreate() {
         println("service: onCreate() 호출")
 
+        initRetrofit()
+
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this) // 통합 위치 제공자 초기화
 
         // 위치 요청 응답 왔을 때 콜백
@@ -108,9 +116,20 @@ class TrackPaceMakeService : Service() {
 
         createNotificationChannel() // 노티피케이션 채널 생성
 
-        startForeground(NOTIFICATION_ID, getNotification()) // 포그라운드 서비스 시작
+        CoroutineScope(Dispatchers.Main).launch {
+            val token = "Bearer " + getSharedPreferences("other", MODE_PRIVATE).getString("TOKEN", "")!!
+            println(getSharedPreferences("trackPaceMake", MODE_PRIVATE).getString("gpsDataId", "")!!)
+            val gpsDataResponse = supplementService.getGpsData(token, getSharedPreferences("trackPaceMake", MODE_PRIVATE).getString("gpsDataId", "")!!)
+            println(gpsDataResponse.code())
+            if (gpsDataResponse.isSuccessful) {
+                val gpsData = gpsDataResponse.body()!!
+                println(gpsData)
+            }
 
-        createLocationRequest() // 위치 업데이트 시작
+            startForeground(NOTIFICATION_ID, getNotification()) // 포그라운드 서비스 시작
+
+            createLocationRequest() // 위치 업데이트 시작
+        }
     }
 
     // 타이머 시작
@@ -163,16 +182,18 @@ class TrackPaceMakeService : Service() {
 
     // notification 만들기
     private fun getNotification(): Notification {
+        val sharedPreferences = getSharedPreferences("trackPaceMake", MODE_PRIVATE)
 
         // 알람 누르면 액티비티 시작하게 하는 pendingIntent
         val activityIntent = Intent(applicationContext, TrackPaceMakeActivity::class.java)
-        activityIntent.putExtra("exerciseKind", getSharedPreferences("trackPaceMake", MODE_PRIVATE).getString("exerciseKind", ""))
-        activityIntent.putExtra("matchType", getSharedPreferences("trackPaceMake", MODE_PRIVATE).getString("matchType", ""))
-        activityIntent.putExtra("trackId", getSharedPreferences("trackPaceMake", MODE_PRIVATE).getString("trackId", ""))
+        activityIntent.putExtra("exerciseKind", sharedPreferences.getString("exerciseKind", ""))
+        activityIntent.putExtra("matchType", sharedPreferences.getString("matchType", ""))
+        activityIntent.putExtra("trackId", sharedPreferences.getString("trackId", ""))
+
         val activityPendingIntent = PendingIntent.getActivity(this, 0, activityIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
 
         val builder = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
-            .setContentText("${getSharedPreferences("trackPaceMake", MODE_PRIVATE).getString("trackName", "")}   ${Utils.timeToText(second)}    ${Utils.distanceToText(distance)}km")
+            .setContentText("${sharedPreferences.getString("trackName", "")}   ${Utils.timeToText(second)}    ${Utils.distanceToText(distance)}km")
             .setContentTitle("페이스메이커")
             .setOngoing(true) //종료 못하게 막음
             .setPriority(NotificationCompat.PRIORITY_MAX)
@@ -181,6 +202,12 @@ class TrackPaceMakeService : Service() {
             .setWhen(System.currentTimeMillis())
 
         return builder.build()
+    }
+
+    // 레트로핏 초기화
+    private fun initRetrofit() {
+        retrofit = RetrofitClient.getInstance()
+        supplementService = retrofit.create(BackendApi::class.java)
     }
 
     // notification 등록을 위한 채널 생성
@@ -228,15 +255,17 @@ class TrackPaceMakeService : Service() {
                 }
             }
             COMPLETE_RECORD -> { // 기록 끝
+                val sharedPreferences = getSharedPreferences("trackPaceMake", MODE_PRIVATE)
+
                 val intent = Intent(this@TrackPaceMakeService, CompleteRecordActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 intent.putExtra("avgSpeed", avgSpeed)
                 intent.putExtra("kcal", 30.0)
                 intent.putExtra("sumAltitude", sumAltitude)
                 intent.putExtra("second", second)
-                intent.putExtra("matchType", getSharedPreferences("trackPaceMake", MODE_PRIVATE).getString("matchType", ""))
-                intent.putExtra("trackId", getSharedPreferences("trackPaceMake", MODE_PRIVATE).getString("trackId", ""))
-                intent.putExtra("exerciseKind", getSharedPreferences("trackPaceMake", MODE_PRIVATE).getString("exerciseKind", ""))
+                intent.putExtra("matchType", sharedPreferences.getString("matchType", ""))
+                intent.putExtra("trackId", sharedPreferences.getString("trackId", ""))
+                intent.putExtra("exerciseKind", sharedPreferences.getString("exerciseKind", ""))
 
                 startActivity(intent)
 

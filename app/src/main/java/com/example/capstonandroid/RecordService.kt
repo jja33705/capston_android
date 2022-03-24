@@ -168,6 +168,7 @@ class RecordService : Service() {
 
         // 알람 누르면 액티비티 시작하게 하는 pendingIntent
         val activityIntent = Intent(applicationContext, RecordActivity::class.java)
+        activityIntent.putExtra("exerciseKind", getSharedPreferences("record", MODE_PRIVATE).getString("exerciseKind", "R"))
         val activityPendingIntent = PendingIntent.getActivity(this, 0, activityIntent, PendingIntent.FLAG_IMMUTABLE)
 
         val builder = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
@@ -178,7 +179,6 @@ class RecordService : Service() {
             .setSmallIcon(R.mipmap.ic_launcher)
             .setContentIntent(activityPendingIntent) // 알람을 눌렀을 때 실행할 작업
             .setWhen(System.currentTimeMillis())
-
         return builder.build()
     }
 
@@ -234,7 +234,7 @@ class RecordService : Service() {
                 intent.putExtra("kcal", 30.0)
                 intent.putExtra("sumAltitude", sumAltitude)
                 intent.putExtra("second", second)
-                intent.putExtra("exerciseKind", getSharedPreferences("record", MODE_PRIVATE).getString("exerciseKind", ""))
+                intent.putExtra("exerciseKind", getSharedPreferences("record", MODE_PRIVATE).getString("exerciseKind", "R"))
                 intent.putExtra("matchType", "혼자하기")
 
                 startActivity(intent)

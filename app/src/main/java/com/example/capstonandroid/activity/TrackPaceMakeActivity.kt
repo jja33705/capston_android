@@ -38,6 +38,8 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var exerciseKind: String
     private lateinit var matchType: String
     private lateinit var trackId: String
+    private lateinit var gpsDataId: String // 상대방의 gps data id
+    private var postId = 0 // 상대방 post id
 
     private lateinit var retrofit: Retrofit // 레트로핏 인스턴스
     private lateinit var supplementService: BackendApi // api
@@ -75,16 +77,18 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback {
         _binding = ActivityTrackPaceMakeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        getSharedPreferences("trackPaceMake", MODE_PRIVATE).edit().putBoolean("isStarted", false).commit()
-
         // 인텐트로 넘어온 옵션값 받음
         val intent = intent
         exerciseKind = intent.getStringExtra("exerciseKind")!!
         matchType = intent.getStringExtra("matchType")!!
         trackId = intent.getStringExtra("trackId")!!
+        gpsDataId = intent.getStringExtra("gpsDataId")!!
+        postId = intent.getIntExtra("postId", 0)!!
         println(" (TrackPaceMake) exerciseKind $exerciseKind")
         println(" (TrackPaceMake) matchType $matchType")
         println(" (TrackPaceMake) trackId $trackId")
+        println(" (TrackPaceMake) gpsDataId $gpsDataId")
+        println(" (TrackPaceMake postId $postId")
 
         // db 사용 설정
         val db = Room.databaseBuilder(applicationContext, AppDatabase::class.java, "database").build()
@@ -118,7 +122,7 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback {
                 canStartAreaCircle.remove()
                 mGoogleMap.addCircle(CircleOptions()
                     .center(LatLng(endPoint.latitude, endPoint.longitude))
-                    .radius(15.0)
+                    .radius(20.0)
                     .fillColor(R.color.area_color)
                     .strokeWidth(0F))
             }
@@ -185,12 +189,15 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback {
                 initTrack()
             }.join() // 트랙 초기화하는거 기다리고 다음 작업 수행함
 
+            // 상태 저장
             getSharedPreferences("trackPaceMake", MODE_PRIVATE)
                 .edit()
                 .putString("exerciseKind", exerciseKind)
                 .putString("matchType", matchType)
                 .putString("trackName", track.trackName)
                 .putString("trackId", trackId)
+                .putString("gpsDataId", gpsDataId)
+                .putInt("postId", postId)
                 .commit()
 
             binding.tvInformation.setBackgroundColor(resources.getColor(R.color.green))
@@ -278,7 +285,7 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback {
             canStartAreaCircle = mGoogleMap.addCircle(
                 CircleOptions()
                 .center(LatLng(startPoint.latitude, startPoint.longitude))
-                .radius(15.0)
+                .radius(20.0)
                 .fillColor(R.color.area_color)
                 .strokeWidth(0F))
 
@@ -386,7 +393,7 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback {
                     mLocation.latitude = latLng.latitude
                     mLocation.longitude = latLng.longitude
 
-                    inCanStartArea = mLocation.distanceTo(startPoint) < 15.0
+                    inCanStartArea = mLocation.distanceTo(startPoint) < 20.0
                     println("시작 가능 위치 내인지: $inCanStartArea")
                     if (inCanStartArea) {
                         binding.tvInformation.visibility = View.GONE
@@ -397,7 +404,7 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback {
 
                 TrackPaceMakeService.IS_STARTED -> { // 시작 중인데 액티비티 재실행 시
                     // lateinit 오류 발생하지 않게 바로 이전 위치부터 등록해줌
-                    beforeLatLng = intent?.getParcelableExtra(RecordService.LAT_LNG)!!
+                    beforeLatLng = intent?.getParcelableExtra(TrackPaceMakeService.LAT_LNG)!!
 
                     mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(beforeLatLng, 18.0f)) // 화면 이동
 
@@ -477,7 +484,7 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback {
                         val currentLocation = Location("currentLocation")
                         currentLocation.latitude = latLng.latitude
                         currentLocation.longitude = latLng.longitude
-                        if (endPoint.distanceTo(currentLocation) < 15.0) {
+                        if (endPoint.distanceTo(currentLocation) < 20.0) {
                             // 서비스 종료하라고 커맨드 보냄
                             val intent = Intent(this@TrackPaceMakeActivity, TrackPaceMakeService::class.java)
                             intent.action = TrackPaceMakeService.COMPLETE_RECORD
