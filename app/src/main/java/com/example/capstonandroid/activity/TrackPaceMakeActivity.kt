@@ -38,8 +38,8 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var exerciseKind: String
     private lateinit var matchType: String
     private lateinit var trackId: String
-    private lateinit var gpsDataId: String // 상대방의 gps data id
-    private var postId = 0 // 상대방 post id
+    private lateinit var opponentGpsDataId: String // 상대방의 gps data id
+    private var opponentPostId = 0 // 상대방 post id
 
     private lateinit var retrofit: Retrofit // 레트로핏 인스턴스
     private lateinit var supplementService: BackendApi // api
@@ -50,9 +50,9 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var track: Track
 
-    private lateinit var startPoint: Location // 시작점
-
-    private lateinit var endPoint: Location // 끝점
+    // 트랙 시작점과 끝점
+    private lateinit var startPoint: Location
+    private lateinit var endPoint: Location
 
     private lateinit var mBroadcastReceiver: MBroadcastReceiver // 브로드캐스트 리시버
 
@@ -65,6 +65,7 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var checkpointList: ArrayList<Location> // 체크포인트 리스트
 
     private var mLocationMarker: Marker? = null // 내 위치 마커
+    private var opponentLocationMarker: Marker? = null // 상대 위치 마커
 
     private var inCanStartArea = false // 시작 가능한 범위 내에 있는지
 
@@ -82,13 +83,13 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback {
         exerciseKind = intent.getStringExtra("exerciseKind")!!
         matchType = intent.getStringExtra("matchType")!!
         trackId = intent.getStringExtra("trackId")!!
-        gpsDataId = intent.getStringExtra("gpsDataId")!!
-        postId = intent.getIntExtra("postId", 0)!!
+        opponentGpsDataId = intent.getStringExtra("opponentGpsDataId")!!
+        opponentPostId = intent.getIntExtra("opponentPostId", 0)!!
         println(" (TrackPaceMake) exerciseKind $exerciseKind")
         println(" (TrackPaceMake) matchType $matchType")
         println(" (TrackPaceMake) trackId $trackId")
-        println(" (TrackPaceMake) gpsDataId $gpsDataId")
-        println(" (TrackPaceMake postId $postId")
+        println(" (TrackPaceMake) opponentGpsDataId $opponentGpsDataId")
+        println(" (TrackPaceMake opponentPostId $opponentPostId")
 
         // db 사용 설정
         val db = Room.databaseBuilder(applicationContext, AppDatabase::class.java, "database").build()
@@ -196,8 +197,8 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback {
                 .putString("matchType", matchType)
                 .putString("trackName", track.trackName)
                 .putString("trackId", trackId)
-                .putString("gpsDataId", gpsDataId)
-                .putInt("postId", postId)
+                .putString("opponentGpsDataId", opponentGpsDataId)
+                .putInt("opponentPostId", opponentPostId)
                 .commit()
 
             binding.tvInformation.setBackgroundColor(resources.getColor(R.color.green))
@@ -378,9 +379,9 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback {
                         gotFirstLocation = true
 
                         // 내 위치 마커 생성
-                        mLocationMarker = mGoogleMap.addMarker(
-                            MarkerOptions().position(latLng).icon(
-                                BitmapDescriptorFactory.fromResource(R.drawable.round_circle_black_24dp)))
+                        mLocationMarker = mGoogleMap.addMarker(MarkerOptions()
+                            .position(latLng)
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.round_circle_black_24dp)))
 
                         binding.tvInformation.text = "시작 가능 위치로 이동하세요."
                         binding.tvInformation.setBackgroundColor(resources.getColor(R.color.red))
@@ -432,7 +433,7 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback {
 
                     CoroutineScope(Dispatchers.Main).launch {
                         val gpsDataList = withContext(Dispatchers.IO) {
-                            gpsDataDao.getAll() // withContext 의 반환값
+                            gpsDataDao.getAllGpsData() // withContext 의 반환값
                         }
 
                         println("db 에서 불러온 크기: ${gpsDataList.size}")
@@ -455,6 +456,8 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback {
 
                 TrackPaceMakeService.RECORD_START_LAT_LNG -> { // 기록 시작 위치
                     println("업데이트 시작 위치 받음")
+
+                    // 내 기록 시작 위치 받음.
                     val recordStartLatLng = intent?.getParcelableExtra<LatLng>(TrackPaceMakeService.LAT_LNG)!!
                     beforeLatLng = recordStartLatLng
                 }
@@ -464,6 +467,9 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback {
                     binding.tvTime.text = Utils.timeToText(second)
 
                     val locationChanged = intent?.getBooleanExtra(TrackPaceMakeService.LOCATION_CHANGED, true)
+
+                    val opponentLatLng = intent?.getParcelableExtra<LatLng>(TrackPaceMakeService.OPPONENT_LAT_LNG)!! // 상대 위치
+                    opponentLocationMarker?.position = opponentLatLng // 상대 마커 이동
 
                     // 위치 다르면 관련 정보 수정하고 마커 이동하고 선 그림
                     if (locationChanged) {
@@ -492,6 +498,16 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback {
                             finish()
                         }
                     }
+                }
+
+                TrackPaceMakeService.OPPONENT_START_LAT_LNG -> { // 상대 시작 위치
+                    val opponentLatLng = intent?.getParcelableExtra<LatLng>(TrackPaceMakeService.OPPONENT_LAT_LNG)!!
+
+                    // 상대 위치 마커 생성
+                    opponentLocationMarker = mGoogleMap.addMarker(MarkerOptions()
+                        .position(opponentLatLng)
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.opponent_test_marker))
+                    )
                 }
             }
         }

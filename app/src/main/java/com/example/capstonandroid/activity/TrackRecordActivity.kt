@@ -415,7 +415,7 @@ class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback {
 
                     CoroutineScope(Dispatchers.Main).launch {
                         val gpsDataList = withContext(Dispatchers.IO) {
-                            gpsDataDao.getAll() // withContext 의 반환값
+                            gpsDataDao.getAllGpsData() // withContext 의 반환값
                         }
 
                         println("db 에서 불러온 크기: ${gpsDataList.size}")

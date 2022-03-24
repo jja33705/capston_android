@@ -8,11 +8,11 @@ import com.example.capstonandroid.db.entity.GpsData
 @Dao
 interface GpsDataDao {
     @Query("SELECT * FROM gps_data")
-    fun getAll(): List<GpsData>
+    fun getAllGpsData(): List<GpsData>
 
     @Insert
     fun insertGpsData(gpsData: GpsData)
 
     @Query("DELETE FROM gps_data")
-    fun deleteAll()
+    fun deleteAllGpsData()
 }

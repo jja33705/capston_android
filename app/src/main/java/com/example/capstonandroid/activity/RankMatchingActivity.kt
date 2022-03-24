@@ -9,6 +9,7 @@ import com.example.capstonandroid.databinding.ActivityRankMatchingBinding
 import com.example.capstonandroid.network.RetrofitClient
 import com.example.capstonandroid.network.api.BackendApi
 import com.example.capstonandroid.network.dto.Post
+import com.example.capstonandroid.network.dto.TrackId
 import com.example.capstonandroid.network.dto.User
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -38,30 +39,40 @@ class RankMatchingActivity : AppCompatActivity() {
 
         val intent = intent
         trackId = intent.getStringExtra("trackId")!!
-        println("trackId: $trackId")
 
-        val token = "Bearer " + getSharedPreferences("other", MODE_PRIVATE).getString("TOKEN", "")!!
         CoroutineScope(Dispatchers.Main).launch {
-            val rankMatchingResponse = supplementService.rankMatching(token, trackId)
-            println(rankMatchingResponse.code())
+            val token = "Bearer " + getSharedPreferences("other", MODE_PRIVATE).getString("TOKEN", "")!!
+            println("(rankMatch) trackId: $trackId")
+            println("(rankMatch) token: $token")
+            val rankMatchingResponse = supplementService.rankMatching(token, TrackId(trackId))
+            println("(rankMatch) code: ${rankMatchingResponse.code()}")
+            println("(rankMatch) message: ${rankMatchingResponse.message()}")
+            println("(rankMatch) errorBody: ${rankMatchingResponse.errorBody()}")
 
             val responseIntent = Intent() // 원래 액티비티로 돌아가면서 전달할 데이터를 담을 인텐트
 
             if (rankMatchingResponse.isSuccessful) {
-                if (rankMatchingResponse.code() == 200) {
-                    post = rankMatchingResponse.body()!!.post
-                    user = rankMatchingResponse.body()!!.user
-                    binding.tvVsUserName.text = user.name
-                    binding.tvVsTime.text = Utils.timeToText(post.time)
-                    binding.tvVsSpeed.text = Utils.avgSpeedToText(post.average_speed)
+                when (rankMatchingResponse.code()) {
+                    // 잘 매칭됐을 때
+                    200 -> {
+                        post = rankMatchingResponse.body()!!.post
+                        user = rankMatchingResponse.body()!!.user
+                        binding.tvVsUserName.text = user.name
+                        binding.tvVsPostName.text = post.title
+                        binding.tvVsTime.text = Utils.timeToText(post.time)
+                        binding.tvVsSpeed.text = Utils.avgSpeedToText(post.average_speed)
 
-                    responseIntent.putExtra("matchSuccess", true)
-                    responseIntent.putExtra("gpsDataId", post.gps_id)
-                    responseIntent.putExtra("postId", post.id)
-                } else {
-                    Toast.makeText(this@RankMatchingActivity, "적당한 매칭 상대가 없습니다.", Toast.LENGTH_SHORT).show()
+                        responseIntent.putExtra("matchSuccess", true)
+                        responseIntent.putExtra("opponentGpsDataId", post.gps_id)
+                        responseIntent.putExtra("opponentPostId", post.id)
+                    }
 
-                    responseIntent.putExtra("matchSuccess", false)
+                    // 매칭할 기록이 없을 때
+                    204 -> {
+                        Toast.makeText(this@RankMatchingActivity, "적당한 매칭 상대가 없습니다.", Toast.LENGTH_SHORT).show()
+
+                        responseIntent.putExtra("matchSuccess", false)
+                    }
                 }
             }
 
