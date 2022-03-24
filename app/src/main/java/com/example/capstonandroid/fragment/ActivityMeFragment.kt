@@ -7,10 +7,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.capstonandroid.R
 import com.example.capstonandroid.activity.MeDetailsActivity
+import com.example.capstonandroid.activity.SNSDetailsActivity
 import com.example.capstonandroid.adapter.RecyclerUserAdapter
 import com.example.capstonandroid.databinding.FragmentActivityMeBinding
 import com.example.capstonandroid.network.api.BackendApi
@@ -72,9 +74,9 @@ class ActivityMeFragment : Fragment() {
 
         val list = ArrayList<UserData>()
         
-        supplementService.myIndex(TOKEN.toString()).enqueue(object :Callback<MyIndexResponse>
+        supplementService.myIndex(TOKEN.toString()).enqueue(object :Callback<MySNSResponse>
         {
-            override fun onResponse(call: Call<MyIndexResponse>, response: Response<MyIndexResponse>) {
+            override fun onResponse(call: Call<MySNSResponse>, response: Response<MySNSResponse>) {
                 println(response.body())
         if(response.isSuccessful) {
             println(response.body())
@@ -84,6 +86,7 @@ class ActivityMeFragment : Fragment() {
 
 
             println(response.body()!!.data.size)
+
             for (i in 0..response.body()!!.data.size-1) {
                 list.add(
                     UserData(
@@ -91,15 +94,17 @@ class ActivityMeFragment : Fragment() {
                             requireContext(),
                             R.drawable.sakai
                         )!!,
-
-                        response.body()!!.data[i]!!.id,
-                        response.body()!!.data[i].created_at
+                        response.body()!!.data[i].post.title,
+                        response.body()!!.data[i].post.kind,
+                        i,
+                        response.body()!!.data[i].created_at,
+                        response.body()!!.data[i].post.time,
                     )
                 )
             }
-            val adapter = RecyclerUserAdapter(list, { data -> adapterOnClick(data) })
-            lstUser2.adapter = adapter
-            lstUser2.addItemDecoration(HomeFragment.DistanceItemDecorator(10))
+            val adapter2 = RecyclerUserAdapter(list, { data -> adapterOnClick(data) })
+            lstUser2.adapter = adapter2
+            lstUser2.addItemDecoration(ActivityMeFragment.DistanceItemDecorator(10))
 
         }else{
 
@@ -107,7 +112,7 @@ class ActivityMeFragment : Fragment() {
 //
             }
 
-            override fun onFailure(call: Call<MyIndexResponse>, t: Throwable) {
+            override fun onFailure(call: Call<MySNSResponse>, t: Throwable) {
 
             }
 
@@ -235,9 +240,13 @@ class ActivityMeFragment : Fragment() {
 
     private fun adapterOnClick(data: UserData) {
 
-        val nextIntent = Intent(requireContext(), MeDetailsActivity::class.java)
-        startActivity(nextIntent)
+        Toast.makeText(requireContext(), "FunCall Clicked -> ID : ${data.title}, Name : ${data.name}", Toast.LENGTH_SHORT).show()
+        println(data.data_num)
 
+
+        val nextIntent = Intent(requireContext(), MeDetailsActivity::class.java)
+        nextIntent.putExtra("data_num", data.data_num)
+        startActivity(nextIntent)
     }
     class DistanceItemDecorator(private val value: Int) : RecyclerView.ItemDecoration() {
 

@@ -42,6 +42,7 @@ private  lateinit var  retrofit: Retrofit  //레트로핏
 private  lateinit var supplementService: BackendApi // api
 
 val indexnumber = ""
+object user {}
 
 var SNSResponse  = {}
 
@@ -135,7 +136,7 @@ class HomeFragment : Fragment()  {
 
                 if(response.isSuccessful) {
 
-
+                    println(response.javaClass.name)
                     println(response.body()!!.data.size)
 
                     for (i in 0..response.body()!!.data.size-1) {
@@ -145,9 +146,11 @@ class HomeFragment : Fragment()  {
                                     requireContext(),
                                     R.drawable.sakai
                                 )!!,
-                                response.body()!!.data[i]!!.id,
+                                response.body()!!.data[i].title,
                                 response.body()!!.data[i].user.name,
-
+                                i,
+                                response.body()!!.data[i].created_at,
+                                response.body()!!.data[i].time
                             )
                         )
                     }
@@ -260,13 +263,12 @@ class HomeFragment : Fragment()  {
 
 
     private fun adapterOnClick(data: UserData) {
-        Toast.makeText(requireContext(), "FunCall Clicked -> ID : ${data.id}, Name : ${data.name}", Toast.LENGTH_SHORT).show()
-        println(data.id)
-
+        Toast.makeText(requireContext(), "FunCall Clicked -> ID : ${data.title}, Name : ${data.name}", Toast.LENGTH_SHORT).show()
+        println(data.data_num)
 
 
         val nextIntent = Intent(requireContext(), SNSDetailsActivity::class.java)
-        nextIntent.putExtra("indexnumber", indexnumber)
+        nextIntent.putExtra("data_num", data.data_num)
         startActivity(nextIntent)
 
     }

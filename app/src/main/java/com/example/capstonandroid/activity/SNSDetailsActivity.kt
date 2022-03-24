@@ -44,9 +44,10 @@ class SNSDetailsActivity : AppCompatActivity() {
 //            Toast.makeText(this, "전달된 이름이 없습니다", Toast.LENGTH_SHORT).show()
 //        }
 //      누른 indexnumber~ 받아오기
-        val indexnumber = intent.getStringExtra("indexnumber")
 
-        println(indexnumber)
+        val data_num : Int = intent.getIntExtra("data_num",0)
+
+        println(data_num.toString())
         val sharedPreference = getSharedPreferences("other", 0)
 
 //      이 타입이 디폴트 값
@@ -58,8 +59,9 @@ class SNSDetailsActivity : AppCompatActivity() {
 
                  if(response.isSuccessful){
 
-                     println(response.body()!!.data[0]!!.title)
-                    binding.title.setText(response.body()!!.data[0]!!.title)
+                     println(response.body()!!.data[data_num]!!.title)
+                    binding.title.setText(response.body()!!.data[data_num]!!.title)
+                     binding.content.setText(response.body()!!.data[data_num]!!.content)
 
 
                  }  else{

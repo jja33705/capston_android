@@ -4,6 +4,9 @@ import android.graphics.drawable.Drawable
 
 data class UserData(
     val img : Drawable,
-    val id: Int,
-    val name: String
-)
+    val title : String,
+    val name: String,
+    val data_num : Int,
+    val created_id : String,
+    val time : Int,
+    )

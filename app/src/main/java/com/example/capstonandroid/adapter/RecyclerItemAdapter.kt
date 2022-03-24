@@ -37,8 +37,10 @@ class RecyclerUserAdapter(private val items: ArrayList<UserData>, private val on
     class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         private var view: View = v
         fun bind(listener: View.OnClickListener, item: UserData) {
-            view.txtUser_id.text = item.id.toString()
+            view.txtUser_title.text = item.title.toString()
             view.txtUser_name.text = item.name
+            view.txtUser_time.text = item.time.toString()
+            view.txtUser_created_id.text = item.created_id
             view.setOnClickListener(listener)
         }
     }

@@ -36,8 +36,8 @@ interface BackendApi {
     @GET("post/index") // SNS 메인화면~
     fun SNSIndex(@Header("Authorization") token: String): Call<SNSResponse>
 
-    @GET("record/myIndex") // 내 기록 불러오기!
-    fun myIndex(@Header("Authorization")token: String): Call<MyIndexResponse>
+    @GET("record/myIndex") // 내 기록만 보기
+    fun myIndex(@Header("Authorization") token : String): Call<MySNSResponse>
 
     //    @POST("post/store") // 기록 저장
     //    fun storePost(@Body record: Track) : Call<Track>

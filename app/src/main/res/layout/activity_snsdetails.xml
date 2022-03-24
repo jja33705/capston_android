@@ -1,157 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/textview"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.SNSDetailsActivity"
-    android:background="@drawable/gradation">
-
+    tools:context=".activity.SNSDetailsActivity">
     <ImageView
-        android:id="@+id/img"
-        android:layout_width="203dp"
-        android:layout_height="168dp"
-        android:layout_marginEnd="170dp"
-        android:layout_marginBottom="470dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.421"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.703"
-        tools:srcCompat="@tools:sample/avatars" />
+        android:id="@+id/logo"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="5dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        />
 
-    <TextView
-        android:id="@+id/time"
-        android:layout_width="75dp"
-        android:layout_height="30dp"
-        android:layout_marginBottom="550dp"
-        android:text="시간"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/kind"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.232" />
-
-    <TextView
-        android:id="@+id/average_speed"
-        android:layout_width="75dp"
-        android:layout_height="30dp"
-        android:layout_marginBottom="350dp"
-        android:text="평균속도"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/time"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/time"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.218" />
-
-    <TextView
-        android:id="@+id/distance"
-        android:layout_width="75dp"
-        android:layout_height="30dp"
-        android:layout_marginBottom="350dp"
-        android:text="거리 "
-        android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/average_speed"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/average_speed"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.394" />
-
-    <TextView
-        android:id="@+id/mmr"
-        android:layout_width="75dp"
-        android:layout_height="30dp"
-        android:layout_marginBottom="350dp"
-        android:text="MMR"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/distance"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/distance"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.544" />
-
-    <TextView
-        android:id="@+id/kind"
-        android:layout_width="75dp"
-        android:layout_height="30dp"
-        android:layout_marginBottom="550dp"
-        android:text="종류"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/time"
-        app:layout_constraintStart_toEndOf="@+id/img"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.232" />
-
-    <TextView
-        android:id="@+id/calorie"
-        android:layout_width="75dp"
-        android:layout_height="30dp"
-        android:layout_marginBottom="470dp"
-        android:text="칼로리"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/kind"
-        app:layout_constraintHorizontal_bias="0.535"
-        app:layout_constraintStart_toStartOf="@+id/kind"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.387" />
-
-    <TextView
-        android:id="@+id/altitude"
-        android:layout_width="75dp"
-        android:layout_height="30dp"
-        android:layout_marginBottom="350dp"
-        android:text="고도"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/calorie"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/calorie"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.397" />
-
-    <TextView
+    <EditText
         android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@id/setting"
+        android:layout_toRightOf="@id/logo"
+        android:hint="제목" />
+    <ImageButton
+        android:id="@+id/setting"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="#00000000"
+        android:scaleType="fitCenter"
+        android:layout_alignParentRight="true"
+        />
+    <ImageView
+        android:id="@+id/mainimage"
+        android:layout_width="350dp"
+        android:layout_height="350dp"
+        android:layout_below="@id/logo"
+        android:src="@drawable/sakai"
+        android:layout_centerHorizontal="true"
+        />
+    <LinearLayout
+        android:id="@+id/function_nav"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="420dp"
-        android:text="제목"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/img" />
+        android:layout_below="@id/mainimage"
+        android:orientation="horizontal">
+        <ImageButton
+            android:src="@drawable/like"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="#00000000"
+            android:scaleType="fitCenter"
+            android:layout_marginLeft="5dp"/>
+        <ImageButton
+            android:layout_width="50dp"
+            android:src="@drawable/comment"
+            android:layout_height="50dp"
+            android:background="#00000000"
+            android:scaleType="fitCenter"/>
+    </LinearLayout>
 
     <TextView
         android:id="@+id/content"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="330dp"
-        android:text="내용"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/img" />
-
-    <TextView
-        android:id="@+id/created_at"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="240dp"
-        android:text="작성날짜"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/img" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_below="@id/function_nav"
+        android:layout_margin="15dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="15dp"
+        android:background="#CCCCCC"
+        android:gravity="center"
+        android:text="오늘은 레이아웃으로 SNS 화면을 만들어보았습니다." />
+    <LinearLayout
+        android:layout_below="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="5dp"
+            />
+        <TextView
+            android:layout_gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Codenet"
+            />
+        <TextView
+            android:layout_gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" : "
+            />
+        <TextView
+            android:layout_gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="수고하셨습니다.^^"/>
+    </LinearLayout>
+</RelativeLayout>
