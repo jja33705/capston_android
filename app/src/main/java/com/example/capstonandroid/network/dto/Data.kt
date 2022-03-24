@@ -23,5 +23,7 @@ data class Data(
     val loss_user_id: Int,
     val post: Post,
     val post_id: Int,
-    val win_user_id: Int
+    val win_user_id: Int,
+    val opponent_id : Int,
+    val kind : String,
 )

@@ -43,8 +43,8 @@ class MeDetailsActivity : AppCompatActivity() {
                 if(response.isSuccessful){
 
                     println(response.body()!!.data[data_num]!!.title)
-                    binding.title.setText(response.body()!!.data[data_num]!!.post.title)
-                    binding.content.setText(response.body()!!.data[data_num]!!.post.content)
+                    binding.title.setText(response.body()!!.data[data_num]!!.title)
+                    binding.content.setText(response.body()!!.data[data_num]!!.content)
 
 
                 }  else{

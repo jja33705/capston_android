@@ -94,11 +94,11 @@ class ActivityMeFragment : Fragment() {
                             requireContext(),
                             R.drawable.sakai
                         )!!,
-                        response.body()!!.data[i].post.title,
-                        response.body()!!.data[i].post.kind,
+                        response.body()!!.data[i].title,
+                        response.body()!!.data[i].kind,
                         i,
                         response.body()!!.data[i].created_at,
-                        response.body()!!.data[i].post.time,
+                        response.body()!!.data[i].time,
                     )
                 )
             }
