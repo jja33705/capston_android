@@ -145,7 +145,7 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback {
             val bounds = listOf(latLngBounds.southwest.longitude, latLngBounds.southwest.latitude, latLngBounds.northeast.longitude, latLngBounds.northeast.latitude)
 
             // 현재 지도상에 보이는 트랙 가져오는 api 호출
-            val tracksResponse = supplementService.getTracks("http://13.124.24.179/api/track/search", bounds, 16, exerciseKind)
+            val tracksResponse = supplementService.getTracks("http://13.124.24.179/api/tracks/search", bounds, 16, exerciseKind)
             println("응답 옴 ${tracksResponse.body()}")
             if (tracksResponse.isSuccessful) {
 

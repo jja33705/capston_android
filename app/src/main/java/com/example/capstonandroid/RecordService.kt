@@ -33,8 +33,6 @@ class RecordService : Service() {
 
     private lateinit var gpsDataDao: GpsDataDao // db 사용을 위한 data access object
 
-    private lateinit var mLocation: Location // 내 위치
-
     private lateinit var beforeLocation: Location // 비교를 위한 이전 위치
 
     private val timer = Timer() // 시간 업데이트를 위한 타이머
@@ -47,9 +45,11 @@ class RecordService : Service() {
 
     private var avgSpeed = 0.0 // 평균 속도
 
-    private var isStarted = false // 시작했는지
-
     companion object {
+        var isStarted = false // 시작 했는지
+        var exerciseKind = "" // 운동 종류
+        lateinit var mLocation: Location // 음... 액티비티에서 이전 위치 바로 초기화해야 하니까 여기에 놓자
+
         private const val PREFIX = "com.example.capstonandroid.recordservice"
 
         const val NOTIFICATION_CHANNEL_ID: String = PREFIX
@@ -75,7 +75,6 @@ class RecordService : Service() {
         const val SECOND = "$PREFIX.SECOND"
         const val DISTANCE = "$PREFIX.DISTANCE"
         const val AVG_SPEED = "$PREFIX.AVG_SPEED"
-        const val LOCATION_CHANGED = "$PREFIX.LOCATION_CHANGED"
     }
 
     // 제일 처음 호출 (1회성으로 서비스가 이미 실행중이면 호출되지 않는다)
@@ -118,34 +117,22 @@ class RecordService : Service() {
     private fun startTimer() {
         timer.schedule(object : TimerTask() {
             override fun run() {
-                CoroutineScope(Dispatchers.Default).launch {
-
-                }
-
                 second ++
 
-                var locationChanged = false
-
-                // 위치 달라졌으면 관련 값 갱신
-                if ((beforeLocation.latitude != mLocation.latitude) || (beforeLocation.longitude != mLocation.longitude)) {
-                    locationChanged = true
-
-                    // 고도가 만약 더 크면 누적 상승 고도 더해줌
-                    if (beforeLocation.altitude < mLocation.altitude) {
-                        sumAltitude += mLocation.altitude - beforeLocation.altitude
-                    }
-
-                    // 거리 구해줌
-                    distance += beforeLocation.distanceTo(mLocation)
-
-                    //평균속도
-                    if (second > 0) {
-                        avgSpeed = (distance / 1000) / (second.toDouble() / 3600)
-                    }
-
-
-                    beforeLocation = mLocation
+                // 고도가 만약 더 크면 누적 상승 고도 더해줌
+                if (beforeLocation.altitude < mLocation.altitude) {
+                    sumAltitude += mLocation.altitude - beforeLocation.altitude
                 }
+
+                // 거리 구해줌
+                distance += beforeLocation.distanceTo(mLocation)
+
+                //평균속도
+                if (second > 0) {
+                    avgSpeed = (distance / 1000) / (second.toDouble() / 3600)
+                }
+
+                beforeLocation = mLocation
 
                 // db에 저장
                 gpsDataDao.insertGpsData(GpsData(second, mLocation.latitude, mLocation.longitude, mLocation.speed, distance, mLocation.altitude))
@@ -160,7 +147,6 @@ class RecordService : Service() {
                 intent.putExtra(SECOND, second)
                 intent.putExtra(DISTANCE, distance)
                 intent.putExtra(AVG_SPEED, avgSpeed)
-                intent.putExtra(LOCATION_CHANGED, locationChanged)
                 LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intent)
             }
         }, 1000, 1000) // 1초 후 시작, 1초 간격
@@ -171,7 +157,7 @@ class RecordService : Service() {
 
         // 알람 누르면 액티비티 시작하게 하는 pendingIntent
         val activityIntent = Intent(applicationContext, RecordActivity::class.java)
-        activityIntent.putExtra("exerciseKind", getSharedPreferences("record", MODE_PRIVATE).getString("exerciseKind", "R"))
+        activityIntent.putExtra("exerciseKind", exerciseKind)
         val activityPendingIntent = PendingIntent.getActivity(this, 0, activityIntent, PendingIntent.FLAG_IMMUTABLE)
 
         val builder = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
@@ -198,7 +184,10 @@ class RecordService : Service() {
 
         when(intent?.action) {
             START_PROCESS -> { // 액티비티 실행되고 프로세스 시작
-                if (isStarted) { // 이미 시작돼 있을 떄 (액티비티 재실행)
+                exerciseKind = intent.getStringExtra("exerciseKind")!!
+                println("RecordService: 서비스 시작에서 운동 종류 받음 $exerciseKind")
+
+                if (isStarted) { // 이미 시작돼 있을 때 (액티비티 재실행)
                     val intent = Intent(ACTION_BROADCAST)
                     intent.putExtra("flag", IS_STARTED)
                     intent.putExtra(SECOND, second)
@@ -237,7 +226,7 @@ class RecordService : Service() {
                 intent.putExtra("kcal", 30.0)
                 intent.putExtra("sumAltitude", sumAltitude)
                 intent.putExtra("second", second)
-                intent.putExtra("exerciseKind", getSharedPreferences("record", MODE_PRIVATE).getString("exerciseKind", "R"))
+                intent.putExtra("exerciseKind", exerciseKind)
                 intent.putExtra("matchType", "혼자하기")
 
                 startActivity(intent)
@@ -289,11 +278,7 @@ class RecordService : Service() {
         timer.cancel() // 타이머 제거
         mFusedLocationClient.removeLocationUpdates(mLocationCallback) // 위치 업데이트 제거
 
-        // 중지한 상태 저장
-        getSharedPreferences("record", MODE_PRIVATE)
-            .edit()
-            .putBoolean("isStarted", false)
-            .commit()
+        isStarted = false
 
         stopForeground(true)
         stopSelf()

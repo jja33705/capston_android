@@ -225,7 +225,7 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback {
 
     // 트랙 정보 가져와서 그림
     private suspend fun initTrack() {
-        val trackResponse = supplementService.getTrack("http://13.124.24.179/api/track/${trackId}")
+        val trackResponse = supplementService.getTrack("http://13.124.24.179/api/tracks/${trackId}")
         println("응답코드: ${trackResponse.code()}")
 
         if (trackResponse.isSuccessful) {
@@ -394,7 +394,8 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback {
                     mLocation.latitude = latLng.latitude
                     mLocation.longitude = latLng.longitude
 
-                    inCanStartArea = mLocation.distanceTo(startPoint) < 20.0
+//                    inCanStartArea = mLocation.distanceTo(startPoint) < 20.0
+                    inCanStartArea = true
                     println("시작 가능 위치 내인지: $inCanStartArea")
                     if (inCanStartArea) {
                         binding.tvInformation.visibility = View.GONE
