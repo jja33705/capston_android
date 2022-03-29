@@ -30,6 +30,9 @@ interface BackendApi {
     @GET("user") // 유저확인 ()
     fun userGet(@Header("Authorization") token: String): Call<LoginUserResponse>
 
+    @GET("post/weekRecord") //요일별 누적거리
+    fun userWeek(@Header("Authorization") token : String,@Query("event") event: String) : Call<UserWeekResponse>
+
     @POST("logout") // 유저 로그아웃
     fun logOut(@Header("Authorization") token: String): Call<LogoutResponse>
 //
@@ -51,6 +54,7 @@ interface BackendApi {
 
     @POST("match/gpsData") // gps 데이터 받기
     suspend fun getGpsData(@Header("Authorization") token: String, @Body gpsId: GpsDataId): Response<GetGpsDataResponse>
+
 
     @GET // 트랙 리스트 받기
     suspend fun getTracks(

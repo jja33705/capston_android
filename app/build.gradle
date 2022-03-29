@@ -99,4 +99,7 @@ dependencies {
 
     // 스피너
     implementation 'com.github.arcadefire:nice-spinner:1.4.4'
+
+//  차트
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 }

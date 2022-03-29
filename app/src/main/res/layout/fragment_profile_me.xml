@@ -160,6 +160,10 @@
 
 
 
+                <com.github.mikephil.charting.charts.BarChart
+                    android:id="@+id/chart"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
                 <TextView
                     android:id="@+id/tv_profile_me_spinner"
                     android:layout_width="match_parent"
