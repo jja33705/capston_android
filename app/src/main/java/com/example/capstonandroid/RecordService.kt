@@ -67,7 +67,6 @@ class RecordService : Service() {
         // flag
         const val BEFORE_START_LOCATION_UPDATE = "$PREFIX.BEFORE_START_LOCATION_UPDATE"
         const val AFTER_START_UPDATE = "AFTER_START_UPDATE"
-        const val IS_STARTED = "IS_STARTED"
         const val RECORD_START_LAT_LNG = "$PREFIX.RECORD_START_LAT_LNG"
 
         // intent keyword
@@ -183,19 +182,9 @@ class RecordService : Service() {
         println("service: onStartCommand 호출, action: ${intent?.action}")
 
         when(intent?.action) {
-            START_PROCESS -> { // 액티비티 실행되고 프로세스 시작
+            START_PROCESS -> { // 서비스 처음 실행할 때
                 exerciseKind = intent.getStringExtra("exerciseKind")!!
                 println("RecordService: 서비스 시작에서 운동 종류 받음 $exerciseKind")
-
-                if (isStarted) { // 이미 시작돼 있을 때 (액티비티 재실행)
-                    val intent = Intent(ACTION_BROADCAST)
-                    intent.putExtra("flag", IS_STARTED)
-                    intent.putExtra(SECOND, second)
-                    intent.putExtra(DISTANCE, distance)
-                    intent.putExtra(AVG_SPEED, avgSpeed)
-                    intent.putExtra(LAT_LNG, LatLng(mLocation.latitude, mLocation.longitude))
-                    LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intent)
-                }
             }
             START_RECORD -> { // 기록 시작
                 CoroutineScope(Dispatchers.Main).launch {

@@ -46,21 +46,23 @@ interface BackendApi {
     @POST("post/store") // 포스트 작성
     suspend fun postRecordActivity(@Header("Authorization") token: String, @Body postRecordActivity: PostRecordActivity): Response<ResponseMessage>
 
-    @Headers("Content-Type: application/json")
     @POST("match/rank") // 랭크 랜덤 매칭
     suspend fun rankMatching(@Header("Authorization") token: String, @Body trackId: TrackId): Response<RankMatchingResponse>
 
     @POST("match/gpsData") // gps 데이터 받기
     suspend fun getGpsData(@Header("Authorization") token: String, @Body gpsId: GpsDataId): Response<GetGpsDataResponse>
 
-    @GET // 트랙 리스트 받기
+    @GET("/api/tracks/search") // 트랙 리스트 받기
     suspend fun getTracks(
-        @Url url: String,
-        @Query("bounds") bounds1: List<Double>,
+        @Header("Authorization") token: String,
+        @Query("bound1") bound1: Double,
+        @Query("bound2") bound2: Double,
+        @Query("bound3") bound3: Double,
+        @Query("bound4") bound4: Double,
         @Query("zoom") zoom: Int,
         @Query("event") event: String
     ): Response<GetTracksResponse>
 
-    @GET // 한개 트랙 받기
-    suspend fun getTrack(@Url url: String): Response<Track>
+    @GET("/api/tracks/{id}") // 한개 트랙 받기
+    suspend fun getTrack(@Header("Authorization") token: String, @Path("id") id: String): Response<Track>
 }

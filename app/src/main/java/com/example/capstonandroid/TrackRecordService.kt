@@ -34,23 +34,22 @@ class TrackRecordService : Service() {
 
     private lateinit var gpsDataDao: GpsDataDao // db 사용을 위한 data access object
 
-    private lateinit var mLocation: Location // 내 위치
-
     private lateinit var beforeLocation: Location // 비교를 위한 이전 위치
 
     private val timer = Timer() // 시간 업데이트를 위한 타이머
 
     private var sumAltitude: Double = 0.0 // 누적 상승 고도
-
     private var second: Int = 0 // 시간 (초)
-
     private var distance = 0.0 // 거리 (m)
-
     private var avgSpeed = 0.0 // 평균 속도
 
-    private var isStarted = false // 시작했는지
-
     companion object {
+        var isStarted = false
+        var trackName = ""
+        var exerciseKind = ""
+        var trackId = ""
+        lateinit var mLocation: Location
+
         private const val PREFIX = "com.example.capstonandroid.trackrecordservice"
 
         const val NOTIFICATION_CHANNEL_ID: String = PREFIX
@@ -121,27 +120,20 @@ class TrackRecordService : Service() {
             override fun run() {
                 second ++
 
-                var locationChanged = false
-
-                // 위치 달라졌으면 관련 값 갱신
-                if ((beforeLocation.latitude != mLocation.latitude) || (beforeLocation.longitude != mLocation.longitude)) {
-                    locationChanged = true
-
-                    // 고도가 만약 더 크면 누적 상승 고도 더해줌
-                    if (beforeLocation.altitude < mLocation.altitude) {
-                        sumAltitude += mLocation.altitude - beforeLocation.altitude
-                    }
-
-                    // 거리 구해줌
-                    distance += beforeLocation.distanceTo(mLocation)
-
-                    //평균속도
-                    if (second > 0) {
-                        avgSpeed = (distance / 1000) / (second.toDouble() / 3600)
-                    }
-
-                    beforeLocation = mLocation
+                // 고도가 만약 더 크면 누적 상승 고도 더해줌
+                if (beforeLocation.altitude < mLocation.altitude) {
+                    sumAltitude += mLocation.altitude - beforeLocation.altitude
                 }
+
+                // 거리 구해줌
+                distance += beforeLocation.distanceTo(mLocation)
+
+                //평균속도
+                if (second > 0) {
+                    avgSpeed = (distance / 1000) / (second.toDouble() / 3600)
+                }
+
+                beforeLocation = mLocation
 
                 // db에 저장
                 gpsDataDao.insertGpsData(GpsData(second, mLocation.latitude, mLocation.longitude, mLocation.speed, distance, mLocation.altitude))
@@ -156,7 +148,6 @@ class TrackRecordService : Service() {
                 intent.putExtra(SECOND, second)
                 intent.putExtra(DISTANCE, distance)
                 intent.putExtra(AVG_SPEED, avgSpeed)
-                intent.putExtra(LOCATION_CHANGED, locationChanged)
                 LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intent)
             }
 
@@ -165,16 +156,15 @@ class TrackRecordService : Service() {
 
     // notification 만들기
     private fun getNotification(): Notification {
-        val sharedPreferences = getSharedPreferences("trackRecord", MODE_PRIVATE)
 
         // 알람 누르면 액티비티 시작하게 하는 pendingIntent
         val activityIntent = Intent(applicationContext, TrackRecordActivity::class.java)
-        activityIntent.putExtra("exerciseKind", sharedPreferences.getString("exerciseKind", ""))
-        activityIntent.putExtra("trackId", sharedPreferences.getString("trackId", ""))
+        activityIntent.putExtra("exerciseKind", exerciseKind)
+        activityIntent.putExtra("trackId", trackId)
         val activityPendingIntent = PendingIntent.getActivity(this, 0, activityIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
 
         val builder = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
-            .setContentText("${getSharedPreferences("trackRecord", MODE_PRIVATE).getString("trackName", "")}   ${Utils.timeToText(second)}    ${Utils.distanceToText(distance)}km")
+            .setContentText("$trackName   ${Utils.timeToText(second)}    ${Utils.distanceToText(distance)}km")
             .setContentTitle("페이스메이커")
             .setOngoing(true) //종료 못하게 막음
             .setPriority(NotificationCompat.PRIORITY_MAX)
@@ -198,14 +188,11 @@ class TrackRecordService : Service() {
 
         when(intent?.action) {
             START_PROCESS -> { // 액티비티 실행되고 프로세스 시작
-                if (isStarted) { // 이미 시작돼 있을 때 (액티비티 재실행)
-                    val intent = Intent(ACTION_BROADCAST)
-                    intent.putExtra("flag", IS_STARTED)
-                    intent.putExtra(SECOND, second)
-                    intent.putExtra(DISTANCE, distance)
-                    intent.putExtra(AVG_SPEED, avgSpeed)
-                    LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intent)
-                }
+                // intent 로 정보 받고 notification 업데이트
+                trackId = intent.getStringExtra("trackId")!!
+                trackName = intent.getStringExtra("trackName")!!
+                exerciseKind = intent.getStringExtra("exerciseKind")!!
+                mNotificationManager.notify(NOTIFICATION_ID, getNotification())
             }
             START_RECORD -> { // 기록 시작
                 CoroutineScope(Dispatchers.Main).launch {
@@ -230,7 +217,6 @@ class TrackRecordService : Service() {
                 }
             }
             COMPLETE_RECORD -> { // 기록 끝
-                val sharedPreferences = getSharedPreferences("trackRecord", MODE_PRIVATE)
 
                 val intent = Intent(this@TrackRecordService, CompleteRecordActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -238,9 +224,9 @@ class TrackRecordService : Service() {
                 intent.putExtra("kcal", 30.0)
                 intent.putExtra("sumAltitude", sumAltitude)
                 intent.putExtra("second", second)
-                intent.putExtra("matchType", sharedPreferences.getString("matchType", ""))
-                intent.putExtra("trackId", sharedPreferences.getString("trackId", ""))
-                intent.putExtra("exerciseKind", sharedPreferences.getString("exerciseKind", ""))
+                intent.putExtra("matchType", "혼자하기")
+                intent.putExtra("trackId", trackId)
+                intent.putExtra("exerciseKind", exerciseKind)
 
                 startActivity(intent)
 
@@ -291,6 +277,8 @@ class TrackRecordService : Service() {
     private fun stopService() {
         mFusedLocationClient.removeLocationUpdates(mLocationCallback) // 위치 업데이트 제거
         timer.cancel() // 타이머 제거
+
+        isStarted = false
 
         stopForeground(true)
         stopSelf()

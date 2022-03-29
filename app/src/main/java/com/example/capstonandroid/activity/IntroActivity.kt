@@ -9,6 +9,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.capstonandroid.R
 import com.example.capstonandroid.RecordService
+import com.example.capstonandroid.TrackPaceMakeService
+import com.example.capstonandroid.TrackRecordService
 import com.example.capstonandroid.databinding.ActivityLoginBinding
 import com.example.capstonandroid.network.RetrofitClient
 import com.example.capstonandroid.network.api.BackendApi
@@ -32,8 +34,8 @@ class IntroActivity : AppCompatActivity() {
 
         val mainIntent = Intent(this,MainActivity::class.java)
 
-//         레코드 중이면 레코드 액티비티로 이동
-        if (RecordService.isStarted) {
+//         레코드 중이면 메인 액티비티로 이동
+        if (RecordService.isStarted || TrackRecordService.isStarted || TrackPaceMakeService.isStarted) {
             startActivity(mainIntent)
             finish()
         } else {

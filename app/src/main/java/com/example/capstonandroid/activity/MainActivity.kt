@@ -12,6 +12,8 @@ import android.view.Window
 import android.widget.Button
 import com.example.capstonandroid.R
 import com.example.capstonandroid.RecordService
+import com.example.capstonandroid.TrackPaceMakeService
+import com.example.capstonandroid.TrackRecordService
 import com.example.capstonandroid.databinding.ActivityMainBinding
 import com.example.capstonandroid.fragment.HomeFragment
 import com.example.capstonandroid.fragment.MeFragment
@@ -33,6 +35,27 @@ class MainActivity : AppCompatActivity() {
         if (RecordService.isStarted) {
             val intent = Intent(this, RecordActivity::class.java)
             intent.putExtra("exerciseKind", RecordService.exerciseKind)
+            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT) // 액티비티 스택 내에 있으면 재실행 함
+            startActivity(intent)
+        }
+
+        // 트랙 레코드 중이면 트랙 레코드 액티비티로 이동
+        if (TrackRecordService.isStarted) {
+            val intent = Intent(this, TrackRecordActivity::class.java)
+            intent.putExtra("exerciseKind", TrackRecordService.exerciseKind)
+            intent.putExtra("trackId", TrackRecordService.trackId)
+            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT) // 액티비티 스택 내에 있으면 재실행 함
+            startActivity(intent)
+        }
+
+        // 트랙 페이스메이커 중이면 트랙 페이스메이커 액티비티로 이동
+        if (TrackPaceMakeService.isStarted) {
+            val intent = Intent(this, TrackPaceMakeActivity::class.java)
+            intent.putExtra("exerciseKind", TrackPaceMakeService.exerciseKind)
+            intent.putExtra("trackId", TrackPaceMakeService.trackId)
+            intent.putExtra("matchType", TrackPaceMakeService.matchType)
+            intent.putExtra("opponentGpsDataId", TrackPaceMakeService.opponentGpsDataId)
+            intent.putExtra("opponentPostId", TrackPaceMakeService.opponentPostId)
             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT) // 액티비티 스택 내에 있으면 재실행 함
             startActivity(intent)
         }

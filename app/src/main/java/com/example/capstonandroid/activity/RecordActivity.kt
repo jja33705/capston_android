@@ -125,8 +125,12 @@ class RecordActivity : AppCompatActivity(), OnMapReadyCallback {
 
         // 이미 서비스가 돌아가고 있다면 이전위치 먼저 등록
         if (RecordService.isStarted) {
-            println("이미 실행 중이다 흐흐흐흐흐흐흐흐ㅡ흐흐흫..........")
+            println("record 이미 실행 중이다")
+            // 마지막 위치 가져오고 마커 생성
             beforeLatLng = LatLng(RecordService.mLocation.latitude, RecordService.mLocation.longitude)
+            mLocationMarker = mGoogleMap.addMarker(MarkerOptions()
+                .position(beforeLatLng)
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.round_circle_black_24dp)))
 
             registerLocalBroadcastReceiver()
 
@@ -137,11 +141,6 @@ class RecordActivity : AppCompatActivity(), OnMapReadyCallback {
             binding.tvInformation.visibility = View.GONE // 정보 창 없앰
 
             mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(beforeLatLng, 18.0f)) // 화면 이동
-
-            // 마커 생성
-            mLocationMarker = mGoogleMap.addMarker(MarkerOptions()
-                .position(beforeLatLng)
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.round_circle_black_24dp)))
 
             loadGpsDataFromDatabaseAndDrawPolyline()
         } else {

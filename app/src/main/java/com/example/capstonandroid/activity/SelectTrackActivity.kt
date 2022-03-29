@@ -142,10 +142,10 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback {
             // 보고있는 카메라 위치 측정
             val latLngBounds = mGoogleMap.projection.visibleRegion.latLngBounds
             println("위치 경계: ${latLngBounds.southwest.longitude} ${latLngBounds.southwest.latitude} ${latLngBounds.northeast.longitude} ${latLngBounds.northeast.latitude}")
-            val bounds = listOf(latLngBounds.southwest.longitude, latLngBounds.southwest.latitude, latLngBounds.northeast.longitude, latLngBounds.northeast.latitude)
 
             // 현재 지도상에 보이는 트랙 가져오는 api 호출
-            val tracksResponse = supplementService.getTracks("http://13.124.24.179/api/tracks/search", bounds, 16, exerciseKind)
+            val token = "Bearer " + getSharedPreferences("other", MODE_PRIVATE).getString("TOKEN", "")!!
+            val tracksResponse = supplementService.getTracks(token, latLngBounds.southwest.longitude, latLngBounds.southwest.latitude, latLngBounds.northeast.longitude, latLngBounds.northeast.latitude, 16, exerciseKind)
             println("응답 옴 ${tracksResponse.body()}")
             if (tracksResponse.isSuccessful) {
 

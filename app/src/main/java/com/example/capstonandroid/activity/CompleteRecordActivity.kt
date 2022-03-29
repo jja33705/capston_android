@@ -51,16 +51,12 @@ class CompleteRecordActivity : AppCompatActivity() {
     private lateinit var exerciseKind: String // 운동 종류
 
     private var second: Int = 0 // 시간
-
     private var sumAltitude = 0.0 // 누적 상승 고도
-
     private var distance = 0.0 // 거리
-
     private var avgSpeed = 0.0 // 평균 속도
-
     private var kcal = 0.0 // 칼로리
-
     private var trackId: String? = null // 트랙 아이디
+    private var opponentPostId: Int? = null // 상대 포스트 아이디
 
     private var loadedGpsData = false // gps 데이터 로딩 완료했는지
 
@@ -117,6 +113,8 @@ class CompleteRecordActivity : AppCompatActivity() {
         println("intent 넘어옴 (matchType): $matchType")
         exerciseKind = intent.getStringExtra("exerciseKind")!!
         println("intent 넘어옴 (exerciseKind): $exerciseKind")
+        opponentPostId = intent.getIntExtra("opponentPostId", 0)
+        println("intent 넘어옴 (opponentPostId): $opponentPostId")
 
 
 
@@ -144,7 +142,7 @@ class CompleteRecordActivity : AppCompatActivity() {
             if (loadedGpsData) {
                 CoroutineScope(Dispatchers.Main).launch {
                     val token = "Bearer " + getSharedPreferences("other", MODE_PRIVATE).getString("TOKEN", "")!!
-                    val postActivityResponse = supplementService.postRecordActivity(token, PostRecordActivity(sumAltitude, avgSpeed, kcal, binding.etDescription.text.toString(), distance, exerciseKind, "혼자하기", range, second, binding.etTitle.text.toString(), trackId, postRecordGpsData))
+                    val postActivityResponse = supplementService.postRecordActivity(token, PostRecordActivity(sumAltitude, avgSpeed, kcal, binding.etDescription.text.toString(), distance, exerciseKind, matchType, range, second, binding.etTitle.text.toString(), trackId, opponentPostId, postRecordGpsData))
 
                     println(postActivityResponse.code())
 
