@@ -11,6 +11,7 @@ import android.os.Bundle
 import android.view.Window
 import android.widget.Button
 import com.example.capstonandroid.R
+import com.example.capstonandroid.RecordService
 import com.example.capstonandroid.databinding.ActivityMainBinding
 import com.example.capstonandroid.fragment.HomeFragment
 import com.example.capstonandroid.fragment.MeFragment
@@ -27,6 +28,14 @@ class MainActivity : AppCompatActivity() {
 
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // 레코드 중이면 레코드 액티비티로 이동
+        if (RecordService.isStarted) {
+            val intent = Intent(this, RecordActivity::class.java)
+            intent.putExtra("exerciseKind", RecordService.exerciseKind)
+            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT) // 액티비티 스택 내에 있으면 재실행 함
+            startActivity(intent)
+        }
 
         // 커스텀 다이얼로그 초기화
         selectExerciseKindDialog = Dialog(this)
@@ -71,16 +80,6 @@ class MainActivity : AppCompatActivity() {
 
         // 처음 들어왔을때는 homeFragment
         binding.bottomNav.selectedItemId = R.id.homeFragment
-
-        // 레코드 중이면 레코드 액티비티로 이동
-        if (getSharedPreferences("record", MODE_PRIVATE).getBoolean("isStarted", false)) {
-            println("실행 중")
-
-            val intent = Intent(this, RecordActivity::class.java)
-            intent.putExtra("exerciseKind", getSharedPreferences("record", MODE_PRIVATE).getString("exerciseKind", "R"))
-            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT) // 액티비티 스택 내에 있으면 재실행 함
-            startActivity(intent)
-        }
     }
 
     // 어떤 종류인지 선택하는 다이얼로그 띄움

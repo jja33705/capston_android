@@ -215,7 +215,7 @@ class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback {
 
     // 트랙 정보 가져와서 그림
     private suspend fun initTrack() {
-        val trackResponse = supplementService.getTrack("http://13.124.24.179/api/track/${trackId}")
+        val trackResponse = supplementService.getTrack("http://13.124.24.179/api/tracks/${trackId}")
         println("응답코드: ${trackResponse.code()}")
 
         if (trackResponse.isSuccessful) {
@@ -462,6 +462,9 @@ class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback {
                         mGoogleMap.addPolyline(PolylineOptions().add(beforeLatLng, latLng)) // 그림 그림
 
                         beforeLatLng = latLng
+
+                        // 어디쯤 왔나 확인하는 로직이 와야 함.
+
 
                         // 도착점 도착했는지 체크
                         val currentLocation = Location("currentLocation")
