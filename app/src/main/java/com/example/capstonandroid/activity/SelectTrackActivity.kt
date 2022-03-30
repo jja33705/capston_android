@@ -17,6 +17,7 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.capstonandroid.R
+import com.example.capstonandroid.Utils
 import com.example.capstonandroid.databinding.ActivitySelectTrackBinding
 import com.example.capstonandroid.network.dto.Track
 import com.example.capstonandroid.network.api.BackendApi
@@ -287,8 +288,9 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback {
         selectedTrackId = newSelectedTrackId
         println(selectedTrackId)
         binding.tvTrackTitle.text = trackMap[selectedTrackId]?.trackName
+        binding.tvTrackUser.text = trackMap[selectedTrackId]!!.user.name
         binding.tvTrackDescription.text = trackMap[selectedTrackId]?.description
-        binding.tvTrackDistance.text = trackMap[selectedTrackId]?.totalDistance.toString()
+        binding.tvTrackDistance.text = Utils.distanceToText(trackMap[selectedTrackId]!!.totalDistance)
         persistentBottomSheet.state = BottomSheetBehavior.STATE_COLLAPSED
 
         // 투명도 조절로 선택된 느낌 줌

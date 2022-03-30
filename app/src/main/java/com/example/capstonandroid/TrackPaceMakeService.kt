@@ -51,6 +51,8 @@ class TrackPaceMakeService : Service() {
     private var distance = 0.0 // 거리 (m)
     private var avgSpeed = 0.0 // 평균 속도
 
+    private var opponentRecordEndSecond = 0
+
     private val timer = Timer() // 시간 업데이트를 위한 타이머
 
     companion object {
@@ -153,8 +155,13 @@ class TrackPaceMakeService : Service() {
                 // 내 현재 상태 db에 저장
                 gpsDataDao.insertGpsData(GpsData(second, mLocation.latitude, mLocation.longitude, mLocation.speed, distance, mLocation.altitude))
 
+                // 상대 운동의 마지막 초까지만 가져오도록 조정
+                var secondForGetOpponentGpsData = opponentRecordEndSecond
+                if (second < secondForGetOpponentGpsData) {
+                    secondForGetOpponentGpsData = second
+                }
                 // 상대 현재 상태 가져오기
-                val opponentGpsData = opponentGpsDataDao.getOpponentGpsDataBySecond(second)
+                val opponentGpsData = opponentGpsDataDao.getOpponentGpsDataBySecond(secondForGetOpponentGpsData)
                 opponentLocation.latitude = opponentGpsData.lat
                 opponentLocation.longitude = opponentGpsData.lng
 
@@ -234,6 +241,7 @@ class TrackPaceMakeService : Service() {
                     val gpsDataResponse = supplementService.getGpsData(token, GpsDataId(opponentGpsDataId))
                     if (gpsDataResponse.isSuccessful) {
                         val opponentGpsData = gpsDataResponse.body()!!.gpsData
+                        opponentRecordEndSecond = opponentGpsData.totalTime
 
                         launch(Dispatchers.IO) {
                             // 모두 db에 저장
