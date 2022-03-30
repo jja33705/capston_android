@@ -38,7 +38,7 @@ interface BackendApi {
     fun SNSIndex(@Header("Authorization") token: String): Call<SNSResponse>
 
     @GET("record/myIndex") // 내 기록 불러오기!
-    fun myIndex(@Header("Authorization")token: String): Call<IndexResponse>
+    fun myIndex(@Header("Authorization")token: String): Call<MySNSResponse>
 
     //    @POST("post/store") // 기록 저장
     //    fun storePost(@Body record: Track) : Call<Track>
@@ -51,6 +51,9 @@ interface BackendApi {
 
     @POST("match/gpsData") // gps 데이터 받기
     suspend fun getGpsData(@Header("Authorization") token: String, @Body gpsId: GpsDataId): Response<GetGpsDataResponse>
+
+    @GET("post/weekRecord") //요일별 누적거리
+    fun userWeek(@Header("Authorization") token : String,@Query("event") event: String) : Call<UserWeekResponse>
 
     @GET("/api/tracks/search") // 트랙 리스트 받기
     suspend fun getTracks(
