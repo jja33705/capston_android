@@ -10,6 +10,8 @@ import android.os.Bundle
 import android.widget.Toast
 import com.example.capstonandroid.R
 import com.example.capstonandroid.RecordService
+import com.example.capstonandroid.TrackPaceMakeService
+import com.example.capstonandroid.TrackRecordService
 import com.example.capstonandroid.databinding.ActivityLoginBinding
 import com.example.capstonandroid.network.RetrofitClient
 import com.example.capstonandroid.network.api.BackendApi
@@ -33,8 +35,8 @@ class IntroActivity : AppCompatActivity() {
 
         val mainIntent = Intent(this,MainActivity::class.java)
 
-//         레코드 중이면 레코드 액티비티로 이동
-        if (RecordService.isStarted) {
+//         레코드 중이면 메인 액티비티로 이동
+        if (RecordService.isStarted || TrackRecordService.isStarted || TrackPaceMakeService.isStarted) {
             startActivity(mainIntent)
             finish()
         } else {
@@ -73,44 +75,6 @@ class IntroActivity : AppCompatActivity() {
                 }
             })
         }
-//        val recordSharedPreferences = getSharedPreferences("record", MODE_PRIVATE)
-//        if (recordSharedPreferences.getBoolean("isStarted", false)) {
-//            println("record 실행 중")
-//            val intent = Intent(this, RecordActivity::class.java)
-//            intent.putExtra("exerciseKind", recordSharedPreferences.getString("exerciseKind", ""))
-//            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT) // 액티비티 스택 내에 있으면 재실행 함
-//            startActivity(intent)
-//            finish()
-//        }
-//
-//        // 트랙 레코드 중이면 트랙 레코드 액티비티로 이동
-//        val trackRecordSharedPreferences = getSharedPreferences("trackRecord", MODE_PRIVATE)
-//        if (trackRecordSharedPreferences.getBoolean("isStarted", false)) {
-//            println("track record 실행 중")
-//            val intent = Intent(this, RecordActivity::class.java)
-//            intent.putExtra("exerciseKind", trackRecordSharedPreferences.getString("exerciseKind", ""))
-//            intent.putExtra("trackId", trackRecordSharedPreferences.getString("trackId", ""))
-//            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT) // 액티비티 스택 내에 있으면 재실행 함
-//            startActivity(intent)
-//            finish()
-//        }
-//
-//        // 트랙 레코드 중이면 트랙 레코드 액티비티로 이동
-//        val trackPaceMakeSharedPreferences = getSharedPreferences("trackPaceMake", MODE_PRIVATE)
-//        if (trackPaceMakeSharedPreferences.getBoolean("isStarted", false)) {
-//            println("track pace make 실행 중")
-//            val intent = Intent(this, RecordActivity::class.java)
-//            intent.putExtra("exerciseKind", trackPaceMakeSharedPreferences.getString("exerciseKind", ""))
-//            intent.putExtra("trackId", trackPaceMakeSharedPreferences.getString("trackId", ""))
-//            intent.putExtra("matchType", trackPaceMakeSharedPreferences.getString("matchType", ""))
-//            intent.putExtra("opponentGpsDataId", trackPaceMakeSharedPreferences.getString("opponentGpsDataId", ""))
-//            intent.putExtra("opponentPostId", trackPaceMakeSharedPreferences.getInt("opponentPostId", 0))
-//            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT) // 액티비티 스택 내에 있으면 재실행 함
-//            startActivity(intent)
-//            finish()
-//        }
-
-
     }
     override fun onPause() {
         super.onPause()

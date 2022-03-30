@@ -54,7 +54,7 @@ class SelectMatchTypeActivity : AppCompatActivity() {
                     intent.putExtra("exerciseKind", exerciseKind)
                     intent.putExtra("trackId", trackId)
                     intent.putExtra("opponentGpsDataId", responseIntent.getStringExtra("opponentGpsDataId"))
-                    intent.putExtra("opponentPostId", responseIntent.getIntExtra("postId", 0))
+                    intent.putExtra("opponentPostId", responseIntent.getIntExtra("opponentPostId", 0))
                     startActivity(intent)
                     finish()
                 } else {
@@ -70,7 +70,8 @@ class SelectMatchTypeActivity : AppCompatActivity() {
         initRetrofit()
 
         CoroutineScope(Dispatchers.Main).launch {
-            val trackResponse = supplementService.getTrack("http://13.124.24.179/api/track/${trackId}")
+            val token = "Bearer " + getSharedPreferences("other", MODE_PRIVATE).getString("TOKEN", "")!!
+            val trackResponse = supplementService.getTrack(token, trackId)
             if (trackResponse.isSuccessful) {
                 track = trackResponse.body()!!
 

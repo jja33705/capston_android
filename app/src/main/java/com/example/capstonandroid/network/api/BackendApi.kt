@@ -15,11 +15,12 @@ interface BackendApi {
 //    @POST("gps")
 //    fun uploadGpsData(@Body positions: Positions) : Call<Positions>
 
+//   테스트용..
+
+
+
     @GET("test") // 보낼 url
     fun test(): Call<String>
-
-    @GET("user") //　테스트 용
-    fun test1(@Header("Authorization") token: String,@Query("page") page: String): Call<String>
 
     @POST("login") //로그인 요청(Login) 하고 응답 받는것(LoginResponse)
     fun loginPost(@Body login: Login): Call<LoginResponse>
@@ -30,17 +31,14 @@ interface BackendApi {
     @GET("user") // 유저확인 ()
     fun userGet(@Header("Authorization") token: String): Call<LoginUserResponse>
 
-    @GET("post/weekRecord") //요일별 누적거리
-    fun userWeek(@Header("Authorization") token : String,@Query("event") event: String) : Call<UserWeekResponse>
-
     @POST("logout") // 유저 로그아웃
     fun logOut(@Header("Authorization") token: String): Call<LogoutResponse>
 //
     @GET("post/index") // SNS 메인화면~
     fun SNSIndex(@Header("Authorization") token: String): Call<SNSResponse>
 
-    @GET("post/myIndex") // 내 기록만 보기
-    fun myIndex(@Header("Authorization") token : String): Call<MySNSResponse>
+    @GET("record/myIndex") // 내 기록 불러오기!
+    fun myIndex(@Header("Authorization")token: String): Call<IndexResponse>
 
     //    @POST("post/store") // 기록 저장
     //    fun storePost(@Body record: Track) : Call<Track>
@@ -48,22 +46,23 @@ interface BackendApi {
     @POST("post/store") // 포스트 작성
     suspend fun postRecordActivity(@Header("Authorization") token: String, @Body postRecordActivity: PostRecordActivity): Response<ResponseMessage>
 
-    @Headers("Content-Type: application/json")
     @POST("match/rank") // 랭크 랜덤 매칭
     suspend fun rankMatching(@Header("Authorization") token: String, @Body trackId: TrackId): Response<RankMatchingResponse>
 
     @POST("match/gpsData") // gps 데이터 받기
     suspend fun getGpsData(@Header("Authorization") token: String, @Body gpsId: GpsDataId): Response<GetGpsDataResponse>
 
-
-    @GET // 트랙 리스트 받기
+    @GET("/api/tracks/search") // 트랙 리스트 받기
     suspend fun getTracks(
-        @Url url: String,
-        @Query("bounds") bounds1: List<Double>,
+        @Header("Authorization") token: String,
+        @Query("bound1") bound1: Double,
+        @Query("bound2") bound2: Double,
+        @Query("bound3") bound3: Double,
+        @Query("bound4") bound4: Double,
         @Query("zoom") zoom: Int,
         @Query("event") event: String
     ): Response<GetTracksResponse>
 
-    @GET // 한개 트랙 받기
-    suspend fun getTrack(@Url url: String): Response<Track>
+    @GET("/api/tracks/{id}") // 한개 트랙 받기
+    suspend fun getTrack(@Header("Authorization") token: String, @Path("id") id: String): Response<Track>
 }
