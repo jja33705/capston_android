@@ -133,6 +133,8 @@ class HomeFragment : Fragment()  {
             ) {
 
 
+                println(response.body())
+
 
                 if(response.isSuccessful) {
 
