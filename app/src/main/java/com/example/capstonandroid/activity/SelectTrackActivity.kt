@@ -10,11 +10,9 @@ import android.os.Bundle
 import android.os.Looper
 import android.view.View
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.capstonandroid.R
-import com.example.capstonandroid.RecordService
 import com.example.capstonandroid.TrackClusterRenderer
 import com.example.capstonandroid.databinding.ActivitySelectTrackBinding
 import com.example.capstonandroid.network.dto.Track
@@ -27,9 +25,9 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.android.gms.tasks.Task
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.maps.android.clustering.ClusterItem
 import com.google.maps.android.clustering.ClusterManager
-import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import kotlinx.coroutines.*
 import org.angmarch.views.NiceSpinner
 import retrofit2.Retrofit
@@ -43,6 +41,8 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var retrofit: Retrofit // 레트로핏 인스턴스
     private lateinit var supplementService: BackendApi // api
+
+    private lateinit var persistentBottomSheet: BottomSheetBehavior<View>
 
     private lateinit var mFusedLocationClient: FusedLocationProviderClient // 통합 위치 제공자 핸들
 
@@ -121,6 +121,40 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback {
             initTracks()
         }
 
+        // 밑에서 올라오는 바텀시트 설정
+        persistentBottomSheet = BottomSheetBehavior.from(binding.bottomSheet)
+        persistentBottomSheet.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                when(newState) {
+                    BottomSheetBehavior.STATE_COLLAPSED -> { // 반만 펼쳤을 때
+                        println("bottom sheet: STATE_COLLAPSED")
+                    }
+                    BottomSheetBehavior.STATE_DRAGGING -> {
+                        println("bottom sheet: STATE_DRAGGING")
+                    }
+                    BottomSheetBehavior.STATE_EXPANDED -> { // 완전히 펼쳤을 때
+                        println("bottom sheet: STATE_EXPANDED")
+                    }
+                    BottomSheetBehavior.STATE_HALF_EXPANDED -> {
+                        println("bottom sheet: STATE_HALF_EXPANDED")
+                    }
+                    BottomSheetBehavior.STATE_HIDDEN -> { // bottom sheet 가 사라졌을 때
+                        println("bottom sheet: STATE_HIDDEN")
+                        selectedTrackId = null
+                    }
+                    BottomSheetBehavior.STATE_SETTLING -> {
+                        println("bottom sheet: STATE_SETTLING")
+                    }
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                println("bottom sheet: onSlide")
+            }
+        })
+
+        persistentBottomSheet.state = BottomSheetBehavior.STATE_HIDDEN // 초기 상태는 bottom sheet 내려가 있는 상태로
+
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
@@ -160,7 +194,6 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback {
 
                     // 폴리라인 그림
                     val latLngList = ArrayList<LatLng>()
-
                     launch(Dispatchers.Default) {
                         for (coordinate in track.gps.coordinates) {
                             latLngList.add(LatLng(coordinate[1], coordinate[0]))
@@ -173,6 +206,31 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback {
                         .width(10F)
                         .color(R.color.main_color))
                     polylineList.add(polyLine)
+                }
+                // 받아온 트랙이 있나 없나에 따라 분기처리
+                if (trackMap.count() > 0) {
+                    // 가장 가까운 곳 찾아서 초기값으로 세팅해 줌 \
+                    val minDistanceTrackId = withContext(Dispatchers.Default) {
+                        var minDistance = Float.MAX_VALUE
+                        var resultTrackId = ""
+                        for ((trackId, track) in trackMap) {
+                            val startLocation = Location("startPoint")
+                            startLocation.latitude = track.start_latlng[1]
+                            startLocation.longitude = track.start_latlng[0]
+                            val distance = mLocation.distanceTo(startLocation)
+                            if (minDistance > distance) {
+                                minDistance = distance
+                                resultTrackId = trackId
+                            }
+                        }
+                        resultTrackId
+                    }
+                    selectedTrackId = minDistanceTrackId
+                    changeBottomSheet(selectedTrackId)
+                    persistentBottomSheet.state = BottomSheetBehavior.STATE_COLLAPSED
+                } else {
+                    persistentBottomSheet.state = BottomSheetBehavior.STATE_HIDDEN
+                    Toast.makeText(this@SelectTrackActivity, "이 구역에는 트랙이 없습니다.", Toast.LENGTH_SHORT).show()
                 }
             }
             clusterManager.cluster() // 강제로 리 클러스터링 해 줘야 이미지가 렌더링 됨....
@@ -201,16 +259,19 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback {
             println("클릭된거 아이디: ${trackItem.snippet}")
 
             selectedTrackId = trackItem.snippet
-
-            binding.slidingLayout.panelState = SlidingUpPanelLayout.PanelState.ANCHORED
-            binding.tvTrackTitle.text = trackMap[trackItem.snippet]?.trackName
-            binding.tvTrackDescription.text = trackMap[trackItem.snippet]?.description
-            binding.tvTrackDistance.text = trackMap[trackItem.snippet]?.totalDistance.toString()
+            changeBottomSheet(selectedTrackId)
+            persistentBottomSheet.state = BottomSheetBehavior.STATE_COLLAPSED
 
             true // 마커 클릭 기본 이벤트 발동 안하게 함
         }
 
         checkPermission()
+    }
+
+    private fun changeBottomSheet(newSelectedTrackId: String?) {
+        binding.tvTrackTitle.text = trackMap[newSelectedTrackId]?.trackName
+        binding.tvTrackDescription.text = trackMap[newSelectedTrackId]?.description
+        binding.tvTrackDistance.text = trackMap[newSelectedTrackId]?.totalDistance.toString()
     }
 
     @SuppressLint("MissingPermission")
@@ -238,7 +299,6 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback {
                     override fun onFinish() {
                         initTracks()
                     }
-
                 } )
             }
         }
