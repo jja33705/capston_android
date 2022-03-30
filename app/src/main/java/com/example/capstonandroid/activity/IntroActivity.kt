@@ -7,6 +7,7 @@ import android.app.ActivityManager
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import com.example.capstonandroid.R
 import com.example.capstonandroid.RecordService
 import com.example.capstonandroid.TrackPaceMakeService

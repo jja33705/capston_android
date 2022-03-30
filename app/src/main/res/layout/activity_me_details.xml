@@ -90,7 +90,6 @@
             android:layout_height="wrap_content"
             android:text="뒤로가기">
         </Button>
-
-    </LinearLayout>
+           </LinearLayout>
 
 </RelativeLayout>

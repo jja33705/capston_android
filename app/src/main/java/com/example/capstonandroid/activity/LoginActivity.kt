@@ -4,6 +4,7 @@ package com.example.capstonandroid.activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.capstonandroid.databinding.ActivityLoginBinding
 import com.example.capstonandroid.network.dto.Login
@@ -116,14 +117,18 @@ class LoginActivity : AppCompatActivity() {
 
 
 
+                        Toast.makeText(this@LoginActivity,"로그인 성공 했습니다!", Toast.LENGTH_SHORT).show()
                         startActivity(nextIntent)
 
                     }else {
                         println("로그인 실패했찌만 "+ token)
                         println("갔지만 실패")
+
                         println(response.body())
                         println(response.message())
                         println(response.code())
+                        Toast.makeText(this@LoginActivity,"로그인 실패 했습니다!", Toast.LENGTH_SHORT).show()
+
                     }
                 }
 

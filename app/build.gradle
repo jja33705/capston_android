@@ -47,6 +47,10 @@ android {
 }
 
 dependencies {
+
+
+
+
     // 안드로이드 내부 db (room 라이브러리)
     def roomVersion = "2.4.2"
     implementation("androidx.room:room-runtime:$roomVersion")
@@ -90,7 +94,12 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     implementation 'com.google.android.gms:play-services-auth:19.2.0'
     implementation 'androidx.multidex:multidex:2.0.1'
+    implementation 'com.tbuonomo:dotsindicator:4.2'
 
     // 스피너
     implementation 'com.github.arcadefire:nice-spinner:1.4.4'
+
+//  차트
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+    
 }
