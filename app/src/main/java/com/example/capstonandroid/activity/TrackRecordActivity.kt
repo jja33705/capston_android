@@ -284,8 +284,8 @@ class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback {
             mGoogleMap.addPolyline(PolylineOptions()
                 .clickable(true)
                 .addAll(latLngList)
-                .color(R.color.main_color)
-                .width(10F))
+                .color(ContextCompat.getColor(this, R.color.main_color))
+                .width(12F))
 
             // 체크포인트 추가
             println("체크포인트")

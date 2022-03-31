@@ -91,6 +91,8 @@ class TrackPaceMakeService : Service() {
         const val DISTANCE = "${PREFIX}.DISTANCE"
         const val AVG_SPEED = "${PREFIX}.AVG_SPEED"
         const val OPPONENT_LAT_LNG = "${PREFIX}.OPPONENT_LAT_LNG"
+        const val SPEED = "${PREFIX}.SPEED"
+        const val OPPONENT_SPEED = "${PREFIX}.OPPONENT_SPEED"
     }
 
     // 제일 처음 호출 (1회성으로 서비스가 이미 실행중이면 호출되지 않는다)
@@ -154,15 +156,23 @@ class TrackPaceMakeService : Service() {
                 // 내 현재 상태 db에 저장
                 gpsDataDao.insertGpsData(GpsData(second, mLocation.latitude, mLocation.longitude, mLocation.speed, distance, mLocation.altitude))
 
+
                 // 상대 운동의 마지막 초까지만 가져오도록 조정
                 var secondForGetOpponentGpsData = opponentRecordEndSecond
                 if (second < secondForGetOpponentGpsData) {
                     secondForGetOpponentGpsData = second
                 }
+
                 // 상대 현재 상태 가져오기
                 val opponentGpsData = opponentGpsDataDao.getOpponentGpsDataBySecond(secondForGetOpponentGpsData)
                 opponentLocation.latitude = opponentGpsData.lat
                 opponentLocation.longitude = opponentGpsData.lng
+
+                // 상대방 속도
+                var opponentSpeed = opponentGpsData.speed
+                if (secondForGetOpponentGpsData == opponentRecordEndSecond) {
+                    opponentSpeed = 0F
+                }
 
                 // 노티피케이션 업데이트
                 mNotificationManager.notify(NOTIFICATION_ID, getNotification())
@@ -175,6 +185,8 @@ class TrackPaceMakeService : Service() {
                 intent.putExtra(SECOND, second)
                 intent.putExtra(DISTANCE, distance)
                 intent.putExtra(AVG_SPEED, avgSpeed)
+                intent.putExtra(SPEED, mLocation.speed)
+                intent.putExtra(OPPONENT_SPEED, opponentSpeed)
                 LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intent)
             }
 

@@ -16,7 +16,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Retrofit
 
-class SelectMatchTypeActivity : AppCompatActivity() {
+class TrackActivity : AppCompatActivity() {
     private var _binding: ActivitySelectMatchTypeBinding? = null
     private val binding get() = _binding!!
 
@@ -71,6 +71,7 @@ class SelectMatchTypeActivity : AppCompatActivity() {
 
         CoroutineScope(Dispatchers.Main).launch {
             val token = "Bearer " + getSharedPreferences("other", MODE_PRIVATE).getString("TOKEN", "")!!
+            // 트랙 가져오기
             val trackResponse = supplementService.getTrack(token, trackId)
             if (trackResponse.isSuccessful) {
                 track = trackResponse.body()!!
@@ -78,6 +79,12 @@ class SelectMatchTypeActivity : AppCompatActivity() {
                 binding.tvTitle.text = track.trackName
                 binding.tvDistance.text = "${track.totalDistance}km"
                 binding.tvDescription.text = track.description
+
+                // 랭킹 가져오기
+                val rankingResponse = supplementService.getRanking(token, trackId)
+                if (rankingResponse.isSuccessful) {
+                    println("${rankingResponse.body()!!}")
+                }
             } else {
                 // 통신에러발생했을경우 처리해야함
             }

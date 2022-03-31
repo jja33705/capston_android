@@ -1,7 +1,10 @@
 package com.example.capstonandroid
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.location.Location
+import android.view.View
 import java.text.DateFormat
 import java.util.*
 
@@ -24,6 +27,27 @@ class Utils {
 
         fun avgSpeedToText(avgSpeed: Double): String {
             return "%.2f".format(avgSpeed)
+        }
+
+        fun speedToText(speed: Float): String {
+            return "%.2fkm/h".format(speed)
+        }
+
+        // 비트맵 이미지 만드는 함수
+        fun createBitmapFromView(marker: View): Bitmap {
+            marker.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
+            marker.layout(0, 0, marker.measuredWidth, marker.measuredHeight)
+
+            val bitmap = Bitmap.createBitmap(marker.measuredWidth,
+                marker.measuredHeight,
+                Bitmap.Config.ARGB_8888)
+
+            val canvas = Canvas(bitmap)
+
+            marker.background?.draw(canvas)
+            marker.draw(canvas)
+
+            return bitmap
         }
     }
 }

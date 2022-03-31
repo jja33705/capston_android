@@ -22,7 +22,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="blue">#0000FF</color>
-    <color name="no_selected_polyline_color">#4D1890ff</color>
+    <color name="no_selected_polyline_color">#401890ff</color>
     <color name="red">#FF0000</color>
     <color name="area_color">#D395D4FF</color>
     <color name="yellow">#FFFF00</color>

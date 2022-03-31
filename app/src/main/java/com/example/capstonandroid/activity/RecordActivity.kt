@@ -174,7 +174,10 @@ class RecordActivity : AppCompatActivity(), OnMapReadyCallback {
 
             println("withContext 끝나고 내려옴")
 
-            mGoogleMap.addPolyline(PolylineOptions().addAll(latLngList)) // 그림 그림
+            mGoogleMap.addPolyline(PolylineOptions()
+                .addAll(latLngList)
+                .color(ContextCompat.getColor(this@RecordActivity, R.color.main_color))
+                .width(12F)) // 그림 그림
         }
     }
 
@@ -315,7 +318,10 @@ class RecordActivity : AppCompatActivity(), OnMapReadyCallback {
                     binding.tvAvgSpeed.text = Utils.avgSpeedToText(avgSpeed)
 
                     mLocationMarker?.position = latLng // 마커 이동
-                    mGoogleMap.addPolyline(PolylineOptions().add(beforeLatLng, latLng)) // 그림 그림
+                    mGoogleMap.addPolyline(PolylineOptions()
+                        .add(beforeLatLng, latLng)
+                        .color(ContextCompat.getColor(this@RecordActivity, R.color.main_color))
+                        .width(12F)) // 그림 그림
 
                     beforeLatLng = latLng
                 }

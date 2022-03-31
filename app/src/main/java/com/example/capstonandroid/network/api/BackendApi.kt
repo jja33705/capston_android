@@ -55,17 +55,12 @@ interface BackendApi {
     @GET("post/weekRecord") //요일별 누적거리
     fun userWeek(@Header("Authorization") token : String,@Query("event") event: String) : Call<UserWeekResponse>
 
-    @GET("/api/tracks/search") // 트랙 리스트 받기
-    suspend fun getTracks(
-        @Header("Authorization") token: String,
-        @Query("bound1") bound1: Double,
-        @Query("bound2") bound2: Double,
-        @Query("bound3") bound3: Double,
-        @Query("bound4") bound4: Double,
-        @Query("zoom") zoom: Int,
-        @Query("event") event: String
-    ): Response<GetTracksResponse>
+    @GET("tracks/search") // 트랙 리스트 받기
+    suspend fun getTracks(@Header("Authorization") token: String, @Query("bound1") bound1: Double, @Query("bound2") bound2: Double, @Query("bound3") bound3: Double, @Query("bound4") bound4: Double, @Query("zoom") zoom: Int, @Query("event") event: String): Response<GetTracksResponse>
 
-    @GET("/api/tracks/{id}") // 한개 트랙 받기
-    suspend fun getTrack(@Header("Authorization") token: String, @Path("id") id: String): Response<Track>
+    @GET("tracks") // 한개 트랙 받기
+    suspend fun getTrack(@Header("Authorization") token: String, @Query("track_id") id: String): Response<Track>
+
+    @GET("ranking/track") // 트랙 랭킹 받기
+    suspend fun getRanking(@Header("Authorization") token: String, @Query("track_id") id: String): Response<RankingResponse>
 }
