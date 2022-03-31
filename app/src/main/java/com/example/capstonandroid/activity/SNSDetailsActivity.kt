@@ -77,6 +77,11 @@ class SNSDetailsActivity : AppCompatActivity() {
              }
          })
 
+        binding.backButton.setOnClickListener {
+            finish()
+        }
+
+
 
 }
     private fun initRetrofit(){
