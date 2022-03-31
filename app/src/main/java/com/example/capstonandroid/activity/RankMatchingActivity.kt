@@ -9,7 +9,6 @@ import com.example.capstonandroid.databinding.ActivityRankMatchingBinding
 import com.example.capstonandroid.network.RetrofitClient
 import com.example.capstonandroid.network.api.BackendApi
 import com.example.capstonandroid.network.dto.Post
-import com.example.capstonandroid.network.dto.TrackId
 import com.example.capstonandroid.network.dto.User
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -44,7 +43,7 @@ class RankMatchingActivity : AppCompatActivity() {
             val token = "Bearer " + getSharedPreferences("other", MODE_PRIVATE).getString("TOKEN", "")!!
             println("(rankMatch) trackId: $trackId")
             println("(rankMatch) token: $token")
-            val rankMatchingResponse = supplementService.rankMatching(token, TrackId(trackId))
+            val rankMatchingResponse = supplementService.rankMatching(token, trackId)
             println("(rankMatch) code: ${rankMatchingResponse.code()}")
             println("(rankMatch) message: ${rankMatchingResponse.message()}")
             println("(rankMatch) errorBody: ${rankMatchingResponse.errorBody()}")

@@ -18,7 +18,6 @@ import com.example.capstonandroid.db.entity.GpsData
 import com.example.capstonandroid.db.entity.OpponentGpsData
 import com.example.capstonandroid.network.RetrofitClient
 import com.example.capstonandroid.network.api.BackendApi
-import com.example.capstonandroid.network.dto.GpsDataId
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.tasks.Task
@@ -50,6 +49,8 @@ class TrackPaceMakeService : Service() {
     private var second: Int = 0 // 시간 (초)
     private var distance = 0.0 // 거리 (m)
     private var avgSpeed = 0.0 // 평균 속도
+
+    private var opponentRecordEndSecond = 0
 
     private val timer = Timer() // 시간 업데이트를 위한 타이머
 
@@ -118,7 +119,7 @@ class TrackPaceMakeService : Service() {
         }
 
         // db 사용 설정
-        val db = Room.databaseBuilder(applicationContext, AppDatabase::class.java, "database").build()
+        val db = AppDatabase.getInstance(applicationContext)!!
         gpsDataDao = db.gpsDataDao()
         opponentGpsDataDao = db.opponentGpsDataDao()
 
@@ -153,8 +154,13 @@ class TrackPaceMakeService : Service() {
                 // 내 현재 상태 db에 저장
                 gpsDataDao.insertGpsData(GpsData(second, mLocation.latitude, mLocation.longitude, mLocation.speed, distance, mLocation.altitude))
 
+                // 상대 운동의 마지막 초까지만 가져오도록 조정
+                var secondForGetOpponentGpsData = opponentRecordEndSecond
+                if (second < secondForGetOpponentGpsData) {
+                    secondForGetOpponentGpsData = second
+                }
                 // 상대 현재 상태 가져오기
-                val opponentGpsData = opponentGpsDataDao.getOpponentGpsDataBySecond(second)
+                val opponentGpsData = opponentGpsDataDao.getOpponentGpsDataBySecond(secondForGetOpponentGpsData)
                 opponentLocation.latitude = opponentGpsData.lat
                 opponentLocation.longitude = opponentGpsData.lng
 
@@ -231,9 +237,10 @@ class TrackPaceMakeService : Service() {
                 CoroutineScope(Dispatchers.Main).launch {
                     // 상대 gps 데이터 가져옴
                     val token = "Bearer " + getSharedPreferences("other", MODE_PRIVATE).getString("TOKEN", "")!!
-                    val gpsDataResponse = supplementService.getGpsData(token, GpsDataId(opponentGpsDataId))
+                    val gpsDataResponse = supplementService.getGpsData(token, opponentGpsDataId)
                     if (gpsDataResponse.isSuccessful) {
                         val opponentGpsData = gpsDataResponse.body()!!.gpsData
+                        opponentRecordEndSecond = opponentGpsData.totalTime
 
                         launch(Dispatchers.IO) {
                             // 모두 db에 저장

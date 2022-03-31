@@ -4,18 +4,20 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Looper
+import android.view.LayoutInflater
 import android.view.View
+import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.capstonandroid.R
-import com.example.capstonandroid.RecordService
-import com.example.capstonandroid.TrackClusterRenderer
+import com.example.capstonandroid.Utils
 import com.example.capstonandroid.databinding.ActivitySelectTrackBinding
 import com.example.capstonandroid.network.dto.Track
 import com.example.capstonandroid.network.api.BackendApi
@@ -27,9 +29,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.android.gms.tasks.Task
-import com.google.maps.android.clustering.ClusterItem
-import com.google.maps.android.clustering.ClusterManager
-import com.sothree.slidinguppanel.SlidingUpPanelLayout
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.coroutines.*
 import org.angmarch.views.NiceSpinner
 import retrofit2.Retrofit
@@ -44,6 +44,8 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var retrofit: Retrofit // 레트로핏 인스턴스
     private lateinit var supplementService: BackendApi // api
 
+    private lateinit var persistentBottomSheet: BottomSheetBehavior<View>
+
     private lateinit var mFusedLocationClient: FusedLocationProviderClient // 통합 위치 제공자 핸들
 
     private lateinit var mLocationCallback: LocationCallback // 위치 정보 업데이트 콜백
@@ -52,17 +54,18 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var job: Job // 코루틴 동작을 제어하기 위한 job
 
-    private lateinit var clusterManager: ClusterManager<TrackItem> // 클러스터 매니저
-
     private lateinit var trackMap: HashMap<String, Track> // 트랙 맵
-
-    private lateinit var polylineList: ArrayList<Polyline> // 폴리라인 관리를 위한 리스트
+    private lateinit var markerMap: HashMap<String, Marker> // 마커 맵
+    private lateinit var polylineMap: HashMap<String, Polyline> // 폴리라인 관리를 위한 맵
 
     private var mLocationMarker: Marker? = null // 내 위치 마커
 
     private var selectedTrackId: String? = null // 선택된 트랙 인덱스
 
     private var exerciseKind = "R" // 운동 종류
+
+    private lateinit var trackMarker: View // 커스텀 마커 뷰
+    private lateinit var trackMarkerTextView: TextView // 커스텀 마커 텍스트 뷰
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,8 +90,11 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback {
         initRetrofit() // retrofit 인스턴스 초기화
 
         trackMap = HashMap() // 트랙 담아놓을 맵 초기화
+        markerMap = HashMap() // 마커 담아놓을 맵 초기화
+        polylineMap = HashMap() // 폴리라인 담아놓을 맵 초기화
 
-        polylineList = ArrayList() // 폴리라인 관리를 위한 리스트
+        trackMarker = LayoutInflater.from(this).inflate(R.layout.track_and_name_marker, null)!!
+        trackMarkerTextView = trackMarker.findViewById(R.id.tv_marker) as TextView
 
         // 스피너 초기 설정
         val niceSpinner: NiceSpinner = binding.spinnerExerciseType
@@ -121,6 +127,46 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback {
             initTracks()
         }
 
+        // 밑에서 올라오는 바텀시트 설정
+        persistentBottomSheet = BottomSheetBehavior.from(binding.bottomSheet)
+        persistentBottomSheet.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                when(newState) {
+                    BottomSheetBehavior.STATE_COLLAPSED -> { // 반만 펼쳤을 때
+                        println("bottom sheet: STATE_COLLAPSED")
+                    }
+                    BottomSheetBehavior.STATE_DRAGGING -> {
+                        println("bottom sheet: STATE_DRAGGING")
+                    }
+                    BottomSheetBehavior.STATE_EXPANDED -> { // 완전히 펼쳤을 때
+                        println("bottom sheet: STATE_EXPANDED")
+                    }
+                    BottomSheetBehavior.STATE_HALF_EXPANDED -> {
+                        println("bottom sheet: STATE_HALF_EXPANDED")
+                    }
+                    BottomSheetBehavior.STATE_HIDDEN -> { // bottom sheet 가 사라졌을 때
+                        println("bottom sheet: STATE_HIDDEN")
+                        // 투명도 다 되돌려 줌
+                        for (trackId in trackMap.keys) {
+                            polylineMap[trackId]?.color = ContextCompat.getColor(this@SelectTrackActivity, R.color.main_color)
+                            markerMap[trackId]?.alpha = 1F
+                        }
+
+                        selectedTrackId = null
+                    }
+                    BottomSheetBehavior.STATE_SETTLING -> {
+                        println("bottom sheet: STATE_SETTLING")
+                    }
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                println("bottom sheet: onSlide")
+            }
+        })
+
+        persistentBottomSheet.state = BottomSheetBehavior.STATE_HIDDEN // 초기 상태는 bottom sheet 내려가 있는 상태로
+
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
@@ -132,12 +178,16 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback {
             println("실행됨")
 
             // 초기화
+            selectedTrackId = null
             trackMap.clear()
-            clusterManager.clearItems()
-            for (polyline in polylineList) {
+            for ((_, marker) in markerMap) {
+                marker.remove()
+            }
+            markerMap.clear()
+            for ((_, polyline) in polylineMap) {
                 polyline.remove()
             }
-            polylineList.clear()
+            polylineMap.clear()
 
             // 보고있는 카메라 위치 측정
             val latLngBounds = mGoogleMap.projection.visibleRegion.latLngBounds
@@ -154,28 +204,56 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback {
 
                     trackMap[track._id] = track
 
-                    // 클러스터링에 마커 추가
-                    val trackItem = TrackItem(LatLng(track.start_latlng[1], track.start_latlng[0]), track.trackName, track._id)
-                    clusterManager.addItem(trackItem)
+                    // 마커 추가
+                    trackMarkerTextView.text = track.trackName
+                    val marker = mGoogleMap.addMarker(MarkerOptions()
+                        .position(LatLng(track.start_latlng[1], track.start_latlng[0]))
+                        .title(track.trackName)
+                        .icon(BitmapDescriptorFactory.fromBitmap(createBitmapFromView()))
+                        .anchor(0.5F, 1F))
+                    marker!!.tag = track._id
+                    markerMap[track._id] = marker!!
 
-                    // 폴리라인 그림
+                    // 폴리라인 추가
                     val latLngList = ArrayList<LatLng>()
-
                     launch(Dispatchers.Default) {
                         for (coordinate in track.gps.coordinates) {
                             latLngList.add(LatLng(coordinate[1], coordinate[0]))
                             println("${coordinate[1]}, ${coordinate[0]}")
                         }
                     }.join() // 오래걸릴수 있으니까 백그라운드 스레드로 넘겨봄...
-                   val polyLine = mGoogleMap.addPolyline(PolylineOptions()
+                    val polyline = mGoogleMap.addPolyline(PolylineOptions()
                         .clickable(true)
                         .addAll(latLngList)
-                        .width(10F)
-                        .color(R.color.main_color))
-                    polylineList.add(polyLine)
+                        .width(12F)
+                        .color(ContextCompat.getColor(this@SelectTrackActivity, R.color.main_color)))
+                    polyline.tag = track._id
+                    polylineMap[track._id] = polyline
+                }
+                // 받아온 트랙이 있나 없나에 따라 분기처리
+                if (trackMap.count() > 0) {
+                    // 가장 가까운 곳 찾아서 초기값으로 세팅해 줌
+                    selectedTrackId = withContext(Dispatchers.Default) {
+                        var minDistance = Float.MAX_VALUE
+                        var resultTrackId = ""
+                        for ((trackId, track) in trackMap) {
+                            val startLocation = Location("startPoint")
+                            startLocation.latitude = track.start_latlng[1]
+                            startLocation.longitude = track.start_latlng[0]
+                            val distance = mLocation.distanceTo(startLocation)
+                            if (minDistance > distance) {
+                                minDistance = distance
+                                resultTrackId = trackId
+                            }
+                        }
+                        resultTrackId
+                    }
+                    selectTrack(selectedTrackId)
+                } else {
+                    persistentBottomSheet.state = BottomSheetBehavior.STATE_HIDDEN
+                    Toast.makeText(this@SelectTrackActivity, "이 구역에는 트랙이 없습니다.", Toast.LENGTH_SHORT).show()
                 }
             }
-            clusterManager.cluster() // 강제로 리 클러스터링 해 줘야 이미지가 렌더링 됨....
         }
     }
 
@@ -189,28 +267,42 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         mGoogleMap = googleMap
 
-        // 클러스터 리스너 등록
-        clusterManager = ClusterManager(this, mGoogleMap)
-        clusterManager.renderer = TrackClusterRenderer(this, mGoogleMap, clusterManager) // 마커 이미지 변경을 위한 것.
-        mGoogleMap.setOnCameraIdleListener(clusterManager)
-        mGoogleMap.setOnMarkerClickListener(clusterManager)
+        // 마커 클릭 리스너 등록
+        mGoogleMap.setOnMarkerClickListener { marker ->
+            if (marker.tag != "myLocation") {
+                selectTrack(marker.tag.toString())
+            }
+            true
+        }
 
-        // 클러스터 아이템 클릭했을 때 리스너
-        clusterManager.setOnClusterItemClickListener { trackItem ->
-            println("클릭된거 타이틀: ${trackItem.title}")
-            println("클릭된거 아이디: ${trackItem.snippet}")
-
-            selectedTrackId = trackItem.snippet
-
-            binding.slidingLayout.panelState = SlidingUpPanelLayout.PanelState.ANCHORED
-            binding.tvTrackTitle.text = trackMap[trackItem.snippet]?.trackName
-            binding.tvTrackDescription.text = trackMap[trackItem.snippet]?.description
-            binding.tvTrackDistance.text = trackMap[trackItem.snippet]?.totalDistance.toString()
-
-            true // 마커 클릭 기본 이벤트 발동 안하게 함
+        // 폴리라인 클릭 리스너 등록
+        mGoogleMap.setOnPolylineClickListener { polyline ->
+            selectTrack(polyline.tag.toString())
         }
 
         checkPermission()
+    }
+
+    // 마커 클릭했을 때 처리
+    private fun selectTrack(newSelectedTrackId: String?) {
+        selectedTrackId = newSelectedTrackId
+        println(selectedTrackId)
+        binding.tvTrackTitle.text = trackMap[selectedTrackId]?.trackName
+        binding.tvTrackUser.text = trackMap[selectedTrackId]!!.user.name
+        binding.tvTrackDescription.text = trackMap[selectedTrackId]?.description
+        binding.tvTrackDistance.text = Utils.distanceToText(trackMap[selectedTrackId]!!.totalDistance)
+        persistentBottomSheet.state = BottomSheetBehavior.STATE_COLLAPSED
+
+        // 투명도 조절로 선택된 느낌 줌
+        for (trackId in trackMap.keys) {
+            if (trackId != selectedTrackId) {
+                markerMap[trackId]?.alpha = 0.3F
+                polylineMap[trackId]?.color = ContextCompat.getColor(this, R.color.no_selected_polyline_color)
+            } else {
+                markerMap[trackId]?.alpha = 1F
+                polylineMap[trackId]?.color = ContextCompat.getColor(this, R.color.main_color)
+            }
+        }
     }
 
     @SuppressLint("MissingPermission")
@@ -238,7 +330,6 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback {
                     override fun onFinish() {
                         initTracks()
                     }
-
                 } )
             }
         }
@@ -319,23 +410,20 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-    // 클러스팅하기 위한 마커 아이템
-    inner class TrackItem(position: LatLng, title: String, snippet: String) : ClusterItem {
+    // 비트맵 이미지 만드는 함수
+    private fun createBitmapFromView(): Bitmap {
+        trackMarker.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
+        trackMarker.layout(0, 0, trackMarker.measuredWidth, trackMarker.measuredHeight)
 
-        private val position: LatLng = position
-        private val title: String = title
-        private val snippet: String = snippet
+        val bitmap = Bitmap.createBitmap(trackMarker.measuredWidth,
+            trackMarker.measuredHeight,
+            Bitmap.Config.ARGB_8888)
 
-        override fun getPosition(): LatLng {
-            return position
-        }
+        val canvas = Canvas(bitmap)
 
-        override fun getTitle(): String? {
-            return title
-        }
+        trackMarker.background?.draw(canvas)
+        trackMarker.draw(canvas)
 
-        override fun getSnippet(): String? {
-            return snippet
-        }
+        return bitmap
     }
 }

@@ -14,12 +14,10 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import androidx.room.Room
 import com.example.capstonandroid.*
 import com.example.capstonandroid.databinding.ActivityTrackPaceMakeBinding
 import com.example.capstonandroid.db.AppDatabase
 import com.example.capstonandroid.db.dao.GpsDataDao
-import com.example.capstonandroid.db.dao.OpponentGpsDataDao
 import com.example.capstonandroid.network.RetrofitClient
 import com.example.capstonandroid.network.api.BackendApi
 import com.example.capstonandroid.network.dto.Track
@@ -94,7 +92,7 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback {
         println(" (TrackPaceMake) opponentPostId $opponentPostId")
 
         // db 사용 설정
-        val db = Room.databaseBuilder(applicationContext, AppDatabase::class.java, "database").build()
+        val db = AppDatabase.getInstance(applicationContext)!!
         gpsDataDao = db.gpsDataDao()
 
         job = Job() // job 생성
@@ -153,7 +151,7 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback {
                 })
                 .setNegativeButton("종료", DialogInterface.OnClickListener { _, _ ->
                     // 기록 종료하는 경우
-                    onBackPressed()
+                    stopRecord()
                 })
                 .show()
         }
@@ -163,17 +161,19 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback {
         mapFragment.getMapAsync(this)
     }
 
+    // 서비스 종료하라고 커맨드 보냄
     @SuppressLint("NewApi")
+    private fun stopRecord() {
+        val intent = Intent(this@TrackPaceMakeActivity, TrackPaceMakeService::class.java)
+        intent.action = TrackPaceMakeService.STOP_SERVICE
+        startForegroundService(intent)
+        super.onBackPressed()
+    }
+
     override fun onBackPressed() {
         println("onBackPressed 호출")
-
-        // 달리기중 아닐때만 뒤로 갈 수 있게 함
         if (!TrackPaceMakeService.isStarted) {
-            // 서비스 종료하라고 커맨드 보냄
-            val intent = Intent(this@TrackPaceMakeActivity, TrackPaceMakeService::class.java)
-            intent.action = TrackPaceMakeService.STOP_SERVICE
-            startForegroundService(intent)
-            super.onBackPressed()
+            stopRecord()
         }
     }
 
