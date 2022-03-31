@@ -14,12 +14,10 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import androidx.room.Room
 import com.example.capstonandroid.*
 import com.example.capstonandroid.databinding.ActivityTrackPaceMakeBinding
 import com.example.capstonandroid.db.AppDatabase
 import com.example.capstonandroid.db.dao.GpsDataDao
-import com.example.capstonandroid.db.dao.OpponentGpsDataDao
 import com.example.capstonandroid.network.RetrofitClient
 import com.example.capstonandroid.network.api.BackendApi
 import com.example.capstonandroid.network.dto.Track
@@ -94,7 +92,7 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback {
         println(" (TrackPaceMake) opponentPostId $opponentPostId")
 
         // db 사용 설정
-        val db = Room.databaseBuilder(applicationContext, AppDatabase::class.java, "database").build()
+        val db = AppDatabase.getInstance(applicationContext)!!
         gpsDataDao = db.gpsDataDao()
 
         job = Job() // job 생성

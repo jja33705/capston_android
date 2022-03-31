@@ -8,9 +8,7 @@ import android.os.IBinder
 import android.os.Looper
 import androidx.core.app.NotificationCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import androidx.room.Room
 import com.example.capstonandroid.activity.CompleteRecordActivity
-import com.example.capstonandroid.activity.RecordActivity
 import com.example.capstonandroid.activity.TrackRecordActivity
 import com.example.capstonandroid.db.AppDatabase
 import com.example.capstonandroid.db.dao.GpsDataDao
@@ -102,7 +100,7 @@ class TrackRecordService : Service() {
         }
 
         // db 사용 설정
-        val db = Room.databaseBuilder(applicationContext, AppDatabase::class.java, "database").build()
+        val db = AppDatabase.getInstance(applicationContext)!!
         gpsDataDao = db.gpsDataDao()
 
         mNotificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager // 노티피케이션 매니저 초기롸

@@ -18,7 +18,6 @@ import com.example.capstonandroid.db.entity.GpsData
 import com.example.capstonandroid.db.entity.OpponentGpsData
 import com.example.capstonandroid.network.RetrofitClient
 import com.example.capstonandroid.network.api.BackendApi
-import com.example.capstonandroid.network.dto.GpsDataId
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.tasks.Task
@@ -120,7 +119,7 @@ class TrackPaceMakeService : Service() {
         }
 
         // db 사용 설정
-        val db = Room.databaseBuilder(applicationContext, AppDatabase::class.java, "database").build()
+        val db = AppDatabase.getInstance(applicationContext)!!
         gpsDataDao = db.gpsDataDao()
         opponentGpsDataDao = db.opponentGpsDataDao()
 
@@ -238,7 +237,7 @@ class TrackPaceMakeService : Service() {
                 CoroutineScope(Dispatchers.Main).launch {
                     // 상대 gps 데이터 가져옴
                     val token = "Bearer " + getSharedPreferences("other", MODE_PRIVATE).getString("TOKEN", "")!!
-                    val gpsDataResponse = supplementService.getGpsData(token, GpsDataId(opponentGpsDataId))
+                    val gpsDataResponse = supplementService.getGpsData(token, opponentGpsDataId)
                     if (gpsDataResponse.isSuccessful) {
                         val opponentGpsData = gpsDataResponse.body()!!.gpsData
                         opponentRecordEndSecond = opponentGpsData.totalTime

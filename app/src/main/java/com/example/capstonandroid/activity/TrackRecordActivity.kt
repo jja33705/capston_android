@@ -16,9 +16,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import androidx.room.Room
 import com.example.capstonandroid.R
-import com.example.capstonandroid.RecordService
 import com.example.capstonandroid.TrackRecordService
 import com.example.capstonandroid.Utils
 import com.example.capstonandroid.databinding.ActivityTrackRecordBinding
@@ -86,7 +84,7 @@ class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback {
         println("trackId $trackId")
 
         // db 사용 설정
-        val db = Room.databaseBuilder(applicationContext, AppDatabase::class.java, "database").build()
+        val db = AppDatabase.getInstance(applicationContext)!!
         gpsDataDao = db.gpsDataDao()
 
         job = Job() // job 생성

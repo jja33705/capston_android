@@ -46,11 +46,11 @@ interface BackendApi {
     @POST("post/store") // 포스트 작성
     suspend fun postRecordActivity(@Header("Authorization") token: String, @Body postRecordActivity: PostRecordActivity): Response<ResponseMessage>
 
-    @POST("match/rank") // 랭크 랜덤 매칭
-    suspend fun rankMatching(@Header("Authorization") token: String, @Body trackId: TrackId): Response<RankMatchingResponse>
+    @GET("match/rank") // 랭크 랜덤 매칭
+    suspend fun rankMatching(@Header("Authorization") token: String, @Query("track_id") trackId: String): Response<RankMatchingResponse>
 
-    @POST("match/gpsData") // gps 데이터 받기
-    suspend fun getGpsData(@Header("Authorization") token: String, @Body gpsId: GpsDataId): Response<GetGpsDataResponse>
+    @GET("match/gpsData") // gps 데이터 받기
+    suspend fun getGpsData(@Header("Authorization") token: String, @Query("gpsId") gpsId: String): Response<GetGpsDataResponse>
 
     @GET("post/weekRecord") //요일별 누적거리
     fun userWeek(@Header("Authorization") token : String,@Query("event") event: String) : Call<UserWeekResponse>
