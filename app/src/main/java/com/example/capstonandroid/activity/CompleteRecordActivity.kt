@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.room.Room
 import com.example.capstonandroid.R
 import com.example.capstonandroid.databinding.ActivityCompleteRecordBinding
@@ -18,9 +19,7 @@ import com.example.capstonandroid.network.api.BackendApi
 import com.example.capstonandroid.network.RetrofitClient
 import com.example.capstonandroid.network.dto.PostRecordActivity
 import com.example.capstonandroid.network.dto.PostRecordGpsData
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import retrofit2.Retrofit
 
 class CompleteRecordActivity : AppCompatActivity() {
@@ -69,7 +68,7 @@ class CompleteRecordActivity : AppCompatActivity() {
 
         supportActionBar?.title = "활동 업로드" // 액션바 텍스트
 
-        val db = Room.databaseBuilder(applicationContext, AppDatabase::class.java, "database").build()
+        val db = AppDatabase.getInstance(applicationContext)!!
         gpsDataDao = db.gpsDataDao()
 
         speedList = ArrayList()
@@ -79,9 +78,20 @@ class CompleteRecordActivity : AppCompatActivity() {
         timeList = ArrayList()
 
         // db에 저장돼 있는 gps 데이터 불러옴
-        CoroutineScope(Dispatchers.IO).launch {
-            gpsDataList = gpsDataDao.getAllGpsData()
-
+        CoroutineScope(Dispatchers.Main).launch {
+            gpsDataList = withContext(Dispatchers.IO) {
+                gpsDataDao.getAllGpsData()
+            }
+            if (gpsDataList.size < 2) {
+                var alertDialog = AlertDialog.Builder(this@CompleteRecordActivity)
+                    .setTitle("안내")
+                    .setMessage("움직임이 감지되지 않습니다.")
+                    .setPositiveButton("확인") { _, _ ->
+                        finish()
+                    }
+                    .create()
+                alertDialog.show()
+            }
             for (gpsData in gpsDataList) {
                 speedList.add(gpsData.speed)
                 gpsList.add(listOf(gpsData.lng, gpsData.lat))
@@ -89,6 +99,7 @@ class CompleteRecordActivity : AppCompatActivity() {
                 distanceList.add(gpsData.distance)
                 timeList.add(gpsData.second)
             }
+            println("gps data 길이: ${gpsDataList.size}")
 
             postRecordGpsData = PostRecordGpsData(speedList, gpsList, altitudeList, distanceList, timeList)
 
