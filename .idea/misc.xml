@@ -42,6 +42,7 @@
         <entry key="app/src/main/res/layout/activity_record.xml" value="0.22328338623046876" />
         <entry key="app/src/main/res/layout/activity_select_match_type.xml" value="0.26979166666666665" />
         <entry key="app/src/main/res/layout/activity_select_track.xml" value="0.37604166666666666" />
+        <entry key="app/src/main/res/layout/activity_track.xml" value="0.36875" />
         <entry key="app/src/main/res/layout/activity_track_record.xml" value="0.25047607421875" />
         <entry key="app/src/main/res/layout/bottom_sheet.xml" value="0.36875" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.19791666666666666" />

@@ -1,29 +1,44 @@
 package com.example.capstonandroid.activity
 
-import android.content.Intent
+import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
+import com.example.capstonandroid.R
+import com.example.capstonandroid.Utils
 import com.example.capstonandroid.databinding.ActivityTrackBinding
 import com.example.capstonandroid.network.RetrofitClient
 import com.example.capstonandroid.network.api.BackendApi
+import com.example.capstonandroid.network.dto.Ranking
 import com.example.capstonandroid.network.dto.Track
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Retrofit
 
-class TrackActivity : AppCompatActivity() {
+class TrackActivity : AppCompatActivity(), OnMapReadyCallback {
     private var _binding: ActivityTrackBinding? = null
     private val binding get() = _binding!!
+
+    private lateinit var mGoogleMap: GoogleMap
 
     private lateinit var retrofit: Retrofit // 레트로핏 인스턴스
     private lateinit var supplementService: BackendApi // api
 
     private lateinit var trackId: String
-    private lateinit var exerciseKind: String
 
     private lateinit var track: Track
+
+    private lateinit var rankingList: List<Ranking>
+
+    // 시작점, 끝점
+    private lateinit var startLatLng: LatLng
+    private lateinit var endLatLng: LatLng
 
     companion object {
         const val RANK_MATCHING_ACTIVITY_REQUEST_CODE = 888
@@ -35,36 +50,24 @@ class TrackActivity : AppCompatActivity() {
         _binding = ActivityTrackBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // 액티비티 이동 후 답을 받는 콜백
-        val activityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-
-            // 액티비티에서 응답 왔을 때
-            if (result.resultCode == RANK_MATCHING_ACTIVITY_REQUEST_CODE) {
-                val responseIntent = result.data!!
-
-                // 매치 성공했는지 아닌지에 따라 분기처리
-                if (responseIntent.getBooleanExtra("matchSuccess", false)) {
-                    println(responseIntent.getStringExtra("gpsDataId"))
-
-                    val intent = Intent(this, TrackPaceMakeActivity::class.java)
-                    intent.putExtra("matchType", "랭크")
-                    intent.putExtra("exerciseKind", exerciseKind)
-                    intent.putExtra("trackId", trackId)
-                    intent.putExtra("opponentGpsDataId", responseIntent.getStringExtra("opponentGpsDataId"))
-                    intent.putExtra("opponentPostId", responseIntent.getIntExtra("opponentPostId", 0))
-                    startActivity(intent)
-                    finish()
-                } else {
-                    println("실패")
-                }
-            }
-        }
-
         val intent = intent
         trackId = intent.getStringExtra("trackId")!!
-        exerciseKind = intent.getStringExtra("exerciseKind")!!
 
         initRetrofit()
+
+        val mapFragment = supportFragmentManager
+            .findFragmentById(R.id.map) as SupportMapFragment
+        mapFragment.getMapAsync(this)
+    }
+
+    // 레트로핏 초기화
+    private fun initRetrofit() {
+        retrofit = RetrofitClient.getInstance()
+        supplementService = retrofit.create(BackendApi::class.java)
+    }
+
+    override fun onMapReady(googleMap: GoogleMap) {
+        mGoogleMap = googleMap
 
         CoroutineScope(Dispatchers.Main).launch {
             val token = "Bearer " + getSharedPreferences("other", MODE_PRIVATE).getString("TOKEN", "")!!
@@ -74,47 +77,80 @@ class TrackActivity : AppCompatActivity() {
                 track = trackResponse.body()!!
 
                 binding.tvTitle.text = track.trackName
-                binding.tvDistance.text = "${track.totalDistance}km"
+                binding.tvDistance.text = "${Utils.distanceToText(track.totalDistance)}km"
                 binding.tvDescription.text = track.description
+
+                startLatLng = LatLng(track.start_latlng[1], track.start_latlng[0])
+                endLatLng = LatLng(track.end_latlng[1], track.end_latlng[0])
+
+                drawTrack() // 트랙 그림
 
                 // 랭킹 가져오기
                 val rankingResponse = supplementService.getRanking(token, trackId)
                 if (rankingResponse.isSuccessful) {
                     println("${rankingResponse.body()!!}")
+                    rankingList = rankingResponse.body()!!.ranking
+
+                    if (rankingList.isNotEmpty()) {
+                        binding.rankFirst.text = rankingResponse.body()!!.ranking[0].user.name
+                    }
                 }
             } else {
                 // 통신에러발생했을경우 처리해야함
             }
         }
-
-        // 혼자하기 눌렀을때 리스너 등록
-        binding.buttonNormal.setOnClickListener {
-            val intent = Intent(this, TrackRecordActivity::class.java)
-            intent.putExtra("trackId", trackId)
-            intent.putExtra("exerciseKind", exerciseKind)
-            startActivity(intent)
-            finish()
-        }
-        // 친선전 눌렀을때 리스너 등록
-        binding.buttonFriendly.setOnClickListener {
-            val intent = Intent(this, TrackPaceMakeActivity::class.java)
-            intent.putExtra("trackId", trackId)
-            intent.putExtra("matchType", "친선")
-            intent.putExtra("exerciseKind", exerciseKind)
-            startActivity(intent)
-            finish()
-        }
-        // 랭크전 눌렀을때 리스너 등록
-        binding.buttonRank.setOnClickListener {
-            val intent = Intent(this, RankMatchingActivity::class.java)
-            intent.putExtra("trackId", trackId)
-            activityResultLauncher.launch(intent)
-        }
     }
 
-    // 레트로핏 초기화
-    private fun initRetrofit() {
-        retrofit = RetrofitClient.getInstance()
-        supplementService = retrofit.create(BackendApi::class.java)
+    private fun drawTrack() {
+        // 경로 그림
+        val builder: LatLngBounds.Builder = LatLngBounds.Builder() // 카메라 이동을 위한 빌더
+
+        val latLngList = ArrayList<LatLng>()
+        for (coordinate in track.gps.coordinates) {
+            val latLng = LatLng(coordinate[1], coordinate[0])
+            latLngList.add(latLng)
+            builder.include(latLng) // 카메라안에 들어와야 하는 지점들 추가
+            println("${coordinate[1]}, ${coordinate[0]}")
+        }
+        mGoogleMap.addPolyline(
+            PolylineOptions()
+                .clickable(true)
+                .addAll(latLngList)
+                .color(ContextCompat.getColor(this, R.color.main_color))
+                .width(12F))
+
+        // 체크포인트 추가
+        for (i in track.checkPoint.indices) {
+            val location = Location("checkpoint")
+            location.latitude = track.checkPoint[i][1]
+            location.longitude = track.checkPoint[i][0]
+
+            mGoogleMap.addMarker(
+                MarkerOptions()
+                    .position(LatLng(location.latitude, location.longitude))
+                    .title("체크포인트 ${i + 1}")
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.checkpoint_before))
+                    .anchor(0.5F, 0.5F))
+        }
+
+        // 출발점 마커 추가
+        mGoogleMap.addMarker(
+            MarkerOptions()
+                .position(startLatLng)
+                .title("출발점")
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.start_marker))
+                .anchor(0.5F, 0.9F))
+
+        // 도착점 마커 추가
+        mGoogleMap.addMarker(
+            MarkerOptions()
+                .position(endLatLng)
+                .title("도착점")
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.goal_flag))
+                .anchor(0F, 1F))
+
+        // 카메라 업데이트
+        val bounds: LatLngBounds = builder.build()
+        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 200))
     }
 }

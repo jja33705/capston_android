@@ -357,7 +357,7 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback {
                 .position(LatLng(startPoint.latitude, startPoint.longitude))
                 .title("출발점")
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.start_marker))
-                .anchor(0.5F, 1F))
+                .anchor(0.5F, 0.9F))
 
             // 시작 가능 반경 그림
             canStartAreaCircle = mGoogleMap.addCircle(
