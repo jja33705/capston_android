@@ -1,13 +1,13 @@
 package com.example.capstonandroid.network.dto
 
 data class Ranking(
-    val altitude: Int,
-    val average_speed: Int,
+    val altitude: Double,
+    val average_speed: Double,
     val calorie: Double,
     val content: String,
     val created_at: String,
     val date: String,
-    val distance: Int,
+    val distance: Double,
     val event: String,
     val gps_id: String,
     val id: Int,

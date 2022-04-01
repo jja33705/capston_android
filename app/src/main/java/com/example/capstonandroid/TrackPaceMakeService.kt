@@ -62,6 +62,7 @@ class TrackPaceMakeService : Service() {
         var matchType = ""
         var opponentPostId = 0
         var opponentGpsDataId = ""
+        var opponentUserName = ""
         lateinit var mLocation: Location
         lateinit var opponentLocation: Location // 상대 위치
 
@@ -253,6 +254,7 @@ class TrackPaceMakeService : Service() {
                     if (gpsDataResponse.isSuccessful) {
                         val opponentGpsData = gpsDataResponse.body()!!.gpsData
                         opponentRecordEndSecond = opponentGpsData.totalTime
+                        opponentUserName = opponentGpsData.user.name
 
                         launch(Dispatchers.IO) {
                             // 모두 db에 저장

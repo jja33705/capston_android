@@ -222,7 +222,7 @@ class TrackRecordService : Service() {
                 intent.putExtra("kcal", 30.0)
                 intent.putExtra("sumAltitude", sumAltitude)
                 intent.putExtra("second", second)
-                intent.putExtra("matchType", "혼자하기")
+                intent.putExtra("matchType", "싱글")
                 intent.putExtra("trackId", trackId)
                 intent.putExtra("exerciseKind", exerciseKind)
 

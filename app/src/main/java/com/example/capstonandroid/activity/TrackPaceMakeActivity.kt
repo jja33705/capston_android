@@ -77,10 +77,12 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback {
     // 내마커 아이콘
     private lateinit var myMarkerIcon: View // 커스텀 마커 뷰
     private lateinit var myMarkerIconTextView: TextView // 커스텀 마커 텍스트 뷰
+    private lateinit var myMarkerUserNameTextView: TextView // 내 이름 텍스트 뷰
 
     // 상대 마커 아이콘
     private lateinit var opponentMarkerIcon: View // 커스텀 마커 뷰
     private lateinit var opponentMarkerIconTextView: TextView // 커스텀 마커 텍스트 뷰
+    private lateinit var opponentMarkerUserNameTextView: TextView // 상대 이름 텍스트 뷰
 
     @SuppressLint("NewApi")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -111,13 +113,16 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback {
         initRetrofit()
 
         // 마커 아이콘 초기화
-        myMarkerIcon = LayoutInflater.from(this).inflate(R.layout.icon_and_speed, null)!!
+        myMarkerIcon = LayoutInflater.from(this).inflate(R.layout.user_icon, null)!!
         myMarkerIconTextView = myMarkerIcon.findViewById(R.id.marker_icon_speed) as TextView
+        myMarkerUserNameTextView = myMarkerIcon.findViewById(R.id.marker_user_name) as TextView
+        myMarkerUserNameTextView.text = "나"
         val myMarkerIconImageView = myMarkerIcon.findViewById(R.id.marker_icon_image) as ImageView
         myMarkerIconImageView.setImageResource(R.drawable.ic_my_location_marker)
 
-        opponentMarkerIcon = LayoutInflater.from(this).inflate(R.layout.icon_and_speed, null)!!
+        opponentMarkerIcon = LayoutInflater.from(this).inflate(R.layout.user_icon, null)!!
         opponentMarkerIconTextView = opponentMarkerIcon.findViewById(R.id.marker_icon_speed) as TextView
+        opponentMarkerUserNameTextView = opponentMarkerIcon.findViewById(R.id.marker_user_name) as TextView
         val opponentMarkerIconImageView = opponentMarkerIcon.findViewById(R.id.marker_icon_image) as ImageView
         opponentMarkerIconImageView.setImageResource(R.drawable.ic_opponent_location_marker)
 
@@ -225,6 +230,7 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback {
                     .icon(BitmapDescriptorFactory.fromBitmap(Utils.createBitmapFromView(myMarkerIcon))))
 
                 // 상대 위치 마커 생성
+                opponentMarkerUserNameTextView.text = TrackPaceMakeService.opponentUserName
                 opponentLocationMarker = mGoogleMap.addMarker(MarkerOptions()
                     .position(LatLng(TrackPaceMakeService.opponentLocation.latitude, TrackPaceMakeService.opponentLocation.longitude))
                     .icon(BitmapDescriptorFactory.fromBitmap(Utils.createBitmapFromView(opponentMarkerIcon))))
@@ -525,6 +531,7 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback {
                     val opponentLatLng = intent?.getParcelableExtra<LatLng>(TrackPaceMakeService.OPPONENT_LAT_LNG)!!
 
                     // 상대 위치 마커 생성
+                    opponentMarkerUserNameTextView.text = TrackPaceMakeService.opponentUserName
                     opponentLocationMarker = mGoogleMap.addMarker(MarkerOptions()
                         .position(opponentLatLng)
                         .icon(BitmapDescriptorFactory.fromBitmap(Utils.createBitmapFromView(opponentMarkerIcon)))
