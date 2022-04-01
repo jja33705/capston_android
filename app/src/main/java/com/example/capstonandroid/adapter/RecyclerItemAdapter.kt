@@ -12,7 +12,9 @@ import com.example.capstonandroid.network.dto.UserData
 import kotlinx.android.synthetic.main.item_view.view.*
 import retrofit2.Retrofit
 
-class RecyclerUserAdapter(private val items: ArrayList<UserData>, private val onClick: (UserData) -> Unit) : RecyclerView.Adapter<RecyclerUserAdapter.ViewHolder>() {
+class RecyclerUserAdapter(
+    private val items: ArrayList<UserData>,
+    private val onClick: (UserData) -> Unit) : RecyclerView.Adapter<RecyclerUserAdapter.ViewHolder>() {
 
     override fun getItemCount(): Int = items.size
 
