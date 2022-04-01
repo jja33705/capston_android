@@ -127,6 +127,11 @@ class CompleteRecordActivity : AppCompatActivity() {
         opponentPostId = intent.getIntExtra("opponentPostId", 0)
         println("intent 넘어옴 (opponentPostId): $opponentPostId")
 
+        // 상대랑 한 거 아니면 null로 그냥
+        if (opponentPostId == 0) {
+            opponentPostId = null
+        }
+
 
 
         // 스피너 설정

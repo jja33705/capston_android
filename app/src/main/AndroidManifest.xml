@@ -24,7 +24,7 @@
             android:name=".activity.MeDetailsActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.SelectMatchTypeActivity"
+            android:name=".activity.TrackActivity"
             android:exported="false"/>
         <activity
             android:name=".activity.RankMatchingActivity"

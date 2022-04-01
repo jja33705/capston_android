@@ -93,7 +93,7 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback {
         markerMap = HashMap() // 마커 담아놓을 맵 초기화
         polylineMap = HashMap() // 폴리라인 담아놓을 맵 초기화
 
-        trackMarker = LayoutInflater.from(this).inflate(R.layout.track_and_name_marker, null)!!
+        trackMarker = LayoutInflater.from(this).inflate(R.layout.track_and_name, null)!!
         trackMarkerTextView = trackMarker.findViewById(R.id.tv_marker) as TextView
 
         // 스피너 초기 설정
@@ -115,7 +115,7 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback {
         // 트랙 선택 버튼 초기화
         binding.btnSelectTrack.setOnClickListener {
             // 매치 타입에 따라 분기처리
-            val intent = Intent(this, SelectMatchTypeActivity::class.java)
+            val intent = Intent(this, TrackActivity::class.java)
             intent.putExtra("trackId", selectedTrackId)
             intent.putExtra("exerciseKind", exerciseKind)
             startActivity(intent)
@@ -146,13 +146,12 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback {
                     }
                     BottomSheetBehavior.STATE_HIDDEN -> { // bottom sheet 가 사라졌을 때
                         println("bottom sheet: STATE_HIDDEN")
+                        selectedTrackId = null
                         // 투명도 다 되돌려 줌
                         for (trackId in trackMap.keys) {
                             polylineMap[trackId]?.color = ContextCompat.getColor(this@SelectTrackActivity, R.color.main_color)
                             markerMap[trackId]?.alpha = 1F
                         }
-
-                        selectedTrackId = null
                     }
                     BottomSheetBehavior.STATE_SETTLING -> {
                         println("bottom sheet: STATE_SETTLING")
@@ -209,7 +208,7 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback {
                     val marker = mGoogleMap.addMarker(MarkerOptions()
                         .position(LatLng(track.start_latlng[1], track.start_latlng[0]))
                         .title(track.trackName)
-                        .icon(BitmapDescriptorFactory.fromBitmap(createBitmapFromView()))
+                        .icon(BitmapDescriptorFactory.fromBitmap(Utils.createBitmapFromView(trackMarker)))
                         .anchor(0.5F, 1F))
                     marker!!.tag = track._id
                     markerMap[track._id] = marker!!
@@ -233,7 +232,7 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback {
                 // 받아온 트랙이 있나 없나에 따라 분기처리
                 if (trackMap.count() > 0) {
                     // 가장 가까운 곳 찾아서 초기값으로 세팅해 줌
-                    selectedTrackId = withContext(Dispatchers.Default) {
+                    val startSelectedTrackId = withContext(Dispatchers.Default) {
                         var minDistance = Float.MAX_VALUE
                         var resultTrackId = ""
                         for ((trackId, track) in trackMap) {
@@ -248,7 +247,7 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback {
                         }
                         resultTrackId
                     }
-                    selectTrack(selectedTrackId)
+                    selectTrack(startSelectedTrackId)
                 } else {
                     persistentBottomSheet.state = BottomSheetBehavior.STATE_HIDDEN
                     Toast.makeText(this@SelectTrackActivity, "이 구역에는 트랙이 없습니다.", Toast.LENGTH_SHORT).show()
@@ -296,7 +295,7 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback {
         // 투명도 조절로 선택된 느낌 줌
         for (trackId in trackMap.keys) {
             if (trackId != selectedTrackId) {
-                markerMap[trackId]?.alpha = 0.3F
+                markerMap[trackId]?.alpha = 0.25F
                 polylineMap[trackId]?.color = ContextCompat.getColor(this, R.color.no_selected_polyline_color)
             } else {
                 markerMap[trackId]?.alpha = 1F
@@ -410,20 +409,11 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-    // 비트맵 이미지 만드는 함수
-    private fun createBitmapFromView(): Bitmap {
-        trackMarker.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
-        trackMarker.layout(0, 0, trackMarker.measuredWidth, trackMarker.measuredHeight)
-
-        val bitmap = Bitmap.createBitmap(trackMarker.measuredWidth,
-            trackMarker.measuredHeight,
-            Bitmap.Config.ARGB_8888)
-
-        val canvas = Canvas(bitmap)
-
-        trackMarker.background?.draw(canvas)
-        trackMarker.draw(canvas)
-
-        return bitmap
+    override fun onBackPressed() {
+        if (persistentBottomSheet.state != BottomSheetBehavior.STATE_HIDDEN) {
+            persistentBottomSheet.state = BottomSheetBehavior.STATE_HIDDEN
+        } else {
+            super.onBackPressed()
+        }
     }
 }

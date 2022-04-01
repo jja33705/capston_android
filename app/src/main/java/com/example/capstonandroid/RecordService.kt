@@ -20,7 +20,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
-import kotlin.collections.ArrayList
 
 class RecordService : Service() {
 
@@ -215,7 +214,7 @@ class RecordService : Service() {
                 intent.putExtra("sumAltitude", sumAltitude)
                 intent.putExtra("second", second)
                 intent.putExtra("exerciseKind", exerciseKind)
-                intent.putExtra("matchType", "혼자하기")
+                intent.putExtra("matchType", "자유")
 
                 startActivity(intent)
 

@@ -77,7 +77,7 @@ class RankMatchingActivity : AppCompatActivity() {
 
             delay(3000)
 
-            setResult(SelectMatchTypeActivity.RANK_MATCHING_ACTIVITY_REQUEST_CODE, responseIntent)
+            setResult(TrackActivity.RANK_MATCHING_ACTIVITY_REQUEST_CODE, responseIntent)
             finish()
         }
 

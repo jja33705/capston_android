@@ -3,11 +3,8 @@ package com.example.capstonandroid.activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
-import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import com.example.capstonandroid.R
-import com.example.capstonandroid.databinding.ActivitySelectMatchTypeBinding
+import com.example.capstonandroid.databinding.ActivityTrackBinding
 import com.example.capstonandroid.network.RetrofitClient
 import com.example.capstonandroid.network.api.BackendApi
 import com.example.capstonandroid.network.dto.Track
@@ -16,8 +13,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Retrofit
 
-class SelectMatchTypeActivity : AppCompatActivity() {
-    private var _binding: ActivitySelectMatchTypeBinding? = null
+class TrackActivity : AppCompatActivity() {
+    private var _binding: ActivityTrackBinding? = null
     private val binding get() = _binding!!
 
     private lateinit var retrofit: Retrofit // 레트로핏 인스턴스
@@ -35,7 +32,7 @@ class SelectMatchTypeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        _binding = ActivitySelectMatchTypeBinding.inflate(layoutInflater)
+        _binding = ActivityTrackBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         // 액티비티 이동 후 답을 받는 콜백
@@ -50,7 +47,7 @@ class SelectMatchTypeActivity : AppCompatActivity() {
                     println(responseIntent.getStringExtra("gpsDataId"))
 
                     val intent = Intent(this, TrackPaceMakeActivity::class.java)
-                    intent.putExtra("matchType", "랭크전")
+                    intent.putExtra("matchType", "랭크")
                     intent.putExtra("exerciseKind", exerciseKind)
                     intent.putExtra("trackId", trackId)
                     intent.putExtra("opponentGpsDataId", responseIntent.getStringExtra("opponentGpsDataId"))
@@ -71,6 +68,7 @@ class SelectMatchTypeActivity : AppCompatActivity() {
 
         CoroutineScope(Dispatchers.Main).launch {
             val token = "Bearer " + getSharedPreferences("other", MODE_PRIVATE).getString("TOKEN", "")!!
+            // 트랙 가져오기
             val trackResponse = supplementService.getTrack(token, trackId)
             if (trackResponse.isSuccessful) {
                 track = trackResponse.body()!!
@@ -78,6 +76,12 @@ class SelectMatchTypeActivity : AppCompatActivity() {
                 binding.tvTitle.text = track.trackName
                 binding.tvDistance.text = "${track.totalDistance}km"
                 binding.tvDescription.text = track.description
+
+                // 랭킹 가져오기
+                val rankingResponse = supplementService.getRanking(token, trackId)
+                if (rankingResponse.isSuccessful) {
+                    println("${rankingResponse.body()!!}")
+                }
             } else {
                 // 통신에러발생했을경우 처리해야함
             }
@@ -87,7 +91,6 @@ class SelectMatchTypeActivity : AppCompatActivity() {
         binding.buttonNormal.setOnClickListener {
             val intent = Intent(this, TrackRecordActivity::class.java)
             intent.putExtra("trackId", trackId)
-            intent.putExtra("matchType", "혼자하기")
             intent.putExtra("exerciseKind", exerciseKind)
             startActivity(intent)
             finish()
@@ -96,7 +99,7 @@ class SelectMatchTypeActivity : AppCompatActivity() {
         binding.buttonFriendly.setOnClickListener {
             val intent = Intent(this, TrackPaceMakeActivity::class.java)
             intent.putExtra("trackId", trackId)
-            intent.putExtra("matchType", "친선전")
+            intent.putExtra("matchType", "친선")
             intent.putExtra("exerciseKind", exerciseKind)
             startActivity(intent)
             finish()

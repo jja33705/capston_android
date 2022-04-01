@@ -13,5 +13,5 @@ data class Track(
     val start_latlng: List<Double>,
     val totalDistance: Double,
     val trackName: String,
-    val user: User
+    val user: UserIdAndName
 )
