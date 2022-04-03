@@ -63,8 +63,14 @@ class TrackPaceMakeService : Service() {
         var opponentPostId = 0
         var opponentGpsDataId = ""
         var opponentUserName = ""
-        lateinit var mLocation: Location
+        lateinit var mLocation: Location // 내 위치
+        var myLocationIndexOnTrack = 0 // 내가 트랙 위에 어디쯤 존재하는지
+        var mySumDistanceOnTrack = 0F // 내가 이동한 트랙위의 거리
+        var myStaySecondOnTrack = 1 // 내가 트랙위에 한 지점에 머무른 시간
         lateinit var opponentLocation: Location // 상대 위치
+        var opponentLocationIndexOnTrack = 0 // 상대가 트랙 위에 어디쯤 존재하는지
+        var opponentSumDistanceOnTrack = 0F
+        var opponentStaySecondOnTrack = 1
 
         private const val PREFIX = "com.example.capstonandroid.trackpacemakeservice"
 
@@ -94,6 +100,9 @@ class TrackPaceMakeService : Service() {
         const val OPPONENT_LAT_LNG = "${PREFIX}.OPPONENT_LAT_LNG"
         const val SPEED = "${PREFIX}.SPEED"
         const val OPPONENT_SPEED = "${PREFIX}.OPPONENT_SPEED"
+
+        // 1초에 갈 수 있다고 생각되는 최대 거리 30미터????
+        const val MAX_DISTANCE = 30F
     }
 
     // 제일 처음 호출 (1회성으로 서비스가 이미 실행중이면 호출되지 않는다)
