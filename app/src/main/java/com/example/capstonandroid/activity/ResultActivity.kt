@@ -7,10 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import com.example.capstonandroid.R
-import com.example.capstonandroid.databinding.ActivityMainBinding
 import com.example.capstonandroid.databinding.ActivityResultBinding
-import com.google.android.gms.common.data.DataHolder.builder
-import java.util.stream.DoubleStream.builder
 
 class ResultActivity : AppCompatActivity() {
 

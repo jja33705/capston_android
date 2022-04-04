@@ -131,11 +131,6 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback {
 
             // 정상적으로 카운트다운 다 지나오면 시작
             if (result.resultCode == CountDownActivity.COUNT_DOWN_ACTIVITY_RESULT_CODE) {
-                // 시작한 상태 저장
-                getSharedPreferences("trackPaceMake", MODE_PRIVATE)
-                    .edit()
-                    .putBoolean("isStarted", true)
-                    .commit()
 
                 // 커맨드 보냄 (서비스는 한번 더 실행 안되니 커맨드가 보내진다.)
                 val intent = Intent(this@TrackPaceMakeActivity, TrackPaceMakeService::class.java)
@@ -153,6 +148,8 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback {
                     .radius(20.0)
                     .fillColor(R.color.area_color)
                     .strokeWidth(0F))
+
+                binding.tvPaceMake.visibility = View.VISIBLE // 페이스메이커와의 차이 정보 보이게
             }
         }
 
@@ -243,6 +240,16 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback {
 
                 binding.tvInformation.visibility = View.GONE // 정보 창 없앰
 
+                // 시작 영역 없애고 도착 영역 그림
+                canStartAreaCircle.remove()
+                mGoogleMap.addCircle(CircleOptions()
+                    .center(LatLng(endPoint.latitude, endPoint.longitude))
+                    .radius(20.0)
+                    .fillColor(R.color.area_color)
+                    .strokeWidth(0F))
+
+                binding.tvPaceMake.visibility = View.VISIBLE // 페이스메이크 창 보이게
+
                 mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(beforeLatLng, 18.0f)) // 화면 이동
 
                 loadGpsDataFromDatabaseAndDrawPolyline()
@@ -297,6 +304,125 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback {
         mGoogleMap = googleMap
 
         checkPermission()
+    }
+
+    // 서로의 차이가 어느정도인지 체크
+    private fun predictLocationDifference(): Float {
+
+        // 내 위치 예측
+        var myIncreaseSumDistance = 0F // 한계치까지만 비교하기 위한 내 위치 증가깂
+
+        var myBeforeLocation = Location("start") // 트랙 위에서 현재 내 위치라고 예상되는 지점
+        myBeforeLocation.latitude =
+            track.gps.coordinates[TrackPaceMakeService.myLocationIndexOnTrack][1]
+        myBeforeLocation.longitude =
+            track.gps.coordinates[TrackPaceMakeService.myLocationIndexOnTrack][0]
+
+        var myMinDistance =
+            TrackPaceMakeService.mLocation.distanceTo(myBeforeLocation) // 가장 작은 거리 차이인 지점과의 거리차이
+
+        var myPredictedLocation = TrackPaceMakeService.myLocationIndexOnTrack // 예상하는 트랙위의 내 위치
+
+        // 이동할 수 있는 가장 최대 거리라고 생각하는 지점까지 반복하며 트랙 위에서 어디와 가장 가까운지 구함
+        println("$myPredictedLocation ${track.gps.coordinates.size}")
+        for (i in myPredictedLocation + 1 until track.gps.coordinates.size) {
+            var location = Location("flag")
+            location.latitude = track.gps.coordinates[i][1]
+            location.longitude = track.gps.coordinates[i][0]
+
+            // 이동할 수 있는 가장 최대 거리를 넘어서면 반복문 종료
+            myIncreaseSumDistance += myBeforeLocation.distanceTo(location)
+            if (myIncreaseSumDistance >= TrackPaceMakeService.MAX_DISTANCE * TrackPaceMakeService.myStaySecondOnTrack) {
+                break
+            }
+
+            val distance = location.distanceTo(TrackPaceMakeService.mLocation)
+            if (distance <= myMinDistance) {
+                myMinDistance = distance
+                myPredictedLocation = i
+            }
+
+            myBeforeLocation = location
+        }
+
+        // 내 트랙 위에서의 누적 이동 거리 갱신해줌
+        for (i in TrackPaceMakeService.myLocationIndexOnTrack until myPredictedLocation) {
+            val beforeLocation = Location("before")
+            beforeLocation.latitude = track.gps.coordinates[i][1]
+            beforeLocation.longitude = track.gps.coordinates[i][0]
+            val afterLocation = Location("after")
+            afterLocation.latitude = track.gps.coordinates[i + 1][1]
+            afterLocation.longitude = track.gps.coordinates[i + 1][0]
+            TrackPaceMakeService.mySumDistanceOnTrack += beforeLocation.distanceTo(afterLocation)
+        }
+
+        if (myPredictedLocation == TrackPaceMakeService.myLocationIndexOnTrack) {
+            TrackPaceMakeService.myStaySecondOnTrack += 1
+        } else {
+            TrackPaceMakeService.myLocationIndexOnTrack = myPredictedLocation // 내 예상 지점 갱신
+            TrackPaceMakeService.myStaySecondOnTrack = 1
+        }
+
+        // 상대 위치 예측-----------------------------------------------------------------------------------
+        var opponentIncreaseSumDistance = 0F // 한계치까지만 비교하기 위한 상대 위치 증가깂
+
+        var opponentBeforeLocation = Location("start") // 트랙 위에서 현재 내 위치라고 예상되는 지점
+        opponentBeforeLocation.latitude =
+            track.gps.coordinates[TrackPaceMakeService.opponentLocationIndexOnTrack][1]
+        opponentBeforeLocation.longitude =
+            track.gps.coordinates[TrackPaceMakeService.opponentLocationIndexOnTrack][0]
+
+        var opponentMinDistance =
+            TrackPaceMakeService.opponentLocation.distanceTo(opponentBeforeLocation) // 가장 작은 거리 차이인 지점과의 거리차이
+
+        var opponentPredictedLocation =
+            TrackPaceMakeService.opponentLocationIndexOnTrack // 예상하는 트랙위의 내 위치
+
+        // 1초안에 이동할 수 있는 가장 최대 거리라고 생각하는 지점까지 반복하며 트랙 위에서 어디와 가장 가까운지 구함
+        for (i in opponentPredictedLocation + 1 until track.gps.coordinates.size) {
+            var location = Location("flag")
+            location.latitude = track.gps.coordinates[i][1]
+            location.longitude = track.gps.coordinates[i][0]
+
+            // 1초안에 이동할 수 있는 가장 최대 거리를 넘어서면 반복문 종료
+            opponentIncreaseSumDistance += opponentBeforeLocation.distanceTo(location)
+            if (opponentIncreaseSumDistance >= TrackPaceMakeService.MAX_DISTANCE * TrackPaceMakeService.opponentStaySecondOnTrack) {
+                break
+            }
+
+            val distance = location.distanceTo(TrackPaceMakeService.opponentLocation)
+            if (distance <= opponentMinDistance) {
+                opponentMinDistance = distance
+                opponentPredictedLocation = i
+            }
+
+            opponentBeforeLocation = location
+        }
+
+        // 상대 트랙 위에서의 누적 이동 거리 갱신해줌
+        for (i in TrackPaceMakeService.opponentLocationIndexOnTrack until opponentPredictedLocation) {
+            val beforeLocation = Location("before")
+            beforeLocation.latitude = track.gps.coordinates[i][1]
+            beforeLocation.longitude = track.gps.coordinates[i][0]
+            val afterLocation = Location("after")
+            afterLocation.latitude = track.gps.coordinates[i + 1][1]
+            afterLocation.longitude = track.gps.coordinates[i + 1][0]
+            TrackPaceMakeService.opponentSumDistanceOnTrack += beforeLocation.distanceTo(
+                afterLocation
+            )
+        }
+
+        if (TrackPaceMakeService.opponentLocationIndexOnTrack == opponentPredictedLocation) {
+            TrackPaceMakeService.opponentStaySecondOnTrack += 1
+        } else {
+            TrackPaceMakeService.opponentLocationIndexOnTrack = opponentPredictedLocation // 상대 예상 지점 갱신
+            TrackPaceMakeService.opponentStaySecondOnTrack = 1
+        }
+
+        println("예상..... 나: $myPredictedLocation 상대: $opponentPredictedLocation")
+        println("예상 누적 거리.... 나: ${TrackPaceMakeService.mySumDistanceOnTrack} 상대: ${TrackPaceMakeService.opponentSumDistanceOnTrack}")
+
+        return TrackPaceMakeService.mySumDistanceOnTrack - TrackPaceMakeService.opponentSumDistanceOnTrack
     }
 
     // 트랙 정보 가져와서 그림
@@ -357,7 +483,7 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback {
                 .position(LatLng(startPoint.latitude, startPoint.longitude))
                 .title("출발점")
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.start_marker))
-                .anchor(0.5F, 1F))
+                .anchor(0.5F, 0.9F))
 
             // 시작 가능 반경 그림
             canStartAreaCircle = mGoogleMap.addCircle(
@@ -514,6 +640,17 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback {
                     mGoogleMap.addPolyline(PolylineOptions().add(beforeLatLng, latLng)) // 그림 그림
 
                     beforeLatLng = latLng
+
+                    CoroutineScope(Dispatchers.Main).launch {
+                        val predictLocationDifference = withContext(Dispatchers.Default) {
+                            predictLocationDifference()
+                        }
+                        if (predictLocationDifference >= 0) {
+                            binding.tvPaceMake.text = "${TrackPaceMakeService.opponentUserName}보다 ${predictLocationDifference}m 앞서는 중"
+                        } else {
+                            binding.tvPaceMake.text = "${TrackPaceMakeService.opponentUserName}보다 ${predictLocationDifference * -1}m 뒤처지는 중"
+                        }
+                    }
 
                     // 도착점 도착했는지 체크
                     val currentLocation = Location("currentLocation")

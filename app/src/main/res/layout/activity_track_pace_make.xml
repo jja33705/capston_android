@@ -123,6 +123,27 @@
             android:layout_height="match_parent"
             app:layout_constraintEnd_toEndOf="parent"></fragment>
 
+        <LinearLayout
+            android:layout_gravity="top|center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@color/white"
+            android:layout_marginTop="25dp"
+            >
+            <TextView
+                android:id="@+id/tv_pace_make"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="페이스메이커보다 0m 앞서는 중"
+                android:textSize="20dp"
+                android:padding="7dp"
+                android:visibility="gone"
+                >
+            </TextView>
+
+        </LinearLayout>
+
         <TextView
             android:id="@+id/tv_information"
             android:layout_width="match_parent"

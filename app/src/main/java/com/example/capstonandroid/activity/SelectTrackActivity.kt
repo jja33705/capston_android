@@ -14,6 +14,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.capstonandroid.R
@@ -67,6 +68,10 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var trackMarker: View // 커스텀 마커 뷰
     private lateinit var trackMarkerTextView: TextView // 커스텀 마커 텍스트 뷰
 
+    companion object {
+        const val RANK_MATCHING_ACTIVITY_REQUEST_CODE = 888
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -112,19 +117,66 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback {
             }
         }
 
-        // 트랙 선택 버튼 초기화
-        binding.btnSelectTrack.setOnClickListener {
+        // 트랙 상세정보 보기 버튼 초기화
+        binding.btnTrackInformation.setOnClickListener {
             // 매치 타입에 따라 분기처리
             val intent = Intent(this, TrackActivity::class.java)
             intent.putExtra("trackId", selectedTrackId)
-            intent.putExtra("exerciseKind", exerciseKind)
             startActivity(intent)
-            finish()
         }
 
         // 현재 위치에서 검색 버튼 초기화
         binding.buttonSearchTrack.setOnClickListener {
             initTracks()
+        }
+
+        // 액티비티 이동 후 답을 받는 콜백
+        val activityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+
+            // 액티비티에서 응답 왔을 때
+            if (result.resultCode == RANK_MATCHING_ACTIVITY_REQUEST_CODE) {
+                val responseIntent = result.data!!
+
+                // 매치 성공했는지 아닌지에 따라 분기처리
+                if (responseIntent.getBooleanExtra("matchSuccess", false)) {
+                    println(responseIntent.getStringExtra("gpsDataId"))
+
+                    val intent = Intent(this, TrackPaceMakeActivity::class.java)
+                    intent.putExtra("matchType", "랭크")
+                    intent.putExtra("exerciseKind", exerciseKind)
+                    intent.putExtra("trackId", selectedTrackId)
+                    intent.putExtra("opponentGpsDataId", responseIntent.getStringExtra("opponentGpsDataId"))
+                    intent.putExtra("opponentPostId", responseIntent.getIntExtra("opponentPostId", 0))
+                    startActivity(intent)
+                    finish()
+                } else {
+                    println("실패")
+                }
+            }
+        }
+
+        // 혼자하기 눌렀을때 리스너 등록
+        binding.buttonNormal.setOnClickListener {
+            val intent = Intent(this, TrackRecordActivity::class.java)
+            intent.putExtra("trackId", selectedTrackId)
+            intent.putExtra("exerciseKind", exerciseKind)
+            startActivity(intent)
+            finish()
+        }
+        // 친선전 눌렀을때 리스너 등록
+        binding.buttonFriendly.setOnClickListener {
+            val intent = Intent(this, TrackPaceMakeActivity::class.java)
+            intent.putExtra("trackId", selectedTrackId)
+            intent.putExtra("matchType", "친선")
+            intent.putExtra("exerciseKind", exerciseKind)
+            startActivity(intent)
+            finish()
+        }
+        // 랭크전 눌렀을때 리스너 등록
+        binding.buttonRank.setOnClickListener {
+            val intent = Intent(this, RankMatchingActivity::class.java)
+            intent.putExtra("trackId", selectedTrackId)
+            activityResultLauncher.launch(intent)
         }
 
         // 밑에서 올라오는 바텀시트 설정
@@ -209,7 +261,7 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback {
                         .position(LatLng(track.start_latlng[1], track.start_latlng[0]))
                         .title(track.trackName)
                         .icon(BitmapDescriptorFactory.fromBitmap(Utils.createBitmapFromView(trackMarker)))
-                        .anchor(0.5F, 1F))
+                        .anchor(0.5F, 0.9F))
                     marker!!.tag = track._id
                     markerMap[track._id] = marker!!
 
@@ -287,9 +339,7 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback {
         selectedTrackId = newSelectedTrackId
         println(selectedTrackId)
         binding.tvTrackTitle.text = trackMap[selectedTrackId]?.trackName
-        binding.tvTrackUser.text = trackMap[selectedTrackId]!!.user.name
-        binding.tvTrackDescription.text = trackMap[selectedTrackId]?.description
-        binding.tvTrackDistance.text = Utils.distanceToText(trackMap[selectedTrackId]!!.totalDistance)
+        binding.tvTrackDistance.text = "${Utils.distanceToText(trackMap[selectedTrackId]!!.totalDistance)}km"
         persistentBottomSheet.state = BottomSheetBehavior.STATE_COLLAPSED
 
         // 투명도 조절로 선택된 느낌 줌
@@ -321,7 +371,7 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback {
                 mLocationMarker?.tag = "myLocation"
 
                 // 화면 이동하고 화면 이동 끝났을 때 맵 불러오는 콜백
-                mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(location.latitude, location.longitude), 11.0f), object : GoogleMap.CancelableCallback {
+                mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(location.latitude, location.longitude), 15.0f), object : GoogleMap.CancelableCallback {
                     override fun onCancel() {
 
                     }
