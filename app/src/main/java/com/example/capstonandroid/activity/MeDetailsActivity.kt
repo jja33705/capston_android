@@ -21,6 +21,7 @@ class MeDetailsActivity : AppCompatActivity() {
     private  lateinit var  retrofit: Retrofit  //레트로핏
     private  lateinit var supplementService: BackendApi // api
 
+    private var page = 1       // 현재 페이지
     lateinit var binding: ActivityMeDetailsBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,14 +32,15 @@ class MeDetailsActivity : AppCompatActivity() {
         setContentView(binding.root)
         initRetrofit()
         val data_num : Int = intent.getIntExtra("data_num",0)
+        val data_page : Int = intent.getIntExtra("data_page",0)
 
         val sharedPreference = getSharedPreferences("other", 0)
 
 //      이 타입이 디폴트 값
-        var TOKEN = "Bearer " + sharedPreference.getString("TOKEN","")
-        println(TOKEN)
+        var token = "Bearer " + sharedPreference.getString("TOKEN","")
+        println(token)
 
-        supplementService.myIndex(TOKEN).enqueue(object : Callback<MySNSResponse> {
+        supplementService.myIndex(token,data_page-1).enqueue(object : Callback<MySNSResponse> {
             override fun onResponse(call: Call<MySNSResponse>, response: Response<MySNSResponse>) {
                 if(response.isSuccessful){
 

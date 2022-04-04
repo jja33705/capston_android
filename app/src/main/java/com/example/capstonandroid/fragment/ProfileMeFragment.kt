@@ -33,9 +33,6 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import kotlin.math.log
 
-
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
@@ -47,10 +44,10 @@ class ProfileMeFragment : Fragment(){
     private var param1: String? = null
     private var param2: String? = null
 
-// 바인딩 객체 타입에 ?를 붙여서 null을 허용 해줘야한다. ( onDestroy 될 때 완벽하게 제거를 하기위해 )
- private var mBinding: FragmentProfileMeBinding? = null
-// 매번 null 체크를 할 필요 없이 편의성을 위해 바인딩 변수 재 선언
- private val binding get() = mBinding!!
+    // 바인딩 객체 타입에 ?를 붙여서 null을 허용 해줘야한다. ( onDestroy 될 때 완벽하게 제거를 하기위해 )
+    private var mBinding: FragmentProfileMeBinding? = null
+    // 매번 null 체크를 할 필요 없이 편의성을 위해 바인딩 변수 재 선언
+    private val binding get() = mBinding!!
 
 
 
@@ -81,10 +78,6 @@ class ProfileMeFragment : Fragment(){
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
-        var user_name = ""
-        var user_followers = ""
-        var user_followings = ""
-        var user_mmr : Int= 0
 
         var mon :Float = 0f;
         var tue :Float = 0f;
@@ -283,6 +276,7 @@ class ProfileMeFragment : Fragment(){
             }
         }
 
+        binding.spProfileMeSpinner.setSelection(1)
  supplementService.userGet(token.toString()).enqueue(object : Callback<LoginUserResponse>{
             override fun onResponse(
                 call: Call<LoginUserResponse>,

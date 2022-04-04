@@ -35,10 +35,14 @@ interface BackendApi {
     fun logOut(@Header("Authorization") token: String): Call<LogoutResponse>
 //
     @GET("post/index") // SNS 메인화면~
-    fun SNSIndex(@Header("Authorization") token: String): Call<SNSResponse>
+    fun SNSIndex(@Header("Authorization") token: String,@Query("page") page: Int): Call<SNSResponse>
 
     @GET("post/myIndex") // 내 기록 불러오기!
-    fun myIndex(@Header("Authorization")token: String): Call<MySNSResponse>
+    fun myIndex(@Header("Authorization")token: String,@Query("page") page: Int): Call<MySNSResponse>
+
+    @POST("userSearch")
+    fun userSearch(@Body userSearchResponse: UserSearchResponse) : Call<UserSearchResponse>
+
 
     //    @POST("post/store") // 기록 저장
     //    fun storePost(@Body record: Track) : Call<Track>

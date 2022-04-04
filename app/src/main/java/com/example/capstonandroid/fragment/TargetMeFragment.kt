@@ -32,43 +32,26 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
 private  lateinit var  retrofit: Retrofit  //레트로핏
 private  lateinit var supplementService: BackendApi // api
-/**
- * A simple [Fragment] subclass.
- * Use the [PersonalMeFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
+
 class PersonalMeFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
-
 
     // 바인딩 객체 타입에 ?를 붙여서 null을 허용 해줘야한다. ( onDestroy 될 때 완벽하게 제거를 하기위해 )
     private var mBinding: FragmentTargetMeBinding? = null
     // 매번 null 체크를 할 필요 없이 편의성을 위해 바인딩 변수 재 선언
     private val binding get() = mBinding!!
 
-    var mon :Float = 0f;
-    var tue :Float = 0f;
-    var wed :Float = 0f;
-    var thu :Float = 0f;
-    var fri :Float = 0f;
-    var sat :Float = 0f;
-    var sun :Float = 0f;
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
 
     }
     inner class MyXAxisFormatter : ValueFormatter(){
@@ -87,6 +70,18 @@ class PersonalMeFragment : Fragment() {
         mBinding = FragmentTargetMeBinding.inflate(inflater, container, false)
 
 
+        arguments?.let {
+            param1 = it.getString(ARG_PARAM1)
+            param2 = it.getString(ARG_PARAM2)
+        }
+
+        var mon :Float = 0f;
+        var tue :Float = 0f;
+        var wed :Float = 0f;
+        var thu :Float = 0f;
+        var fri :Float = 0f;
+        var sat :Float = 0f;
+        var sun :Float = 0f;
         initRetrofit()
 
         val sharedPreference = requireActivity().getSharedPreferences("other", 0)
@@ -274,7 +269,7 @@ class PersonalMeFragment : Fragment() {
             }
 
         }
-
+        binding.spProfileMeSpinner.setSelection(1)
         return binding.root
 
     }

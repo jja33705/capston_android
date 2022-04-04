@@ -19,6 +19,7 @@ import com.example.capstonandroid.network.api.BackendApi
 import com.example.capstonandroid.network.RetrofitClient
 import com.example.capstonandroid.network.dto.*
 import kotlinx.android.synthetic.main.fragment_activity_me.*
+import kotlinx.android.synthetic.main.fragment_home.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -42,6 +43,8 @@ class ActivityMeFragment : Fragment() {
     // 매번 null 체크를 할 필요 없이 편의성을 위해 바인딩 변수 재 선언
     private val binding get() = mBinding!!
 
+
+    private var page = 1       // 현재 페이지
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -66,49 +69,49 @@ class ActivityMeFragment : Fragment() {
         initRetrofit()
 ////      토큰 불러오기
 
+       page = 1       // 현재 페이지
         val sharedPreference = requireActivity().getSharedPreferences("other", 0)
 
 //      이 타입이 디폴트 값
-        var TOKEN = "Bearer " + sharedPreference.getString("TOKEN","")
-        println("프로필 미 프래그먼트 + "+TOKEN)
+        var token = "Bearer " + sharedPreference.getString("TOKEN", "")
+        println("프로필 미 프래그먼트 + " + token)
 
         val list = ArrayList<UserData>()
-        
-        supplementService.myIndex(TOKEN.toString()).enqueue(object :Callback<MySNSResponse>
-        {
+        val adapter2 = RecyclerUserAdapter(list, { data -> adapterOnClick(data) })
+
+        supplementService.myIndex(token, page).enqueue(object : Callback<MySNSResponse> {
             override fun onResponse(call: Call<MySNSResponse>, response: Response<MySNSResponse>) {
                 println(response.body())
-        if(response.isSuccessful) {
-            println(response.body())
+                if (response.isSuccessful) {
+                    println(response.body())
 
 //            println("여긴뭐여?"+LoginUserResponse!!.posts[0].title)
 
 
+                    println(response.body()!!.data.size)
 
-            println(response.body()!!.data.size)
+                    for (i in 0..response.body()!!.data.size - 1) {
+                        list.add(
+                            UserData(
+                                ContextCompat.getDrawable(
+                                    requireContext(),
+                                    R.drawable.sakai
+                                )!!,
+                                response.body()!!.data[i].title,
+                                response.body()!!.data[i].kind,
+                                i,
+                                response.body()!!.data[i].created_at,
+                                response.body()!!.data[i].time,
+                                response.body()!!.current_page
+                            )
+                        )
+                    }
+                    lstUser2.adapter = adapter2
+                    lstUser2.addItemDecoration(ActivityMeFragment.DistanceItemDecorator(10))
 
-            for (i in 0..response.body()!!.data.size-1) {
-                list.add(
-                    UserData(
-                        ContextCompat.getDrawable(
-                            requireContext(),
-                            R.drawable.sakai
-                        )!!,
-                        response.body()!!.data[i].title,
-                        response.body()!!.data[i].kind,
-                        i,
-                        response.body()!!.data[i].created_at,
-                        response.body()!!.data[i].time,
-                    )
-                )
-            }
-            val adapter2 = RecyclerUserAdapter(list, { data -> adapterOnClick(data) })
-            lstUser2.adapter = adapter2
-            lstUser2.addItemDecoration(ActivityMeFragment.DistanceItemDecorator(10))
+                } else {
 
-        }else{
-
-        }
+                }
 //
             }
 
@@ -118,124 +121,53 @@ class ActivityMeFragment : Fragment() {
 
         })
 
+        binding.lstUser2.addOnScrollListener(object : RecyclerView.OnScrollListener(){
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
 
+                if (!lstUser2.canScrollVertically(1)){
 
-//        supplementService.myIndex(TOKEN.toString()).enqueue(object :Callback<IndexResponse>{
-//            override fun onResponse(call: Call<IndexResponse>, response: Response<IndexResponse>) {
-//
-//                if(response.isSuccessful) {
-//                    println(response.body())
-//
-//                    var myIndex: IndexResponse? = response.body()
-//
-////                            var data: Data? =
-//
-//                    val items = mutableListOf<ListViewItem>()
-//
-//                    var usersize: Int = myIndex!!.data.size
-//                    println(usersize)
-//                    for (i in usersize downTo 1) {
-//                        items.add(
-//                            ListViewItem(
-//                                ContextCompat.getDrawable(
-//                                    requireContext(),
-//                                    R.drawable.sakai
-//                                )!!,
-//                                myIndex!!.data[usersize - 1].title,
-//                                "작성일자 : " + myIndex!!.data[usersize - 1].updated_at
-//                            )
-//                        )
-//                        --usersize
-//
-//
-//                    }
-//                    val adapter = ListViewAdapter(items)
-//                    listView.adapter = adapter
-//                    listView.setOnItemClickListener { parent: AdapterView<*>, view: View, position: Int, id: Long ->
-//                        val item = parent.getItemAtPosition(position) as ListViewItem
-//                        Toast.makeText(requireContext(), item.title, Toast.LENGTH_SHORT).show()
-//                    }
-//                }}
-//            override fun onFailure(call: Call<IndexResponse>, t: Throwable) {
-//                TODO("Not yet implemented")
-//            }
-//
-//        })
+                    supplementService.myIndex(token, page).enqueue(object : Callback<MySNSResponse>{
+                        override fun onResponse(
+                            call: Call<MySNSResponse>,
+                            response: Response<MySNSResponse>
+                        ) {
 
-//        supplementService.loginPost(login).enqueue(object : Callback<LoginResponse>{
-//            override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
-//
-//
-//                if(response.isSuccessful){
-//                    println("성공 활동 기록 프래그먼트")
-////
-//                    println("콜백 응답으로 온것"+ response.body())
-//
-//
-//                    var loginResponse: LoginResponse? = response.body()
-//
-//                    var user: User? = loginResponse!!.user
-////                        데이터 클래스 USER 사용방법
-////                        var user: User? = loginResponse!!.user
-////                        print(user!!.birth)
-//                    println(user!!.name)
-//                    println(user!!.posts[0].title)
-//
-//                    val items = mutableListOf<ListViewItem>()
-//
-//
-//                    println(user!!.posts[1].title)
-////                    for (i in user!!.posts.)
-//
-//                    println(user!!.posts.size) //2
-//                     var usersize : Int = user!!.posts.size
-//                    for (i in usersize downTo 1){
-//                        items.add(
-//                            ListViewItem(ContextCompat.getDrawable(requireContext(),
-//                            R.drawable.sakai)!!,
-//                            user!!.posts[usersize-1].title,
-//                            "작성일자 : " + user!!.posts[usersize-1].updated_at)
-//                        )
-//                            --usersize
-//
-//
-//                    }
-//
-//                    val adapter = ListViewAdapter(items)
-//                    listView.adapter = adapter
-//                    listView.setOnItemClickListener { parent: AdapterView<*>, view: View, position: Int, id: Long -> val item = parent.getItemAtPosition(position) as ListViewItem
-//                        Toast.makeText(requireContext(), item.title, Toast.LENGTH_SHORT).show() }
-//
-//                }
-//                else{
-//
-//                    println("갔지만 실패")
-//                    println(response.body())
-//                    println(response.message())
-//                    println(response.code())
-//                }
-//
-//            }
-//
-//            override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
-//                TODO("Not yet implemented")
-//                println("실패")
-//                println(t.message)
-//            }
-//
-//        })
+                            if(response.isSuccessful&&response.body()!!.data.size!==0) {
+                                for (i in 0..response.body()!!.data.size - 1) {
+                                    list.add(
+                                        UserData(
+                                            ContextCompat.getDrawable(
+                                                requireContext(),
+                                                R.drawable.sakai
+                                            )!!,
+                                            response.body()!!.data[i].title,
+                                            response.body()!!.data[i].kind,
+                                            i,
+                                            response.body()!!.data[i].created_at,
+                                            response.body()!!.data[i].time,
+                                            response.body()!!.current_page
+                                        )
+                                    )
+                                }
 
+                                lstUser2.adapter!!.notifyItemInserted(10)
+                                page++
 
+                            }else{
 
+                            }
+                        }
 
+                        override fun onFailure(call: Call<MySNSResponse>, t: Throwable) {
+                            TODO("Not yet implemented")
+                        }
+                    })
 
-
-
+                }
+            }
+        })
         return binding.root
-
-
-
-
     }
 
     private fun adapterOnClick(data: UserData) {
@@ -246,6 +178,7 @@ class ActivityMeFragment : Fragment() {
 
         val nextIntent = Intent(requireContext(), MeDetailsActivity::class.java)
         nextIntent.putExtra("data_num", data.data_num)
+        nextIntent.putExtra("data_page", page)
         startActivity(nextIntent)
     }
     class DistanceItemDecorator(private val value: Int) : RecyclerView.ItemDecoration() {

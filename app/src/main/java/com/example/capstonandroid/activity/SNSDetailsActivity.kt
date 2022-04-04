@@ -9,7 +9,6 @@ import android.widget.TextView
 import android.widget.Toast
 import com.example.capstonandroid.R
 import com.example.capstonandroid.databinding.*
-import com.example.capstonandroid.fragment.indexnumber
 import com.example.capstonandroid.network.RetrofitClient
 import com.example.capstonandroid.network.api.BackendApi
 import com.example.capstonandroid.network.dto.SNSResponse
@@ -22,6 +21,7 @@ class SNSDetailsActivity : AppCompatActivity() {
     private  lateinit var  retrofit: Retrofit  //레트로핏
     private  lateinit var supplementService: BackendApi // api
 
+    private var page = 0       // 현재 페이지
 
 
     lateinit var binding: ActivitySnsdetailsBinding
@@ -46,15 +46,18 @@ class SNSDetailsActivity : AppCompatActivity() {
 //      누른 indexnumber~ 받아오기
 
         val data_num : Int = intent.getIntExtra("data_num",0)
+        val data_page : Int = intent.getIntExtra("data_page",0)
 
         println(data_num.toString())
+        println(data_page.toString())
         val sharedPreference = getSharedPreferences("other", 0)
 
 //      이 타입이 디폴트 값
         var TOKEN = "Bearer " + sharedPreference.getString("TOKEN","")
         println(TOKEN)
 
-         supplementService.SNSIndex(TOKEN).enqueue(object : Callback<SNSResponse> {
+
+         supplementService.SNSIndex(TOKEN,data_page-1).enqueue(object : Callback<SNSResponse> {
              override fun onResponse(call: Call<SNSResponse>, response: Response<SNSResponse>) {
 
                  if(response.isSuccessful){
