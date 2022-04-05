@@ -83,6 +83,7 @@ class MainActivity : AppCompatActivity() {
             when (it.itemId) {
                 R.id.homeFragment -> {
                     supportFragmentManager.beginTransaction().replace(R.id.fragment_container, HomeFragment()).commit()
+                    supportActionBar?.title = "ホーム"
                 }
                 R.id.trackFragment -> {
 //                    supportFragmentManager.beginTransaction().replace(R.id.fragment_container, TrackFragment()).commit()
@@ -96,6 +97,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.meFragment -> {
                     supportFragmentManager.beginTransaction().replace(R.id.fragment_container, MeFragment()).commit()
+                    supportActionBar?.title = "나"
                 }
             }
             true

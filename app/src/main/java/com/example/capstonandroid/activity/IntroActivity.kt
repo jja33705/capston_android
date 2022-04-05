@@ -80,7 +80,7 @@ class IntroActivity : AppCompatActivity() {
                         startActivity(loginIntent)
                     }
                 })
-            }, 3000)
+            }, 1500)
         }
     }
     override fun onPause() {
