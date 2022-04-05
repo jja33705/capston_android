@@ -44,6 +44,10 @@ interface BackendApi {
     @GET("post/weekRecord") //요일별 누적거리
     fun userWeek(@Header("Authorization") token : String,@Query("event") event: String) : Call<UserWeekResponse>
 
+    @POST("like/{postID}") //좋아요 누르기
+    fun postLike(@Header("Authorization") token:String, @Path("postID") postID: Int) : Call<LikeResponse>
+
+
 //  재현 코드
 
     @GET("test") // 보낼 url

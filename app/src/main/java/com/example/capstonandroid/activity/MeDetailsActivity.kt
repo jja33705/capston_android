@@ -75,6 +75,11 @@ class MeDetailsActivity : AppCompatActivity() {
         })
         //      객체 만들기
 
+        if(range=="private"){
+            binding.range.setImageResource(R.drawable.lock)}
+        else{
+            binding.range.setImageResource(R.drawable.lockaa)
+        }
         binding.backButton.setOnClickListener {
             finish()
         }
@@ -120,6 +125,7 @@ class MeDetailsActivity : AppCompatActivity() {
 
                 })
                 range = "private"
+                binding.range.setImageResource(R.drawable.lock)
             }else {
                 val update = Update(
                     content = content,
@@ -143,6 +149,7 @@ class MeDetailsActivity : AppCompatActivity() {
 
                 })
                 range = "public"
+                binding.range.setImageResource(R.drawable.lockaa)
             }
 
         }

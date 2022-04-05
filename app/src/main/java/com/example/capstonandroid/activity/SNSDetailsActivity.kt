@@ -12,6 +12,7 @@ import com.example.capstonandroid.R
 import com.example.capstonandroid.databinding.*
 import com.example.capstonandroid.network.RetrofitClient
 import com.example.capstonandroid.network.api.BackendApi
+import com.example.capstonandroid.network.dto.LikeResponse
 import com.example.capstonandroid.network.dto.SNSResponse
 import retrofit2.Call
 import retrofit2.Callback
@@ -45,6 +46,7 @@ class SNSDetailsActivity : AppCompatActivity() {
 //        }
 //      누른 indexnumber~ 받아오기
 
+        var postID = 0
         val data_num : Int = intent.getIntExtra("data_num",0)
         val data_page : Int = intent.getIntExtra("data_page",0)
 
@@ -66,6 +68,8 @@ class SNSDetailsActivity : AppCompatActivity() {
                      binding.content.setText(response.body()!!.data[data_num]!!.content)
 //                     println(response.body()!!.data[data_num]!!.likes.size)
                     binding.like.setText(response.body()!!.data[data_num]!!.likes.size.toString())
+                     postID = response.body()!!.data[data_num]!!.id
+                     println(postID)
 
                  }  else{
                      println("실패함ㅋㅋ")
@@ -85,7 +89,42 @@ class SNSDetailsActivity : AppCompatActivity() {
         }
 
         binding.likeButton.setOnClickListener{
+            supplementService.postLike(token,postID).enqueue(object : Callback<LikeResponse>{
+                override fun onResponse(
+                    call: Call<LikeResponse>,
+                    response: Response<LikeResponse>
+                ) {
+                    if (response.isSuccessful){
+                        Toast.makeText(this@SNSDetailsActivity,"좋아요 눌렀습니다.",Toast.LENGTH_SHORT).show()
+                        supplementService.SNSIndex(token,data_page).enqueue(object : Callback<SNSResponse> {
+                            override fun onResponse(call: Call<SNSResponse>, response: Response<SNSResponse>) {
 
+                                if(response.isSuccessful){
+                                    binding.like.setText(response.body()!!.data[data_num]!!.likes.size.toString())
+
+                                }  else{
+                                    println("실패함ㅋㅋ")
+                                    println(response.body())
+                                    println(response.message())
+                                }
+                            }
+
+                            override fun onFailure(call: Call<SNSResponse>, t: Throwable) {
+                                println("아예 가지도 않음ㅋㅋ")
+                                println(t.message)
+                            }
+                        })
+                    }else {
+
+                        Toast.makeText(this@SNSDetailsActivity,"좋아요 실패했습니다.",Toast.LENGTH_SHORT).show()
+                    }
+                }
+
+                override fun onFailure(call: Call<LikeResponse>, t: Throwable) {
+                    TODO("Not yet implemented")
+                }
+
+            })
         }
 
         binding.commentButton.setOnClickListener {
