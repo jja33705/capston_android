@@ -13,7 +13,7 @@
         android:layout_alignParentStart="true"
         />
 
-    <EditText
+    <TextView
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -44,13 +44,6 @@
         android:layout_below="@id/mainimage"
         android:orientation="horizontal">
         <ImageButton
-            android:src="@drawable/like"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:background="#00000000"
-            android:scaleType="fitCenter"
-            android:layout_marginLeft="5dp"/>
-        <ImageButton
             android:layout_width="50dp"
             android:src="@drawable/comment"
             android:layout_height="50dp"
@@ -63,19 +56,25 @@
             android:layout_height="50dp"
             android:scaleType="fitCenter"
             android:background="#00000000"/>
+
+        <ImageButton
+            android:id="@+id/edit"
+            android:layout_width="54dp"
+            android:layout_height="match_parent"
+            android:src="@color/area_color"></ImageButton>
     </LinearLayout>
 
-    <TextView
+    <EditText
         android:id="@+id/content"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:layout_below="@id/function_nav"
-        android:layout_margin="15dp"
         android:layout_marginStart="15dp"
         android:layout_marginTop="15dp"
         android:layout_marginEnd="15dp"
         android:layout_marginBottom="15dp"
         android:background="#CCCCCC"
+        android:focusable="false"
         android:gravity="center"
         android:text="오늘은 레이아웃으로 SNS 화면을 만들어보았습니다." />
     <LinearLayout
@@ -90,6 +89,12 @@
             android:layout_height="wrap_content"
             android:text="뒤로가기">
         </Button>
+        <Button
+        android:id="@+id/deleteButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="삭제하기?">
+    </Button>
            </LinearLayout>
 
 </RelativeLayout>

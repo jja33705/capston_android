@@ -26,4 +26,5 @@ data class Data(
     val win_user_id: Int,
     val opponent_id : Int,
     val kind : String,
+    val comment: List<Comment>,
 )

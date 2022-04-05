@@ -33,6 +33,7 @@ private const val ARG_PARAM2 = "param2"
 private  lateinit var  retrofit: Retrofit  //레트로핏
 private  lateinit var supplementService: BackendApi // api
 
+private var page = 1       // 현재 페이지
 class ActivityMeFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
@@ -44,7 +45,6 @@ class ActivityMeFragment : Fragment() {
     private val binding get() = mBinding!!
 
 
-    private var page = 1       // 현재 페이지
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -68,16 +68,15 @@ class ActivityMeFragment : Fragment() {
 //        함수 초기화
         initRetrofit()
 ////      토큰 불러오기
-
-       page = 1       // 현재 페이지
+        page = 1       // 현재 페이지
         val sharedPreference = requireActivity().getSharedPreferences("other", 0)
 
 //      이 타입이 디폴트 값
         var token = "Bearer " + sharedPreference.getString("TOKEN", "")
         println("프로필 미 프래그먼트 + " + token)
 
-        val list = ArrayList<UserData>()
-        val adapter2 = RecyclerUserAdapter(list, { data -> adapterOnClick(data) })
+        val list2 = ArrayList<UserData>()
+        val adapter2 = RecyclerUserAdapter(list2, { data -> adapterOnClick(data) })
 
         supplementService.myIndex(token, page).enqueue(object : Callback<MySNSResponse> {
             override fun onResponse(call: Call<MySNSResponse>, response: Response<MySNSResponse>) {
@@ -91,7 +90,7 @@ class ActivityMeFragment : Fragment() {
                     println(response.body()!!.data.size)
 
                     for (i in 0..response.body()!!.data.size - 1) {
-                        list.add(
+                        list2.add(
                             UserData(
                                 ContextCompat.getDrawable(
                                     requireContext(),
@@ -107,8 +106,9 @@ class ActivityMeFragment : Fragment() {
                         )
                     }
                     lstUser2.adapter = adapter2
-                    lstUser2.addItemDecoration(ActivityMeFragment.DistanceItemDecorator(10))
+                    lstUser2.addItemDecoration(DistanceItemDecorator(10))
 
+                    page++
                 } else {
 
                 }
@@ -135,7 +135,7 @@ class ActivityMeFragment : Fragment() {
 
                             if(response.isSuccessful&&response.body()!!.data.size!==0) {
                                 for (i in 0..response.body()!!.data.size - 1) {
-                                    list.add(
+                                    list2.add(
                                         UserData(
                                             ContextCompat.getDrawable(
                                                 requireContext(),
@@ -151,7 +151,7 @@ class ActivityMeFragment : Fragment() {
                                     )
                                 }
 
-                                lstUser2.adapter!!.notifyItemInserted(10)
+                                lstUser2.adapter!!.notifyDataSetChanged()
                                 page++
 
                             }else{
@@ -178,8 +178,8 @@ class ActivityMeFragment : Fragment() {
 
         val nextIntent = Intent(requireContext(), MeDetailsActivity::class.java)
         nextIntent.putExtra("data_num", data.data_num)
-        nextIntent.putExtra("data_page", page)
-        startActivity(nextIntent)
+        nextIntent.putExtra("data_page", data.page)
+        startActivityForResult(nextIntent,10)
     }
     class DistanceItemDecorator(private val value: Int) : RecyclerView.ItemDecoration() {
 
@@ -212,16 +212,6 @@ class ActivityMeFragment : Fragment() {
         super.onDestroy()
     }
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment ActivityMeFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
         fun newInstance(param1: String, param2: String) =
             ActivityMeFragment().apply {
                 arguments = Bundle().apply {

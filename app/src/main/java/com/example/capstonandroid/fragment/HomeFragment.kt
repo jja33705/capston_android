@@ -10,6 +10,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -37,6 +39,7 @@ private  lateinit var  retrofit: Retrofit  //레트로핏
 private  lateinit var supplementService: BackendApi // api
 
 
+private var page = 1      // 현재 페이지
 object user {}
 
 
@@ -51,7 +54,6 @@ class HomeFragment : Fragment()  {
     private val binding get() = mBinding!!
 
 
-    private var page = 0      // 현재 페이지
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -69,7 +71,6 @@ class HomeFragment : Fragment()  {
         }
 //      함수 초기화
         initRetrofit()
-
         page = 1       // 현재 페이지
         val sharedPreference = requireActivity().getSharedPreferences("other", 0)
 
@@ -86,11 +87,8 @@ class HomeFragment : Fragment()  {
                 call: Call<SNSResponse>,
                 response: Response<SNSResponse>
             ) {
-                println(response.body())
-
                 if(response.isSuccessful) {
 
-                    println(response.javaClass.name)
                     println(response.body()!!.data.size)
                     for (i in 0..response.body()!!.data.size-1) {
                         list.add(
@@ -156,10 +154,10 @@ class HomeFragment : Fragment()  {
                                         )
                                     )
                                 }
+//                                lstUser.adapter!!.notifyItemInserted(10)
+                                lstUser.adapter!!.notifyDataSetChanged()
 
-                                lstUser.adapter!!.notifyItemInserted(10)
-
-                                    page ++
+                                page ++
                             }else{
 
                             }
@@ -181,12 +179,12 @@ class HomeFragment : Fragment()  {
 
     private fun adapterOnClick(data: UserData) {
         Toast.makeText(requireContext(), "FunCall Clicked -> ID : ${data.title}, Name : ${data.name}", Toast.LENGTH_SHORT).show()
-        println(data.data_num)
-
+        println("데이터 넘버" + data.data_num)
+        println("페이지 누르면? "+data.page)
 
         val nextIntent = Intent(requireContext(), SNSDetailsActivity::class.java)
         nextIntent.putExtra("data_num", data.data_num)
-        nextIntent.putExtra("data_page", page)
+        nextIntent.putExtra("data_page", data.page)
         startActivity(nextIntent)
 
     }
@@ -221,6 +219,7 @@ class HomeFragment : Fragment()  {
                     }
                 }
         }
+
 
 
 

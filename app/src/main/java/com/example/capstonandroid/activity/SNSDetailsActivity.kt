@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContentProviderCompat.requireContext
 import com.example.capstonandroid.R
 import com.example.capstonandroid.databinding.*
 import com.example.capstonandroid.network.RetrofitClient
@@ -22,7 +23,6 @@ class SNSDetailsActivity : AppCompatActivity() {
     private  lateinit var supplementService: BackendApi // api
 
     private var page = 0       // 현재 페이지
-
 
     lateinit var binding: ActivitySnsdetailsBinding
 
@@ -53,19 +53,19 @@ class SNSDetailsActivity : AppCompatActivity() {
         val sharedPreference = getSharedPreferences("other", 0)
 
 //      이 타입이 디폴트 값
-        var TOKEN = "Bearer " + sharedPreference.getString("TOKEN","")
-        println(TOKEN)
+        var token = "Bearer " + sharedPreference.getString("TOKEN","")
+        println(token)
 
 
-         supplementService.SNSIndex(TOKEN,data_page-1).enqueue(object : Callback<SNSResponse> {
+         supplementService.SNSIndex(token,data_page).enqueue(object : Callback<SNSResponse> {
              override fun onResponse(call: Call<SNSResponse>, response: Response<SNSResponse>) {
 
                  if(response.isSuccessful){
 
-                     println(response.body()!!.data[data_num]!!.title)
                     binding.title.setText(response.body()!!.data[data_num]!!.title)
                      binding.content.setText(response.body()!!.data[data_num]!!.content)
-
+//                     println(response.body()!!.data[data_num]!!.likes.size)
+                    binding.like.setText(response.body()!!.data[data_num]!!.likes.size.toString())
 
                  }  else{
                      println("실패함ㅋㅋ")
@@ -84,6 +84,18 @@ class SNSDetailsActivity : AppCompatActivity() {
             finish()
         }
 
+        binding.likeButton.setOnClickListener{
+
+        }
+
+        binding.commentButton.setOnClickListener {
+
+            println("머지? 왜 안날라가")
+            val nextIntent = Intent(this, SNSCommentActivity::class.java)
+            nextIntent.putExtra("data_num", data_num)
+            nextIntent.putExtra("data_page", data_page)
+            startActivity(nextIntent)
+        }
 
 
 }
