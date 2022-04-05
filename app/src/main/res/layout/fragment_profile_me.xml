@@ -7,7 +7,7 @@
         android:visibility="visible"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/gradation"
+        android:background="@color/white"
         android:orientation="vertical">
 
         <!--        위 아래로 반으로 쪼갬 -->
