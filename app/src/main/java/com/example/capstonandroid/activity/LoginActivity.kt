@@ -30,6 +30,8 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        supportActionBar?.hide()
+
 //        binding.btnRegister.setOnClickListener {
 //            println("hello")
 //            val intent : Intent = Intent(this,RegisterActivity::class.java);

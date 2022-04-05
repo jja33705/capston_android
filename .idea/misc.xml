@@ -31,12 +31,17 @@
         <entry key="app/src/main/res/drawable/circle_button.xml" value="0.2675" />
         <entry key="app/src/main/res/drawable/ic__28937_blue_flag_location_map_marker_icon.xml" value="0.2735" />
         <entry key="app/src/main/res/drawable/ic__440906_map_marker_navigation_pin_icon.xml" value="0.2075" />
+        <entry key="app/src/main/res/drawable/login_button.xml" value="0.1815" />
         <entry key="app/src/main/res/drawable/round_background.xml" value="0.28" />
+        <entry key="app/src/main/res/drawable/round_button_background.xml" value="0.1815" />
         <entry key="app/src/main/res/drawable/start_button.xml" value="0.2675" />
         <entry key="app/src/main/res/drawable/start_button_1.xml" value="0.3065" />
         <entry key="app/src/main/res/drawable/stop_button.xml" value="0.2929522705078125" />
+        <entry key="app/src/main/res/drawable/textstyle.xml" value="0.1815" />
         <entry key="app/src/main/res/drawable/track_and_name_marker.xml" value="0.221" />
         <entry key="app/src/main/res/layout/activity_complete_record.xml" value="0.234375" />
+        <entry key="app/src/main/res/layout/activity_intro.xml" value="0.36875" />
+        <entry key="app/src/main/res/layout/activity_login.xml" value="0.3080963134765625" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.19791666666666666" />
         <entry key="app/src/main/res/layout/activity_random_matching.xml" value="0.37604166666666666" />
         <entry key="app/src/main/res/layout/activity_rank_matching.xml" value="0.275" />

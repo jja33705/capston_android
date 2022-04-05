@@ -7,6 +7,8 @@ import android.app.ActivityManager
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.widget.Toast
 import com.example.capstonandroid.R
 import com.example.capstonandroid.RecordService
@@ -33,6 +35,8 @@ class IntroActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_intro)
 
+        supportActionBar?.hide()
+
         val mainIntent = Intent(this,MainActivity::class.java)
 
 //         레코드 중이면 메인 액티비티로 이동
@@ -40,40 +44,43 @@ class IntroActivity : AppCompatActivity() {
             startActivity(mainIntent)
             finish()
         } else {
-            initRetrofit()
+            val handler = Handler(Looper.getMainLooper())
+            handler.postDelayed({
+                initRetrofit()
 
-            val loginIntent = Intent(this,LoginActivity::class.java)
+                val loginIntent = Intent(this,LoginActivity::class.java)
 
-            val sharedPreference = getSharedPreferences("other", MODE_PRIVATE)
+                val sharedPreference = getSharedPreferences("other", MODE_PRIVATE)
 
 //      이 타입이 디폴트 값
-            var token = "Bearer " + sharedPreference.getString("TOKEN","")
-            println("token: $token")
+                var token = "Bearer " + sharedPreference.getString("TOKEN","")
+                println("token: $token")
 
-            supplementService.userGet(token).enqueue(object : Callback<LoginUserResponse> {
+                supplementService.userGet(token).enqueue(object : Callback<LoginUserResponse> {
 
-                override fun onResponse(
-                    call: Call<LoginUserResponse>,
-                    response: Response<LoginUserResponse>
-                ) {
-                    if(response.isSuccessful){
-                        println(response.body())
-                        println("로그인이 되버렸어요")
+                    override fun onResponse(
+                        call: Call<LoginUserResponse>,
+                        response: Response<LoginUserResponse>
+                    ) {
+                        if(response.isSuccessful){
+                            println(response.body())
+                            println("로그인이 되버렸어요")
 //                  로그인 토큰 인증이 되면???
-                        startActivity(mainIntent)
-                    }else {
-                        println("로그인이 되지않아요..")
+                            startActivity(mainIntent)
+                        }else {
+                            println("로그인이 되지않아요..")
 //                  로그인 토큰 인증이 되지않으면?????
-                        println(response.message())
-                        println(response.body())
+                            println(response.message())
+                            println(response.body())
+                            startActivity(loginIntent)
+                        }
+                    }
+                    override fun onFailure(call: Call<LoginUserResponse>, t: Throwable) {
+                        println("아 아예 실패해버렸어요!")
                         startActivity(loginIntent)
                     }
-                }
-                override fun onFailure(call: Call<LoginUserResponse>, t: Throwable) {
-                    println("아 아예 실패해버렸어요!")
-                    startActivity(loginIntent)
-                }
-            })
+                })
+            }, 3000)
         }
     }
     override fun onPause() {
