@@ -33,6 +33,9 @@ class SNSDetailsActivity : AppCompatActivity() {
 
         binding = ActivitySnsdetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        supportActionBar?.title = "활동"
+
         initRetrofit()
 
 //        if (intent.hasExtra("indexnumber")) {

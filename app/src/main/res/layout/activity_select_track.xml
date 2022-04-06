@@ -40,12 +40,12 @@
     <LinearLayout
         android:id="@+id/bottom_sheet"
         android:layout_width="match_parent"
-        android:layout_height="400dp"
+        android:layout_height="250dp"
         android:background="@color/white"
         android:orientation="vertical"
         android:padding="16dp"
         app:behavior_hideable="true"
-        app:behavior_peekHeight="600dp"
+        app:behavior_peekHeight="400dp"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
         <LinearLayout

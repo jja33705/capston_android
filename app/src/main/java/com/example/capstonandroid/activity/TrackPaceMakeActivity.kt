@@ -303,6 +303,8 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         mGoogleMap = googleMap
 
+        mGoogleMap.setMaxZoomPreference(18F) // 최대 줌
+
         checkPermission()
     }
 
@@ -482,7 +484,7 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback {
                 MarkerOptions()
                 .position(LatLng(startPoint.latitude, startPoint.longitude))
                 .title("출발점")
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.start_marker))
+                .icon(Utils.getMarkerIconFromDrawable(resources.getDrawable(R.drawable.start_point_marker,null)))
                 .anchor(0.5F, 0.9F))
 
             // 시작 가능 반경 그림
@@ -498,7 +500,7 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback {
                 MarkerOptions()
                 .position(LatLng(track.end_latlng[1], track.end_latlng[0]))
                 .title("도착점")
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.goal_flag))
+                .icon(Utils.getMarkerIconFromDrawable(resources.getDrawable(R.drawable.end_point_marker,null)))
                 .anchor(0F, 1F))
 
             mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(track.start_latlng[1], track.start_latlng[0]), 18.0f)) // 화면 이동
@@ -646,9 +648,9 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback {
                             predictLocationDifference()
                         }
                         if (predictLocationDifference >= 0) {
-                            binding.tvPaceMake.text = "${TrackPaceMakeService.opponentUserName}보다 ${predictLocationDifference}m 앞서는 중"
+                            binding.tvPaceMake.text = "${TrackPaceMakeService.opponentUserName}보다 약 ${predictLocationDifference}m 앞서는 중"
                         } else {
-                            binding.tvPaceMake.text = "${TrackPaceMakeService.opponentUserName}보다 ${predictLocationDifference * -1}m 뒤처지는 중"
+                            binding.tvPaceMake.text = "${TrackPaceMakeService.opponentUserName}보다 약 ${predictLocationDifference * -1}m 뒤처지는 중"
                         }
                     }
 

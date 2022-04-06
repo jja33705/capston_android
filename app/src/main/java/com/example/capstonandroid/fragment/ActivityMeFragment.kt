@@ -18,8 +18,6 @@ import com.example.capstonandroid.databinding.FragmentActivityMeBinding
 import com.example.capstonandroid.network.api.BackendApi
 import com.example.capstonandroid.network.RetrofitClient
 import com.example.capstonandroid.network.dto.*
-import kotlinx.android.synthetic.main.fragment_activity_me.*
-import kotlinx.android.synthetic.main.fragment_home.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -106,8 +104,8 @@ class ActivityMeFragment : Fragment() {
                             )
                         )
                     }
-                    lstUser2.adapter = adapter2
-                    lstUser2.addItemDecoration(ActivityMeFragment.DistanceItemDecorator(10))
+                    binding.lstUser2.adapter = adapter2
+                    binding.lstUser2.addItemDecoration(ActivityMeFragment.DistanceItemDecorator(10))
 
                 } else {
 
@@ -125,7 +123,7 @@ class ActivityMeFragment : Fragment() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
 
-                if (!lstUser2.canScrollVertically(1)){
+                if (!binding.lstUser2.canScrollVertically(1)){
 
                     supplementService.myIndex(token, page).enqueue(object : Callback<MySNSResponse>{
                         override fun onResponse(
@@ -151,7 +149,7 @@ class ActivityMeFragment : Fragment() {
                                     )
                                 }
 
-                                lstUser2.adapter!!.notifyItemInserted(10)
+                                binding.lstUser2.adapter!!.notifyItemInserted(10)
                                 page++
 
                             }else{

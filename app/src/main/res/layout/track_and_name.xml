@@ -2,22 +2,21 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="wrap_content"
     android:layout_width="wrap_content"
     >
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:src="@drawable/track_and_name_marker"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="28dp"
+        android:src="@drawable/start_point_marker"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_marker"></ImageView>
+        app:layout_constraintTop_toTopOf="@+id/tv_marker"></ImageView>
 
-    <TextView
+    <com.example.capstonandroid.OutLineTextView
         android:id="@+id/tv_marker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -25,7 +24,12 @@
         android:text="트랙 이름"
         android:textColor="@color/black"
         android:textSize="13sp"
+        android:fontFamily="@font/noto_sans_jp_regular"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"></TextView>
+        app:layout_constraintTop_toTopOf="parent"
+        app:textStrokeColor="@color/white"
+        app:textStrokeWidth="10"
+        >
+    </com.example.capstonandroid.OutLineTextView>
 </androidx.constraintlayout.widget.ConstraintLayout>

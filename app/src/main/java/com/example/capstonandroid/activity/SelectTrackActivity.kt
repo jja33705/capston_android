@@ -273,10 +273,11 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback {
                             println("${coordinate[1]}, ${coordinate[0]}")
                         }
                     }.join() // 오래걸릴수 있으니까 백그라운드 스레드로 넘겨봄...
+
                     val polyline = mGoogleMap.addPolyline(PolylineOptions()
                         .clickable(true)
                         .addAll(latLngList)
-                        .width(12F)
+                        .width(Utils.POLYLINE_WIDTH)
                         .color(ContextCompat.getColor(this@SelectTrackActivity, R.color.main_color)))
                     polyline.tag = track._id
                     polylineMap[track._id] = polyline
@@ -317,6 +318,7 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
         mGoogleMap = googleMap
+        mGoogleMap.setMaxZoomPreference(18F) // 최대 줌
 
         // 마커 클릭 리스너 등록
         mGoogleMap.setOnMarkerClickListener { marker ->
@@ -352,6 +354,9 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback {
                 polylineMap[trackId]?.color = ContextCompat.getColor(this, R.color.main_color)
             }
         }
+
+        // 카메라 업데이트
+        mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(trackMap[selectedTrackId]!!.start_latlng[1], trackMap[selectedTrackId]!!.start_latlng[0]), mGoogleMap.cameraPosition.zoom))
     }
 
     @SuppressLint("MissingPermission")

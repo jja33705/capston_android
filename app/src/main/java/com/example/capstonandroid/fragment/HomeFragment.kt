@@ -21,7 +21,6 @@ import com.example.capstonandroid.network.RetrofitClient
 import com.example.capstonandroid.network.api.BackendApi
 import com.example.capstonandroid.network.dto.SNSResponse
 import com.example.capstonandroid.network.dto.UserData
-import kotlinx.android.synthetic.main.fragment_home.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -108,8 +107,8 @@ class HomeFragment : Fragment()  {
                             )
                         )
                     }
-                    lstUser.adapter = adapter
-                    lstUser.addItemDecoration(DistanceItemDecorator(10))
+                    binding.lstUser.adapter = adapter
+                    binding.lstUser.addItemDecoration(DistanceItemDecorator(10))
 
                     page ++
                 }
@@ -131,7 +130,7 @@ class HomeFragment : Fragment()  {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
 
-                if (!lstUser.canScrollVertically(1)){
+                if (!binding.lstUser.canScrollVertically(1)){
 
                     supplementService.SNSIndex(token, page).enqueue(object : Callback<SNSResponse>{
                         override fun onResponse(
@@ -157,7 +156,7 @@ class HomeFragment : Fragment()  {
                                     )
                                 }
 
-                                lstUser.adapter!!.notifyItemInserted(10)
+                                binding.lstUser.adapter!!.notifyItemInserted(10)
 
                                     page ++
                             }else{

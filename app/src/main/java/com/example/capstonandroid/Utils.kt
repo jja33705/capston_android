@@ -3,13 +3,18 @@ package com.example.capstonandroid
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.drawable.Drawable
 import android.location.Location
 import android.view.View
+import com.google.android.gms.maps.model.BitmapDescriptor
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import java.text.DateFormat
 import java.util.*
 
 class Utils {
     companion object {
+        const val POLYLINE_WIDTH = 20F
+
         fun timeToText(time: Int): String {
             return if (time == 0) {
                 "00:00:00"
@@ -33,7 +38,7 @@ class Utils {
             return "%.2fkm/h".format(speed)
         }
 
-        // 비트맵 이미지 만드는 함수
+        // 뷰에서 비트맵 이미지 만드는 함수
         fun createBitmapFromView(marker: View): Bitmap {
             marker.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
             marker.layout(0, 0, marker.measuredWidth, marker.measuredHeight)
@@ -48,6 +53,19 @@ class Utils {
             marker.draw(canvas)
 
             return bitmap
+        }
+
+        fun getMarkerIconFromDrawable(drawable: Drawable): BitmapDescriptor? {
+            val canvas = Canvas()
+            val bitmap = Bitmap.createBitmap(
+                drawable.intrinsicWidth,
+                drawable.intrinsicHeight,
+                Bitmap.Config.ARGB_8888
+            )
+            canvas.setBitmap(bitmap)
+            drawable.setBounds(0, 0, drawable.intrinsicWidth, drawable.intrinsicHeight)
+            drawable.draw(canvas)
+            return BitmapDescriptorFactory.fromBitmap(bitmap)
         }
     }
 }

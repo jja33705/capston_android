@@ -3,13 +3,13 @@ package com.example.capstonandroid.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.capstonandroid.R
 import com.example.capstonandroid.network.RetrofitClient
 import com.example.capstonandroid.network.api.BackendApi
 import com.example.capstonandroid.network.dto.UserData
-import kotlinx.android.synthetic.main.item_view.view.*
 import retrofit2.Retrofit
 
 class RecyclerUserAdapter(
@@ -39,11 +39,11 @@ class RecyclerUserAdapter(
     class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         private var view: View = v
         fun bind(listener: View.OnClickListener, item: UserData) {
-            view.txtUser_title.text = item.title.toString()
-            view.txtUser_name.text = item.name
-            view.txtUser_time.text = item.time.toString()
-            view.txtUser_created_id.text = item.created_id
-            view.txtUser_page.text = item.page.toString()
+            view.findViewById<TextView>(R.id.txtUser_title).text = item.title.toString()
+            view.findViewById<TextView>(R.id.txtUser_name).text = item.name
+            view.findViewById<TextView>(R.id.txtUser_time).text = item.time.toString()
+            view.findViewById<TextView>(R.id.txtUser_created_id).text = item.created_id
+            view.findViewById<TextView>(R.id.txtUser_page).text = item.page.toString()
             view.setOnClickListener(listener)
         }
     }
