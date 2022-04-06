@@ -10,10 +10,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
-import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.capstonandroid.R
 import com.example.capstonandroid.activity.SNSDetailsActivity
@@ -28,6 +24,8 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -52,7 +50,6 @@ class HomeFragment : Fragment()  {
 
     private var mBinding: FragmentHomeBinding? = null
     private val binding get() = mBinding!!
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -89,8 +86,11 @@ class HomeFragment : Fragment()  {
             ) {
                 if(response.isSuccessful) {
 
+
                     println(response.body()!!.data.size)
                     for (i in 0..response.body()!!.data.size-1) {
+
+
                         list.add(
                             UserData(
                                 ContextCompat.getDrawable(
@@ -101,8 +101,7 @@ class HomeFragment : Fragment()  {
                                 response.body()!!.data[i].user.name,
                                 i,
                                 response.body()!!.data[i].created_at,
-                                response.body()!!.data[i].time,
-                                response.body()!!.current_page
+                                response.body()!!.current_page,
                             )
                         )
                     }
@@ -149,9 +148,8 @@ class HomeFragment : Fragment()  {
                                             response.body()!!.data[i].user.name,
                                             i,
                                             response.body()!!.data[i].created_at,
-                                            response.body()!!.data[i].time,
-                                            response.body()!!.current_page
-                                        )
+                                            response.body()!!.current_page,
+                                            )
                                     )
                                 }
 //                                lstUser.adapter!!.notifyItemInserted(10)
@@ -164,7 +162,6 @@ class HomeFragment : Fragment()  {
                         }
 
                         override fun onFailure(call: Call<SNSResponse>, t: Throwable) {
-                            TODO("Not yet implemented")
                         }
                     })
 
@@ -180,7 +177,6 @@ class HomeFragment : Fragment()  {
     private fun adapterOnClick(data: UserData) {
         Toast.makeText(requireContext(), "FunCall Clicked -> ID : ${data.title}, Name : ${data.name}", Toast.LENGTH_SHORT).show()
         println("데이터 넘버" + data.data_num)
-        println("페이지 누르면? "+data.page)
 
         val nextIntent = Intent(requireContext(), SNSDetailsActivity::class.java)
         nextIntent.putExtra("data_num", data.data_num)

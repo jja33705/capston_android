@@ -47,7 +47,10 @@ interface BackendApi {
     @POST("like/{postID}") //좋아요 누르기
     fun postLike(@Header("Authorization") token:String, @Path("postID") postID: Int) : Call<LikeResponse>
 
+    @POST("comment/store/{postID}") // 댓글 등록..
+    fun commentSend(@Header("Authorization")token: String, @Path("postID") postID:Int,@Body commentSend: CommentSend) : Call<CommentSendResponse>
 
+    @DELETE("post/{postID}")
 //  재현 코드
 
     @GET("test") // 보낼 url

@@ -100,9 +100,9 @@ class ActivityMeFragment : Fragment() {
                                 response.body()!!.data[i].kind,
                                 i,
                                 response.body()!!.data[i].created_at,
-                                response.body()!!.data[i].time,
-                                response.body()!!.current_page
-                            )
+                                response.body()!!.current_page,
+
+                                )
                         )
                     }
                     lstUser2.adapter = adapter2
@@ -145,8 +145,7 @@ class ActivityMeFragment : Fragment() {
                                             response.body()!!.data[i].kind,
                                             i,
                                             response.body()!!.data[i].created_at,
-                                            response.body()!!.data[i].time,
-                                            response.body()!!.current_page
+                                            response.body()!!.current_page,
                                         )
                                     )
                                 }

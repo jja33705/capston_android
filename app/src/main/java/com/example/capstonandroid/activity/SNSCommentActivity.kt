@@ -1,25 +1,17 @@
 package com.example.capstonandroid.activity
 
-import android.content.Intent
 import android.graphics.Rect
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
-import androidx.core.content.ContextCompat
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.capstonandroid.R
 import com.example.capstonandroid.adapter.RecyclerCommentAdapter
-import com.example.capstonandroid.adapter.RecyclerUserAdapter
 import com.example.capstonandroid.databinding.ActivitySnscommentBinding
-import com.example.capstonandroid.databinding.ActivitySnsdetailsBinding
 import com.example.capstonandroid.fragment.HomeFragment
 import com.example.capstonandroid.network.RetrofitClient
 import com.example.capstonandroid.network.api.BackendApi
-import com.example.capstonandroid.network.dto.Comment
-import com.example.capstonandroid.network.dto.CommentData
-import com.example.capstonandroid.network.dto.SNSResponse
-import com.example.capstonandroid.network.dto.UserData
+import com.example.capstonandroid.network.dto.*
 import kotlinx.android.synthetic.main.activity_snscomment.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import retrofit2.Call
@@ -35,6 +27,7 @@ class SNSCommentActivity : AppCompatActivity()
 
     private var page = 1      // 현재 페이지
     object user {}
+    private var postID = 0
     lateinit var binding: ActivitySnscommentBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,10 +54,15 @@ class SNSCommentActivity : AppCompatActivity()
         val list = ArrayList<CommentData>()
         val adapter = RecyclerCommentAdapter(list, { data -> adapterOnClick(data) })
 
+//          content 값 받아오기
+        println(content)
+
         supplementService.SNSIndex(token, data_page).enqueue(object : Callback<SNSResponse>{
             override fun onResponse(call: Call<SNSResponse>, response: Response<SNSResponse>) {
                 if(response.isSuccessful){
                     println(response.body()!!.data[data_num].comment.size)
+                    postID = response.body()!!.data[data_num].id
+                    println("여기 포스트 아이디는?"+postID)
                 }else{
                 }
             }
@@ -92,6 +90,7 @@ class SNSCommentActivity : AppCompatActivity()
                                 response.body()!!.data[data_num].comment[i].content,
                                 response.body()!!.data[data_num].comment[i].created_at,
                                 response.body()!!.data[data_num].comment[i].updated_at,
+                                response.body()!!.data[data_num].comment[i].id
                             )
                         )
                     }
@@ -113,6 +112,26 @@ class SNSCommentActivity : AppCompatActivity()
             }
         })
 
+        binding.commitButton.setOnClickListener {
+            var content = binding.content.text
+//      객체 만들기
+            val commentSend = CommentSend(
+                content = content.toString(),
+            )
+            supplementService.commentSend(token,postID,commentSend).enqueue(object : Callback<CommentSendResponse> {
+                override fun onResponse(
+                    call: Call<CommentSendResponse>,
+                    response: Response<CommentSendResponse>
+                ) {
+                finish()
+
+                }
+
+                override fun onFailure(call: Call<CommentSendResponse>, t: Throwable) {
+
+                }
+            })
+        }
 
 //        binding.lstUser3.addOnScrollListener(object : RecyclerView.OnScrollListener(){
 //            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {

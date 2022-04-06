@@ -5,4 +5,5 @@ data class CommentData(
     val content: String,
     val created_at: String,
     val updated_at: String,
+    val commentID : Int
 )
