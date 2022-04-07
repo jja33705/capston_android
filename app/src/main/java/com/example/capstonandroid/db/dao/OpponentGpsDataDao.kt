@@ -18,4 +18,7 @@ interface OpponentGpsDataDao {
 
     @Query("SELECT * FROM opponent_gps_data")
     fun getAllOpponentGpsData(): List<OpponentGpsData>
+
+    @Query("SELECT EXISTS(SELECT * FROM opponent_gps_data WHERE second = :second)")
+    fun isRecordExistsOpponentGpsData(second: Int): Boolean
 }

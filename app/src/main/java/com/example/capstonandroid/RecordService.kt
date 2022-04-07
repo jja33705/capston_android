@@ -73,6 +73,7 @@ class RecordService : Service() {
         const val SECOND = "$PREFIX.SECOND"
         const val DISTANCE = "$PREFIX.DISTANCE"
         const val AVG_SPEED = "$PREFIX.AVG_SPEED"
+        const val LOCATION_CHANGED = "$PREFIX.LOCATION_CHANGED"
     }
 
     // 제일 처음 호출 (1회성으로 서비스가 이미 실행중이면 호출되지 않는다)
@@ -94,6 +95,8 @@ class RecordService : Service() {
                     intent.putExtra("flag", BEFORE_START_LOCATION_UPDATE)
                     intent.putExtra(LAT_LNG, LatLng(mLocation.latitude, mLocation.longitude))
                     LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intent)
+                } else {
+
                 }
             }
         }
@@ -117,23 +120,29 @@ class RecordService : Service() {
             override fun run() {
                 second ++
 
-                // 고도가 만약 더 크면 누적 상승 고도 더해줌
-                if (beforeLocation.altitude < mLocation.altitude) {
-                    sumAltitude += mLocation.altitude - beforeLocation.altitude
-                }
+                val locationChanged = (mLocation.latitude != beforeLocation.latitude) || (mLocation.longitude != beforeLocation.longitude)
 
-                // 거리 구해줌
-                distance += beforeLocation.distanceTo(mLocation)
+                // 위치가 다르면 수행할 작업들
+                if (locationChanged) {
+                    // 고도가 만약 더 크면 누적 상승 고도 더해줌
+                    if (beforeLocation.altitude < mLocation.altitude) {
+                        sumAltitude += mLocation.altitude - beforeLocation.altitude
+                    }
+
+                    // 거리 구해줌
+                    distance += beforeLocation.distanceTo(mLocation)
+                    println("거리: $distance")
+
+                    beforeLocation = mLocation
+
+                    // db에 저장
+                    gpsDataDao.insertGpsData(GpsData(second, mLocation.latitude, mLocation.longitude, mLocation.speed, distance, mLocation.altitude))
+                }
 
                 //평균속도
                 if (second > 0) {
                     avgSpeed = (distance / 1000) / (second.toDouble() / 3600)
                 }
-
-                beforeLocation = mLocation
-
-                // db에 저장
-                gpsDataDao.insertGpsData(GpsData(second, mLocation.latitude, mLocation.longitude, mLocation.speed, distance, mLocation.altitude))
 
                 // 노티피케이션 업데이트
                 mNotificationManager.notify(NOTIFICATION_ID, getNotification())
@@ -145,6 +154,7 @@ class RecordService : Service() {
                 intent.putExtra(SECOND, second)
                 intent.putExtra(DISTANCE, distance)
                 intent.putExtra(AVG_SPEED, avgSpeed)
+                intent.putExtra(LOCATION_CHANGED, locationChanged)
                 LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intent)
             }
         }, 1000, 1000) // 1초 후 시작, 1초 간격
@@ -216,6 +226,7 @@ class RecordService : Service() {
                 intent.putExtra("second", second)
                 intent.putExtra("exerciseKind", exerciseKind)
                 intent.putExtra("matchType", "자유")
+                intent.putExtra("distance", distance)
 
                 startActivity(intent)
 

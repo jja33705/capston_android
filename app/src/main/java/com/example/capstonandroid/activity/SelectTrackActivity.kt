@@ -18,6 +18,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.capstonandroid.R
+import com.example.capstonandroid.SelectExerciseKindBottomSheetClickListener
+import com.example.capstonandroid.SelectExerciseKindBottomSheetDialog
 import com.example.capstonandroid.Utils
 import com.example.capstonandroid.databinding.ActivitySelectTrackBinding
 import com.example.capstonandroid.network.dto.Track
@@ -32,10 +34,9 @@ import com.google.android.gms.maps.model.*
 import com.google.android.gms.tasks.Task
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.coroutines.*
-import org.angmarch.views.NiceSpinner
 import retrofit2.Retrofit
 
-class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback {
+class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, SelectExerciseKindBottomSheetClickListener {
 
     private var _binding: ActivitySelectTrackBinding? = null
     private val binding get() = _binding!!
@@ -101,20 +102,20 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback {
         trackMarker = LayoutInflater.from(this).inflate(R.layout.track_and_name, null)!!
         trackMarkerTextView = trackMarker.findViewById(R.id.tv_marker) as TextView
 
-        // 스피너 초기 설정
-        val niceSpinner: NiceSpinner = binding.spinnerExerciseType
-        niceSpinner.attachDataSource(listOf("Running", "Riding"))
-        niceSpinner.setOnSpinnerItemSelectedListener { _, _, position, _ ->
-            when (position) {
-                0 -> {
-                    exerciseKind = "R"
-                    initTracks()
+        // 운동 종목 버튼 초기화
+        binding.btnSelectExerciseKind.setOnClickListener {
+            val selectedId = when (exerciseKind) {
+                "R" -> {
+                    R.id.radio_button_running
                 }
-                1 -> {
-                    exerciseKind = "B"
-                    initTracks()
+                "B" -> {
+                    R.id.radio_button_cycling
+                }
+                else -> {
+                    0
                 }
             }
+            SelectExerciseKindBottomSheetDialog.newInstance(selectedId).show(supportFragmentManager, "SelectExerciseKindBottomSheetDialog")
         }
 
         // 트랙 상세정보 보기 버튼 초기화
@@ -273,10 +274,11 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback {
                             println("${coordinate[1]}, ${coordinate[0]}")
                         }
                     }.join() // 오래걸릴수 있으니까 백그라운드 스레드로 넘겨봄...
+
                     val polyline = mGoogleMap.addPolyline(PolylineOptions()
                         .clickable(true)
                         .addAll(latLngList)
-                        .width(12F)
+                        .width(Utils.POLYLINE_WIDTH)
                         .color(ContextCompat.getColor(this@SelectTrackActivity, R.color.main_color)))
                     polyline.tag = track._id
                     polylineMap[track._id] = polyline
@@ -317,6 +319,7 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
         mGoogleMap = googleMap
+        mGoogleMap.setMaxZoomPreference(18F) // 최대 줌
 
         // 마커 클릭 리스너 등록
         mGoogleMap.setOnMarkerClickListener { marker ->
@@ -352,6 +355,9 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback {
                 polylineMap[trackId]?.color = ContextCompat.getColor(this, R.color.main_color)
             }
         }
+
+        // 카메라 업데이트
+        mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(trackMap[selectedTrackId]!!.start_latlng[1], trackMap[selectedTrackId]!!.start_latlng[0]), mGoogleMap.cameraPosition.zoom))
     }
 
     @SuppressLint("MissingPermission")
@@ -464,6 +470,27 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback {
             persistentBottomSheet.state = BottomSheetBehavior.STATE_HIDDEN
         } else {
             super.onBackPressed()
+        }
+    }
+
+    override fun onRadioButtonChanged(selectedId: Int) {
+        println("선택된 것: $selectedId")
+
+        when (selectedId) {
+            R.id.radio_button_running -> {
+                exerciseKind = "R"
+                binding.btnSelectExerciseKind.text = "ランニング"
+                binding.btnSelectExerciseKind.setCompoundDrawablesWithIntrinsicBounds(resources.getDrawable(R.drawable.run, null), null, null, null)
+                binding.trackExerciseKindIcon.setImageResource(R.drawable.run)
+                initTracks()
+            }
+            R.id.radio_button_cycling -> {
+                exerciseKind = "B"
+                binding.btnSelectExerciseKind.text = "サイクリング"
+                binding.btnSelectExerciseKind.setCompoundDrawablesWithIntrinsicBounds(resources.getDrawable(R.drawable.cycle, null), null, null, null)
+                binding.trackExerciseKindIcon.setImageResource(R.drawable.cycle)
+                initTracks()
+            }
         }
     }
 }

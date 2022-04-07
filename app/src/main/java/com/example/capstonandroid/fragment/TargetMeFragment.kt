@@ -26,7 +26,6 @@ import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
-import kotlinx.android.synthetic.main.fragment_target_me.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -132,7 +131,7 @@ class PersonalMeFragment : Fragment() {
                     entries.add(BarEntry(7.2f,sun))
 
 
-                    chart.run {
+                    binding.chart.run {
                         description.isEnabled = false //차트 옆에 별도로 표기되는 description이다. false로 설정하여 안보이게 했다.
                         setMaxVisibleValueCount(7) // 최대 보이는 그래프 개수를 7개로 정해주었다.
                         setPinchZoom(false) // 핀치줌(두손가락으로 줌인 줌 아웃하는것) 설정
@@ -174,7 +173,7 @@ class PersonalMeFragment : Fragment() {
                     dataSet.add(set)
                     val data = BarData(dataSet)
                     data.barWidth = 0.3f//막대 너비 설정하기
-                    chart.run {
+                    binding.chart.run {
                         this.data = data //차트의 데이터를 data로 설정해줌.
                         setFitBars(true)
                         invalidate()
@@ -214,7 +213,7 @@ class PersonalMeFragment : Fragment() {
                     entries.add(BarEntry(7.2f,sun))
 
 
-                    chart.run {
+                    binding.chart.run {
                         description.isEnabled = false //차트 옆에 별도로 표기되는 description이다. false로 설정하여 안보이게 했다.
                         setMaxVisibleValueCount(7) // 최대 보이는 그래프 개수를 7개로 정해주었다.
                         setPinchZoom(false) // 핀치줌(두손가락으로 줌인 줌 아웃하는것) 설정
@@ -256,7 +255,7 @@ class PersonalMeFragment : Fragment() {
                     dataSet.add(set)
                     val data = BarData(dataSet)
                     data.barWidth = 0.3f//막대 너비 설정하기
-                    chart.run {
+                    binding.chart.run {
                         this.data = data //차트의 데이터를 data로 설정해줌.
                         setFitBars(true)
                         invalidate()

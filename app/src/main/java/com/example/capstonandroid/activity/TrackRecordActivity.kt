@@ -6,13 +6,17 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.*
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Canvas
+import android.graphics.drawable.Drawable
 import android.location.Location
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
@@ -22,9 +26,9 @@ import com.example.capstonandroid.Utils
 import com.example.capstonandroid.databinding.ActivityTrackRecordBinding
 import com.example.capstonandroid.db.AppDatabase
 import com.example.capstonandroid.db.dao.GpsDataDao
-import com.example.capstonandroid.network.dto.Track
-import com.example.capstonandroid.network.api.BackendApi
 import com.example.capstonandroid.network.RetrofitClient
+import com.example.capstonandroid.network.api.BackendApi
+import com.example.capstonandroid.network.dto.Track
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -32,6 +36,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import kotlinx.coroutines.*
 import retrofit2.Retrofit
+
 
 class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback {
     private var _binding: ActivityTrackRecordBinding? = null
@@ -69,7 +74,7 @@ class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private var gotFirstLocation = false // 첫 번째 위치를 받아와 시작 가능한 상태인지
 
-    @SuppressLint("NewApi")
+    @SuppressLint("NewApi", "ResourceType")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -252,6 +257,8 @@ class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         mGoogleMap = googleMap
 
+        mGoogleMap.setMaxZoomPreference(18F) // 최대 줌
+
         checkPermission()
     }
 
@@ -285,7 +292,7 @@ class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback {
                 .clickable(true)
                 .addAll(latLngList)
                 .color(ContextCompat.getColor(this, R.color.main_color))
-                .width(12F))
+                .width(Utils.POLYLINE_WIDTH))
 
             // 체크포인트 추가
             println("체크포인트")
@@ -309,7 +316,7 @@ class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback {
             mGoogleMap.addMarker(MarkerOptions()
                 .position(LatLng(startPoint.latitude, startPoint.longitude))
                 .title("출발점")
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.start_marker))
+                .icon(Utils.getMarkerIconFromDrawable(resources.getDrawable(R.drawable.start_point_marker,null)))
                 .anchor(0.5F, 0.9F))
 
             // 시작 가능 반경 그림
@@ -323,8 +330,8 @@ class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback {
             mGoogleMap.addMarker(MarkerOptions()
                 .position(LatLng(track.end_latlng[1], track.end_latlng[0]))
                 .title("도착점")
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.goal_flag))
-                .anchor(0F, 1F))
+                .icon(Utils.getMarkerIconFromDrawable(resources.getDrawable(R.drawable.end_point_marker,null)))
+                .anchor(0.25F, 0.9F))
 
             mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(track.start_latlng[1], track.start_latlng[0]), 18.0f)) // 화면 이동
 
@@ -439,32 +446,33 @@ class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback {
                     val second = intent?.getIntExtra(TrackRecordService.SECOND, 0)
                     binding.tvTime.text = Utils.timeToText(second)
 
-                    val latLng = intent?.getParcelableExtra<LatLng>(TrackRecordService.LAT_LNG)!!
-
-                    val distance = intent?.getDoubleExtra(TrackRecordService.DISTANCE, 0.0)
-                    binding.tvDistance.text = Utils.distanceToText(distance)
-
                     val avgSpeed = intent?.getDoubleExtra(TrackRecordService.AVG_SPEED, 0.0)
                     binding.tvAvgSpeed.text = Utils.avgSpeedToText(avgSpeed)
 
-                    mLocationMarker?.position = latLng // 마커 이동
-                    mGoogleMap.addPolyline(PolylineOptions().add(beforeLatLng, latLng)) // 그림 그림
+                    val locationChanged = intent?.getBooleanExtra(TrackRecordService.LOCATION_CHANGED, true)
 
-                    beforeLatLng = latLng
+                    if (locationChanged) {
+                        val latLng = intent?.getParcelableExtra<LatLng>(TrackRecordService.LAT_LNG)!!
 
-                    // 어디쯤 왔나 확인하는 로직이 와야 함.
+                        val distance = intent?.getDoubleExtra(TrackRecordService.DISTANCE, 0.0)
+                        binding.tvDistance.text = Utils.distanceToText(distance)
 
+                        mLocationMarker?.position = latLng // 마커 이동
+                        mGoogleMap.addPolyline(PolylineOptions().add(beforeLatLng, latLng)) // 그림 그림
 
-                    // 도착점 도착했는지 체크
-                    val currentLocation = Location("currentLocation")
-                    currentLocation.latitude = latLng.latitude
-                    currentLocation.longitude = latLng.longitude
-                    if (endPoint.distanceTo(currentLocation) < 20.0) {
-                        // 서비스 종료하라고 커맨드 보냄
-                        val intent = Intent(this@TrackRecordActivity, TrackRecordService::class.java)
-                        intent.action = TrackRecordService.COMPLETE_RECORD
-                        startForegroundService(intent)
-                        finish()
+                        beforeLatLng = latLng
+
+                        // 도착점 도착했는지 체크
+                        val currentLocation = Location("currentLocation")
+                        currentLocation.latitude = latLng.latitude
+                        currentLocation.longitude = latLng.longitude
+                        if (endPoint.distanceTo(currentLocation) < 20.0) {
+                            // 서비스 종료하라고 커맨드 보냄
+                            val intent = Intent(this@TrackRecordActivity, TrackRecordService::class.java)
+                            intent.action = TrackRecordService.COMPLETE_RECORD
+                            startForegroundService(intent)
+                            finish()
+                        }
                     }
                 }
             }

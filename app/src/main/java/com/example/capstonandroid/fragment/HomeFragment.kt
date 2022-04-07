@@ -10,6 +10,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.capstonandroid.R
 import com.example.capstonandroid.activity.SNSDetailsActivity
@@ -19,13 +21,10 @@ import com.example.capstonandroid.network.RetrofitClient
 import com.example.capstonandroid.network.api.BackendApi
 import com.example.capstonandroid.network.dto.SNSResponse
 import com.example.capstonandroid.network.dto.UserData
-import kotlinx.android.synthetic.main.fragment_home.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
-import java.text.SimpleDateFormat
-import java.util.*
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -37,7 +36,6 @@ private  lateinit var  retrofit: Retrofit  //레트로핏
 private  lateinit var supplementService: BackendApi // api
 
 
-private var page = 1      // 현재 페이지
 object user {}
 
 
@@ -51,6 +49,8 @@ class HomeFragment : Fragment()  {
     private var mBinding: FragmentHomeBinding? = null
     private val binding get() = mBinding!!
 
+
+    private var page = 0      // 현재 페이지
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -68,6 +68,7 @@ class HomeFragment : Fragment()  {
         }
 //      함수 초기화
         initRetrofit()
+
         page = 1       // 현재 페이지
         val sharedPreference = requireActivity().getSharedPreferences("other", 0)
 
@@ -84,13 +85,13 @@ class HomeFragment : Fragment()  {
                 call: Call<SNSResponse>,
                 response: Response<SNSResponse>
             ) {
+                println(response.body())
+
                 if(response.isSuccessful) {
 
-
+                    println(response.javaClass.name)
                     println(response.body()!!.data.size)
                     for (i in 0..response.body()!!.data.size-1) {
-
-
                         list.add(
                             UserData(
                                 ContextCompat.getDrawable(
@@ -105,8 +106,8 @@ class HomeFragment : Fragment()  {
                             )
                         )
                     }
-                    lstUser.adapter = adapter
-                    lstUser.addItemDecoration(DistanceItemDecorator(10))
+                    binding.lstUser.adapter = adapter
+                    binding.lstUser.addItemDecoration(DistanceItemDecorator(10))
 
                     page ++
                 }
@@ -128,7 +129,7 @@ class HomeFragment : Fragment()  {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
 
-                if (!lstUser.canScrollVertically(1)){
+                if (!binding.lstUser.canScrollVertically(1)){
 
                     supplementService.SNSIndex(token, page).enqueue(object : Callback<SNSResponse>{
                         override fun onResponse(
@@ -148,20 +149,22 @@ class HomeFragment : Fragment()  {
                                             response.body()!!.data[i].user.name,
                                             i,
                                             response.body()!!.data[i].created_at,
-                                            response.body()!!.current_page,
-                                            )
+                                            response.body()!!.data[i].time,
+                                            response.body()!!.current_page
+                                        )
                                     )
                                 }
-//                                lstUser.adapter!!.notifyItemInserted(10)
-                                lstUser.adapter!!.notifyDataSetChanged()
 
-                                page ++
+                                binding.lstUser.adapter!!.notifyItemInserted(10)
+
+                                    page ++
                             }else{
 
                             }
                         }
 
                         override fun onFailure(call: Call<SNSResponse>, t: Throwable) {
+                            TODO("Not yet implemented")
                         }
                     })
 
@@ -176,11 +179,12 @@ class HomeFragment : Fragment()  {
 
     private fun adapterOnClick(data: UserData) {
         Toast.makeText(requireContext(), "FunCall Clicked -> ID : ${data.title}, Name : ${data.name}", Toast.LENGTH_SHORT).show()
-        println("데이터 넘버" + data.data_num)
+        println(data.data_num)
+
 
         val nextIntent = Intent(requireContext(), SNSDetailsActivity::class.java)
         nextIntent.putExtra("data_num", data.data_num)
-        nextIntent.putExtra("data_page", data.page)
+        nextIntent.putExtra("data_page", page)
         startActivity(nextIntent)
 
     }
@@ -215,7 +219,6 @@ class HomeFragment : Fragment()  {
                     }
                 }
         }
-
 
 
 

@@ -64,7 +64,6 @@ class TrackRecordService : Service() {
         // flag
         const val BEFORE_START_LOCATION_UPDATE = "${PREFIX}.BEFORE_START_LOCATION_UPDATE"
         const val AFTER_START_UPDATE = "AFTER_START_UPDATE"
-        const val IS_STARTED = "IS_STARTED"
         const val RECORD_START_LAT_LNG = "${PREFIX}.RECORD_START_LAT_LNG"
 
         // intent keyword
@@ -117,23 +116,27 @@ class TrackRecordService : Service() {
             override fun run() {
                 second ++
 
-                // 고도가 만약 더 크면 누적 상승 고도 더해줌
-                if (beforeLocation.altitude < mLocation.altitude) {
-                    sumAltitude += mLocation.altitude - beforeLocation.altitude
-                }
+                val locationChanged = (beforeLocation.latitude != mLocation.latitude) || (beforeLocation.longitude != mLocation.longitude)
 
-                // 거리 구해줌
-                distance += beforeLocation.distanceTo(mLocation)
+                if (locationChanged) {
+                    // 고도가 만약 더 크면 누적 상승 고도 더해줌
+                    if (beforeLocation.altitude < mLocation.altitude) {
+                        sumAltitude += mLocation.altitude - beforeLocation.altitude
+                    }
+
+                    // 거리 구해줌
+                    distance += beforeLocation.distanceTo(mLocation)
+
+                    beforeLocation = mLocation
+
+                    // db에 저장
+                    gpsDataDao.insertGpsData(GpsData(second, mLocation.latitude, mLocation.longitude, mLocation.speed, distance, mLocation.altitude))
+                }
 
                 //평균속도
                 if (second > 0) {
                     avgSpeed = (distance / 1000) / (second.toDouble() / 3600)
                 }
-
-                beforeLocation = mLocation
-
-                // db에 저장
-                gpsDataDao.insertGpsData(GpsData(second, mLocation.latitude, mLocation.longitude, mLocation.speed, distance, mLocation.altitude))
 
                 // 노티피케이션 업데이트
                 mNotificationManager.notify(NOTIFICATION_ID, getNotification())
@@ -145,6 +148,7 @@ class TrackRecordService : Service() {
                 intent.putExtra(SECOND, second)
                 intent.putExtra(DISTANCE, distance)
                 intent.putExtra(AVG_SPEED, avgSpeed)
+                intent.putExtra(LOCATION_CHANGED, locationChanged)
                 LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intent)
             }
 
@@ -224,6 +228,7 @@ class TrackRecordService : Service() {
                 intent.putExtra("matchType", "싱글")
                 intent.putExtra("trackId", trackId)
                 intent.putExtra("exerciseKind", exerciseKind)
+                intent.putExtra("distance", distance)
 
                 startActivity(intent)
 

@@ -9,6 +9,7 @@
         android:id="@+id/trackFragment"
         android:icon="@drawable/track"
         android:enabled="true"
+        android:checkable="false"
         android:title="트랙" />
     <item
         android:id="@+id/recordActivity"

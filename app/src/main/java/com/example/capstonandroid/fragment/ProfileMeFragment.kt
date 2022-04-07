@@ -35,8 +35,6 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
-import retrofit2.http.Path
-import java.io.File
 import kotlin.math.log
 
 private const val ARG_PARAM1 = "param1"
@@ -188,7 +186,7 @@ class ProfileMeFragment : Fragment(){
                         dataSet.add(set)
                         val data = BarData(dataSet)
                         data.barWidth = 0.3f//막대 너비 설정하기
-                        chart.run {
+                        binding.chart.run {
                             this.data = data //차트의 데이터를 data로 설정해줌.
                             setFitBars(true)
                             invalidate()
@@ -223,7 +221,7 @@ class ProfileMeFragment : Fragment(){
                             entries.add(BarEntry(7.2f,sun))
 
 
-                            chart.run {
+                            binding.chart.run {
                                 description.isEnabled = false //차트 옆에 별도로 표기되는 description이다. false로 설정하여 안보이게 했다.
                                 setMaxVisibleValueCount(7) // 최대 보이는 그래프 개수를 7개로 정해주었다.
                                 setPinchZoom(false) // 핀치줌(두손가락으로 줌인 줌 아웃하는것) 설정
@@ -264,7 +262,7 @@ class ProfileMeFragment : Fragment(){
                             dataSet.add(set)
                             val data = BarData(dataSet)
                             data.barWidth = 0.3f//막대 너비 설정하기
-                            chart.run {
+                            binding.chart.run {
                                 this.data = data //차트의 데이터를 data로 설정해줌.
                                 setFitBars(true)
                                 invalidate()

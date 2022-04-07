@@ -50,7 +50,10 @@ class TrackPaceMakeService : Service() {
     private var distance = 0.0 // 거리 (m)
     private var avgSpeed = 0.0 // 평균 속도
 
+    // 상대 관련 데이터
     private var opponentRecordEndSecond = 0
+    private lateinit var opponentGpsData: OpponentGpsData
+    private var opponentSpeed = 0F
 
     private val timer = Timer() // 시간 업데이트를 위한 타이머
 
@@ -66,11 +69,11 @@ class TrackPaceMakeService : Service() {
         lateinit var mLocation: Location // 내 위치
         var myLocationIndexOnTrack = 0 // 내가 트랙 위에 어디쯤 존재하는지
         var mySumDistanceOnTrack = 0F // 내가 이동한 트랙위의 거리
-        var myStaySecondOnTrack = 1 // 내가 트랙위에 한 지점에 머무른 시간
+        var myBeforeLocationChangedSecond = 0 // 이전 내 위치 바뀐 시간
         lateinit var opponentLocation: Location // 상대 위치
         var opponentLocationIndexOnTrack = 0 // 상대가 트랙 위에 어디쯤 존재하는지
         var opponentSumDistanceOnTrack = 0F
-        var opponentStaySecondOnTrack = 1
+        var opponentBeforeLocationChangedSecond = 0 // 이전 상대 위치 바뀐 시간
 
         private const val PREFIX = "com.example.capstonandroid.trackpacemakeservice"
 
@@ -100,6 +103,8 @@ class TrackPaceMakeService : Service() {
         const val OPPONENT_LAT_LNG = "${PREFIX}.OPPONENT_LAT_LNG"
         const val SPEED = "${PREFIX}.SPEED"
         const val OPPONENT_SPEED = "${PREFIX}.OPPONENT_SPEED"
+        const val LOCATION_CHANGED = "${PREFIX}.LOCATION_CHANGED"
+        const val OPPONENT_LOCATION_CHANGED = "${PREFIX}.OPPONENT_LOCATION_CHANGED"
 
         // 1초에 갈 수 있다고 생각되는 최대 거리 30미터????
         const val MAX_DISTANCE = 30F
@@ -148,40 +153,41 @@ class TrackPaceMakeService : Service() {
             override fun run() {
                 second ++
 
-                // 고도가 만약 더 크면 누적 상승 고도 더해줌
-                if (beforeLocation.altitude < mLocation.altitude) {
-                    sumAltitude += mLocation.altitude - beforeLocation.altitude
-                }
+                val locationChanged = (beforeLocation.latitude != mLocation.latitude) || (beforeLocation.longitude != mLocation.longitude)
 
-                // 거리 구해줌
-                distance += beforeLocation.distanceTo(mLocation)
+                if (locationChanged) {
+                    // 고도가 만약 더 크면 누적 상승 고도 더해줌
+                    if (beforeLocation.altitude < mLocation.altitude) {
+                        sumAltitude += mLocation.altitude - beforeLocation.altitude
+                    }
+
+                    // 거리 구해줌
+                    distance += beforeLocation.distanceTo(mLocation)
+
+                    beforeLocation = mLocation
+
+                    // 내 현재 상태 db에 저장
+                    gpsDataDao.insertGpsData(GpsData(second, mLocation.latitude, mLocation.longitude, mLocation.speed, distance, mLocation.altitude))
+                }
 
                 //평균속도
                 if (second > 0) {
                     avgSpeed = (distance / 1000) / (second.toDouble() / 3600)
                 }
 
-                beforeLocation = mLocation
+                // 이 시간에 상대 기록된 상대 운동 데이터 있는지
+                val opponentLocationChanged = opponentGpsDataDao.isRecordExistsOpponentGpsData(second)
+                println("상대 운동 데이터 바꼈나? $opponentLocationChanged")
 
-                // 내 현재 상태 db에 저장
-                gpsDataDao.insertGpsData(GpsData(second, mLocation.latitude, mLocation.longitude, mLocation.speed, distance, mLocation.altitude))
+                // 상대 운동 데이터 있으면 수행
+                if (opponentLocationChanged) {
+                    // 상대 현재 상태 가져오기
+                    opponentGpsData = opponentGpsDataDao.getOpponentGpsDataBySecond(second)
+                    opponentLocation.latitude = opponentGpsData.lat
+                    opponentLocation.longitude = opponentGpsData.lng
 
-
-                // 상대 운동의 마지막 초까지만 가져오도록 조정
-                var secondForGetOpponentGpsData = opponentRecordEndSecond
-                if (second < secondForGetOpponentGpsData) {
-                    secondForGetOpponentGpsData = second
-                }
-
-                // 상대 현재 상태 가져오기
-                val opponentGpsData = opponentGpsDataDao.getOpponentGpsDataBySecond(secondForGetOpponentGpsData)
-                opponentLocation.latitude = opponentGpsData.lat
-                opponentLocation.longitude = opponentGpsData.lng
-
-                // 상대방 속도
-                var opponentSpeed = opponentGpsData.speed
-                if (secondForGetOpponentGpsData == opponentRecordEndSecond) {
-                    opponentSpeed = 0F
+                    // 상대방 속도
+                    opponentSpeed = opponentGpsData.speed
                 }
 
                 // 노티피케이션 업데이트
@@ -196,7 +202,9 @@ class TrackPaceMakeService : Service() {
                 intent.putExtra(DISTANCE, distance)
                 intent.putExtra(AVG_SPEED, avgSpeed)
                 intent.putExtra(SPEED, mLocation.speed)
+                intent.putExtra(LOCATION_CHANGED, locationChanged)
                 intent.putExtra(OPPONENT_SPEED, opponentSpeed)
+                intent.putExtra(OPPONENT_LOCATION_CHANGED, opponentLocationChanged)
                 LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intent)
             }
 
@@ -324,6 +332,7 @@ class TrackPaceMakeService : Service() {
                 intent.putExtra("trackId", trackId)
                 intent.putExtra("exerciseKind", exerciseKind)
                 intent.putExtra("opponentPostId", opponentPostId)
+                intent.putExtra("distance", distance)
 
                 startActivity(intent)
 
