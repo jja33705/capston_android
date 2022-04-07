@@ -1,11 +1,13 @@
 package com.example.capstonandroid.adapter
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.capstonandroid.R
+import com.example.capstonandroid.activity.MeDetailsActivity
 import com.example.capstonandroid.activity.SNSCommentActivity
 import com.example.capstonandroid.network.RetrofitClient
 import com.example.capstonandroid.network.api.BackendApi
@@ -36,6 +38,7 @@ class RecyclerCommentAdapter(
             bind(listener, item)
             itemView.tag = item
         }
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

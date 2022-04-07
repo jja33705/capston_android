@@ -148,7 +148,8 @@ class SNSCommentActivity : AppCompatActivity()
 //
 //                            if(response.isSuccessful&&response.body()!!.data[data_num].comment.size==0) {
 //                                for (i in 0..response.body()!!.data[data_num].comment.size-1) {
-//                                    list.add(
+//
+    //                                    list.add(
 //                                        CommentData(
 //                                            response.body()!!.data[data_num].comment[i].user.name.toString(),
 //                                            response.body()!!.data[data_num].comment[i].content,

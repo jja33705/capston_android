@@ -24,11 +24,13 @@ class MeDetailsActivity : AppCompatActivity() {
     private  lateinit var supplementService: BackendApi // api
 
     private var page = 1       // 현재 페이지
+
     lateinit var binding: ActivityMeDetailsBinding
 
     private var postID = 0
     private var content :String = ""
     private var range : String = ""
+    private var title : String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,8 +43,6 @@ class MeDetailsActivity : AppCompatActivity() {
         val data_page: Int = intent.getIntExtra("data_page", 0)
 
         val sharedPreference = getSharedPreferences("other", 0)
-
-
 
 //      이 타입이 디폴트 값
         var token = "Bearer " + sharedPreference.getString("TOKEN", "")
@@ -59,9 +59,15 @@ class MeDetailsActivity : AppCompatActivity() {
                     postID = response.body()!!.data[data_num].id
                     content = response.body()!!.data[data_num].content.toString()
                     range = response.body()!!.data[data_num].range.toString()
-
+                    title = response.body()!!.data[data_num].title
                     println("콘텐츠"+content)
                     println("랭스"+range)
+                    if(range=="private"){
+                        binding.range.setImageResource(R.drawable.lock)}
+                    else{
+                        binding.range.setImageResource(R.drawable.lockaa)
+                    }
+
                 } else {
                     println("실패함ㅋㅋ")
                     println(response.body())
@@ -75,11 +81,6 @@ class MeDetailsActivity : AppCompatActivity() {
         })
         //      객체 만들기
 
-        if(range=="private"){
-            binding.range.setImageResource(R.drawable.lock)}
-        else{
-            binding.range.setImageResource(R.drawable.lockaa)
-        }
         binding.backButton.setOnClickListener {
             finish()
         }
@@ -104,21 +105,22 @@ class MeDetailsActivity : AppCompatActivity() {
 
             if(range=="public"){
                 val update = Update(
+                    title = title,
                     content = content,
                     range = "private"
                 )
 
                 println(update)
-                supplementService.postUpdate(token,postID,update).enqueue(object : Callback<UpdateResponse>{
+                supplementService.postUpdate(token,postID,update).enqueue(object : Callback<Int>{
                     override fun onResponse(
-                        call: Call<UpdateResponse>,
-                        response: Response<UpdateResponse>
+                        call: Call<Int>,
+                        response: Response<Int>
                     ) {
 
 
                     }
 
-                    override fun onFailure(call: Call<UpdateResponse>, t: Throwable) {
+                    override fun onFailure(call: Call<Int>, t: Throwable) {
 
                         println("실패")
                     }
@@ -128,21 +130,21 @@ class MeDetailsActivity : AppCompatActivity() {
                 binding.range.setImageResource(R.drawable.lock)
             }else {
                 val update = Update(
+                    title = title,
                     content = content,
                     range = "public"
                 )
 
                 println(update)
-                supplementService.postUpdate(token,postID,update).enqueue(object : Callback<UpdateResponse>{
+                supplementService.postUpdate(token,postID,update).enqueue(object : Callback<Int>{
                     override fun onResponse(
-                        call: Call<UpdateResponse>,
-                        response: Response<UpdateResponse>
+                        call: Call<Int>,
+                        response: Response<Int>
                     ) {
-
 
                     }
 
-                    override fun onFailure(call: Call<UpdateResponse>, t: Throwable) {
+                    override fun onFailure(call: Call<Int>, t: Throwable) {
 
                         println("실패")
                     }

@@ -27,10 +27,16 @@ import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import kotlinx.android.synthetic.main.fragment_target_me.*
+import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
+import retrofit2.http.Path
+import java.io.File
 import kotlin.math.log
 
 private const val ARG_PARAM1 = "param1"
@@ -336,6 +342,32 @@ class ProfileMeFragment : Fragment(){
                 }
             })
         }
+
+
+
+
+//        binding.imageButton.setOnClickListener {
+//            val file = File("")
+//            var requestBody : RequestBody = RequestBody.create("image/*".toMediaTypeOrNull(),file)
+//            var body : MultipartBody.Part = MultipartBody.Part.createFormData("uploaded_file","tlqkf",requestBody)
+//
+//            supplementService.imageTest(token,body).enqueue(object : Callback<ImageResponse>{
+//                override fun onResponse(
+//                    call: Call<ImageResponse>,
+//                    response: Response<ImageResponse>
+//                ) {
+//                    if (response.isSuccessful){
+//                        println("성공")
+//                    }else {
+//                        println("실패")
+//                    }
+//                }
+//
+//                override fun onFailure(call: Call<ImageResponse>, t: Throwable) {
+//                     println("가지도 않음 ㅋ")
+//                }
+//            })
+//        }
         return binding.root
     }
 

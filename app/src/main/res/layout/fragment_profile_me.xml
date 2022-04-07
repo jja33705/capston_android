@@ -169,13 +169,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     ></TextView>
-<!--                <ImageView-->
-<!--                    android:id="@+id/iv_profile_me_imageview"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="match_parent"-->
-<!--                    android:src="@drawable/sakai">-->
-<!--                </ImageView>-->
-
             </LinearLayout>
 
 
@@ -185,45 +178,12 @@
 
 
 
-
-
-<!--        <Button-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_weight="1"-->
-<!--            android:textSize="10sp"-->
-<!--            android:text="回数"></Button>-->
-<!--        <Button-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_weight="1"-->
-<!--            android:textSize="10sp"-->
-<!--            android:text="カロリー"></Button>-->
-<!--        <Button-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_weight="1"-->
-<!--            android:textSize="10sp"-->
-<!--            android:text="距離"></Button>-->
-<!--        <Button-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_weight="1"-->
-<!--            android:textSize="10sp"-->
-<!--            android:text="時間"></Button>-->
-<!--        <Button-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_weight="1"-->
-<!--            android:textSize="10sp"-->
-<!--            android:text="高度"></Button>-->
-
-
         <Button
             android:id="@+id/logout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="로그아웃"></Button>
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -8,6 +8,7 @@ import retrofit2.Call
 import retrofit2.http.*
 import com.example.capstonandroid.network.dto.GetTracksResponse
 import com.example.capstonandroid.network.dto.Track
+import okhttp3.MultipartBody
 import retrofit2.Response
 
 // 사용할 api 목록 정의하는 곳
@@ -36,7 +37,7 @@ interface BackendApi {
     fun userSearch(@Body userSearchResponse: UserSearchResponse) : Call<UserSearchResponse>
 
     @PUT("post/update/{postID}") // 자기 게시물 수정
-    fun postUpdate(@Header("Authorization") token : String, @Path("postID")postID : Int, @Body update : Update) : Call<UpdateResponse>
+    fun postUpdate(@Header("Authorization") token : String, @Path("postID")postID : Int, @Body update : Update) : Call<Int>
 
     @DELETE("post/{postID}") // 자기 게시물 삭제
     fun postDelete(@Header("Authorization") token: String,@Path("postID") postID :Int ) : Call<DeleteResponse>
@@ -51,7 +52,16 @@ interface BackendApi {
     fun commentSend(@Header("Authorization")token: String, @Path("postID") postID:Int,@Body commentSend: CommentSend) : Call<CommentSendResponse>
 
     @DELETE("post/{postID}")
+
+    @POST("post/image")
+    fun imageTest(@Header("Authorization")token:String,
+                  @Part imageFile : MultipartBody.Part): Call<ImageResponse>
+
+
+
+
 //  재현 코드
+
 
     @GET("test") // 보낼 url
     fun test(): Call<String>
