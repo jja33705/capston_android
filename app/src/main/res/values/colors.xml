@@ -29,4 +29,5 @@
     <color name="yellow">#FFFF00</color>
     <color name="green">#00FF00</color>
     <color name="focused">#E0E0E0</color>
+    <color name="silver_color">#E1E1E1</color>
 </resources>

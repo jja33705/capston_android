@@ -309,21 +309,25 @@ class RecordActivity : AppCompatActivity(), OnMapReadyCallback {
                     val second = intent?.getIntExtra(RecordService.SECOND, 0)
                     binding.tvTime.text = Utils.timeToText(second)
 
-                    val latLng = intent?.getParcelableExtra<LatLng>(RecordService.LAT_LNG)!!
-
-                    val distance = intent?.getDoubleExtra(RecordService.DISTANCE, 0.0)
-                    binding.tvDistance.text = Utils.distanceToText(distance)
-
                     val avgSpeed = intent?.getDoubleExtra(RecordService.AVG_SPEED, 0.0)
                     binding.tvAvgSpeed.text = Utils.avgSpeedToText(avgSpeed)
 
-                    mLocationMarker?.position = latLng // 마커 이동
-                    mGoogleMap.addPolyline(PolylineOptions()
-                        .add(beforeLatLng, latLng)
-                        .color(ContextCompat.getColor(this@RecordActivity, R.color.main_color))
-                        .width(12F)) // 그림 그림
+                    val locationChanged = intent?.getBooleanExtra(RecordService.LOCATION_CHANGED, true)
 
-                    beforeLatLng = latLng
+                    if (locationChanged) {
+                        val latLng = intent?.getParcelableExtra<LatLng>(RecordService.LAT_LNG)!!
+
+                        val distance = intent?.getDoubleExtra(RecordService.DISTANCE, 0.0)
+                        binding.tvDistance.text = Utils.distanceToText(distance)
+
+                        mLocationMarker?.position = latLng // 마커 이동
+                        mGoogleMap.addPolyline(PolylineOptions()
+                            .add(beforeLatLng, latLng)
+                            .color(ContextCompat.getColor(this@RecordActivity, R.color.main_color))
+                            .width(12F)) // 그림 그림
+
+                        beforeLatLng = latLng
+                    }
                 }
             }
         }

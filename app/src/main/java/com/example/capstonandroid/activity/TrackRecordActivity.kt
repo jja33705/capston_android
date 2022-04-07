@@ -446,32 +446,33 @@ class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback {
                     val second = intent?.getIntExtra(TrackRecordService.SECOND, 0)
                     binding.tvTime.text = Utils.timeToText(second)
 
-                    val latLng = intent?.getParcelableExtra<LatLng>(TrackRecordService.LAT_LNG)!!
-
-                    val distance = intent?.getDoubleExtra(TrackRecordService.DISTANCE, 0.0)
-                    binding.tvDistance.text = Utils.distanceToText(distance)
-
                     val avgSpeed = intent?.getDoubleExtra(TrackRecordService.AVG_SPEED, 0.0)
                     binding.tvAvgSpeed.text = Utils.avgSpeedToText(avgSpeed)
 
-                    mLocationMarker?.position = latLng // 마커 이동
-                    mGoogleMap.addPolyline(PolylineOptions().add(beforeLatLng, latLng)) // 그림 그림
+                    val locationChanged = intent?.getBooleanExtra(TrackRecordService.LOCATION_CHANGED, true)
 
-                    beforeLatLng = latLng
+                    if (locationChanged) {
+                        val latLng = intent?.getParcelableExtra<LatLng>(TrackRecordService.LAT_LNG)!!
 
-                    // 어디쯤 왔나 확인하는 로직이 와야 함.
+                        val distance = intent?.getDoubleExtra(TrackRecordService.DISTANCE, 0.0)
+                        binding.tvDistance.text = Utils.distanceToText(distance)
 
+                        mLocationMarker?.position = latLng // 마커 이동
+                        mGoogleMap.addPolyline(PolylineOptions().add(beforeLatLng, latLng)) // 그림 그림
 
-                    // 도착점 도착했는지 체크
-                    val currentLocation = Location("currentLocation")
-                    currentLocation.latitude = latLng.latitude
-                    currentLocation.longitude = latLng.longitude
-                    if (endPoint.distanceTo(currentLocation) < 20.0) {
-                        // 서비스 종료하라고 커맨드 보냄
-                        val intent = Intent(this@TrackRecordActivity, TrackRecordService::class.java)
-                        intent.action = TrackRecordService.COMPLETE_RECORD
-                        startForegroundService(intent)
-                        finish()
+                        beforeLatLng = latLng
+
+                        // 도착점 도착했는지 체크
+                        val currentLocation = Location("currentLocation")
+                        currentLocation.latitude = latLng.latitude
+                        currentLocation.longitude = latLng.longitude
+                        if (endPoint.distanceTo(currentLocation) < 20.0) {
+                            // 서비스 종료하라고 커맨드 보냄
+                            val intent = Intent(this@TrackRecordActivity, TrackRecordService::class.java)
+                            intent.action = TrackRecordService.COMPLETE_RECORD
+                            startForegroundService(intent)
+                            finish()
+                        }
                     }
                 }
             }

@@ -13,7 +13,7 @@ import java.util.*
 
 class Utils {
     companion object {
-        const val POLYLINE_WIDTH = 20F
+        const val POLYLINE_WIDTH = 16F
 
         fun timeToText(time: Int): String {
             return if (time == 0) {
