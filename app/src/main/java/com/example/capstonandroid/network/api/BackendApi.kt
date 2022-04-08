@@ -88,5 +88,5 @@ interface BackendApi {
     suspend fun getTrack(@Header("Authorization") token: String, @Query("track_id") id: String): Response<Track>
 
     @GET("ranking/track") // 트랙 랭킹 받기
-    suspend fun getRanking(@Header("Authorization") token: String, @Query("track_id") id: String): Response<RankingResponse>
+    suspend fun getRanking(@Header("Authorization") token: String, @Query("track_id") id: String, @Query("page") page: Int): Response<RankingResponse>
 }

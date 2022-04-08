@@ -3,13 +3,15 @@ package com.example.capstonandroid.activity
 import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.core.content.ContextCompat
 import com.example.capstonandroid.R
 import com.example.capstonandroid.Utils
 import com.example.capstonandroid.databinding.ActivityTrackBinding
 import com.example.capstonandroid.network.RetrofitClient
 import com.example.capstonandroid.network.api.BackendApi
-import com.example.capstonandroid.network.dto.Ranking
+import com.example.capstonandroid.network.dto.Data
+import com.example.capstonandroid.network.dto.Post
 import com.example.capstonandroid.network.dto.Track
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -34,7 +36,7 @@ class TrackActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var track: Track
 
-    private lateinit var rankingList: List<Ranking>
+    private lateinit var firstRank: Data
 
     // 시작점, 끝점
     private lateinit var startLatLng: LatLng
@@ -91,13 +93,20 @@ class TrackActivity : AppCompatActivity(), OnMapReadyCallback {
                 drawTrack() // 트랙 그림
 
                 // 랭킹 가져오기
-                val rankingResponse = supplementService.getRanking(token, trackId)
+                val rankingResponse = supplementService.getRanking(token, trackId, 1)
                 if (rankingResponse.isSuccessful) {
                     println("${rankingResponse.body()!!}")
-                    rankingList = rankingResponse.body()!!.ranking
+                    when (rankingResponse.code()) {
+                        200 -> {
+                            firstRank = rankingResponse.body()!!.data[0]
 
-                    if (rankingList.isNotEmpty()) {
-//                        binding.rankFirst.text = rankingResponse.body()!!.ranking[0].user.name
+                            binding.trackRankFirstName.text = firstRank.user.name
+                            binding.trackRankFirstTime.text = Utils.timeToText(firstRank.time)
+                        }
+                        204 -> { // 아직 달린 사람 아무도 없을 때
+                            binding.trackRankFirstLinearLayout.visibility = View.GONE
+                            binding.tvTrackNoRecord.visibility = View.VISIBLE
+                        }
                     }
                 }
             } else {

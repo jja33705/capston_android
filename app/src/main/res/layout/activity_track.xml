@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,6 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:background="@color/white"
         >
         <fragment
             android:id="@+id/map"
@@ -23,175 +23,245 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingTop="10dp"
             >
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="トラック"
-                android:textSize="12dp"
-                android:textColor="@color/black"
-                android:layout_marginVertical="5dp"
-                android:fontFamily="@font/noto_sans_jp_light"
-                android:includeFontPadding="false"
-                android:paddingHorizontal="13dp"
-                >
-            </TextView>
-            <TextView
-                android:id="@+id/tv_track_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="제목"
-                android:textColor="@color/black"
-                android:textSize="23dp"
-                android:fontFamily="@font/noto_sans_jp_medium"
-                android:textStyle="bold"
-                android:includeFontPadding="false"
-                android:paddingHorizontal="13dp"
-                android:layout_marginBottom="8dp"
-                ></TextView>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingHorizontal="18dp"
-                android:paddingVertical="3dp"
-                android:orientation="horizontal"
+                android:orientation="vertical"
+                android:elevation="5dp"
+                android:paddingTop="10dp"
+                android:background="@color/white"
                 >
-
-                <androidx.appcompat.widget.LinearLayoutCompat
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    >
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="種目"
-                        android:textSize="12dp"
-                        android:textColor="@color/black"
-                        android:fontFamily="@font/noto_sans_jp_light"
-                        android:includeFontPadding="false"
-                        >
-                    </TextView>
-                    <ImageView
-                        android:id="@+id/track_exercise_kind_icon"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:src="@drawable/run"
-                        android:layout_marginRight="6dp"
-                        android:layout_gravity="center"
-                        android:padding="3dp"
-                        >
-                    </ImageView>
-                </androidx.appcompat.widget.LinearLayoutCompat>
-
-                <ImageView
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/horizontal_line"
-                    android:layout_marginHorizontal="8dp"
-                    android:layout_marginVertical="5dp"
-                    >
-                </ImageView>
-
-                <androidx.appcompat.widget.LinearLayoutCompat
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
+                    android:text="トラック"
+                    android:textSize="12dp"
+                    android:textColor="@color/black"
+                    android:layout_marginVertical="5dp"
+                    android:fontFamily="@font/noto_sans_jp_light"
+                    android:includeFontPadding="false"
+                    android:paddingHorizontal="13dp"
                     >
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="距離"
-                        android:textSize="12dp"
-                        android:textColor="@color/black"
-                        android:fontFamily="@font/noto_sans_jp_light"
-                        android:includeFontPadding="false"
-                        >
-                    </TextView>
-                    <TextView
-                        android:id="@+id/tv_track_distance"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="0"
-                        android:textColor="@color/black"
-                        android:fontFamily="@font/noto_sans_jp_regular"
-                        android:includeFontPadding="false"
-                        android:textSize="17dp"></TextView>
-                </androidx.appcompat.widget.LinearLayoutCompat>
+                </TextView>
+                <TextView
+                    android:id="@+id/tv_track_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="제목"
+                    android:textColor="@color/black"
+                    android:textSize="23dp"
+                    android:fontFamily="@font/noto_sans_jp_medium"
+                    android:textStyle="bold"
+                    android:includeFontPadding="false"
+                    android:paddingHorizontal="13dp"
+                    android:layout_marginBottom="8dp"
+                    ></TextView>
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="18dp"
+                    android:paddingVertical="3dp"
+                    android:orientation="horizontal"
+                    >
+
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="種目"
+                            android:textSize="12dp"
+                            android:textColor="@color/black"
+                            android:fontFamily="@font/noto_sans_jp_light"
+                            android:includeFontPadding="false"
+                            >
+                        </TextView>
+                        <ImageView
+                            android:id="@+id/track_exercise_kind_icon"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:src="@drawable/run"
+                            android:layout_marginRight="6dp"
+                            android:layout_gravity="center"
+                            android:padding="3dp"
+                            >
+                        </ImageView>
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+                    <ImageView
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/horizontal_line"
+                        android:layout_marginHorizontal="8dp"
+                        android:layout_marginVertical="5dp"
+                        >
+                    </ImageView>
+
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="距離"
+                            android:textSize="12dp"
+                            android:textColor="@color/black"
+                            android:fontFamily="@font/noto_sans_jp_light"
+                            android:includeFontPadding="false"
+                            >
+                        </TextView>
+                        <TextView
+                            android:id="@+id/tv_track_distance"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textColor="@color/black"
+                            android:fontFamily="@font/noto_sans_jp_regular"
+                            android:includeFontPadding="false"
+                            android:textSize="17dp"></TextView>
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tv_track_description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="가나다라마바사아자차카타파하이"
+                    android:paddingHorizontal="15dp"
+                    android:layout_marginVertical="15dp"
+                    android:fontFamily="@font/noto_sans_jp_regular"
+                    android:includeFontPadding="false"
+                    >
+                </TextView>
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/tv_track_description"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="가나다라마바사아자차카타파하이"
-                android:paddingHorizontal="15dp"
-                android:layout_marginVertical="15dp"
-                android:fontFamily="@font/noto_sans_jp_regular"
-                android:includeFontPadding="false"
-                >
-            </TextView>
+
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="15dp"
+                android:layout_height="12dp"
                 android:src="@drawable/horizontal_line"
                 >
             </ImageView>
-            <TextView
-                android:layout_marginTop="10dp"
-                android:layout_width="wrap_content"
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="順位"
-                android:textColor="@color/black"
-                android:textSize="23dp"
-                android:fontFamily="@font/noto_sans_jp_medium"
-                android:textStyle="bold"
-                android:includeFontPadding="false"
-                android:paddingHorizontal="13dp"
-                ></TextView>
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/track_rank_first_user_image"
-                android:layout_marginTop="8dp"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
-                android:layout_gravity="center"
-                android:src="@mipmap/ic_launcher_round"
+                android:orientation="vertical"
+                android:background="@color/white"
+                android:elevation="5dp"
                 >
-            </de.hdodenhof.circleimageview.CircleImageView>
 
-            <TextView
-                android:id="@+id/track_rank_first_name"
-                android:drawableLeft="@drawable/trophy"
-                android:drawablePadding="5dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="홍길동"
-                android:fontFamily="@font/noto_sans_jp_regular"
-                android:textColor="@color/black"
-                android:includeFontPadding="false"
-                android:layout_marginTop="3dp"
-                >
-            </TextView>
+                <TextView
+                    android:layout_marginVertical="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="順位"
+                    android:textColor="@color/black"
+                    android:textSize="23dp"
+                    android:fontFamily="@font/noto_sans_jp_medium"
+                    android:textStyle="bold"
+                    android:includeFontPadding="false"
+                    android:paddingHorizontal="13dp"
+                    ></TextView>
 
-            <TextView
-                android:id="@+id/track_rank_first_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="00:00"
-                android:layout_gravity="center"
-                android:fontFamily="@font/noto_sans_jp_medium"
-                android:textSize="22dp"
-                android:includeFontPadding="false"
-                >
-            </TextView>
+                <TextView
+                    android:visibility="gone"
+                    android:id="@+id/tv_track_no_record"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="まだ誰もこのトラックを完走していません。"
+                    android:fontFamily="@font/noto_sans_jp_regular"
+                    android:padding="10dp"
+                    android:textColor="@color/black"
+                    >
+                </TextView>
 
+                <LinearLayout
+                    android:id="@+id/track_rank_first_linear_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_gravity="center"
+                    >
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/trophy"
+                        android:layout_gravity="center"
+                        >
+                    </ImageView>
 
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/track_rank_first_user_image"
+                        android:layout_marginTop="8dp"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:layout_gravity="center"
+                        android:src="@mipmap/ic_launcher_round"
+                        >
+                    </de.hdodenhof.circleimageview.CircleImageView>
+
+                    <TextView
+                        android:id="@+id/track_rank_first_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="홍길동"
+                        android:textSize="18dp"
+                        android:fontFamily="@font/noto_sans_jp_regular"
+                        android:textColor="@color/black"
+                        android:includeFontPadding="false"
+                        android:layout_marginVertical="3dp"
+                        >
+                    </TextView>
+
+                    <TextView
+                        android:id="@+id/track_rank_first_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="00:00"
+                        android:layout_gravity="center"
+                        android:fontFamily="@font/noto_sans_jp_medium"
+                        android:textSize="25dp"
+                        android:textColor="@color/black"
+                        android:includeFontPadding="false"
+                        android:layout_marginBottom="7dp"
+                        >
+                    </TextView>
+
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:src="@drawable/horizontal_line"
+                    >
+                </ImageView>
+
+                <Button
+                    android:id="@+id/button_all_rank"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:text="全体順位"
+                    android:gravity="start|center"
+                    android:paddingHorizontal="20dp"
+                    android:fontFamily="@font/noto_sans_jp_light"
+                    android:includeFontPadding="false"
+                    android:backgroundTint="@color/white"
+                    android:drawableRight="@drawable/arrow_forward"
+                    >
+                </Button>
+
+            </LinearLayout>
 
         </LinearLayout>
 
