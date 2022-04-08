@@ -43,6 +43,8 @@ class ActivityMeFragment : Fragment() {
 
 
     private var page = 1       // 현재 페이지
+
+    private var pageNum = 1;
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -74,8 +76,8 @@ class ActivityMeFragment : Fragment() {
         var token = "Bearer " + sharedPreference.getString("TOKEN", "")
         println("프로필 미 프래그먼트 + " + token)
 
-        val list = ArrayList<UserData>()
-        val adapter2 = RecyclerUserAdapter(list, { data -> adapterOnClick(data) })
+        val list2 = ArrayList<UserData>()
+        val adapter2 = RecyclerUserAdapter(list2, { data -> adapterOnClick(data) })
 
         supplementService.myIndex(token, page).enqueue(object : Callback<MySNSResponse> {
             override fun onResponse(call: Call<MySNSResponse>, response: Response<MySNSResponse>) {
@@ -83,13 +85,11 @@ class ActivityMeFragment : Fragment() {
                 if (response.isSuccessful) {
                     println(response.body())
 
-//            println("여긴뭐여?"+LoginUserResponse!!.posts[0].title)
 
+                    println(response.body()!!.data.size.toString()+"ㅇㅁㄴㅇㄴㅁㅇㄴㅁㅇㅁㄴㅇㅁㄴㅇㄴㅁㅇ")
 
-                    println(response.body()!!.data.size)
-
-                    for (i in 0..response.body()!!.data.size - 1) {
-                        list.add(
+                    for (i in 0..response.body()!!.data.size -1) {
+                        list2.add(
                             UserData(
                                 ContextCompat.getDrawable(
                                     requireContext(),
@@ -100,13 +100,13 @@ class ActivityMeFragment : Fragment() {
                                 i,
                                 response.body()!!.data[i].created_at,
                                 response.body()!!.data[i].time,
-                                response.body()!!.current_page
                             )
                         )
                     }
                     binding.lstUser2.adapter = adapter2
                     binding.lstUser2.addItemDecoration(DistanceItemDecorator(10))
 
+                    page++
                 } else {
 
                 }
@@ -133,7 +133,7 @@ class ActivityMeFragment : Fragment() {
 
                             if(response.isSuccessful&&response.body()!!.data.size!==0) {
                                 for (i in 0..response.body()!!.data.size - 1) {
-                                    list.add(
+                                    list2.add(
                                         UserData(
                                             ContextCompat.getDrawable(
                                                 requireContext(),
@@ -144,7 +144,6 @@ class ActivityMeFragment : Fragment() {
                                             i,
                                             response.body()!!.data[i].created_at,
                                             response.body()!!.data[i].time,
-                                            response.body()!!.current_page
                                         )
                                     )
                                 }
@@ -176,7 +175,7 @@ class ActivityMeFragment : Fragment() {
 
         val nextIntent = Intent(requireContext(), MeDetailsActivity::class.java)
         nextIntent.putExtra("data_num", data.data_num)
-        nextIntent.putExtra("data_page", page)
+        nextIntent.putExtra("data_page", page-1)
         startActivity(nextIntent)
     }
     class DistanceItemDecorator(private val value: Int) : RecyclerView.ItemDecoration() {

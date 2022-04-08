@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:layout_margin="5dp"
+    android:layout_marginBottom="5dp"
+    android:orientation="horizontal">
+
+    <TextView
+        android:background="@color/area_color"
+        android:id="@+id/user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="닉네임">
+
+    </TextView>
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
+
+    <TextView
+        android:background="@color/colorAccent"
+        android:id="@+id/user_content"
+        android:layout_width="320dp"
+        android:layout_height="20dp"
+        android:text="내용"></TextView>
+    <TextView
+        android:background="@color/colorAccent"
+        android:id="@+id/user_created_at"
+        android:layout_width="320dp"
+        android:layout_height="20dp"
+        android:text="작성일자"></TextView>
+    <TextView
+        android:background="@color/colorAccent"
+        android:id="@+id/user_updated_at"
+        android:layout_width="320dp"
+        android:layout_height="20dp"
+        android:text="수정일자"></TextView>
+
+
+</LinearLayout>
+
+<Button
+    android:id="@+id/deleteButton"
+    android:layout_width="50dp"
+    android:layout_height="wrap_content"
+    android:text="삭제"></Button>
+</LinearLayout>

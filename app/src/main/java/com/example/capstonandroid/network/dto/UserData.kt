@@ -8,6 +8,5 @@ data class UserData(
     val name: String,
     val data_num : Int,
     val created_id : String,
-    val time : Int,
     val page : Int,
     )
