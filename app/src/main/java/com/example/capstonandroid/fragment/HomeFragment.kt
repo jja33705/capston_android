@@ -91,6 +91,9 @@ class HomeFragment : Fragment()  {
                 if(response.isSuccessful) {
 
                     println(response.javaClass.name)
+                    if(response.body()!!.data==null){
+                        return
+                    }else {
                     println(response.body()!!.data.size)
                     for (i in 0..response.body()!!.data.size-1) {
                         list.add(
@@ -112,7 +115,7 @@ class HomeFragment : Fragment()  {
 
                     page ++
                     println(page.toString() +"찍어보자")
-                }
+                }}
                 else{
                     println("실패함ㅋㅋ")
                     println(response.body())

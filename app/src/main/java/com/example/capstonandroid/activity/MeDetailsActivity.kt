@@ -164,6 +164,13 @@ class MeDetailsActivity : AppCompatActivity() {
             println("에딧 눌렀어요!")
 
         }
+        binding.commentButton.setOnClickListener {
+            println("머지? 왜 안날라가")
+            val nextIntent = Intent(this, MeCommentActivity::class.java)
+            nextIntent.putExtra("data_num", data_num)
+            nextIntent.putExtra("data_page", data_page)
+            startActivity(nextIntent)
+        }
     }
 
 
