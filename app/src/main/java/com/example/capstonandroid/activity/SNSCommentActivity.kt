@@ -12,8 +12,6 @@ import com.example.capstonandroid.fragment.HomeFragment
 import com.example.capstonandroid.network.RetrofitClient
 import com.example.capstonandroid.network.api.BackendApi
 import com.example.capstonandroid.network.dto.*
-import kotlinx.android.synthetic.main.activity_snscomment.*
-import kotlinx.android.synthetic.main.fragment_home.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -29,6 +27,7 @@ class SNSCommentActivity : AppCompatActivity()
     object user {}
     private var postID = 0
     lateinit var binding: ActivitySnscommentBinding
+    private var content = "";
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -94,8 +93,8 @@ class SNSCommentActivity : AppCompatActivity()
                             )
                         )
                     }
-                    lstUser3.adapter = adapter
-                    lstUser3.addItemDecoration(HomeFragment.DistanceItemDecorator(10))
+                    binding.lstUser3.adapter = adapter
+                    binding.lstUser3.addItemDecoration(HomeFragment.DistanceItemDecorator(10))
 
                     page++
                 }

@@ -41,9 +41,7 @@ class RecyclerUserAdapter(
         fun bind(listener: View.OnClickListener, item: UserData) {
             view.findViewById<TextView>(R.id.txtUser_title).text = item.title.toString()
             view.findViewById<TextView>(R.id.txtUser_name).text = item.name
-            view.findViewById<TextView>(R.id.txtUser_time).text = item.time.toString()
             view.findViewById<TextView>(R.id.txtUser_created_id).text = item.created_id
-            view.findViewById<TextView>(R.id.txtUser_page).text = item.page.toString()
             view.setOnClickListener(listener)
         }
     }

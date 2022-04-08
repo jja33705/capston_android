@@ -21,6 +21,7 @@ import com.example.capstonandroid.network.RetrofitClient
 import com.example.capstonandroid.network.api.BackendApi
 import com.example.capstonandroid.network.dto.SNSResponse
 import com.example.capstonandroid.network.dto.UserData
+import kotlinx.android.synthetic.main.fragment_home.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -106,10 +107,11 @@ class HomeFragment : Fragment()  {
                             )
                         )
                     }
-                    binding.lstUser.adapter = adapter
-                    binding.lstUser.addItemDecoration(DistanceItemDecorator(10))
+                  lstUser.adapter = adapter
+                    lstUser.addItemDecoration(DistanceItemDecorator(10))
 
                     page ++
+                    println(page.toString() +"찍어보자")
                 }
                 else{
                     println("실패함ㅋㅋ")
@@ -137,6 +139,7 @@ class HomeFragment : Fragment()  {
                             response: Response<SNSResponse>
                         ) {
 
+                            println(response.body()!!.data)
                             if(response.isSuccessful&&response.body()!!.data.size!==0) {
                                 for (i in 0..response.body()!!.data.size - 1) {
                                     list.add(
@@ -150,12 +153,11 @@ class HomeFragment : Fragment()  {
                                             i,
                                             response.body()!!.data[i].created_at,
                                             response.body()!!.data[i].time,
-                                            response.body()!!.current_page
                                         )
                                     )
                                 }
 
-                                binding.lstUser.adapter!!.notifyItemInserted(10)
+                                lstUser.adapter!!.notifyItemInserted(10)
 
                                     page ++
                             }else{
@@ -184,7 +186,7 @@ class HomeFragment : Fragment()  {
 
         val nextIntent = Intent(requireContext(), SNSDetailsActivity::class.java)
         nextIntent.putExtra("data_num", data.data_num)
-        nextIntent.putExtra("data_page", page)
+        nextIntent.putExtra("data_page", page-1)
         startActivity(nextIntent)
 
     }

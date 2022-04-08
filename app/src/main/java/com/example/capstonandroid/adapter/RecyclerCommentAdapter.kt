@@ -1,21 +1,14 @@
 package com.example.capstonandroid.adapter
 
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.capstonandroid.R
-import com.example.capstonandroid.activity.MeDetailsActivity
-import com.example.capstonandroid.activity.SNSCommentActivity
 import com.example.capstonandroid.network.RetrofitClient
 import com.example.capstonandroid.network.api.BackendApi
-import com.example.capstonandroid.network.dto.Comment
 import com.example.capstonandroid.network.dto.CommentData
-import com.example.capstonandroid.network.dto.UserData
 import kotlinx.android.synthetic.main.comment_item_view.view.*
-import kotlinx.android.synthetic.main.item_view.view.*
 import retrofit2.Retrofit
 
 class RecyclerCommentAdapter(
