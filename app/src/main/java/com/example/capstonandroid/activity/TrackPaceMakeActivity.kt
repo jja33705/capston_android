@@ -606,7 +606,10 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback {
                     binding.tvTime.text = Utils.timeToText(second)
 
                     val avgSpeed = intent?.getDoubleExtra(TrackPaceMakeService.AVG_SPEED, 0.0)
-                    binding.tvAvgSpeed.text = Utils.avgSpeedToText(avgSpeed)
+                    binding.tvAvgSpeed.text = Utils.formatDoublePointTwo(avgSpeed)
+
+                    val calorie = intent?.getDoubleExtra(TrackPaceMakeService.CALORIE, 0.0)
+                    binding.tvKcal.text = Utils.formatDoublePointTwo(calorie)
 
                     // 상대 위치 바꼈을 떄
                     val opponentLocationChanged = intent?.getBooleanExtra(TrackPaceMakeService.OPPONENT_LOCATION_CHANGED, true)

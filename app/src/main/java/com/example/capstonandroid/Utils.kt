@@ -30,8 +30,8 @@ class Utils {
             return "%.2f".format(distance / 1000)
         }
 
-        fun avgSpeedToText(avgSpeed: Double): String {
-            return "%.2f".format(avgSpeed)
+        fun formatDoublePointTwo(double: Double): String {
+            return "%.2f".format(double)
         }
 
         fun speedToText(speed: Float): String {

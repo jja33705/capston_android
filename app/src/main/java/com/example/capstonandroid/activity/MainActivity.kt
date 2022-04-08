@@ -17,7 +17,6 @@ import com.example.capstonandroid.TrackRecordService
 import com.example.capstonandroid.databinding.ActivityMainBinding
 import com.example.capstonandroid.fragment.HomeFragment
 import com.example.capstonandroid.fragment.MeFragment
-import com.example.capstonandroid.fragment.TrackFragment
 
 class MainActivity : AppCompatActivity() {
     private var _binding: ActivityMainBinding? = null

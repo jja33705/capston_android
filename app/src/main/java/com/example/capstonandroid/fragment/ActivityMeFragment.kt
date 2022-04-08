@@ -105,7 +105,7 @@ class ActivityMeFragment : Fragment() {
                         )
                     }
                     binding.lstUser2.adapter = adapter2
-                    binding.lstUser2.addItemDecoration(ActivityMeFragment.DistanceItemDecorator(10))
+                    binding.lstUser2.addItemDecoration(DistanceItemDecorator(10))
 
                 } else {
 

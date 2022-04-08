@@ -59,7 +59,7 @@ class RankMatchingActivity : AppCompatActivity() {
                         binding.tvVsUserName.text = user.name
                         binding.tvVsPostName.text = post.title
                         binding.tvVsTime.text = Utils.timeToText(post.time)
-                        binding.tvVsSpeed.text = Utils.avgSpeedToText(post.average_speed)
+                        binding.tvVsSpeed.text = Utils.formatDoublePointTwo(post.average_speed)
 
                         responseIntent.putExtra("matchSuccess", true)
                         responseIntent.putExtra("opponentGpsDataId", post.gps_id)

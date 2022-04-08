@@ -30,4 +30,5 @@
     <color name="green">#00FF00</color>
     <color name="focused">#E0E0E0</color>
     <color name="silver_color">#E1E1E1</color>
+    <color name="gold_color">#ffd700</color>
 </resources>

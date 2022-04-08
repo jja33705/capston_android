@@ -40,6 +40,8 @@ class TrackRecordService : Service() {
     private var distance = 0.0 // 거리 (m)
     private var avgSpeed = 0.0 // 평균 속도
 
+    private var calorie = 0.0 // 칼로리
+
     companion object {
         var isStarted = false
         var trackName = ""
@@ -72,6 +74,7 @@ class TrackRecordService : Service() {
         const val DISTANCE = "${PREFIX}.DISTANCE"
         const val AVG_SPEED = "${PREFIX}.AVG_SPEED"
         const val LOCATION_CHANGED = "${PREFIX}.LOCATION_CHANGED"
+        const val CALORIE = "${PREFIX}.CALORIE"
     }
 
     // 제일 처음 호출 (1회성으로 서비스가 이미 실행중이면 호출되지 않는다)
@@ -138,6 +141,16 @@ class TrackRecordService : Service() {
                     avgSpeed = (distance / 1000) / (second.toDouble() / 3600)
                 }
 
+                // 칼로리
+                when (exerciseKind) {
+                    "R" -> {
+                        calorie += 0.15
+                    }
+                    "B" -> {
+                        calorie += 0.16
+                    }
+                }
+
                 // 노티피케이션 업데이트
                 mNotificationManager.notify(NOTIFICATION_ID, getNotification())
 
@@ -148,6 +161,7 @@ class TrackRecordService : Service() {
                 intent.putExtra(SECOND, second)
                 intent.putExtra(DISTANCE, distance)
                 intent.putExtra(AVG_SPEED, avgSpeed)
+                intent.putExtra(CALORIE, calorie)
                 intent.putExtra(LOCATION_CHANGED, locationChanged)
                 LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intent)
             }
@@ -222,7 +236,7 @@ class TrackRecordService : Service() {
                 val intent = Intent(this@TrackRecordService, CompleteRecordActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 intent.putExtra("avgSpeed", avgSpeed)
-                intent.putExtra("kcal", 30.0)
+                intent.putExtra("kcal", calorie)
                 intent.putExtra("sumAltitude", sumAltitude)
                 intent.putExtra("second", second)
                 intent.putExtra("matchType", "싱글")

@@ -35,14 +35,13 @@ class RecordService : Service() {
     private lateinit var beforeLocation: Location // 비교를 위한 이전 위치
 
     private val timer = Timer() // 시간 업데이트를 위한 타이머
+    private var weight = 0 // 칼로리 계산을 위한 몸무게
 
     private var sumAltitude: Double = 0.0 // 누적 상승 고도
-
     private var second: Int = 0 // 시간 (초)
-
     private var distance = 0.0 // 거리 (m)
-
     private var avgSpeed = 0.0 // 평균 속도
+    private var calorie = 0.0 // 칼로리
 
     companion object {
         var isStarted = false // 시작 했는지
@@ -74,11 +73,14 @@ class RecordService : Service() {
         const val DISTANCE = "$PREFIX.DISTANCE"
         const val AVG_SPEED = "$PREFIX.AVG_SPEED"
         const val LOCATION_CHANGED = "$PREFIX.LOCATION_CHANGED"
+        const val CALORIE = "$PREFIX.CALORIE"
     }
 
     // 제일 처음 호출 (1회성으로 서비스가 이미 실행중이면 호출되지 않는다)
     override fun onCreate() {
         println("service: onCreate() 호출")
+
+        weight = getSharedPreferences("other", MODE_PRIVATE).getInt("WEIGHT", 0)
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this) // 통합 위치 제공자 초기화
 
@@ -139,9 +141,19 @@ class RecordService : Service() {
                     gpsDataDao.insertGpsData(GpsData(second, mLocation.latitude, mLocation.longitude, mLocation.speed, distance, mLocation.altitude))
                 }
 
-                //평균속도
+                // 평균속도
                 if (second > 0) {
                     avgSpeed = (distance / 1000) / (second.toDouble() / 3600)
+                }
+
+                // 칼로리
+                when (exerciseKind) {
+                    "R" -> {
+                        calorie += 0.15
+                    }
+                    "B" -> {
+                        calorie += 0.16
+                    }
                 }
 
                 // 노티피케이션 업데이트
@@ -155,6 +167,7 @@ class RecordService : Service() {
                 intent.putExtra(DISTANCE, distance)
                 intent.putExtra(AVG_SPEED, avgSpeed)
                 intent.putExtra(LOCATION_CHANGED, locationChanged)
+                intent.putExtra(CALORIE, calorie)
                 LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intent)
             }
         }, 1000, 1000) // 1초 후 시작, 1초 간격
@@ -221,7 +234,7 @@ class RecordService : Service() {
                 val intent = Intent(this@RecordService, CompleteRecordActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 intent.putExtra("avgSpeed", avgSpeed)
-                intent.putExtra("kcal", 30.0)
+                intent.putExtra("kcal", calorie)
                 intent.putExtra("sumAltitude", sumAltitude)
                 intent.putExtra("second", second)
                 intent.putExtra("exerciseKind", exerciseKind)

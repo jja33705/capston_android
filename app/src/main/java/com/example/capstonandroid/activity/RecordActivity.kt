@@ -14,6 +14,7 @@ import androidx.core.content.ContextCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.example.capstonandroid.R
 import com.example.capstonandroid.RecordService
+import com.example.capstonandroid.TrackPaceMakeService
 import com.example.capstonandroid.Utils
 import com.example.capstonandroid.databinding.ActivityRecordBinding
 import com.example.capstonandroid.db.AppDatabase
@@ -310,7 +311,10 @@ class RecordActivity : AppCompatActivity(), OnMapReadyCallback {
                     binding.tvTime.text = Utils.timeToText(second)
 
                     val avgSpeed = intent?.getDoubleExtra(RecordService.AVG_SPEED, 0.0)
-                    binding.tvAvgSpeed.text = Utils.avgSpeedToText(avgSpeed)
+                    binding.tvAvgSpeed.text = Utils.formatDoublePointTwo(avgSpeed)
+
+                    val calorie = intent?.getDoubleExtra(RecordService.CALORIE, 0.0)
+                    binding.tvKcal.text = Utils.formatDoublePointTwo(calorie)
 
                     val locationChanged = intent?.getBooleanExtra(RecordService.LOCATION_CHANGED, true)
 

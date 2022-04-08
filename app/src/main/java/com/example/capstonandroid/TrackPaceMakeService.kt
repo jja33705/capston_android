@@ -49,6 +49,7 @@ class TrackPaceMakeService : Service() {
     private var second: Int = 0 // 시간 (초)
     private var distance = 0.0 // 거리 (m)
     private var avgSpeed = 0.0 // 평균 속도
+    private var calorie = 0.0 // 칼로리
 
     // 상대 관련 데이터
     private var opponentRecordEndSecond = 0
@@ -105,6 +106,7 @@ class TrackPaceMakeService : Service() {
         const val OPPONENT_SPEED = "${PREFIX}.OPPONENT_SPEED"
         const val LOCATION_CHANGED = "${PREFIX}.LOCATION_CHANGED"
         const val OPPONENT_LOCATION_CHANGED = "${PREFIX}.OPPONENT_LOCATION_CHANGED"
+        const val CALORIE = "${PREFIX}.CALORIE"
 
         // 1초에 갈 수 있다고 생각되는 최대 거리 30미터????
         const val MAX_DISTANCE = 30F
@@ -190,6 +192,16 @@ class TrackPaceMakeService : Service() {
                     opponentSpeed = opponentGpsData.speed
                 }
 
+                // 칼로리
+                when (exerciseKind) {
+                    "R" -> {
+                        calorie += 0.15
+                    }
+                    "B" -> {
+                        calorie += 0.16
+                    }
+                }
+
                 // 노티피케이션 업데이트
                 mNotificationManager.notify(NOTIFICATION_ID, getNotification())
 
@@ -201,6 +213,7 @@ class TrackPaceMakeService : Service() {
                 intent.putExtra(SECOND, second)
                 intent.putExtra(DISTANCE, distance)
                 intent.putExtra(AVG_SPEED, avgSpeed)
+                intent.putExtra(CALORIE, calorie)
                 intent.putExtra(SPEED, mLocation.speed)
                 intent.putExtra(LOCATION_CHANGED, locationChanged)
                 intent.putExtra(OPPONENT_SPEED, opponentSpeed)
@@ -325,7 +338,7 @@ class TrackPaceMakeService : Service() {
                 val intent = Intent(this@TrackPaceMakeService, CompleteRecordActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 intent.putExtra("avgSpeed", avgSpeed)
-                intent.putExtra("kcal", 30.0)
+                intent.putExtra("kcal", calorie)
                 intent.putExtra("sumAltitude", sumAltitude)
                 intent.putExtra("second", second)
                 intent.putExtra("matchType", matchType)

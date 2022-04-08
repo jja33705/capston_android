@@ -447,7 +447,10 @@ class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback {
                     binding.tvTime.text = Utils.timeToText(second)
 
                     val avgSpeed = intent?.getDoubleExtra(TrackRecordService.AVG_SPEED, 0.0)
-                    binding.tvAvgSpeed.text = Utils.avgSpeedToText(avgSpeed)
+                    binding.tvAvgSpeed.text = Utils.formatDoublePointTwo(avgSpeed)
+
+                    val calorie = intent?.getDoubleExtra(TrackRecordService.CALORIE, 0.0)
+                    binding.tvKcal.text = Utils.formatDoublePointTwo(calorie)
 
                     val locationChanged = intent?.getBooleanExtra(TrackRecordService.LOCATION_CHANGED, true)
 

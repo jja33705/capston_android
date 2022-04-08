@@ -50,6 +50,8 @@ class TrackActivity : AppCompatActivity(), OnMapReadyCallback {
         _binding = ActivityTrackBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        supportActionBar?.title = "トラック"
+
         val intent = intent
         trackId = intent.getStringExtra("trackId")!!
 
@@ -76,9 +78,12 @@ class TrackActivity : AppCompatActivity(), OnMapReadyCallback {
             if (trackResponse.isSuccessful) {
                 track = trackResponse.body()!!
 
-                binding.tvTitle.text = track.trackName
-                binding.tvDistance.text = "${Utils.distanceToText(track.totalDistance)}km"
-                binding.tvDescription.text = track.description
+                binding.tvTrackTitle.text = track.trackName
+                binding.tvTrackDistance.text = "${Utils.distanceToText(track.totalDistance)}km"
+                binding.tvTrackDescription.text = track.description
+                if (track.event == "B") {
+                    binding.trackExerciseKindIcon.setImageResource(R.drawable.cycle)
+                }
 
                 startLatLng = LatLng(track.start_latlng[1], track.start_latlng[0])
                 endLatLng = LatLng(track.end_latlng[1], track.end_latlng[0])
@@ -92,7 +97,7 @@ class TrackActivity : AppCompatActivity(), OnMapReadyCallback {
                     rankingList = rankingResponse.body()!!.ranking
 
                     if (rankingList.isNotEmpty()) {
-                        binding.rankFirst.text = rankingResponse.body()!!.ranking[0].user.name
+//                        binding.rankFirst.text = rankingResponse.body()!!.ranking[0].user.name
                     }
                 }
             } else {
