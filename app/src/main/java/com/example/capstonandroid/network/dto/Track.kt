@@ -7,10 +7,8 @@ data class Track(
     val checkPoint: List<List<Double>>,
     val createdAt: String,
     val description: String,
-    val end_latlng: List<Double>,
     val event: String,
     val gps: Gps,
-    val start_latlng: List<Double>,
     val totalDistance: Double,
     val trackName: String,
     val user: UserIdAndName

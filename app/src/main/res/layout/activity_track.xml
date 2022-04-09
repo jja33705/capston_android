@@ -136,6 +136,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="가나다라마바사아자차카타파하이"
+                    android:textColor="@color/black"
                     android:paddingHorizontal="15dp"
                     android:layout_marginVertical="15dp"
                     android:fontFamily="@font/noto_sans_jp_regular"
@@ -237,21 +238,13 @@
                         android:layout_marginBottom="7dp"
                         >
                     </TextView>
-
                 </LinearLayout>
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:src="@drawable/horizontal_line"
-                    >
-                </ImageView>
-
                 <Button
                     android:id="@+id/button_all_rank"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:text="全体順位"
+                    android:textColor="@color/black"
                     android:gravity="start|center"
                     android:paddingHorizontal="20dp"
                     android:fontFamily="@font/noto_sans_jp_light"

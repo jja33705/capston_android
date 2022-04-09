@@ -425,13 +425,13 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback {
 
             //출발점 초기화
             startPoint = Location("startPoint")
-            startPoint.latitude = track.start_latlng[1]
-            startPoint.longitude = track.start_latlng[0]
+            startPoint.latitude = track.gps.coordinates[0][1]
+            startPoint.longitude = track.gps.coordinates[0][0]
 
             // 도착점 초기화
             endPoint = Location("endPoint")
-            endPoint.latitude = track.end_latlng[1]
-            endPoint.longitude = track.end_latlng[0]
+            endPoint.latitude = track.gps.coordinates[track.gps.coordinates.size - 1][1]
+            endPoint.longitude = track.gps.coordinates[track.gps.coordinates.size - 1][0]
 
             // 경로 그림
             val latLngList = ArrayList<LatLng>()
@@ -484,12 +484,12 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback {
             // 도착점 마커 추가
             mGoogleMap.addMarker(
                 MarkerOptions()
-                .position(LatLng(track.end_latlng[1], track.end_latlng[0]))
+                .position(LatLng(track.gps.coordinates[track.gps.coordinates.size - 1][1], track.gps.coordinates[track.gps.coordinates.size - 1][0]))
                 .title("도착점")
                 .icon(Utils.getMarkerIconFromDrawable(resources.getDrawable(R.drawable.end_point_marker,null)))
                 .anchor(0F, 1F))
 
-            mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(track.start_latlng[1], track.start_latlng[0]), 18.0f)) // 화면 이동
+            mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(track.gps.coordinates[0][1], track.gps.coordinates[0][0]), 18.0f)) // 화면 이동
 
             println("다 그림")
         } else {

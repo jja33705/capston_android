@@ -44,6 +44,7 @@
         android:layout_below="@id/mainimage"
         android:orientation="horizontal">
         <ImageButton
+            android:id="@+id/commentButton"
             android:layout_width="50dp"
             android:src="@drawable/comment"
             android:layout_height="50dp"

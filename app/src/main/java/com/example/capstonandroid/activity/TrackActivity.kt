@@ -1,5 +1,6 @@
 package com.example.capstonandroid.activity
 
+import android.content.Intent
 import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -59,6 +60,13 @@ class TrackActivity : AppCompatActivity(), OnMapReadyCallback {
 
         initRetrofit()
 
+        // 전체 랭킹 버튼 눌렀을 때
+        binding.buttonAllRank.setOnClickListener {
+            val intent = Intent(this@TrackActivity, RankingActivity::class.java)
+            intent.putExtra("trackId", trackId)
+            startActivity(intent)
+        }
+
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
@@ -87,15 +95,14 @@ class TrackActivity : AppCompatActivity(), OnMapReadyCallback {
                     binding.trackExerciseKindIcon.setImageResource(R.drawable.cycle)
                 }
 
-                startLatLng = LatLng(track.start_latlng[1], track.start_latlng[0])
-                endLatLng = LatLng(track.end_latlng[1], track.end_latlng[0])
+                startLatLng = LatLng(track.gps.coordinates[0][1], track.gps.coordinates[0][0])
+                endLatLng = LatLng(track.gps.coordinates[track.gps.coordinates.size - 1][1], track.gps.coordinates[track.gps.coordinates.size - 1][0])
 
                 drawTrack() // 트랙 그림
 
                 // 랭킹 가져오기
                 val rankingResponse = supplementService.getRanking(token, trackId, 1)
                 if (rankingResponse.isSuccessful) {
-                    println("${rankingResponse.body()!!}")
                     when (rankingResponse.code()) {
                         200 -> {
                             firstRank = rankingResponse.body()!!.data[0]
