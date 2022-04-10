@@ -184,6 +184,11 @@
             android:layout_height="wrap_content"
             android:text="로그아웃"></Button>
 
+        <Button
+            android:id="@+id/picTest"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="테스트"></Button>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

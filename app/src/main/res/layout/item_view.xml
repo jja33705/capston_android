@@ -21,6 +21,9 @@
             android:src="@drawable/main_profile"
            ></ImageButton>
         <TextView
+            android:hint="제목"
+            android:includeFontPadding="false"
+            android:fontFamily="@font/noto_sans_jp_black"
             android:layout_margin="5dp"
             android:id="@+id/txtUser_name"
             android:layout_width="wrap_content"
@@ -31,6 +34,8 @@
             android:textColor="#666666"
             android:textSize="20dp"></TextView>
         <TextView
+            android:includeFontPadding="false"
+            android:fontFamily="@font/noto_sans_jp_black"
             android:id="@+id/txtUser_created_id"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
@@ -52,6 +57,8 @@
                 android:layout_gravity="center"
                 android:background="@drawable/map" />
                 <TextView
+                    android:includeFontPadding="false"
+                    android:fontFamily="@font/noto_sans_jp_medium"
                     android:layout_margin="5dp"
                     android:id="@+id/txtUser_title"
                     android:maxLines="1"

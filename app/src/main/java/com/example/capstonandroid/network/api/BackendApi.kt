@@ -9,6 +9,7 @@ import retrofit2.http.*
 import com.example.capstonandroid.network.dto.GetTracksResponse
 import com.example.capstonandroid.network.dto.Track
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Response
 
 // 사용할 api 목록 정의하는 곳
@@ -53,9 +54,10 @@ interface BackendApi {
 
     @DELETE("post/{postID}")
 
+
     @POST("post/image")
-    fun imageTest(@Header("Authorization")token:String,
-                  @Part imageFile : MultipartBody.Part): Call<ImageResponse>
+    fun imageTest(@Header("Authorization") token : String ,
+                  @Part images : MultipartBody.Part?): Call<ImageResponse>
 
 
 

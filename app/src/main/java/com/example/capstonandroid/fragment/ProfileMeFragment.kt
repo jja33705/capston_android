@@ -1,7 +1,9 @@
 package com.example.capstonandroid.fragment
 
+import android.Manifest
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
@@ -35,6 +38,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
+import java.io.File
 import kotlin.math.log
 
 private const val ARG_PARAM1 = "param1"
@@ -298,6 +302,7 @@ class ProfileMeFragment : Fragment(){
                     binding.tvProfileMeFollowings.setText("팔로윙 : "+user_followings)
                     binding.tvProfileMeMmr.setText("MMR : " + user_mmr)
 
+
                 if (loginuserResponse?.profile.equals(null)||loginuserResponse?.profile.equals("img")){
                         binding.tvProfileMePicture.setImageResource(R.drawable.main_profile)
                     }else {
@@ -341,6 +346,10 @@ class ProfileMeFragment : Fragment(){
             })
         }
 
+        binding.picTest.setOnClickListener {
+
+        }
+
 
 
 
@@ -374,6 +383,7 @@ class ProfileMeFragment : Fragment(){
 
 
     }
+
     override fun onDestroy() {
         mBinding = null
         super.onDestroy()
