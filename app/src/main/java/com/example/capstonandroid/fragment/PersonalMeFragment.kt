@@ -1,6 +1,5 @@
 package com.example.capstonandroid.fragment
 
-import android.graphics.Color
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -8,16 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.example.capstonandroid.R
-import com.example.capstonandroid.databinding.FragmentProfileMeBinding
 import com.example.capstonandroid.databinding.FragmentTargetMeBinding
 import com.example.capstonandroid.network.api.BackendApi
 import com.example.capstonandroid.network.RetrofitClient
-import com.example.capstonandroid.network.dto.Event
-import com.example.capstonandroid.network.dto.Login
-import com.example.capstonandroid.network.dto.SNSResponse
 import com.example.capstonandroid.network.dto.UserWeekResponse
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.*

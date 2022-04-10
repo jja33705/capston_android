@@ -21,6 +21,9 @@
         android:theme="@style/Theme.CapstonAndroid"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".activity.RankingActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.MeCommentActivity"
             android:exported="false" />
         <activity

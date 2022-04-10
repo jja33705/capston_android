@@ -259,7 +259,7 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, SelectExerc
                     // 마커 추가
                     trackMarkerTextView.text = track.trackName
                     val marker = mGoogleMap.addMarker(MarkerOptions()
-                        .position(LatLng(track.start_latlng[1], track.start_latlng[0]))
+                        .position(LatLng(track.gps.coordinates[0][1], track.gps.coordinates[0][0]))
                         .title(track.trackName)
                         .icon(BitmapDescriptorFactory.fromBitmap(Utils.createBitmapFromView(trackMarker)))
                         .anchor(0.5F, 0.9F))
@@ -291,8 +291,8 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, SelectExerc
                         var resultTrackId = ""
                         for ((trackId, track) in trackMap) {
                             val startLocation = Location("startPoint")
-                            startLocation.latitude = track.start_latlng[1]
-                            startLocation.longitude = track.start_latlng[0]
+                            startLocation.latitude = track.gps.coordinates[0][1]
+                            startLocation.longitude = track.gps.coordinates[0][0]
                             val distance = mLocation.distanceTo(startLocation)
                             if (minDistance > distance) {
                                 minDistance = distance
@@ -357,7 +357,7 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, SelectExerc
         }
 
         // 카메라 업데이트
-        mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(trackMap[selectedTrackId]!!.start_latlng[1], trackMap[selectedTrackId]!!.start_latlng[0]), mGoogleMap.cameraPosition.zoom))
+        mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(trackMap[selectedTrackId]!!.gps.coordinates[0][1], trackMap[selectedTrackId]!!.gps.coordinates[0][0]), mGoogleMap.cameraPosition.zoom))
     }
 
     @SuppressLint("MissingPermission")
