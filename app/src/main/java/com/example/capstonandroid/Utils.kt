@@ -55,6 +55,7 @@ class Utils {
             return bitmap
         }
 
+
         fun getMarkerIconFromDrawable(drawable: Drawable): BitmapDescriptor? {
             val canvas = Canvas()
             val bitmap = Bitmap.createBitmap(

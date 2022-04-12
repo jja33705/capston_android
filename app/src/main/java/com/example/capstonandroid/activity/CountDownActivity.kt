@@ -38,6 +38,8 @@ class CountDownActivity : AppCompatActivity() {
         _binding = ActivityCountDownBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        supportActionBar?.hide()
+
         textToSpeech = TextToSpeech(this) {
             if (it == TextToSpeech.SUCCESS) {
                 textToSpeech.language = Locale.JAPANESE
@@ -53,7 +55,7 @@ class CountDownActivity : AppCompatActivity() {
                 val windowManager = this.getSystemService(Context.WINDOW_SERVICE) as WindowManager
                 val windowMetrics = windowManager.currentWindowMetrics
                 val insets = windowMetrics.windowInsets.getInsetsIgnoringVisibility(WindowInsets.Type.systemBars())
-                size = ((windowMetrics.bounds.height() - insets.bottom - insets.top) / 2).toFloat() - 70F
+                size = ((windowMetrics.bounds.height() - insets.bottom - insets.top) / 2).toFloat() + 70
 
                 showAnimation(countDownTextViewThree)
             }

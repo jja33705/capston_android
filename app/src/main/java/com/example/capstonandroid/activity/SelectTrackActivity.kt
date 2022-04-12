@@ -61,6 +61,7 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, SelectExerc
     private lateinit var polylineMap: HashMap<String, Polyline> // 폴리라인 관리를 위한 맵
 
     private var mLocationMarker: Marker? = null // 내 위치 마커
+    private var mLocationBack: Marker? = null
 
     private var selectedTrackId: String? = null // 선택된 트랙 인덱스
 
@@ -79,7 +80,7 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, SelectExerc
         _binding = ActivitySelectTrackBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        supportActionBar?.title = "트랙 선택" // 액션바 텍스트 수정
+        supportActionBar?.title = "トラック選択" // 액션바 텍스트 수정
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this) // 통합 위치 제공자 초기화
 
@@ -88,6 +89,7 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, SelectExerc
             override fun onLocationResult(locationResult: LocationResult) {
                 mLocation = locationResult.lastLocation
                 mLocationMarker?.position = LatLng(mLocation.latitude, mLocation.longitude) // 마커 이동
+                mLocationBack?.position = LatLng(mLocation.latitude, mLocation.longitude)
             }
         }
 
@@ -320,10 +322,11 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, SelectExerc
     override fun onMapReady(googleMap: GoogleMap) {
         mGoogleMap = googleMap
         mGoogleMap.setMaxZoomPreference(18F) // 최대 줌
+        mGoogleMap.uiSettings.isCompassEnabled = true // 나침반 설정
 
         // 마커 클릭 리스너 등록
         mGoogleMap.setOnMarkerClickListener { marker ->
-            if (marker.tag != "myLocation") {
+            if (marker.tag != "myLocation" && marker.tag != "myLocationBack") {
                 selectTrack(marker.tag.toString())
             }
             true
@@ -370,11 +373,18 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, SelectExerc
                 println("마지막 위치 잘 가져옴, 위도: ${location.latitude}, 경도: ${location.longitude}")
                 mLocation = location
 
-                // 내 위치 마커 생성
                 mLocationMarker = mGoogleMap.addMarker(MarkerOptions()
                     .position(LatLng(location.latitude, location.longitude))
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.round_circle_black_24dp)))
+                    .icon(Utils.getMarkerIconFromDrawable(resources.getDrawable(R.drawable.circle_basic_marker, null)))
+                    .anchor(0.5F, 0.5F))
                 mLocationMarker?.tag = "myLocation"
+
+                mLocationBack = mGoogleMap.addMarker(MarkerOptions()
+                    .position(LatLng(location.latitude, location.longitude))
+                    .icon(Utils.getMarkerIconFromDrawable(resources.getDrawable(R.drawable.circle_basic_marker_back, null)))
+                    .alpha(0.3F)
+                    .anchor(0.5F, 0.5F))
+                mLocationBack?.tag = "myLocationBack"
 
                 // 화면 이동하고 화면 이동 끝났을 때 맵 불러오는 콜백
                 mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(location.latitude, location.longitude), 15.0f), object : GoogleMap.CancelableCallback {

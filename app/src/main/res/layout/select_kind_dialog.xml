@@ -18,7 +18,7 @@
         android:textSize="30sp"
         android:fontFamily="@font/noto_sans_jp_bold"
         android:layout_gravity="center"
-        android:layout_marginTop="15dp"></TextView>
+        android:layout_marginTop="10dp"></TextView>
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -34,7 +34,7 @@
             android:layout_height="80dp"
             android:text="ランニング"
             android:textSize="12dp"
-            android:fontFamily="@font/noto_sans_jp_regular"
+            android:fontFamily="@font/noto_sans_jp_bold"
             android:drawableLeft="@drawable/run_white"
             android:layout_marginRight="20dp"
             android:background="@drawable/exercise_kind_button_background"
@@ -50,7 +50,7 @@
             android:text="サイクリング"
             android:textColor="@color/white"
             android:drawableLeft="@drawable/cycle_white"
-            android:fontFamily="@font/noto_sans_jp_regular"
+            android:fontFamily="@font/noto_sans_jp_bold"
             android:textSize="12dp"
             android:paddingHorizontal="10dp"
             android:background="@drawable/exercise_kind_button_background"

@@ -48,6 +48,9 @@ class TrackRecordService : Service() {
         var exerciseKind = ""
         var trackId = ""
         lateinit var mLocation: Location
+        var myLocationIndexOnTrack = 0
+        var mySumDistanceOnTrack = 0F // 내가 이동한 트랙위의 거리
+        var myBeforeLocationChangedSecond = 0 // 이전 내 위치 바뀐 시간
 
         private const val PREFIX = "com.example.capstonandroid.trackrecordservice"
 
@@ -75,6 +78,8 @@ class TrackRecordService : Service() {
         const val AVG_SPEED = "${PREFIX}.AVG_SPEED"
         const val LOCATION_CHANGED = "${PREFIX}.LOCATION_CHANGED"
         const val CALORIE = "${PREFIX}.CALORIE"
+
+        const val MAX_DISTANCE = 30F
     }
 
     // 제일 처음 호출 (1회성으로 서비스가 이미 실행중이면 호출되지 않는다)

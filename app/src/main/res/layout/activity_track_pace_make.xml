@@ -162,7 +162,9 @@
             android:layout_gravity="bottom|center"
             android:layout_marginBottom="40dp"
             android:background="@drawable/start_button"
-            android:text="시작"
+            android:text="開始"
+            android:fontFamily="@font/noto_sans_jp_regular"
+            android:textColor="@color/white"
             android:textSize="20dp"
             >
         </androidx.appcompat.widget.AppCompatButton>
@@ -174,7 +176,9 @@
             android:layout_gravity="bottom|center"
             android:layout_marginBottom="40dp"
             android:background="@drawable/stop_button"
-            android:text="종료"
+            android:text="終了"
+            android:textColor="@color/white"
+            android:fontFamily="@font/noto_sans_jp_regular"
             android:textSize="20dp"
             android:visibility="gone"
             >

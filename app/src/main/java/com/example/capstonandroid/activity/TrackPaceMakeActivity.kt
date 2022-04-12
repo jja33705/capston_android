@@ -143,13 +143,8 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback {
                 binding.startButton.visibility = View.GONE
                 binding.stopButton.visibility = View.VISIBLE
 
-                // 시작 영역 없애고 도착 영역 그림
+                // 시작 영역 없앰
                 canStartAreaCircle.remove()
-                mGoogleMap.addCircle(CircleOptions()
-                    .center(LatLng(endPoint.latitude, endPoint.longitude))
-                    .radius(20.0)
-                    .fillColor(R.color.area_color)
-                    .strokeWidth(0F))
 
                 binding.tvPaceMake.visibility = View.VISIBLE // 페이스메이커와의 차이 정보 보이게
             }
@@ -173,12 +168,12 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback {
             AlertDialog.Builder(this)
                 .setTitle("기록 종료")
                 .setMessage("정말로 기록을 종료하시겠습니까")
-                .setPositiveButton("취소", DialogInterface.OnClickListener { _, _ ->
-                })
-                .setNegativeButton("종료", DialogInterface.OnClickListener { _, _ ->
+                .setPositiveButton("취소") { _, _ ->
+                }
+                .setNegativeButton("종료") { _, _ ->
                     // 기록 종료하는 경우
                     stopRecord()
-                })
+                }
                 .show()
         }
 
@@ -242,13 +237,8 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback {
 
                 binding.tvInformation.visibility = View.GONE // 정보 창 없앰
 
-                // 시작 영역 없애고 도착 영역 그림
+                // 시작 영역 없앰
                 canStartAreaCircle.remove()
-                mGoogleMap.addCircle(CircleOptions()
-                    .center(LatLng(endPoint.latitude, endPoint.longitude))
-                    .radius(20.0)
-                    .fillColor(R.color.area_color)
-                    .strokeWidth(0F))
 
                 binding.tvPaceMake.visibility = View.VISIBLE // 페이스메이크 창 보이게
 
@@ -310,7 +300,10 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback {
         checkPermission()
     }
 
+    @SuppressLint("NewApi")
     private fun predictLocation() {
+        println("내 위치 바뀌는 거: ${TrackPaceMakeService.myBeforeLocationChangedSecond} $second")
+
         // 내 위치 예측
         var myIncreaseSumDistance = 0F // 한계치까지만 비교하기 위한 내 위치 증가깂
 
@@ -359,6 +352,16 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         TrackPaceMakeService.myLocationIndexOnTrack = myPredictedLocation // 내 예상 지점 갱신
+
+        // 끝에 도착했는지 여기서 체크하자
+        if (TrackPaceMakeService.myLocationIndexOnTrack == track.gps.coordinates.size - 1) {
+            val intent = Intent(this@TrackPaceMakeActivity, TrackPaceMakeService::class.java)
+            intent.action = TrackPaceMakeService.COMPLETE_RECORD
+            startForegroundService(intent)
+            finish()
+        }
+
+        TrackPaceMakeService.myBeforeLocationChangedSecond = second
     }
 
     private fun predictOpponentLocation() {
@@ -411,9 +414,11 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         TrackPaceMakeService.opponentLocationIndexOnTrack = opponentPredictedLocation // 상대 예상 지점 갱신
+        TrackPaceMakeService.opponentBeforeLocationChangedSecond = second
     }
 
     // 트랙 정보 가져와서 그림
+    @SuppressLint("NewApi")
     private suspend fun initTrack() {
         val token = "Bearer " + getSharedPreferences("other", MODE_PRIVATE).getString("TOKEN", "")!!
         val trackResponse = supplementService.getTrack(token, trackId)
@@ -437,7 +442,6 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback {
             val latLngList = ArrayList<LatLng>()
             for (coordinate in track.gps.coordinates) {
                 latLngList.add(LatLng(coordinate[1], coordinate[0]))
-                println("${coordinate[1]}, ${coordinate[0]}")
             }
             mGoogleMap.addPolyline(
                 PolylineOptions()
@@ -478,7 +482,7 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback {
                 CircleOptions()
                 .center(LatLng(startPoint.latitude, startPoint.longitude))
                 .radius(20.0)
-                .fillColor(R.color.area_color)
+                .fillColor(resources.getColor(R.color.default_marker_color_opacity, null))
                 .strokeWidth(0F))
 
             // 도착점 마커 추가
@@ -638,20 +642,7 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback {
                         mGoogleMap.addPolyline(PolylineOptions().add(beforeLatLng, latLng)) // 그림 그림
 
                         beforeLatLng = latLng
-
-                        // 도착점 도착했는지 체크
-                        val currentLocation = Location("currentLocation")
-                        currentLocation.latitude = latLng.latitude
-                        currentLocation.longitude = latLng.longitude
-                        if (endPoint.distanceTo(currentLocation) < 20.0) {
-                            // 서비스 종료하라고 커맨드 보냄
-                            val intent = Intent(this@TrackPaceMakeActivity, TrackPaceMakeService::class.java)
-                            intent.action = TrackPaceMakeService.COMPLETE_RECORD
-                            startForegroundService(intent)
-                            finish()
-                        }
                     }
-
                     // 뭔가 위치 바뀐거 있으면 서로간의 거리 다시 구함.
                     if (locationChanged || opponentLocationChanged) {
                         CoroutineScope(Dispatchers.Main).launch {

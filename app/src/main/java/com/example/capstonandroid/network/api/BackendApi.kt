@@ -9,6 +9,7 @@ import retrofit2.http.*
 import com.example.capstonandroid.network.dto.GetTracksResponse
 import com.example.capstonandroid.network.dto.Track
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Response
 
 // 사용할 api 목록 정의하는 곳
@@ -72,8 +73,28 @@ interface BackendApi {
 //  @POST("post/store") // 기록 저장
 //  fun storePost(@Body record: Track) : Call<Track>
 
+//    @POST("post/store") // 포스트 작성
+//    suspend fun postRecordActivity(@Header("Authorization") token: String, @Body postRecordActivity: PostRecordActivity): Response<ResponseMessage>
+
+    @Multipart
     @POST("post/store") // 포스트 작성
-    suspend fun postRecordActivity(@Header("Authorization") token: String, @Body postRecordActivity: PostRecordActivity): Response<ResponseMessage>
+    suspend fun postRecordActivity(
+        @Header("Authorization") token: String,
+        @Part img: List<MultipartBody.Part>?,
+        @Part("average_speed") averageSpeed: RequestBody,
+        @Part("altitude") altitude: RequestBody,
+        @Part("calorie") calorie: RequestBody,
+        @Part("content") content: RequestBody,
+        @Part("distance") distance: RequestBody,
+        @Part("event") event: RequestBody,
+        @Part("kind") kind: RequestBody,
+        @Part("range") range: RequestBody,
+        @Part("time") time: RequestBody,
+        @Part("title") title: RequestBody,
+        @Part("track_id") trackId: RequestBody?,
+        @Part("opponent_id") opponentId: RequestBody?,
+        @Part("gpsData") gpsData: RequestBody
+        ): Response<ResponseMessage>
 
     @GET("match/rank") // 랭크 랜덤 매칭
     suspend fun rankMatching(@Header("Authorization") token: String, @Query("track_id") trackId: String): Response<RankMatchingResponse>

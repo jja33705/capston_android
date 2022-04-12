@@ -128,7 +128,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/run"
-                android:layout_marginRight="6dp"
+                android:layout_marginRight="10dp"
                 android:layout_gravity="center"
                 >
             </ImageView>
@@ -138,6 +138,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0"
+                android:textColor="@color/black"
+                android:fontFamily="@font/noto_sans_jp_light"
+                android:includeFontPadding="false"
+                android:textSize="15dp"
+                android:layout_marginRight="10dp"
+                >
+            </TextView>
+
+            <TextView
+                android:id="@+id/tv_track_slope"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="12.3%"
                 android:textColor="@color/black"
                 android:fontFamily="@font/noto_sans_jp_light"
                 android:includeFontPadding="false"
@@ -161,28 +174,45 @@
         </LinearLayout>
 
         <LinearLayout
+            android:layout_marginTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
             <Button
                 android:id="@+id/button_normal"
-                android:layout_width="120dp"
-                android:layout_height="120dp"
-                android:text="혼자하기"></Button>
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@drawable/match_type_button_background"
+                android:text="一人"
+                android:fontFamily="@font/noto_sans_jp_bold"
+                android:layout_marginBottom="15dp"
+                android:textColor="@color/white"
+                >
+            </Button>
 
             <Button
                 android:id="@+id/button_friendly"
-                android:layout_width="120dp"
-                android:layout_height="120dp"
-                android:text="친선전"></Button>
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@drawable/match_type_button_background"
+                android:text="親善競技"
+                android:fontFamily="@font/noto_sans_jp_bold"
+                android:layout_marginBottom="15dp"
+                android:textColor="@color/white"
+                >
+            </Button>
 
             <Button
                 android:id="@+id/button_rank"
-                android:layout_width="120dp"
-                android:layout_height="120dp"
-                android:text="랭크전"></Button>
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:fontFamily="@font/noto_sans_jp_bold"
+                android:background="@drawable/match_type_button_background"
+                android:text="ランクマッチ"
+                android:textColor="@color/white"
+                >
+            </Button>
 
         </LinearLayout>
     </LinearLayout>
