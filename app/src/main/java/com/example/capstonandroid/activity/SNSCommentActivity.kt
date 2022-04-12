@@ -156,7 +156,7 @@ class SNSCommentActivity : AppCompatActivity()
                                 imm.hideSoftInputFromWindow(binding.content.getWindowToken(), 0);
                                 binding.content.setText(null)
 
-                                binding.lstUser3.smoothScrollToPosition(response.body()!!.data[data_num].comment.size-1)
+                                binding.lstUser3.smoothScrollToPosition(datasize)
                             }
                             else{
                                 println("실패함ㅋㅋ")

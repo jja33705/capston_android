@@ -159,6 +159,7 @@ class MeCommentActivity : AppCompatActivity() {
 
                                 imm.hideSoftInputFromWindow(binding.content.getWindowToken(), 0);
                                 binding.content.setText(null)
+                                binding.lstUser3.smoothScrollToPosition(datasize)
                             }
                             else{
                                 println("실패함ㅋㅋ")
