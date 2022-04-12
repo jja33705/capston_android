@@ -2,9 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="370dp"
-    android:layout_marginTop="5dp"
-    android:layout_marginRight="50dp"
-    android:layout_marginLeft="50dp"
+    android:layout_marginTop="10dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginLeft="10dp"
     android:orientation="vertical"
     android:background="@drawable/round_border">
 
@@ -12,6 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:layout_gravity="center_horizontal"
         android:layout_margin="5dp">
         <ImageButton
 
@@ -19,6 +20,7 @@
             android:layout_margin="5dp"
             android:layout_width="30dp"
             android:layout_height="30dp"
+            android:layout_gravity="center_vertical"
             android:src="@drawable/main_profile"
            ></ImageButton>
         <TextView
@@ -26,26 +28,24 @@
             android:includeFontPadding="false"
             android:fontFamily="@font/noto_sans_jp_black"
             android:layout_margin="5dp"
+            android:gravity="center"
             android:id="@+id/txtUser_name"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
-            android:layout_marginTop="2dp"
-            android:paddingTop="3dp"
-            android:paddingBottom="3dp"
-            android:layout_gravity="center"
+            android:layout_gravity="center_vertical"
             android:textColor="#666666"
-            android:textSize="16dp"></TextView>
+            android:textSize="18dp"></TextView>
         <TextView
+            android:layout_gravity="center"
+            android:gravity="center"
             android:includeFontPadding="false"
             android:fontFamily="@font/noto_sans_jp_black"
             android:id="@+id/txtUser_created_id"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
-            android:layout_marginTop="2dp"
-            android:paddingTop="3dp"
-            android:paddingBottom="3dp"
+            android:text="날짜"
             android:textColor="#666666"
-            android:textSize="10dp" />
+            android:textSize="15dp" />
     </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -68,9 +68,12 @@
                 android:textColor="#666666"
                 android:textSize="24dp" />
             <ImageView
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginBottom="10dp"
                 android:id="@+id/imgUser_icon"
-                android:layout_width="250dp"
-                android:layout_height="250dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:background="@drawable/map" />
 
