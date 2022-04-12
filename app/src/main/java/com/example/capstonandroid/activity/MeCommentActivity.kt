@@ -1,8 +1,11 @@
 package com.example.capstonandroid.activity
 
+import android.content.Context
 import android.graphics.Rect
 import android.os.Bundle
 import android.view.View
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.capstonandroid.R
@@ -31,13 +34,14 @@ class MeCommentActivity : AppCompatActivity() {
     private var postID = 0
     lateinit var binding: ActivityMeCommentBinding
     private var content = "";
+    private var datasize = 0;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_snscomment)
 
         binding = ActivityMeCommentBinding.inflate(layoutInflater)
-
+        val imm: InputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
 
         setContentView(binding.root)
         initRetrofit()
@@ -88,6 +92,7 @@ class MeCommentActivity : AppCompatActivity() {
                     for (i in 0..response.body()!!.data[data_num].comment.size-1) {
                         list.add(
                             CommentData(
+
                                 response.body()!!.data[data_num].comment[i].user.name.toString(),
                                 response.body()!!.data[data_num].comment[i].content,
                                 response.body()!!.data[data_num].comment[i].created_at,
@@ -96,6 +101,7 @@ class MeCommentActivity : AppCompatActivity() {
                             )
                         )
                     }
+                    datasize = response.body()!!.data[data_num].comment.size
                     binding.lstUser3.adapter = adapter
                     binding.lstUser3.addItemDecoration(ActivityMeFragment.DistanceItemDecorator(10))
 
@@ -113,7 +119,6 @@ class MeCommentActivity : AppCompatActivity() {
                 println(t.message)
             }
         })
-
         binding.commitButton.setOnClickListener {
             var content = binding.content.text
 //      객체 만들기
@@ -126,7 +131,47 @@ class MeCommentActivity : AppCompatActivity() {
                     call: Call<CommentSendResponse>,
                     response: Response<CommentSendResponse>
                 ) {
-                    finish()
+
+
+
+                    supplementService.myIndex(token,data_page
+                    ).enqueue(object : Callback<MySNSResponse> {
+                        override fun onResponse(
+                            call: Call<MySNSResponse>,
+                            response: Response<MySNSResponse>
+                        ) {
+                            if(response.isSuccessful) {
+
+                                datasize = response.body()!!.data[data_num].comment.size
+                                    list.add(
+                                        CommentData(
+
+
+                                            response.body()!!.data[data_num].comment[datasize-1].user.name.toString(),
+                                            response.body()!!.data[data_num].comment[datasize-1].content,
+                                            response.body()!!.data[data_num].comment[datasize-1].created_at,
+                                            response.body()!!.data[data_num].comment[datasize-1].updated_at,
+                                            response.body()!!.data[data_num].comment[datasize-1].id
+                                        )
+                                    )
+
+                                binding.lstUser3.adapter = adapter
+
+                                imm.hideSoftInputFromWindow(binding.content.getWindowToken(), 0);
+                                binding.content.setText(null)
+                            }
+                            else{
+                                println("실패함ㅋㅋ")
+                                println(response.body())
+                                println(response.message())
+                            }
+                        }
+
+                        override fun onFailure(call: Call<MySNSResponse>, t: Throwable) {
+                            println("아예 가지도 않음ㅋㅋ")
+                            println(t.message)
+                        }
+                    })
 
                 }
 

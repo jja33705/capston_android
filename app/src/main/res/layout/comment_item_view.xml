@@ -2,49 +2,87 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="60dp"
-    android:layout_margin="5dp"
-    android:layout_marginBottom="5dp"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginTop="5dp"
+    android:background="@drawable/round_border"
     android:orientation="horizontal">
 
-    <TextView
-        android:background="@color/area_color"
-        android:id="@+id/user_name"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="닉네임">
+        android:orientation="horizontal">
 
-    </TextView>
-<LinearLayout
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    >
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            >
 
-    <TextView
-        android:background="@color/colorAccent"
-        android:id="@+id/user_content"
-        android:layout_width="320dp"
-        android:layout_height="20dp"
-        android:text="내용"></TextView>
-    <TextView
-        android:background="@color/colorAccent"
-        android:id="@+id/user_created_at"
-        android:layout_width="320dp"
-        android:layout_height="20dp"
-        android:text="작성일자"></TextView>
-    <TextView
-        android:background="@color/colorAccent"
-        android:id="@+id/user_updated_at"
-        android:layout_width="320dp"
-        android:layout_height="20dp"
-        android:text="수정일자"></TextView>
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/profile"
+
+                >
+
+            </ImageView>
+            <TextView
+                android:id="@+id/user_name"
+                android:includeFontPadding="false"
+                android:fontFamily="@font/noto_sans_jp_bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="닉네임"
+                android:layout_gravity="center">
+
+            </TextView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+            </TextView>
+            <TextView
+                android:id="@+id/user_content"
+                android:layout_width="320dp"
+                android:layout_height="20dp"
+                android:includeFontPadding="false"
+                android:fontFamily="@font/noto_sans_jp_medium"
+                android:text="내용"></TextView>
+            <TextView
+                android:id="@+id/user_created_at"
+                android:layout_width="320dp"
+                android:layout_height="20dp"
+                android:includeFontPadding="false"
+                android:fontFamily="@font/noto_sans_jp_medium"
+                android:text="작성일자"></TextView>
+            <TextView
+                android:id="@+id/user_updated_at"
+                android:layout_width="320dp"
+                android:layout_height="20dp"
+                android:includeFontPadding="false"
+                android:fontFamily="@font/noto_sans_jp_medium"
+                android:text="수정일자"></TextView>
+
+        </LinearLayout>
 
 
-</LinearLayout>
 
-<Button
-    android:id="@+id/deleteButton"
-    android:layout_width="50dp"
-    android:layout_height="wrap_content"
-    android:text="삭제"></Button>
+    </LinearLayout>
+
+
+
+    <Button
+        android:id="@+id/deleteButton"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:text="삭제"></Button>
 </LinearLayout>

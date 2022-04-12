@@ -297,7 +297,7 @@ class ProfileMeFragment : Fragment(){
                     var user_followings = loginuserResponse?.followings?.count().toString()
                     var user_mmr = loginuserResponse?.mmr
 
-                binding.tvProfileMeName.setText(user_name)
+                    binding.tvProfileMeName.setText(user_name)
                     binding.tvProfileMeFollowers.setText("팔로워 : " + user_followers)
                     binding.tvProfileMeFollowings.setText("팔로윙 : "+user_followings)
                     binding.tvProfileMeMmr.setText("MMR : " + user_mmr)
@@ -346,35 +346,11 @@ class ProfileMeFragment : Fragment(){
             })
         }
 
-        binding.picTest.setOnClickListener {
-
-        }
 
 
 
 
-//        binding.imageButton.setOnClickListener {
-//            val file = File("")
-//            var requestBody : RequestBody = RequestBody.create("image/*".toMediaTypeOrNull(),file)
-//            var body : MultipartBody.Part = MultipartBody.Part.createFormData("uploaded_file","tlqkf",requestBody)
-//
-//            supplementService.imageTest(token,body).enqueue(object : Callback<ImageResponse>{
-//                override fun onResponse(
-//                    call: Call<ImageResponse>,
-//                    response: Response<ImageResponse>
-//                ) {
-//                    if (response.isSuccessful){
-//                        println("성공")
-//                    }else {
-//                        println("실패")
-//                    }
-//                }
-//
-//                override fun onFailure(call: Call<ImageResponse>, t: Throwable) {
-//                     println("가지도 않음 ㅋ")
-//                }
-//            })
-//        }
+
         return binding.root
     }
 
@@ -393,6 +369,7 @@ class ProfileMeFragment : Fragment(){
         retrofit = RetrofitClient.getInstance()
         supplementService = retrofit.create(BackendApi::class.java);
     }
+
     companion object {
         /**
          * Use this factory method to create a new instance of

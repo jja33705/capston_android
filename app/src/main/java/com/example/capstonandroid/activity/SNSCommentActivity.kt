@@ -3,6 +3,8 @@ package com.example.capstonandroid.activity
 import android.graphics.Rect
 import android.os.Bundle
 import android.view.View
+import android.view.inputmethod.InputMethodManager
+import android.widget.ScrollView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.capstonandroid.R
@@ -17,6 +19,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 
+
 class SNSCommentActivity : AppCompatActivity()
 {
     private  lateinit var  retrofit: Retrofit  //레트로핏
@@ -28,13 +31,13 @@ class SNSCommentActivity : AppCompatActivity()
     private var postID = 0
     lateinit var binding: ActivitySnscommentBinding
     private var content = "";
-
+    private var datasize = 0;
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_snscomment)
 
         binding = ActivitySnscommentBinding.inflate(layoutInflater)
-
+        val imm: InputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
 
         setContentView(binding.root)
         initRetrofit()
@@ -90,9 +93,12 @@ class SNSCommentActivity : AppCompatActivity()
                                 response.body()!!.data[data_num].comment[i].created_at,
                                 response.body()!!.data[data_num].comment[i].updated_at,
                                 response.body()!!.data[data_num].comment[i].id
+
                             )
                         )
                     }
+
+                    datasize = response.body()!!.data[data_num].comment.size
                     binding.lstUser3.adapter = adapter
                     binding.lstUser3.addItemDecoration(HomeFragment.DistanceItemDecorator(10))
 
@@ -117,12 +123,53 @@ class SNSCommentActivity : AppCompatActivity()
             val commentSend = CommentSend(
                 content = content.toString(),
             )
-            supplementService.commentSend(token,postID,commentSend).enqueue(object : Callback<CommentSendResponse> {
+            supplementService.commentSend(token,postID,commentSend).enqueue(object :
+                Callback<CommentSendResponse> {
                 override fun onResponse(
                     call: Call<CommentSendResponse>,
                     response: Response<CommentSendResponse>
                 ) {
-                finish()
+
+
+
+                    supplementService.SNSIndex(token,data_page
+                    ).enqueue(object : Callback<SNSResponse> {
+                        override fun onResponse(
+                            call: Call<SNSResponse>,
+                            response: Response<SNSResponse>
+                        ) {
+                            if(response.isSuccessful) {
+
+                                datasize = response.body()!!.data[data_num].comment.size
+                                list.add(
+                                    CommentData(
+
+                                        response.body()!!.data[data_num].comment[datasize-1].user.name.toString(),
+                                        response.body()!!.data[data_num].comment[datasize-1].content,
+                                        response.body()!!.data[data_num].comment[datasize-1].created_at,
+                                        response.body()!!.data[data_num].comment[datasize-1].updated_at,
+                                        response.body()!!.data[data_num].comment[datasize-1].id
+                                    )
+                                )
+                                binding.lstUser3.adapter = adapter
+
+                                imm.hideSoftInputFromWindow(binding.content.getWindowToken(), 0);
+                                binding.content.setText(null)
+
+                                binding.lstUser3.smoothScrollToPosition(response.body()!!.data[data_num].comment.size-1)
+                            }
+                            else{
+                                println("실패함ㅋㅋ")
+                                println(response.body())
+                                println(response.message())
+                            }
+                        }
+
+                        override fun onFailure(call: Call<SNSResponse>, t: Throwable) {
+                            println("아예 가지도 않음ㅋㅋ")
+                            println(t.message)
+                        }
+                    })
 
                 }
 
@@ -130,6 +177,8 @@ class SNSCommentActivity : AppCompatActivity()
 
                 }
             })
+
+
         }
 
 //        binding.lstUser3.addOnScrollListener(object : RecyclerView.OnScrollListener(){

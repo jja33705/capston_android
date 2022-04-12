@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:layout_weight="0.8">
+            android:layout_weight="0.65">
 
             <!--            -->
             <LinearLayout
@@ -39,6 +39,8 @@
                         android:layout_weight="1">
                     </ImageView>
                     <Button
+                        android:includeFontPadding="false"
+                        android:fontFamily="@font/noto_sans_jp_regular"
                         android:visibility="gone"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -61,20 +63,24 @@
                         android:orientation="vertical"
                         android:layout_weight="1">
                         <TextView
+                            android:includeFontPadding="false"
+                            android:fontFamily="@font/noto_sans_jp_bold"
                             android:text="이름 : "
                             android:id="@+id/tv_profile_me_name"
-                            android:layout_weight="1"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
                             android:gravity="center"
                             android:textSize="28sp">
                         </TextView>
 
                         <TextView
+                            android:includeFontPadding="false"
+                            android:fontFamily="@font/noto_sans_jp_medium"
                             android:id="@+id/tv_profile_me_mmr"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.1"
                             android:text="MMR : "
                             android:gravity="center"
                             android:textSize="18sp">
@@ -95,6 +101,8 @@
                             >
 
                             <TextView
+                                android:includeFontPadding="false"
+                                android:fontFamily="@font/noto_sans_jp_regular"
                                 android:id="@+id/tv_profile_me_followers"
                                 android:layout_width="match_parent"
                                 android:layout_height="20dp"
@@ -104,6 +112,8 @@
                                 android:textSize="18sp">
                             </TextView>
                             <TextView
+                                android:includeFontPadding="false"
+                                android:fontFamily="@font/noto_sans_jp_regular"
                                 android:id="@+id/tv_profile_me_followings"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
@@ -165,6 +175,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"/>
                 <TextView
+                    android:includeFontPadding="false"
+                    android:fontFamily="@font/noto_sans_jp_regular"
                     android:id="@+id/tv_profile_me_spinner"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -179,16 +191,25 @@
 
 
         <Button
+            android:layout_margin="5dp"
+            android:background="@drawable/login_button"
+            android:includeFontPadding="false"
+            android:fontFamily="@font/noto_sans_jp_regular"
             android:id="@+id/logout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="30dp"
             android:text="로그아웃"></Button>
 
-        <Button
-            android:id="@+id/picTest"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="테스트"></Button>
+<!--        <Button-->
+<!--            android:layout_margin="5dp"-->
+<!--            android:background="@drawable/login_button"-->
+
+<!--            android:includeFontPadding="false"-->
+<!--            android:fontFamily="@font/noto_sans_jp_regular"-->
+<!--            android:id="@+id/picTest"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="30dp"-->
+<!--            android:text="테스트"></Button>-->
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

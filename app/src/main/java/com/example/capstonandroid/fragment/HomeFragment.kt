@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.capstonandroid.R
 import com.example.capstonandroid.activity.SNSDetailsActivity
 import com.example.capstonandroid.adapter.RecyclerUserAdapter
+import com.example.capstonandroid.adapter.RecyclerUserAdapter2
 import com.example.capstonandroid.databinding.FragmentHomeBinding
 import com.example.capstonandroid.network.RetrofitClient
 import com.example.capstonandroid.network.api.BackendApi
@@ -79,7 +80,7 @@ class HomeFragment : Fragment()  {
 
 
         val list = ArrayList<UserData>()
-        val adapter = RecyclerUserAdapter(list, { data -> adapterOnClick(data) })
+        val adapter = RecyclerUserAdapter2(list, { data -> adapterOnClick(data) })
 
         supplementService.SNSIndex(token, page).enqueue(object : Callback<SNSResponse>{
             override fun onResponse(
@@ -102,8 +103,8 @@ class HomeFragment : Fragment()  {
                                     requireContext(),
                                     R.drawable.sakai
                                 )!!,
-                                response.body()!!.data[i].title,
                                 response.body()!!.data[i].user.name,
+                                response.body()!!.data[i].title,
                                 i,
                                 response.body()!!.data[i].created_at,
                                 response.body()!!.current_page,
@@ -151,11 +152,11 @@ class HomeFragment : Fragment()  {
                                                 requireContext(),
                                                 R.drawable.sakai
                                             )!!,
-                                            response.body()!!.data[i].title,
                                             response.body()!!.data[i].user.name,
+                                            response.body()!!.data[i].title,
                                             i,
                                             response.body()!!.data[i].created_at,
-                                            response.body()!!.data[i].time,
+                                            response.body()!!.current_page
                                         )
                                     )
                                 }
@@ -186,10 +187,10 @@ class HomeFragment : Fragment()  {
         Toast.makeText(requireContext(), "FunCall Clicked -> ID : ${data.title}, Name : ${data.name}", Toast.LENGTH_SHORT).show()
         println(data.data_num)
 
-
         val nextIntent = Intent(requireContext(), SNSDetailsActivity::class.java)
         nextIntent.putExtra("data_num", data.data_num)
-        nextIntent.putExtra("data_page", page-1)
+        nextIntent.putExtra("data_page",data.page)
+
         startActivity(nextIntent)
 
     }

@@ -21,6 +21,7 @@ object RetrofitClient {
 //   http
     private const val BASE_URL = "http://3.35.239.14/api/"
 
+//    private const val BASE_URL = "http://localhost:8000/api/"
 //    private const val BASE_URL = "http://10.0.2.2:8000/api/"
 
     fun getInstance(): Retrofit {

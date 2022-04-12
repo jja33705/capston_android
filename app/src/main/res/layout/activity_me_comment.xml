@@ -42,15 +42,27 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <EditText
+            android:includeFontPadding="false"
+            android:fontFamily="@font/noto_sans_jp_black"
             android:id="@+id/content"
             android:layout_width="wrap_content"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:hint="여긴 입력창"></EditText>
+            android:layout_margin="10dp"
+            android:background="@null"
+            android:singleLine="true"
+            android:imeOptions="actionDone"
+            android:hint="댓글을 입력하세요!"></EditText>
 
         <Button
+            android:includeFontPadding="false"
+            android:fontFamily="@font/noto_sans_jp_black"
             android:id="@+id/commitButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:layout_margin="10dp"
+            android:background="@drawable/login_button"
+            android:layout_width="70dp"
+            android:layout_height="50dp"
             android:text="입력">
 
         </Button>

@@ -12,13 +12,13 @@ import com.example.capstonandroid.network.api.BackendApi
 import com.example.capstonandroid.network.dto.UserData
 import retrofit2.Retrofit
 
-class RecyclerUserAdapter(
+class RecyclerUserAdapter2(
     private val items: ArrayList<UserData>,
-    private val onClick: (UserData) -> Unit) : RecyclerView.Adapter<RecyclerUserAdapter.ViewHolder>() {
+    private val onClick: (UserData) -> Unit) : RecyclerView.Adapter<RecyclerUserAdapter2.ViewHolder>() {
 
     override fun getItemCount(): Int = items.size
 
-    override fun onBindViewHolder(holder: RecyclerUserAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: RecyclerUserAdapter2.ViewHolder, position: Int) {
         val item = items[position]
         val listener = View.OnClickListener { it ->
             item.let {
@@ -32,8 +32,8 @@ class RecyclerUserAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val inflatedView = LayoutInflater.from(parent.context).inflate(R.layout.item_view, parent, false)
-        return RecyclerUserAdapter.ViewHolder(inflatedView)
+        val inflatedView = LayoutInflater.from(parent.context).inflate(R.layout.item_view2, parent, false)
+        return RecyclerUserAdapter2.ViewHolder(inflatedView)
     }
 
     class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
@@ -42,7 +42,6 @@ class RecyclerUserAdapter(
             view.findViewById<TextView>(R.id.txtUser_title).text = item.name
             view.findViewById<TextView>(R.id.txtUser_name).text = item.title
             view.findViewById<TextView>(R.id.txtUser_created_id).text = item.created_id
-            view.findViewById<TextView>(R.id.page).text = item.page.toString()
             view.setOnClickListener(listener)
         }
     }

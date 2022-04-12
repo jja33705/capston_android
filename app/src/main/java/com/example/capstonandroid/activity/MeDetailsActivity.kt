@@ -2,11 +2,15 @@ package com.example.capstonandroid.activity
 
 // 내기록 볼때 액티비티
 
+import android.content.DialogInterface
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.InputType.TYPE_NULL
+import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.core.view.isVisible
 import com.example.capstonandroid.R
 import com.example.capstonandroid.databinding.ActivityMeDetailsBinding
 import com.example.capstonandroid.databinding.ActivitySnsdetailsBinding
@@ -32,6 +36,12 @@ class MeDetailsActivity : AppCompatActivity() {
     private var range : String = ""
     private var title : String = ""
 
+    private var time = 0.0;
+    private var calorie : Double = 0.0;
+    private var average_speed : Double= 0.0;
+    private var altitude: Double = 0.0;
+    private var distance: Double = 0.0;
+    private var kind = "";
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_me_details)
@@ -42,11 +52,14 @@ class MeDetailsActivity : AppCompatActivity() {
         val data_num: Int = intent.getIntExtra("data_num", 0)
         val data_page: Int = intent.getIntExtra("data_page", 0)
 
+
+
+        println(data_page)
         val sharedPreference = getSharedPreferences("other", 0)
 
 //      이 타입이 디폴트 값
         var token = "Bearer " + sharedPreference.getString("TOKEN", "")
-        println(token)
+        println("여기는 좀 .. " + token)
 
         supplementService.myIndex(token, data_page).enqueue(object : Callback<MySNSResponse> {
             override fun onResponse(call: Call<MySNSResponse>, response: Response<MySNSResponse>) {
@@ -62,6 +75,20 @@ class MeDetailsActivity : AppCompatActivity() {
                     content = response.body()!!.data[data_num].content.toString()
                     range = response.body()!!.data[data_num].range.toString()
                     title = response.body()!!.data[data_num].title
+
+                    time = response.body()!!.data[data_num]!!.time.toDouble()
+                    calorie = response.body()!!.data[data_num]!!.calorie
+                    average_speed = response.body()!!.data[data_num]!!.average_speed
+                    altitude = response.body()!!.data[data_num]!!.altitude
+                    distance = response.body()!!.data[data_num]!!.distance
+                    kind = response.body()!!.data[data_num]!!.kind
+
+                    binding.time.setText("시간 : "+time)
+                    binding.calorie.setText("칼로리 : "+calorie)
+                    binding.kind.setText("종류 : " + kind)
+                    binding.averageSpeed.setText("평균 속도 : "+average_speed)
+                    binding.altitude.setText("고도 : "+altitude)
+                    binding.distance.setText("거리 : "+distance)
                     println("콘텐츠"+content)
                     println("랭스"+range)
                     if(range=="private"){
@@ -69,7 +96,6 @@ class MeDetailsActivity : AppCompatActivity() {
                     else{
                         binding.range.setImageResource(R.drawable.lockaa)
                     }
-
                 } else {
                     println("실패함ㅋㅋ")
                     println(response.body())
@@ -89,87 +115,175 @@ class MeDetailsActivity : AppCompatActivity() {
 
         binding.deleteButton.setOnClickListener {
 
-            println("삭제하기전 페이지?? 뭘까요ㅋㅋ"+postID)
-            supplementService.postDelete(token,postID).enqueue(object : Callback<DeleteResponse> {
-                override fun onResponse(call: Call<DeleteResponse>, response: Response<DeleteResponse>) {
-                    intent.putExtra("resultData","world")
-                    setResult(RESULT_OK,intent)
-                    finish()
-                }
-                override fun onFailure(call: Call<DeleteResponse>, t: Throwable) {
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle("정말 삭제 할 것입니까?")
+                .setPositiveButton("확인", DialogInterface.OnClickListener{ dialog,id->
+                    println("삭제하기전 페이지?? 뭘까요ㅋㅋ"+postID)
+                    supplementService.postDelete(token,postID).enqueue(object : Callback<DeleteResponse> {
+                        override fun onResponse(call: Call<DeleteResponse>, response: Response<DeleteResponse>) {
+                            intent.putExtra("resultData","world")
+                            setResult(RESULT_OK,intent)
+                            finish()
+                        }
+                        override fun onFailure(call: Call<DeleteResponse>, t: Throwable) {
 
-                }
-            })
+                        }
+                    })
+                })
+                .setNegativeButton("취소",DialogInterface.OnClickListener{ dialog,id ->
+                    println("취소 하셨네요")
+                })
+
+            builder.show()
+
         }
 
 
         binding.range.setOnClickListener{
 
-            if(range=="public"){
-                val update = Update(
-                    title = title,
-                    content = content,
-                    range = "private"
-                )
+            val rangeName :String
+             if (range=="public"){
+                 rangeName = "비공개"
+             }else {
+                 rangeName = "공개"
+             }
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle("정말 " +  rangeName +" 하시겠습니까?")
+                .setPositiveButton("확인", DialogInterface.OnClickListener{ dialog,id->
 
-                println(update)
-                supplementService.postUpdate(token,postID,update).enqueue(object : Callback<Int>{
-                    override fun onResponse(
-                        call: Call<Int>,
-                        response: Response<Int>
-                    ) {
+                    if(range=="public"){
+                        val update = Update(
+                            title = title,
+                            content = content,
+                            range = "private"
+                        )
+
+                        println(update)
+                        supplementService.postUpdate(token,postID,update).enqueue(object : Callback<Int>{
+                            override fun onResponse(
+                                call: Call<Int>,
+                                response: Response<Int>
+                            ) {
 
 
+                            }
+
+                            override fun onFailure(call: Call<Int>, t: Throwable) {
+
+                                println("실패")
+                            }
+
+                        })
+                        range = "private"
+                        binding.range.setImageResource(R.drawable.lock)
+                    }else {
+                        val update = Update(
+                            title = title,
+                            content = content,
+                            range = "public"
+                        )
+
+                        println(update)
+                        supplementService.postUpdate(token,postID,update).enqueue(object : Callback<Int>{
+                            override fun onResponse(
+                                call: Call<Int>,
+                                response: Response<Int>
+                            ) {
+
+                            }
+
+                            override fun onFailure(call: Call<Int>, t: Throwable) {
+
+                                println("실패")
+                            }
+
+                        })
+                        range = "public"
+                        binding.range.setImageResource(R.drawable.lockaa)
                     }
-
-                    override fun onFailure(call: Call<Int>, t: Throwable) {
-
-                        println("실패")
-                    }
-
                 })
-                range = "private"
-                binding.range.setImageResource(R.drawable.lock)
-            }else {
-                val update = Update(
-                    title = title,
-                    content = content,
-                    range = "public"
-                )
-
-                println(update)
-                supplementService.postUpdate(token,postID,update).enqueue(object : Callback<Int>{
-                    override fun onResponse(
-                        call: Call<Int>,
-                        response: Response<Int>
-                    ) {
-
-                    }
-
-                    override fun onFailure(call: Call<Int>, t: Throwable) {
-
-                        println("실패")
-                    }
-
+                .setNegativeButton("취소",DialogInterface.OnClickListener{ dialog,id ->
+                    println("취소 하셨네요")
                 })
-                range = "public"
-                binding.range.setImageResource(R.drawable.lockaa)
-            }
+
+            builder.show()
+
+
+
+
+
+
+
+
 
         }
 
-        binding.content.setInputType(TYPE_NULL);
-        binding.edit.setOnClickListener{
-            Toast.makeText(this,"눌렀어요",Toast.LENGTH_SHORT).show()
-            println("에딧 눌렀어요!")
-
-        }
+//        binding.content.setInputType(TYPE_NULL);
+//        binding.title.setInputType(TYPE_NULL)
         binding.commentButton.setOnClickListener {
             println("머지? 왜 안날라가")
             val nextIntent = Intent(this, MeCommentActivity::class.java)
             nextIntent.putExtra("data_num", data_num)
             nextIntent.putExtra("data_page", data_page)
             startActivity(nextIntent)
+        }
+
+        binding.edit.setOnClickListener{
+            binding.edit.visibility = View.GONE
+            binding.title.setFocusableInTouchMode (true);
+            binding.title.setFocusable(true);
+            binding.content.setFocusableInTouchMode (true);
+            binding.content.setFocusable(true);
+//            binding.backButton.visibility = View.GONE
+            binding.deleteButton.visibility = View.GONE
+            binding.editButton.visibility = View.VISIBLE
+
+        }
+
+        binding.editButton.setOnClickListener {
+
+
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle("정말 수정 할 것입니까?")
+                .setPositiveButton("확인", DialogInterface.OnClickListener{ dialog,id->
+                    title = binding.title.text.toString()
+                    content = binding.content.text.toString()
+
+                    val update = Update(
+                        title = title,
+                        content = content,
+                        range = "private"
+                    )
+                    supplementService.postUpdate(token,postID,update).enqueue(object : Callback<Int>{
+                        override fun onResponse(call: Call<Int>, response: Response<Int>) {
+                            if (response.isSuccessful){
+
+                                binding.edit.visibility = View.VISIBLE
+                                binding.title.setFocusableInTouchMode (false);
+                                binding.title.setFocusable(false);
+                                binding.content.setFocusableInTouchMode (false);
+                                binding.content.setFocusable(false);
+//            binding.backButton.visibility = View.GONE
+                                binding.deleteButton.visibility = View.VISIBLE
+                                binding.editButton.visibility = View.GONE
+                            }
+                            else{}
+                        }
+
+                        override fun onFailure(call: Call<Int>, t: Throwable) {
+                            TODO("Not yet implemented")
+                        }
+                    })
+                })
+                .setNegativeButton("취소",DialogInterface.OnClickListener{ dialog,id ->
+                    println("취소 하셨네요")
+                })
+
+            builder.show()
+
+
+
+
         }
     }
 

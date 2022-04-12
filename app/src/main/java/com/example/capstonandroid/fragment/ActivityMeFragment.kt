@@ -96,10 +96,10 @@ class ActivityMeFragment : Fragment() {
                                     R.drawable.sakai
                                 )!!,
                                 response.body()!!.data[i].title,
-                                response.body()!!.data[i].kind,
+                                response.body()!!.data[i].user.name,
                                 i,
                                 response.body()!!.data[i].created_at,
-                                response.body()!!.data[i].time,
+                                response.body()!!.current_page
                             )
                         )
                     }
@@ -143,7 +143,7 @@ class ActivityMeFragment : Fragment() {
                                             response.body()!!.data[i].kind,
                                             i,
                                             response.body()!!.data[i].created_at,
-                                            response.body()!!.data[i].time,
+                                            response.body()!!.current_page,
                                         )
                                     )
                                 }
@@ -175,7 +175,7 @@ class ActivityMeFragment : Fragment() {
 
         val nextIntent = Intent(requireContext(), MeDetailsActivity::class.java)
         nextIntent.putExtra("data_num", data.data_num)
-        nextIntent.putExtra("data_page", page-1)
+        nextIntent.putExtra("data_page", data.page)
         startActivity(nextIntent)
     }
     class DistanceItemDecorator(private val value: Int) : RecyclerView.ItemDecoration() {

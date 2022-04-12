@@ -4,95 +4,200 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activity.SNSDetailsActivity">
-    <ImageView
-        android:id="@+id/logo"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginLeft="5dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        />
 
-    <EditText
-        android:id="@+id/title"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_alignParentTop="true"
-        android:layout_toLeftOf="@id/setting"
-        android:layout_toRightOf="@id/logo"
-        android:hint="제목" />
-    <ImageButton
-        android:id="@+id/setting"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:background="#00000000"
-        android:scaleType="fitCenter"
-        android:layout_alignParentRight="true"
-        />
-    <ImageView
-        android:id="@+id/mainimage"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
-        android:layout_below="@id/logo"
-        android:src="@drawable/sakai"
-        android:layout_centerHorizontal="true"
-        />
     <LinearLayout
-        android:id="@+id/function_nav"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/mainimage"
-        android:orientation="horizontal">
-        <ImageButton
-            android:id="@+id/likeButton"
-            android:src="@drawable/like"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:background="#00000000"
-            android:scaleType="fitCenter"
-            android:layout_marginLeft="5dp"/>
-        <TextView
-            android:id="@+id/like"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/round_border"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp">
+
+            <EditText
+                android:id="@+id/title"
+                android:layout_width="280dp"
+                android:layout_height="40dp"
+                android:layout_below="@id/function_nav"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="10dp"
+                android:background="@null"
+                android:focusable="false"
+                android:fontFamily="@font/noto_sans_jp_black"
+                android:hint="제목"
+                android:includeFontPadding="false"
+                android:textSize="24dp" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/mainimage"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:padding="3dp"
+            android:src="@drawable/map" />
+
+        <LinearLayout
+            android:id="@+id/function_nav"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="좋아요 갯수">
+            android:layout_below="@id/mainimage"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal">
 
-        </TextView>
-        <ImageButton
-            android:id="@+id/commentButton"
-            android:layout_width="50dp"
-            android:src="@drawable/comment"
-            android:layout_height="50dp"
-            android:background="#00000000"
-            android:scaleType="fitCenter"/>
-    </LinearLayout>
+            <ImageButton
+                android:id="@+id/commentButton"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="bottom"
+                android:background="#00000000"
+                android:scaleType="fitCenter"
+                android:src="@drawable/comment" />
 
-    <TextView
-        android:id="@+id/content"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_below="@id/function_nav"
-        android:layout_margin="15dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginEnd="15dp"
-        android:layout_marginBottom="15dp"
-        android:background="#CCCCCC"
-        android:gravity="center"
-        android:text="오늘은 레이아웃으로 SNS 화면을 만들어보았습니다." />
-    <LinearLayout
-        android:layout_below="@+id/content"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center">
+            <ImageButton
+                android:id="@+id/likeButton"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="10dp"
+                android:background="#00000000"
+                android:scaleType="fitCenter"
+                android:src="@drawable/like" />
 
-        <Button
-            android:id="@+id/backButton"
-            android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/like"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:fontFamily="@font/noto_sans_jp_regular"
+                android:includeFontPadding="false" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="뒤로가기">
-        </Button>
+            android:padding="10dp">
+            <TextView
+                android:includeFontPadding="false"
+                android:id="@+id/content"
+                android:fontFamily="@font/noto_sans_jp_black"
+                android:text="내용 : "
+                android:textSize="20sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
+            </TextView>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_weight="1">
+                <TextView
+                    android:id="@+id/time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/noto_sans_jp_regular"
+                    android:includeFontPadding="false"
+                    android:text="시간 : "
+                    android:textSize="16sp"></TextView>
+
+                <TextView
+                    android:id="@+id/calorie"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/noto_sans_jp_regular"
+                    android:includeFontPadding="false"
+                    android:text="칼로리 : "
+                    android:textSize="16sp"></TextView>
+
+                <TextView
+                    android:id="@+id/kind"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/noto_sans_jp_regular"
+                    android:includeFontPadding="false"
+                    android:text="종류 : "
+                    android:textSize="16dp"></TextView>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/average_speed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/noto_sans_jp_regular"
+                    android:includeFontPadding="false"
+                    android:text="평균 속도 : "
+                    android:textSize="16dp"></TextView>
+
+                <TextView
+                    android:id="@+id/altitude"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/noto_sans_jp_regular"
+                    android:includeFontPadding="false"
+                    android:text="고도 : "
+                    android:textSize="16dp"></TextView>
+                <TextView
+                    android:id="@+id/distance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/noto_sans_jp_regular"
+                    android:includeFontPadding="false"
+                    android:text="거리 : "
+                    android:textSize="16dp"></TextView>
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/editButton"
+                android:layout_width="90dp"
+                android:layout_height="30dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/login_button"
+                android:fontFamily="@font/noto_sans_jp_regular"
+                android:includeFontPadding="false"
+                android:text="수정"
+                android:textColor="@color/white"
+                android:visibility="gone"></Button>
+
+            <Button
+                android:id="@+id/backButton"
+                android:layout_width="90dp"
+                android:layout_height="30dp"
+                android:background="@drawable/login_button"
+                android:fontFamily="@font/noto_sans_jp_regular"
+                android:includeFontPadding="false"
+                android:text="뒤로가기"
+                android:textColor="@color/white"></Button>
+        </LinearLayout>
     </LinearLayout>
-
 </RelativeLayout>
