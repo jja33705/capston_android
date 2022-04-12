@@ -43,6 +43,7 @@ class RecordActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var job: Job
 
     private var mLocationMarker: Marker? = null // 내 위치 마커
+    private var mLocationBack: Marker? = null // 내 위치 뒤
 
     private var gotFirstLocation = false // 서비스 다 초기화하고 위치정보 받아와서 시작 가능한 상태인지
 
@@ -130,7 +131,14 @@ class RecordActivity : AppCompatActivity(), OnMapReadyCallback {
             beforeLatLng = LatLng(RecordService.mLocation.latitude, RecordService.mLocation.longitude)
             mLocationMarker = mGoogleMap.addMarker(MarkerOptions()
                 .position(beforeLatLng)
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.round_circle_black_24dp)))
+                .icon(Utils.getMarkerIconFromDrawable(resources.getDrawable(R.drawable.circle_basic_marker, null)))
+                .anchor(0.5F, 0.5F))
+
+            mLocationBack = mGoogleMap.addMarker(MarkerOptions()
+                .position(beforeLatLng)
+                .icon(Utils.getMarkerIconFromDrawable(resources.getDrawable(R.drawable.circle_basic_marker_back, null)))
+                .alpha(0.3F)
+                .anchor(0.5F, 0.5F))
 
             registerLocalBroadcastReceiver()
 
@@ -288,6 +296,7 @@ class RecordActivity : AppCompatActivity(), OnMapReadyCallback {
                     println("리시버로 위치 받음 ${latLng.latitude}, ${latLng.longitude}")
 
                     mLocationMarker?.position = latLng // 마커 이동
+                    mLocationBack?.position = latLng
 
                     // 이떄부터 기록 시작 가능 (마지막 위치는 부정확안 경향이 있다.)
                     if (!gotFirstLocation) {
@@ -296,7 +305,16 @@ class RecordActivity : AppCompatActivity(), OnMapReadyCallback {
                         mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 18.0f)) // 화면 이동
 
                         // 내 위치 마커 생성
-                        mLocationMarker = mGoogleMap.addMarker(MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.round_circle_black_24dp)))
+                        mLocationMarker = mGoogleMap.addMarker(MarkerOptions()
+                            .position(latLng)
+                            .icon(Utils.getMarkerIconFromDrawable(resources.getDrawable(R.drawable.circle_basic_marker, null)))
+                            .anchor(0.5F, 0.5F))
+
+                        mLocationBack = mGoogleMap.addMarker(MarkerOptions()
+                            .position(latLng)
+                            .icon(Utils.getMarkerIconFromDrawable(resources.getDrawable(R.drawable.circle_basic_marker_back, null)))
+                            .alpha(0.3F)
+                            .anchor(0.5F, 0.5F))
 
                         binding.tvInformation.visibility = View.GONE
                     }
@@ -325,6 +343,7 @@ class RecordActivity : AppCompatActivity(), OnMapReadyCallback {
                         binding.tvDistance.text = Utils.distanceToText(distance)
 
                         mLocationMarker?.position = latLng // 마커 이동
+                        mLocationBack?.position = latLng
                         mGoogleMap.addPolyline(PolylineOptions()
                             .add(beforeLatLng, latLng)
                             .color(ContextCompat.getColor(this@RecordActivity, R.color.main_color))

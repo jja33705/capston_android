@@ -14,8 +14,8 @@
     <color name="colorEmailSignIn">#009688</color>
     <color name="colorEmailSignInPressed">#004D40</color>
 
-    <color name="main_color">#1890ff</color>
-    <color name="main_color_dark">#0C4A84</color>
+    <color name="main_color">#467ada</color>
+    <color name="main_color_dark">#274377</color>
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>
@@ -24,7 +24,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="blue">#0000FF</color>
-    <color name="no_selected_polyline_color">#401890ff</color>
+    <color name="no_selected_polyline_color">#40467ada</color>
     <color name="red">#FF0000</color>
     <color name="area_color">#D395D4FF</color>
     <color name="yellow">#FFFF00</color>
@@ -32,4 +32,6 @@
     <color name="focused">#E0E0E0</color>
     <color name="silver_color">#E1E1E1</color>
     <color name="gold_color">#ffd700</color>
+    <color name="default_marker_color">#4284F4</color>
+    <color name="default_marker_color_opacity">#4D4284F4</color>
 </resources>

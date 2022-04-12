@@ -121,7 +121,7 @@ class LoginActivity : AppCompatActivity() {
 
                         Toast.makeText(this@LoginActivity,"로그인 성공 했습니다!", Toast.LENGTH_SHORT).show()
                         startActivity(nextIntent)
-
+                        finish()
                     }else {
                         println("로그인 실패했찌만 "+ token)
                         println("갔지만 실패")

@@ -2,30 +2,55 @@ package com.example.capstonandroid.activity
 
 // 레코드 완료 후 뜨는 액티비티
 
-import androidx.appcompat.app.AppCompatActivity
+import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Context
+import android.content.ContextWrapper
+import android.content.Intent
+import android.database.Cursor
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
+import android.util.TypedValue
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Toast
+import android.widget.*
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
-import androidx.room.Room
+import androidx.appcompat.app.AppCompatActivity
 import com.example.capstonandroid.R
+import com.example.capstonandroid.SelectPostRangeBottomSheetClickListener
+import com.example.capstonandroid.SelectPostRangeBottomSheetDialog
 import com.example.capstonandroid.databinding.ActivityCompleteRecordBinding
 import com.example.capstonandroid.db.AppDatabase
 import com.example.capstonandroid.db.dao.GpsDataDao
 import com.example.capstonandroid.db.entity.GpsData
-import com.example.capstonandroid.network.api.BackendApi
 import com.example.capstonandroid.network.RetrofitClient
-import com.example.capstonandroid.network.dto.PostRecordActivity
+import com.example.capstonandroid.network.api.BackendApi
 import com.example.capstonandroid.network.dto.PostRecordGpsData
+import com.google.gson.GsonBuilder
 import kotlinx.coroutines.*
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.Retrofit
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.io.OutputStream
+import java.util.*
+import kotlin.collections.ArrayList
 
-class CompleteRecordActivity : AppCompatActivity() {
+class CompleteRecordActivity : AppCompatActivity(), SelectPostRangeBottomSheetClickListener {
 
     private var _binding: ActivityCompleteRecordBinding? = null
     private val binding get() = _binding!!
+
+
 
     private lateinit var retrofit: Retrofit // 레트로핏 인스턴스
     private lateinit var supplementService: BackendApi // api
@@ -43,11 +68,18 @@ class CompleteRecordActivity : AppCompatActivity() {
 
     private lateinit var postRecordGpsData: PostRecordGpsData // 총 합친 gps 데이터
 
-    private lateinit var range: String // 공개 범위
+    private var range = "public" // 공개 범위
 
     private lateinit var matchType: String // 매치 타입
 
     private lateinit var exerciseKind: String // 운동 종류
+
+    private lateinit var imageList: ArrayList<File>
+    private lateinit var imageRequestBodyList: ArrayList<MultipartBody.Part>
+
+    // null 인지 아닌지에 따라 달라야 하니까 따로 선언
+    private var trackIdRequestBody: RequestBody? = null
+    private var opponentPostIdRequestBody: RequestBody? = null
 
     private var second: Int = 0 // 시간
     private var sumAltitude = 0.0 // 누적 상승 고도
@@ -59,6 +91,7 @@ class CompleteRecordActivity : AppCompatActivity() {
 
     private var loadedGpsData = false // gps 데이터 로딩 완료했는지
 
+    @SuppressLint("Range")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = ActivityCompleteRecordBinding.inflate(layoutInflater)
@@ -66,10 +99,13 @@ class CompleteRecordActivity : AppCompatActivity() {
 
         initRetrofit()
 
-        supportActionBar?.title = "활동 업로드" // 액션바 텍스트
+        supportActionBar?.title = "活動作成" // 액션바 텍스트
 
         val db = AppDatabase.getInstance(applicationContext)!!
         gpsDataDao = db.gpsDataDao()
+
+        imageList = ArrayList()
+        imageRequestBodyList = ArrayList()
 
         speedList = ArrayList()
         gpsList = ArrayList()
@@ -103,6 +139,8 @@ class CompleteRecordActivity : AppCompatActivity() {
 
             postRecordGpsData = PostRecordGpsData(speedList, gpsList, altitudeList, distanceList, timeList)
 
+            println("이게 뭐지" + postRecordGpsData.toString().toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull()))
+
             loadedGpsData = true
         }
 
@@ -120,35 +158,64 @@ class CompleteRecordActivity : AppCompatActivity() {
         println("intent 넘어옴 (kcal): $kcal")
         trackId = intent.getStringExtra("trackId")
         println("intent 넘어옴 (trackId): $trackId")
+        trackIdRequestBody = if (trackId!= null) trackId.toString().toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull()) else null
         matchType = intent.getStringExtra("matchType")!!
         println("intent 넘어옴 (matchType): $matchType")
         exerciseKind = intent.getStringExtra("exerciseKind")!!
         println("intent 넘어옴 (exerciseKind): $exerciseKind")
         opponentPostId = intent.getIntExtra("opponentPostId", 0)
         println("intent 넘어옴 (opponentPostId): $opponentPostId")
+        opponentPostIdRequestBody = if (opponentPostId != 0) opponentPostId.toString().toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull()) else null
 
-        // 상대랑 한 거 아니면 null로 그냥
-        if (opponentPostId == 0) {
-            opponentPostId = null
+        // 이미지 선택 후 답을 받는 콜백
+        val activityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            println("응답: ${result.resultCode}")
+
+            if (result.resultCode == Activity.RESULT_OK) {
+                val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, result.data!!.data!!)
+                val absolutePath = bitmapToFile(bitmap)
+                val imageFile = File(absolutePath.path)
+                imageList.add(imageFile)
+                println("이미지 파일: ${imageFile.path}")
+
+                println("이미지 잘 담기나....$imageList")
+
+                // 미리보기 띄움
+                val imageView = ImageView(this)
+                imageView.setImageURI(result.data!!.data)
+                val width = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 130F, resources.displayMetrics).toInt()
+                val height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 90F, resources.displayMetrics).toInt()
+                val layoutParam = LinearLayout.LayoutParams(width, height)
+                layoutParam.rightMargin = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10F, resources.displayMetrics).toInt()
+                imageView.layoutParams = layoutParam
+                imageView.scaleType = ImageView.ScaleType.CENTER_CROP
+                imageView.background = getDrawable(R.drawable.image_view_background)
+                imageView.clipToOutline = true
+                binding.linearLayoutImage.addView(imageView, imageList.size-1)
+            }
         }
 
+        // 이미지 업로드 버튼 초기화
+        binding.uploadImage.setOnClickListener {
+            val intent = Intent(Intent.ACTION_GET_CONTENT)
+            intent.type = "image/*"
+            activityResultLauncher.launch(intent)
+        }
 
-
-        // 스피너 설정
-        binding.spinnerRange.adapter = ArrayAdapter.createFromResource(this, R.array.range, android.R.layout.simple_spinner_item)
-        binding.spinnerRange.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(adapterView: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                when (position) {
-                    0 -> {
-                        range = "public"
-                    }
-                    1 -> {
-                        range = "private"
-                    }
+        // 공개 버튼 초기화
+        binding.btnRange.setOnClickListener {
+            val selectedId = when (range) {
+                "public" -> {
+                    R.id.radio_button_public
+                }
+                "private" -> {
+                    R.id.radio_button_private
+                }
+                else -> {
+                    0
                 }
             }
-            override fun onNothingSelected(adapterView: AdapterView<*>?) {
-            }
+            SelectPostRangeBottomSheetDialog.newInstance(selectedId).show(supportFragmentManager, "SelectPostRangeBottomSheetDialog")
         }
 
         // 등록 버튼 눌렀을 때
@@ -158,13 +225,39 @@ class CompleteRecordActivity : AppCompatActivity() {
             if (loadedGpsData) {
                 CoroutineScope(Dispatchers.Main).launch {
                     val token = "Bearer " + getSharedPreferences("other", MODE_PRIVATE).getString("TOKEN", "")!!
-                    val postActivityResponse = supplementService.postRecordActivity(token, PostRecordActivity(sumAltitude, avgSpeed, kcal, binding.etDescription.text.toString(), distance, exerciseKind, matchType, range, second, binding.etTitle.text.toString(), trackId, opponentPostId, postRecordGpsData))
+                    val gson = GsonBuilder().create()
+                    val postRecordGpsDataJsonString = gson.toJson(postRecordGpsData) // json 으로 파싱한 문자열로 보내줄 거임
+
+                    // 이미지 하나하나 FormData 에 배열로 넣어줌
+                    imageList.forEachIndexed { index, image ->
+                        val imageRequestBody = image.asRequestBody("image/*".toMediaTypeOrNull())
+                        val imageMultipartBody = MultipartBody.Part.createFormData("img[$index]", image.name, imageRequestBody)
+                        imageRequestBodyList.add(imageMultipartBody)
+                    }
+                    val postActivityResponse = supplementService.postRecordActivity(
+                        token,
+                        imageRequestBodyList,
+                        avgSpeed.toString().toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull()),
+                        sumAltitude.toString().toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull()),
+                        kcal.toString().toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull()),
+                        binding.etDescription.text.toString().toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull()),
+                        distance.toString().toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull()),
+                        exerciseKind.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull()),
+                        matchType.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull()),
+                        range.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull()),
+                        second.toString().toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull()),
+                        binding.etTitle.text.toString().toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull()),
+                        trackIdRequestBody,
+                        opponentPostIdRequestBody,
+                        postRecordGpsDataJsonString.toString().toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
+                    )
 
                     println(postActivityResponse.code())
 
                     if (postActivityResponse.isSuccessful) {
                         println(postActivityResponse.body())
-                        Toast.makeText(this@CompleteRecordActivity, "저장 성공", Toast.LENGTH_SHORT)
+                        println(postActivityResponse.message())
+                        println(postActivityResponse.errorBody())
                         finish()
                     } else {
                         println(postActivityResponse.message())
@@ -189,5 +282,46 @@ class CompleteRecordActivity : AppCompatActivity() {
         super.onDestroy()
 
         _binding = null
+    }
+
+    private fun bitmapToFile(bitmap: Bitmap): Uri {
+        // Get the context wrapper
+        val wrapper = ContextWrapper(applicationContext)
+
+        // Initialize a new file instance to save bitmap object
+        var file = wrapper.getDir("Images",Context.MODE_PRIVATE)
+        file = File(file,"${UUID.randomUUID()}.jpg")
+
+        try{
+            // Compress the bitmap and save in jpg format
+            val stream: OutputStream = FileOutputStream(file)
+            bitmap.compress(Bitmap.CompressFormat.JPEG,100,stream)
+            stream.flush()
+            stream.close()
+        }catch (e: IOException){
+            e.printStackTrace()
+        }
+
+        // Return the saved bitmap uri
+        return Uri.parse(file.absolutePath)
+    }
+
+    override fun onRadioButtonChanged(selectedId: Int) {
+        println("선택된 것: $selectedId")
+
+        when (selectedId) {
+            R.id.radio_button_public -> {
+                range = "public"
+                binding.btnRange.text = "全員"
+                binding.btnRange.setCompoundDrawablesWithIntrinsicBounds(resources.getDrawable(R.drawable.icon_public, null), null, null, null)
+            }
+            R.id.radio_button_private -> {
+                range = "private"
+                binding.btnRange.text = "自分のみ"
+                binding.btnRange.setCompoundDrawablesWithIntrinsicBounds(resources.getDrawable(R.drawable.icon_private, null), null, null, null)
+            }
+        }
+
+        println("선택했을 때: $range")
     }
 }

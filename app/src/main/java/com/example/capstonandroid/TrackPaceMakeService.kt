@@ -289,8 +289,9 @@ class TrackPaceMakeService : Service() {
                         launch(Dispatchers.IO) {
                             // 모두 db에 저장
                             opponentGpsDataDao.deleteAllOpponentGpsData()
-                            opponentGpsData.time.map { second ->
-                                opponentGpsDataDao.insertOpponentGpsData(OpponentGpsData(second, opponentGpsData.gps.coordinates[second][1], opponentGpsData.gps.coordinates[second][0], opponentGpsData.speed[second].toFloat(), opponentGpsData.distance[second], opponentGpsData.altitude[second]))
+                            println("상대 데이터 시간: ${opponentGpsData.time} ${opponentGpsData.totalTime}")
+                            opponentGpsData.time.forEachIndexed() { i, second ->
+                                opponentGpsDataDao.insertOpponentGpsData(OpponentGpsData(second, opponentGpsData.gps.coordinates[i][1], opponentGpsData.gps.coordinates[i][0], opponentGpsData.speed[i].toFloat(), opponentGpsData.distance[i], opponentGpsData.altitude[i]))
                             }
 
                             // 상대 시작 위치 가져오기
