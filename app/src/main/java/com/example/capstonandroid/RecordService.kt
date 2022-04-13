@@ -97,8 +97,6 @@ class RecordService : Service() {
                     intent.putExtra("flag", BEFORE_START_LOCATION_UPDATE)
                     intent.putExtra(LAT_LNG, LatLng(mLocation.latitude, mLocation.longitude))
                     LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intent)
-                } else {
-
                 }
             }
         }

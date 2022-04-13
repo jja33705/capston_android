@@ -4,21 +4,13 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../layout/custom_preview.xml" value="0.39444444444444443" />
-        <entry key="..\:/Users/sakai/capston_android/app/src/main/res/drawable/button_layout.xml" value="0.1" />
-        <entry key="..\:/Users/sakai/capston_android/app/src/main/res/drawable/idol_list_item.xml" value="0.191" />
-        <entry key="..\:/Users/sakai/capston_android/app/src/main/res/drawable/image_style.xml" value="0.118" />
-        <entry key="..\:/Users/sakai/capston_android/app/src/main/res/drawable/round_background.xml" value="0.1535" />
-        <entry key="..\:/Users/sakai/capston_android/app/src/main/res/drawable/round_border.xml" value="0.1535" />
         <entry key="..\:/Users/sakai/capston_android/app/src/main/res/layout/activity_intro.xml" value="0.25833333333333336" />
         <entry key="..\:/Users/sakai/capston_android/app/src/main/res/layout/activity_login.xml" value="0.264" />
-        <entry key="..\:/Users/sakai/capston_android/app/src/main/res/layout/activity_main.xml" value="0.15942028985507245" />
-        <entry key="..\:/Users/sakai/capston_android/app/src/main/res/layout/activity_me_comment.xml" value="0.1421875" />
-        <entry key="..\:/Users/sakai/capston_android/app/src/main/res/layout/activity_me_details.xml" value="0.22" />
+        <entry key="..\:/Users/sakai/capston_android/app/src/main/res/layout/activity_main.xml" value="0.19166666666666668" />
+        <entry key="..\:/Users/sakai/capston_android/app/src/main/res/layout/activity_me_details.xml" value="0.264" />
         <entry key="..\:/Users/sakai/capston_android/app/src/main/res/layout/activity_select_track.xml" value="0.25833333333333336" />
-        <entry key="..\:/Users/sakai/capston_android/app/src/main/res/layout/activity_snscomment.xml" value="0.3041025641025641" />
         <entry key="..\:/Users/sakai/capston_android/app/src/main/res/layout/activity_snsdetails.xml" value="0.264" />
         <entry key="..\:/Users/sakai/capston_android/app/src/main/res/layout/activity_track_record.xml" value="0.25833333333333336" />
-        <entry key="..\:/Users/sakai/capston_android/app/src/main/res/layout/comment_item_view.xml" value="0.33" />
         <entry key="..\:/Users/sakai/capston_android/app/src/main/res/layout/custom_list_item.xml" value="0.19166666666666668" />
         <entry key="..\:/Users/sakai/capston_android/app/src/main/res/layout/custom_list_item2.xml" value="0.25833333333333336" />
         <entry key="..\:/Users/sakai/capston_android/app/src/main/res/layout/fragment_activity_me.xml" value="0.19166666666666668" />
@@ -26,18 +18,17 @@
         <entry key="..\:/Users/sakai/capston_android/app/src/main/res/layout/fragment_me.xml" value="0.19166666666666668" />
         <entry key="..\:/Users/sakai/capston_android/app/src/main/res/layout/fragment_profile_me.xml" value="0.19166666666666668" />
         <entry key="..\:/Users/sakai/capston_android/app/src/main/res/layout/fragment_target_me.xml" value="0.33" />
-        <entry key="..\:/Users/sakai/capston_android/app/src/main/res/layout/idol_list_item.xml" value="0.30885416666666665" />
         <entry key="..\:/Users/sakai/capston_android/app/src/main/res/layout/item_loading.xml" value="0.23645833333333333" />
         <entry key="..\:/Users/sakai/capston_android/app/src/main/res/layout/item_notice.xml" value="0.23645833333333333" />
         <entry key="..\:/Users/sakai/capston_android/app/src/main/res/layout/item_recycler.xml" value="0.21666666666666667" />
         <entry key="..\:/Users/sakai/capston_android/app/src/main/res/layout/item_view.xml" value="0.23645833333333333" />
-        <entry key="..\:/Users/sakai/capston_android/app/src/main/res/layout/item_view2.xml" value="0.24375" />
         <entry key="..\:/Users/sakai/capston_android/app/src/main/res/layout/layout_recycler_item.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/sakai/capston_android/app/src/main/res/layout/test.xml" value="0.23645833333333333" />
         <entry key="..\:/Users/sakai/capston_android/app/src/main/res/layout/test2.xml" value="0.23645833333333333" />
         <entry key="..\:/Users/sakai/capston_android/app/src/main/res/layout/view_item_layout.xml" value="0.25" />
         <entry key="..\:/Users/sakai/capston_android/app/src/main/res/layout/view_toolbar.xml" value="0.13125" />
         <entry key="..\:/Users/sakai/capston_android/app/src/main/res/menu/search_menu.xml" value="0.20416666666666666" />
+        <entry key="app/src/main/res/drawable-v24/push_icon.xml" value="0.2125" />
         <entry key="app/src/main/res/drawable/TrackMarker.xml" value="0.213" />
         <entry key="app/src/main/res/drawable/arrow_down.xml" value="0.2285" />
         <entry key="app/src/main/res/drawable/arrow_forward.xml" value="0.2045" />
@@ -90,7 +81,7 @@
         <entry key="app/src/main/res/layout/activity_random_matching.xml" value="0.37604166666666666" />
         <entry key="app/src/main/res/layout/activity_rank_matching.xml" value="0.275" />
         <entry key="app/src/main/res/layout/activity_ranking.xml" value="0.39807891845703125" />
-        <entry key="app/src/main/res/layout/activity_record.xml" value="0.22328338623046876" />
+        <entry key="app/src/main/res/layout/activity_record.xml" value="0.37506713867187497" />
         <entry key="app/src/main/res/layout/activity_select_match_type.xml" value="0.26979166666666665" />
         <entry key="app/src/main/res/layout/activity_select_track.xml" value="0.3032868048454042" />
         <entry key="app/src/main/res/layout/activity_track.xml" value="0.25519856656535295" />

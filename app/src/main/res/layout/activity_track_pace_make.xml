@@ -1,116 +1,139 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.TrackRecordActivity">
+    tools:context=".activity.TrackRecordActivity"
+    android:orientation="vertical"
+    >
 
-    <TextView
-        android:id="@+id/st_time"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:paddingVertical="15dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:text="시간"
-        android:textSize="15sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"></TextView>
+        android:orientation="vertical"
+        android:elevation="10dp"
+        android:background="@color/white"
+        >
+        <TextView
+            android:id="@+id/tv_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/noto_sans_jp_bold"
+            android:includeFontPadding="false"
+            android:text="00:00:00"
+            android:textColor="@color/black"
+            android:textSize="50sp"></TextView>
 
-    <TextView
-        android:id="@+id/tv_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="00:00:00"
-        android:textColor="@color/black"
-        android:textSize="30sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/st_time"></TextView>
+        <TextView
+            android:id="@+id/st_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="時間"
+            android:textSize="12sp"
+            android:fontFamily="@font/noto_sans_jp_light"
+            android:includeFontPadding="false"
+            android:layout_gravity="center"
+            >
+        </TextView>
 
-    <TextView
-        android:id="@+id/st_distance"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="거리 (km)"
-        android:textSize="15sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.508"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_time"></TextView>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="12"
+            >
+            <TextView
+                android:id="@+id/tv_distance"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="0.00"
+                android:textColor="@color/black"
+                android:includeFontPadding="false"
+                android:fontFamily="@font/noto_sans_jp_bold"
+                android:textSize="30sp"
+                android:gravity="center"
+                android:layout_weight="4"
+                >
+            </TextView>
+            <TextView
+                android:id="@+id/tv_avg_speed"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="0.00"
+                android:textColor="@color/black"
+                android:includeFontPadding="false"
+                android:fontFamily="@font/noto_sans_jp_bold"
+                android:textSize="30sp"
+                android:gravity="center"
+                android:layout_weight="4"
+                >
 
-    <TextView
-        android:id="@+id/st_avg_speed"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="36dp"
-        android:text="평균 속도 (km/h)"
-        android:textSize="15sp"
-        app:layout_constraintEnd_toStartOf="@+id/st_distance"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_time"></TextView>
+            </TextView>
+            <TextView
+                android:id="@+id/tv_kcal"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="0.00"
+                android:textColor="@color/black"
+                android:includeFontPadding="false"
+                android:fontFamily="@font/noto_sans_jp_bold"
+                android:textSize="30sp"
+                android:gravity="center"
+                android:layout_weight="4"
+                >
+            </TextView>
+        </LinearLayout>
 
-    <TextView
-        android:id="@+id/st_kcal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="칼로리 (kcal)"
-        android:textSize="15sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.505"
-        app:layout_constraintStart_toEndOf="@+id/st_distance"
-        app:layout_constraintTop_toBottomOf="@+id/tv_time"></TextView>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="12"
+            >
+            <TextView
+                android:id="@+id/st_distance"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="距離(km)"
+                android:textSize="12sp"
+                android:layout_weight="4"
+                android:fontFamily="@font/noto_sans_jp_light"
+                android:includeFontPadding="false"
+                android:gravity="center"
+                ></TextView>
 
-    <TextView
-        android:id="@+id/tv_distance"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="0.00"
-        android:textColor="@color/black"
-        android:textSize="30sp"
-        app:layout_constraintBottom_toTopOf="@+id/frameLayout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/st_distance"
-        app:layout_constraintVertical_bias="0.0"></TextView>
+            <TextView
+                android:id="@+id/st_avg_speed"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="平均時速(km/h)"
+                android:textSize="12sp"
+                android:layout_weight="4"
+                android:fontFamily="@font/noto_sans_jp_light"
+                android:includeFontPadding="false"
+                android:gravity="center"></TextView>
 
-    <TextView
-        android:id="@+id/tv_avg_speed"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="0.00"
-        android:textColor="@color/black"
-        android:textSize="30sp"
-        app:layout_constraintBottom_toTopOf="@+id/frameLayout"
-        app:layout_constraintEnd_toStartOf="@+id/tv_distance"
-        app:layout_constraintHorizontal_bias="0.491"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/st_avg_speed"
-        app:layout_constraintVertical_bias="0.0"></TextView>
+            <TextView
+                android:id="@+id/st_kcal"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="カロリー(kcal)"
+                android:textSize="12sp"
+                android:layout_weight="4"
+                android:fontFamily="@font/noto_sans_jp_light"
+                android:includeFontPadding="false"
+                android:gravity="center"></TextView>
 
-    <TextView
-        android:id="@+id/tv_kcal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="68dp"
-        android:text="0"
-        android:textColor="@color/black"
-        android:textSize="30sp"
-        app:layout_constraintBottom_toTopOf="@+id/frameLayout"
-        app:layout_constraintStart_toEndOf="@+id/tv_distance"
-        app:layout_constraintTop_toBottomOf="@+id/st_kcal"
-        app:layout_constraintVertical_bias="0.0"></TextView>
+        </LinearLayout>
+
+    </LinearLayout>
 
     <FrameLayout
-        android:id="@+id/frameLayout"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_percent="0.75"
@@ -121,7 +144,9 @@
             android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_constraintEnd_toEndOf="parent"></fragment>
+            app:layout_constraintEnd_toEndOf="parent"
+            >
+        </fragment>
 
         <LinearLayout
             android:layout_gravity="top|center"
@@ -138,7 +163,7 @@
                 android:text="페이스메이커보다 0m 앞서는 중"
                 android:textSize="20dp"
                 android:padding="7dp"
-                android:visibility="gone"
+                android:visibility="visible"
                 >
             </TextView>
 
@@ -148,9 +173,9 @@
             android:id="@+id/tv_information"
             android:layout_width="match_parent"
             android:layout_height="25dp"
-            android:background="@color/yellow"
+            android:background="@color/green"
             android:gravity="center"
-            android:text="트랙 정보 불러오는 중"
+            android:text="위치 정보 불러오는 중"
             android:textColor="@color/white">
 
         </TextView>
@@ -186,4 +211,4 @@
 
     </FrameLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
