@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.dj.loadingdialog.LoadingDialog
 import com.example.capstonandroid.R
 import com.example.capstonandroid.activity.SNSDetailsActivity
 import com.example.capstonandroid.adapter.RecyclerUserAdapter
@@ -23,6 +24,10 @@ import com.example.capstonandroid.network.api.BackendApi
 import com.example.capstonandroid.network.dto.SNSResponse
 import com.example.capstonandroid.network.dto.UserData
 import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -38,6 +43,7 @@ private  lateinit var  retrofit: Retrofit  //레트로핏
 private  lateinit var supplementService: BackendApi // api
 
 
+var tt = "";
 object user {}
 
 
@@ -145,6 +151,8 @@ class HomeFragment : Fragment()  {
 
                             println(response.body()!!.data)
                             if(response.isSuccessful&&response.body()!!.data.size!==0) {
+//                                LoadingDialog(requireContext()).show()
+                                    showLoadingDialog()
                                 for (i in 0..response.body()!!.data.size - 1) {
                                     list.add(
                                         UserData(
@@ -164,6 +172,8 @@ class HomeFragment : Fragment()  {
                                 lstUser.adapter!!.notifyItemInserted(10)
 
                                     page ++
+
+                                tt = "finish"
                             }else{
 
                             }
@@ -175,8 +185,10 @@ class HomeFragment : Fragment()  {
                     })
 
                 }
+
+
             }
-        })
+            })
         return binding.root
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -226,6 +238,19 @@ class HomeFragment : Fragment()  {
                 }
         }
 
+    private fun showLoadingDialog() {
+        val dialog = LoadingDialog(requireContext())
+        CoroutineScope(Main).launch {
+            dialog.show()
+            if(tt=="finish"){
+                tt==""
+                delay(300)
+
+                dialog.dismiss()
+
+            }
+        }
+    }
 
 
 

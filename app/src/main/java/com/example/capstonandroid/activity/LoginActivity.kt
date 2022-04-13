@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.dj.loadingdialog.LoadingDialog
 import com.example.capstonandroid.databinding.ActivityLoginBinding
 import com.example.capstonandroid.network.dto.Login
 import com.example.capstonandroid.network.api.BackendApi
@@ -66,6 +67,7 @@ class LoginActivity : AppCompatActivity() {
 
         binding.loginButton.setOnClickListener{
 
+            LoadingDialog(this).show()
 //          edittext 이메일 값 받아 오기
             var email = binding.emailEditText.text
 //            println(email)

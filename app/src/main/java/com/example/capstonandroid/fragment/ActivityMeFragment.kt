@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.dj.loadingdialog.LoadingDialog
 import com.example.capstonandroid.R
 import com.example.capstonandroid.activity.MeDetailsActivity
 import com.example.capstonandroid.activity.SNSDetailsActivity
@@ -18,6 +19,10 @@ import com.example.capstonandroid.databinding.FragmentActivityMeBinding
 import com.example.capstonandroid.network.api.BackendApi
 import com.example.capstonandroid.network.RetrofitClient
 import com.example.capstonandroid.network.dto.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -132,6 +137,7 @@ class ActivityMeFragment : Fragment() {
                         ) {
 
                             if(response.isSuccessful&&response.body()!!.data.size!==0) {
+                                showLoadingDialog()
                                 for (i in 0..response.body()!!.data.size - 1) {
                                     list2.add(
                                         UserData(
@@ -162,6 +168,7 @@ class ActivityMeFragment : Fragment() {
                     })
 
                 }
+
             }
         })
         return binding.root
@@ -190,7 +197,19 @@ class ActivityMeFragment : Fragment() {
         }
     }
 
+    private fun showLoadingDialog() {
+        val dialog = LoadingDialog(requireContext())
+        CoroutineScope(Dispatchers.Main).launch {
+            dialog.show()
+            if(tt=="finish"){
+                tt==""
+                delay(300)
 
+                dialog.dismiss()
+
+            }
+        }
+    }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

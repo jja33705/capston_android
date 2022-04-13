@@ -47,7 +47,8 @@ android {
 
 dependencies {
 
-
+//  다이얼로그 화면 구현
+    implementation 'com.github.ybq:Android-SpinKit:1.4.0'
 
 
     // 안드로이드 내부 db (room 라이브러리)

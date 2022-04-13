@@ -108,7 +108,7 @@ class SNSDetailsActivity : AppCompatActivity() {
                      binding.kind.setText("종류 : " + kind)
                      binding.averageSpeed.setText("평균 속도 : "+average_speed +" Km/h")
                      binding.altitude.setText("고도 : "+altitude)
-                     binding.distance.setText("거리 : "+distance/10+" Km")
+                     binding.distance.setText("거리 : "+(distance/10)+" Km")
                  }  else{
                      println("실패함ㅋㅋ")
                      println(response.body())
