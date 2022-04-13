@@ -81,6 +81,7 @@ interface BackendApi {
     @POST("post/store") // 포스트 작성
     suspend fun postRecordActivity(
         @Header("Authorization") token: String,
+        @Part mapImg: MultipartBody.Part,
         @Part img: List<MultipartBody.Part>?,
         @Part("average_speed") averageSpeed: RequestBody,
         @Part("altitude") altitude: RequestBody,

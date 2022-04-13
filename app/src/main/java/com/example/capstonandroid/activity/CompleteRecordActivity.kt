@@ -7,15 +7,12 @@ import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
-import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.TypedValue
-import android.view.View
 import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
@@ -50,8 +47,6 @@ class CompleteRecordActivity : AppCompatActivity(), SelectPostRangeBottomSheetCl
     private var _binding: ActivityCompleteRecordBinding? = null
     private val binding get() = _binding!!
 
-
-
     private lateinit var retrofit: Retrofit // 레트로핏 인스턴스
     private lateinit var supplementService: BackendApi // api
 
@@ -74,6 +69,7 @@ class CompleteRecordActivity : AppCompatActivity(), SelectPostRangeBottomSheetCl
 
     private lateinit var exerciseKind: String // 운동 종류
 
+    private lateinit var mapImageFile: File
     private lateinit var imageList: ArrayList<File>
     private lateinit var imageRequestBodyList: ArrayList<MultipartBody.Part>
 
@@ -176,9 +172,6 @@ class CompleteRecordActivity : AppCompatActivity(), SelectPostRangeBottomSheetCl
                 val absolutePath = bitmapToFile(bitmap)
                 val imageFile = File(absolutePath.path)
                 imageList.add(imageFile)
-                println("이미지 파일: ${imageFile.path}")
-
-                println("이미지 잘 담기나....$imageList")
 
                 // 미리보기 띄움
                 val imageView = ImageView(this)
@@ -191,7 +184,7 @@ class CompleteRecordActivity : AppCompatActivity(), SelectPostRangeBottomSheetCl
                 imageView.scaleType = ImageView.ScaleType.CENTER_CROP
                 imageView.background = getDrawable(R.drawable.image_view_background)
                 imageView.clipToOutline = true
-                binding.linearLayoutImage.addView(imageView, imageList.size-1)
+                binding.linearLayoutImage.addView(imageView, imageList.size)
             }
         }
 
@@ -234,8 +227,13 @@ class CompleteRecordActivity : AppCompatActivity(), SelectPostRangeBottomSheetCl
                         val imageMultipartBody = MultipartBody.Part.createFormData("img[$index]", image.name, imageRequestBody)
                         imageRequestBodyList.add(imageMultipartBody)
                     }
+
+                    val mapImageRequestBody = mapImageFile.asRequestBody("image/*".toMediaTypeOrNull())
+                    val mapImageMultipartBody = MultipartBody.Part.createFormData("mapImg[0]", mapImageFile.name, mapImageRequestBody)
+
                     val postActivityResponse = supplementService.postRecordActivity(
                         token,
+                        mapImageMultipartBody,
                         imageRequestBodyList,
                         avgSpeed.toString().toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull()),
                         sumAltitude.toString().toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull()),
@@ -270,6 +268,26 @@ class CompleteRecordActivity : AppCompatActivity(), SelectPostRangeBottomSheetCl
                 Toast.makeText(this@CompleteRecordActivity, "활동 데이터 로드 중. 잠시 후 다시 시도하세요", Toast.LENGTH_SHORT)
             }
         }
+
+        // 맵 이미지 추가
+        println("이미지 불러오기 시작")
+        val bitmap = BitmapFactory.decodeFile("$cacheDir/map.png")
+        val absolutePath = bitmapToFile(bitmap)
+        mapImageFile = File(absolutePath.path)
+
+
+        // 맵 이미지 미리보기 띄움
+        val imageView = ImageView(this)
+        imageView.setImageBitmap(bitmap)
+        val width = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 130F, resources.displayMetrics).toInt()
+        val height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 90F, resources.displayMetrics).toInt()
+        val layoutParam = LinearLayout.LayoutParams(width, height)
+        layoutParam.rightMargin = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10F, resources.displayMetrics).toInt()
+        imageView.layoutParams = layoutParam
+        imageView.scaleType = ImageView.ScaleType.CENTER_CROP
+        imageView.background = getDrawable(R.drawable.image_view_background)
+        imageView.clipToOutline = true
+        binding.linearLayoutImage.addView(imageView, 0)
     }
 
     // 레트로핏 초기화

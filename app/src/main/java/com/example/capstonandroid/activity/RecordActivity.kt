@@ -4,6 +4,7 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.*
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -12,20 +13,19 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.example.capstonandroid.*
 import com.example.capstonandroid.R
-import com.example.capstonandroid.RecordService
-import com.example.capstonandroid.TrackPaceMakeService
-import com.example.capstonandroid.Utils
 import com.example.capstonandroid.databinding.ActivityRecordBinding
 import com.example.capstonandroid.db.AppDatabase
 import com.example.capstonandroid.db.dao.GpsDataDao
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.*
 import kotlinx.coroutines.*
+import java.io.FileOutputStream
 
 const val LOCATION_PERMISSION_REQUEST_CODE = 100 // 위치 권한 요청 코드
 
-class RecordActivity : AppCompatActivity(), OnMapReadyCallback {
+class RecordActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.SnapshotReadyCallback {
 
     private var _binding: ActivityRecordBinding? = null
     private val binding get() = _binding!!
@@ -42,6 +42,8 @@ class RecordActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var job: Job
 
+    private lateinit var latLngList: ArrayList<LatLng> // 폴리라인에 넣을 위치 리스트
+    private lateinit var mPolyline: Polyline
     private var mLocationMarker: Marker? = null // 내 위치 마커
     private var mLocationBack: Marker? = null // 내 위치 뒤
 
@@ -53,6 +55,10 @@ class RecordActivity : AppCompatActivity(), OnMapReadyCallback {
 
         _binding = ActivityRecordBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        supportActionBar?.hide()
+
+        latLngList = ArrayList()
 
         val intent: Intent = intent
         exerciseKind = intent.getStringExtra("exerciseKind")!!
@@ -97,11 +103,17 @@ class RecordActivity : AppCompatActivity(), OnMapReadyCallback {
         // 종료 버튼 초기화
         binding.stopButton.setOnClickListener {
             println("종료 버튼 클릭함")
-            val intent = Intent(this@RecordActivity, RecordService::class.java)
-            intent.action = RecordService.COMPLETE_RECORD
-            startForegroundService(intent)
 
-            finish()
+            // 종료하기전 스냅샷 찍음
+            val builder: LatLngBounds.Builder = LatLngBounds.Builder() // 카메라 이동을 위한 빌더
+            for (latLng in latLngList) {
+                builder.include(latLng) // 카메라안에 들어와야 하는 지점들 추가
+            }
+            // 카메라 업데이트
+            val bounds: LatLngBounds = builder.build()
+            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 200))
+
+            mGoogleMap.snapshot(this)
         }
 
         val mapFragment = supportFragmentManager
@@ -127,6 +139,12 @@ class RecordActivity : AppCompatActivity(), OnMapReadyCallback {
         // 이미 서비스가 돌아가고 있다면 이전위치 먼저 등록
         if (RecordService.isStarted) {
             println("record 이미 실행 중이다")
+            // 버튼 바꿈
+            binding.startButton.visibility = View.GONE
+            binding.stopButton.visibility = View.VISIBLE
+
+            binding.tvInformation.visibility = View.GONE // 정보 창 없앰
+
             // 마지막 위치 가져오고 마커 생성
             beforeLatLng = LatLng(RecordService.mLocation.latitude, RecordService.mLocation.longitude)
             mLocationMarker = mGoogleMap.addMarker(MarkerOptions()
@@ -139,14 +157,6 @@ class RecordActivity : AppCompatActivity(), OnMapReadyCallback {
                 .icon(Utils.getMarkerIconFromDrawable(resources.getDrawable(R.drawable.circle_basic_marker_back, null)))
                 .alpha(0.3F)
                 .anchor(0.5F, 0.5F))
-
-            registerLocalBroadcastReceiver()
-
-            // 버튼 바꿈
-            binding.startButton.visibility = View.GONE
-            binding.stopButton.visibility = View.VISIBLE
-
-            binding.tvInformation.visibility = View.GONE // 정보 창 없앰
 
             mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(beforeLatLng, 18.0f)) // 화면 이동
 
@@ -172,21 +182,22 @@ class RecordActivity : AppCompatActivity(), OnMapReadyCallback {
             println("db 에서 불러온 크기: ${gpsDataList.size}")
 
             // 선 그리기
-            val latLngList = withContext(Dispatchers.Default) {
-                val latLngList = ArrayList<LatLng>()
+            latLngList = withContext(Dispatchers.Default) {
+                val latLngListInner = ArrayList<LatLng>()
                 for (gpsData in gpsDataList) {
-                    latLngList.add(LatLng(gpsData.lat, gpsData.lng))
-                    println("withContext 내부 for 문 수행 중")
+                    latLngListInner.add(LatLng(gpsData.lat, gpsData.lng))
                 }
-                latLngList
+                latLngListInner
             }
 
             println("withContext 끝나고 내려옴")
 
-            mGoogleMap.addPolyline(PolylineOptions()
+            mPolyline = mGoogleMap.addPolyline(PolylineOptions()
                 .addAll(latLngList)
                 .color(ContextCompat.getColor(this@RecordActivity, R.color.main_color))
                 .width(12F)) // 그림 그림
+
+            registerLocalBroadcastReceiver()
         }
     }
 
@@ -288,6 +299,7 @@ class RecordActivity : AppCompatActivity(), OnMapReadyCallback {
 
     // 브로드캐스트를 받을 리시버
     inner class MBroadcastReceiver: BroadcastReceiver() {
+        @SuppressLint("NewApi")
         override fun onReceive(context: Context?, intent: Intent?) {
             // flag 에 따라 분기처리
             when (intent?.getStringExtra("flag")) {
@@ -322,6 +334,11 @@ class RecordActivity : AppCompatActivity(), OnMapReadyCallback {
                 RecordService.RECORD_START_LAT_LNG -> { // 기록 시작 위치
                     println("업데이트 시작 위치 받음")
                     val recordStartLatLng = intent?.getParcelableExtra<LatLng>(RecordService.LAT_LNG)!!
+                    latLngList.add(recordStartLatLng)
+                    mPolyline = mGoogleMap.addPolyline(PolylineOptions()
+                        .addAll(latLngList)
+                        .color(resources.getColor(R.color.main_color, null))
+                        .width(12F)) // 그림 그림
                     beforeLatLng = recordStartLatLng
                 }
                 RecordService.AFTER_START_UPDATE -> { // 기록 시작 후 초마다 받는 업데이트
@@ -344,15 +361,41 @@ class RecordActivity : AppCompatActivity(), OnMapReadyCallback {
 
                         mLocationMarker?.position = latLng // 마커 이동
                         mLocationBack?.position = latLng
-                        mGoogleMap.addPolyline(PolylineOptions()
-                            .add(beforeLatLng, latLng)
-                            .color(ContextCompat.getColor(this@RecordActivity, R.color.main_color))
-                            .width(12F)) // 그림 그림
+
+                        // 폴리라인 새로 그림
+                        latLngList.add(latLng)
+                        mPolyline.points = latLngList
 
                         beforeLatLng = latLng
                     }
                 }
             }
         }
+    }
+
+    @SuppressLint("NewApi")
+    override fun onSnapshotReady(snapshot: Bitmap?) {
+        //앱 내부 cache 저장소: /data/user/0/com.example.capstonandroid/cache
+
+        // 이미 있는 이미지는 삭제
+        val file = cacheDir
+        val fileList = file.listFiles()
+        for (file in fileList) {
+            if (file.name == "map.png") {
+                file.delete()
+            }
+        }
+
+        // 이미지 저장
+        val fileOutputStream = FileOutputStream("${cacheDir}/map.png")
+        snapshot?.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream)
+        fileOutputStream.close()
+        println("이미지 저장 끝남")
+
+        val intent = Intent(this@RecordActivity, RecordService::class.java)
+        intent.action = RecordService.COMPLETE_RECORD
+        startForegroundService(intent)
+
+        finish()
     }
 }
