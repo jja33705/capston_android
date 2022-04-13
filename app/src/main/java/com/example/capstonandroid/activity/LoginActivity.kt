@@ -67,7 +67,6 @@ class LoginActivity : AppCompatActivity() {
 
         binding.loginButton.setOnClickListener{
 
-            LoadingDialog(this).show()
 //          edittext 이메일 값 받아 오기
             var email = binding.emailEditText.text
 //            println(email)
