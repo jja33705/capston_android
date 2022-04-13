@@ -9,7 +9,9 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.viewpager2.widget.ViewPager2
+import com.bumptech.glide.util.Util
 import com.example.capstonandroid.R
+import com.example.capstonandroid.Utils
 import com.example.capstonandroid.adapter.ViewPagerAdapter
 import com.example.capstonandroid.databinding.*
 import com.example.capstonandroid.network.RetrofitClient
@@ -93,13 +95,20 @@ class SNSDetailsActivity : AppCompatActivity() {
                      kind = response.body()!!.data[data_num]!!.kind
                      content = response.body()!!.data[data_num]!!.content
 
+                     if(time>3600){
+                         binding.time.setText("시간 : "+time.toInt()/3600+"시간 "+time/60.toInt()+"분 "+time.toInt()%60+"초")
+                     }else if (time>60){
+                         binding.time.setText("시간 : "+time.toInt()/60+"분 "+time.toInt()%60+"초")
+                     }else {
+                         binding.time.setText("시간 : "+time.toInt()%60+"초")
+                     }
+
                      binding.content.setText(content)
-                     binding.time.setText("시간 : "+time)
-                     binding.calorie.setText("칼로리 : "+calorie)
+                     binding.calorie.setText("칼로리 : "+calorie+" Cal")
                      binding.kind.setText("종류 : " + kind)
-                     binding.averageSpeed.setText("평균 속도 : "+average_speed)
+                     binding.averageSpeed.setText("평균 속도 : "+average_speed +" Km/h")
                      binding.altitude.setText("고도 : "+altitude)
-                     binding.distance.setText("거리 : "+distance)
+                     binding.distance.setText("거리 : "+distance/10+" Km")
                  }  else{
                      println("실패함ㅋㅋ")
                      println(response.body())
@@ -113,9 +122,9 @@ class SNSDetailsActivity : AppCompatActivity() {
              }
          })
 
-        binding.backButton.setOnClickListener {
-            finish()
-        }
+//        binding.backButton.setOnClickListener {
+//            finish()
+//        }
 
         binding.likeButton.setOnClickListener{
             supplementService.postLike(token,postID).enqueue(object : Callback<LikeResponse>{

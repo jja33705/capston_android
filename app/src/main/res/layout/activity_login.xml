@@ -32,6 +32,8 @@
             android:padding="20dp">
 
             <EditText
+                android:includeFontPadding="false"
+                android:fontFamily="@font/noto_sans_jp_black"
                 android:id="@+id/emailEditText"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
@@ -44,6 +46,8 @@
                 android:textColor="@color/black"/>
 
             <EditText
+                android:includeFontPadding="false"
+                android:fontFamily="@font/noto_sans_jp_black"
                 android:id="@+id/passwordEditText"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
@@ -61,13 +65,25 @@
                 android:includeFontPadding="false"
                 android:layout_marginTop="15dp"
                 android:background="@drawable/login_button"
-                android:fontFamily="@font/noto_sans_jp_regular"
-                android:text="Signin"
+                android:fontFamily="@font/noto_sans_jp_bold"
+                android:text="Sign in"
                 android:textColor="@color/white"
                 >
             </Button>
+            <CheckBox
+                android:includeFontPadding="false"
+                android:fontFamily="@font/noto_sans_jp_medium"
+                android:layout_marginTop="15dp"
+                android:id="@+id/autoLoginCheckBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="자동 로그인"></CheckBox>
 
             <TextView
+                android:id="@+id/forgot_email"
+                android:includeFontPadding="false"
+                android:fontFamily="@font/noto_sans_jp_black"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -75,6 +91,7 @@
                 android:text="계정을 잊으셨나요?"></TextView>
 
             <TextView
+                android:includeFontPadding="false"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -82,6 +99,8 @@
                 android:text="또는"></TextView>
 
             <TextView
+                android:includeFontPadding="false"
+                android:fontFamily="@font/noto_sans_jp_bold"
                 android:id="@+id/registerbutton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

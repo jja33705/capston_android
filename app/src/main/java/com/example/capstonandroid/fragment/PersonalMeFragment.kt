@@ -48,7 +48,7 @@ class PersonalMeFragment : Fragment() {
 
     }
     inner class MyXAxisFormatter : ValueFormatter(){
-        private val days = arrayOf("월요일","화요일","수요일","목요일","금요일","토요일","일요일")
+        private val days = arrayOf("6일전","5일전","4일전","3일전","그저께","어제","오늘")
         override fun getAxisLabel(value: Float, axis: AxisBase?): String {
             return days.getOrNull(value.toInt()-1) ?: value.toString()
         }
@@ -68,13 +68,13 @@ class PersonalMeFragment : Fragment() {
             param2 = it.getString(ARG_PARAM2)
         }
 
-        var mon :Float = 0f;
-        var tue :Float = 0f;
-        var wed :Float = 0f;
-        var thu :Float = 0f;
-        var fri :Float = 0f;
-        var sat :Float = 0f;
-        var sun :Float = 0f;
+        var today :Float = 0f;
+        var oneDayAgo :Float = 0f;
+        var twoDayAgo :Float = 0f;
+        var threeDayAgo :Float = 0f;
+        var fourDayAgo :Float = 0f;
+        var fiveDayAgo :Float = 0f;
+        var sixDayAgo :Float = 0f;
         initRetrofit()
 
         val sharedPreference = requireActivity().getSharedPreferences("other", 0)
@@ -99,13 +99,13 @@ class PersonalMeFragment : Fragment() {
                         call: Call<UserWeekResponse>,
                         response: Response<UserWeekResponse>
                     ) {
-                        mon = response.body()!!.Mon.toFloat()
-                        tue = response.body()!!.Tue.toFloat()
-                        wed = response.body()!!.Wed.toFloat()
-                        thu = response.body()!!.Tur.toFloat()// 여기 디비 수정 해야됨.
-                        fri = response.body()!!.Fri.toFloat()
-                        sat = response.body()!!.Sat.toFloat()
-                        sun = response.body()!!.Sun.toFloat()
+                        today = response.body()!!.today.toFloat()
+                        oneDayAgo = response.body()!!.oneDayAgo.toFloat()
+                        twoDayAgo = response.body()!!.twoDayAgo.toFloat()
+                        threeDayAgo = response.body()!!.threeDayAgo.toFloat()// 여기 디비 수정 해야됨.
+                        fourDayAgo= response.body()!!.fourDayAgo.toFloat()
+                        fiveDayAgo = response.body()!!.fiveDayAgo.toFloat()
+                        sixDayAgo = response.body()!!.sixDayAgo.toFloat()
 
                         println(response.body()!!)
                     }
@@ -116,13 +116,13 @@ class PersonalMeFragment : Fragment() {
 
 
                 if (position1 == 0) { val entries = ArrayList<BarEntry>()
-                    entries.add(BarEntry(1.2f,mon))
-                    entries.add(BarEntry(2.2f,tue))
-                    entries.add(BarEntry(3.2f,wed))
-                    entries.add(BarEntry(4.2f,thu))
-                    entries.add(BarEntry(5.2f,fri))
-                    entries.add(BarEntry(6.2f,sat))
-                    entries.add(BarEntry(7.2f,sun))
+                    entries.add(BarEntry(1.2f,sixDayAgo))
+                    entries.add(BarEntry(2.2f,fiveDayAgo))
+                    entries.add(BarEntry(3.2f,fourDayAgo))
+                    entries.add(BarEntry(4.2f,threeDayAgo))
+                    entries.add(BarEntry(5.2f,twoDayAgo))
+                    entries.add(BarEntry(6.2f,oneDayAgo))
+                    entries.add(BarEntry(7.2f,today))
 
 
                     binding.chart.run {
@@ -182,13 +182,13 @@ class PersonalMeFragment : Fragment() {
                             call: Call<UserWeekResponse>,
                             response: Response<UserWeekResponse>
                         ) {
-                            mon = response.body()!!.Mon.toFloat()
-                            tue = response.body()!!.Tue.toFloat()
-                            wed = response.body()!!.Wed.toFloat()
-                            thu = response.body()!!.Tur.toFloat()// 여기 디비 수정 해야됨.
-                            fri = response.body()!!.Fri.toFloat()
-                            sat = response.body()!!.Sat.toFloat()
-                            sun = response.body()!!.Sun.toFloat()
+                            today = response.body()!!.today.toFloat()
+                            oneDayAgo = response.body()!!.oneDayAgo.toFloat()
+                            twoDayAgo = response.body()!!.twoDayAgo.toFloat()
+                            threeDayAgo = response.body()!!.threeDayAgo.toFloat()// 여기 디비 수정 해야됨.
+                            fourDayAgo= response.body()!!.fourDayAgo.toFloat()
+                            fiveDayAgo = response.body()!!.fiveDayAgo.toFloat()
+                            sixDayAgo = response.body()!!.sixDayAgo.toFloat()
 
                             println(response.body()!!)
                         }
@@ -198,14 +198,13 @@ class PersonalMeFragment : Fragment() {
                     })
 
                     val entries = ArrayList<BarEntry>()
-                    entries.add(BarEntry(1.2f,mon))
-                    entries.add(BarEntry(2.2f,tue))
-                    entries.add(BarEntry(3.2f,wed))
-                    entries.add(BarEntry(4.2f,thu))
-                    entries.add(BarEntry(5.2f,fri))
-                    entries.add(BarEntry(6.2f,sat))
-                    entries.add(BarEntry(7.2f,sun))
-
+                    entries.add(BarEntry(1.2f,sixDayAgo))
+                    entries.add(BarEntry(2.2f,fiveDayAgo))
+                    entries.add(BarEntry(3.2f,fourDayAgo))
+                    entries.add(BarEntry(4.2f,threeDayAgo))
+                    entries.add(BarEntry(5.2f,twoDayAgo))
+                    entries.add(BarEntry(6.2f,oneDayAgo))
+                    entries.add(BarEntry(7.2f,today))
 
                     binding.chart.run {
                         description.isEnabled = false //차트 옆에 별도로 표기되는 description이다. false로 설정하여 안보이게 했다.
@@ -254,6 +253,7 @@ class PersonalMeFragment : Fragment() {
                         setFitBars(true)
                         invalidate()
                     }
+
                 }
             }
 
