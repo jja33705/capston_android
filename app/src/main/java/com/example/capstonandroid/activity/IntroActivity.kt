@@ -56,6 +56,12 @@ class IntroActivity : AppCompatActivity() {
                 var token = "Bearer " + sharedPreference.getString("TOKEN","")
                 println("token: $token")
 
+                var autologin = sharedPreference.getString("autologin","")
+                println("autologin : $autologin")
+
+
+
+                if(autologin=="true"){
                 supplementService.userGet(token).enqueue(object : Callback<LoginUserResponse> {
 
                     override fun onResponse(
@@ -79,7 +85,10 @@ class IntroActivity : AppCompatActivity() {
                         println("아 아예 실패해버렸어요!")
                         startActivity(loginIntent)
                     }
-                })
+                })}else{
+
+                    startActivity(loginIntent)
+                }
             }, 500)
         }
     }

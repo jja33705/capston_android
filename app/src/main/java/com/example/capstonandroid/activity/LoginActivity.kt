@@ -64,11 +64,6 @@ class LoginActivity : AppCompatActivity() {
         }
 
 
-
-
-
-
-//      로그인 버튼 만들기
         binding.loginButton.setOnClickListener{
 
 //          edittext 이메일 값 받아 오기
@@ -79,17 +74,41 @@ class LoginActivity : AppCompatActivity() {
             var password = binding.passwordEditText.text
 //            println(password)
 
+
 //      객체 만들기
             val login = Login(
                 email = email.toString(),
                 password = password.toString()
             )
 
+            println(login)
 
             val nextIntent = Intent(this, MainActivity::class.java)
 
+            if(binding.autoLoginCheckBox.isChecked.toString().equals("true")){
 
+                var autologin: String = "true"
 
+                val sharedPreference = getSharedPreferences("other", 0)
+                val editor = sharedPreference.edit()
+                editor.putString("autologin", autologin)
+                println("여긴 자동로그인 맞나 아닌가"+ autologin)
+                editor.apply()
+                }else {
+
+                var autologin: String = "false"
+
+                val sharedPreference = getSharedPreferences("other", 0)
+                val editor = sharedPreference.edit()
+                editor.putString("autologin", autologin)
+                println("여긴 자동로그인 맞나 아닌가"+ autologin)
+                editor.apply()
+
+                }
+
+            binding.forgotEmail.setOnClickListener {
+
+            }
             supplementService.loginPost(login).enqueue(object : Callback<LoginResponse> {
                 override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
 

@@ -109,9 +109,9 @@ class MeDetailsActivity : AppCompatActivity() {
         })
         //      객체 만들기
 
-        binding.backButton.setOnClickListener {
-            finish()
-        }
+//        binding.backButton.setOnClickListener {
+//            finish()
+//        }
 
         binding.deleteButton.setOnClickListener {
 

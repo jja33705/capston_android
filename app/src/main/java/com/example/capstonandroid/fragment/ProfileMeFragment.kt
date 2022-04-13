@@ -41,6 +41,7 @@ import retrofit2.Retrofit
 import java.io.File
 import kotlin.math.log
 
+
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
@@ -68,7 +69,7 @@ class ProfileMeFragment : Fragment(){
     }
 
     inner class MyXAxisFormatter : ValueFormatter(){
-        private val days = arrayOf("월요일","화요일","수요일","목요일","금요일","토요일","일요일")
+        private val days = arrayOf("6일전","5일전","4일전","3일전","그저께","어제","오늘")
         override fun getAxisLabel(value: Float, axis: AxisBase?): String {
             return days.getOrNull(value.toInt()-1) ?: value.toString()
         }
@@ -87,13 +88,21 @@ class ProfileMeFragment : Fragment(){
             param2 = it.getString(ARG_PARAM2)
         }
 
-        var mon :Float = 0f;
-        var tue :Float = 0f;
-        var wed :Float = 0f;
-        var thu :Float = 0f;
-        var fri :Float = 0f;
-        var sat :Float = 0f;
-        var sun :Float = 0f;
+        var r_today :Float = 0f;
+        var r_oneDayAgo :Float = 0f;
+        var r_twoDayAgo :Float = 0f;
+        var r_threeDayAgo :Float = 0f;
+        var r_fourDayAgo :Float = 0f;
+        var r_fiveDayAgo :Float = 0f;
+        var r_sixDayAgo :Float = 0f;
+
+        var b_today :Float = 0f;
+        var b_oneDayAgo :Float = 0f;
+        var b_twoDayAgo :Float = 0f;
+        var b_threeDayAgo :Float = 0f;
+        var b_fourDayAgo :Float = 0f;
+        var b_fiveDayAgo :Float = 0f;
+        var b_sixDayAgo :Float = 0f;
 
 //        함수 초기화
         initRetrofit()
@@ -106,185 +115,138 @@ class ProfileMeFragment : Fragment(){
         var token = "Bearer " + sharedPreference.getString("TOKEN","")
         println("프로필 미 프래그먼트 + "+token)
 
+        var event = ""
 
         var sData = resources.getStringArray(R.array.my_array)
-        var adapter =
-            activity?.let { ArrayAdapter<String>(it,android.R.layout.simple_spinner_item,sData) }
-        binding.spProfileMeSpinner.adapter = adapter
 
-        binding.spProfileMeSpinner.onItemSelectedListener = object:AdapterView.OnItemSelectedListener{
-            override fun onItemSelected(parent : AdapterView<*>?, view: View?, position1: Int, Int: Long) {
-                if (position1 == 0) {
-
-                        var event = "B"
-
-                        supplementService.userWeek(token, event).enqueue(object : Callback<UserWeekResponse>{
-                            override fun onResponse(
-                                call: Call<UserWeekResponse>,
-                                response: Response<UserWeekResponse>
-                            ) {
-                                mon = response.body()!!.Mon.toFloat()
-                                tue = response.body()!!.Tue.toFloat()
-                                wed = response.body()!!.Wed.toFloat()
-                                thu = response.body()!!.Tur.toFloat()// 여기 디비 수정 해야됨.
-                                fri = response.body()!!.Fri.toFloat()
-                                sat = response.body()!!.Sat.toFloat()
-                                sun = response.body()!!.Sun.toFloat()
-
-                                println(response.body()!!)
-                            }
-
-                            override fun onFailure(call: Call<UserWeekResponse>, t: Throwable) {
-                            }
-                        })
-
-                        val entries = ArrayList<BarEntry>()
-                        entries.add(BarEntry(1.2f,mon))
-                        entries.add(BarEntry(2.2f,tue))
-                        entries.add(BarEntry(3.2f,wed))
-                        entries.add(BarEntry(4.2f,thu))
-                        entries.add(BarEntry(5.2f,fri))
-                        entries.add(BarEntry(6.2f,sat))
-                        entries.add(BarEntry(7.2f,sun))
-
-
-                        chart.run {
-                            description.isEnabled = false //차트 옆에 별도로 표기되는 description이다. false로 설정하여 안보이게 했다.
-                            setMaxVisibleValueCount(7) // 최대 보이는 그래프 개수를 7개로 정해주었다.
-                            setPinchZoom(false) // 핀치줌(두손가락으로 줌인 줌 아웃하는것) 설정
-                            setDrawBarShadow(false)//그래프의 그림자
-                            setDrawGridBackground(false)//격자구조 넣을건지
-                            axisLeft.run { //왼쪽 축. 즉 Y방향 축을 뜻한다.
-                                axisMaximum = 101f //100 위치에 선을 그리기 위해 101f로 맥시멈을 정해주었다
-                                axisMinimum = 0f // 최소값 0
-                                granularity = 50f // 50 단위마다 선을 그리려고 granularity 설정 해 주었다.
-                                //위 설정이 20f였다면 총 5개의 선이 그려졌을 것
-                                setDrawLabels(true) // 값 적는거 허용 (0, 50, 100)
-                                setDrawGridLines(true) //격자 라인 활용
-                                setDrawAxisLine(false) // 축 그리기 설정
-                                axisLineColor = ContextCompat.getColor(context,R.color.black) // 축 색깔 설정
-                                gridColor = ContextCompat.getColor(context,R.color.blue) // 축 아닌 격자 색깔 설정
-                                textColor = ContextCompat.getColor(context,R.color.blue) // 라벨 텍스트 컬러 설정
-                                textSize = 14f //라벨 텍스트 크기
-                            }
-                            xAxis.run {
-                                position = XAxis.XAxisPosition.BOTTOM//X축을 아래에다가 둔다.
-                                granularity = 1f // 1 단위만큼 간격 두기
-                                setDrawAxisLine(true) // 축 그림
-                                setDrawGridLines(false) // 격자
-                                textColor = ContextCompat.getColor(context,R.color.black) //라벨 색상
-                                valueFormatter = MyXAxisFormatter() // 축 라벨 값 바꿔주기 위함
-                                textSize = 12f // 텍스트 크기
-                            }
-                            axisRight.isEnabled = false // 오른쪽 Y축을 안보이게 해줌.
-                            setTouchEnabled(false) // 그래프 터치해도 아무 변화없게 막음
-                            animateY(1000) // 밑에서부터 올라오는 애니매이션 적용
-                            legend.isEnabled = false //차트 범례 설정
-
-                        }
-
-                        var set = BarDataSet(entries,"DataSet")//데이터셋 초기화 하기
-                        set.color = ContextCompat.getColor(requireContext()!!,R.color.red)
-
-                        val dataSet :ArrayList<IBarDataSet> = ArrayList()
-                        dataSet.add(set)
-                        val data = BarData(dataSet)
-                        data.barWidth = 0.3f//막대 너비 설정하기
-                        binding.chart.run {
-                            this.data = data //차트의 데이터를 data로 설정해줌.
-                            setFitBars(true)
-                            invalidate()
-                        }
-                    }
-                 else {
-
-                    var event = "R"
-
-                    supplementService.userWeek(token, event).enqueue(object : Callback<UserWeekResponse>{
-                        override fun onResponse(
-                            call: Call<UserWeekResponse>,
-                            response: Response<UserWeekResponse>
+        event= "R"
+       supplementService.userWeek(token, event).enqueue(object : Callback<UserWeekResponse>{
+            override fun onResponse(
+                   call: Call<UserWeekResponse>,
+                   response: Response<UserWeekResponse>
                         ) {
-                            mon = response.body()!!.Mon.toFloat()
-                            tue = response.body()!!.Tue.toFloat()
-                            wed = response.body()!!.Wed.toFloat()
-                            thu = response.body()!!.Tur.toFloat()// 여기 디비 수정 해야됨.
-                            fri = response.body()!!.Fri.toFloat()
-                            sat = response.body()!!.Sat.toFloat()
-                            sun = response.body()!!.Sun.toFloat()
+                            r_today = response.body()!!.today.toFloat()
+                            r_oneDayAgo = response.body()!!.oneDayAgo.toFloat()
+                            r_twoDayAgo = response.body()!!.twoDayAgo.toFloat()
+                            r_threeDayAgo = response.body()!!.threeDayAgo.toFloat()// 여기 디비 수정 해야됨.
+                            r_fourDayAgo= response.body()!!.fourDayAgo.toFloat()
+                            r_fiveDayAgo = response.body()!!.fiveDayAgo.toFloat()
+                            r_sixDayAgo = response.body()!!.sixDayAgo.toFloat()
 
                             println(response.body()!!)
 
-                            val entries = ArrayList<BarEntry>()
-                            entries.add(BarEntry(1.2f,mon))
-                            entries.add(BarEntry(2.2f,tue))
-                            entries.add(BarEntry(3.2f,wed))
-                            entries.add(BarEntry(4.2f,thu))
-                            entries.add(BarEntry(5.2f,fri))
-                            entries.add(BarEntry(6.2f,sat))
-                            entries.add(BarEntry(7.2f,sun))
-
-
-                            binding.chart.run {
-                                description.isEnabled = false //차트 옆에 별도로 표기되는 description이다. false로 설정하여 안보이게 했다.
-                                setMaxVisibleValueCount(7) // 최대 보이는 그래프 개수를 7개로 정해주었다.
-                                setPinchZoom(false) // 핀치줌(두손가락으로 줌인 줌 아웃하는것) 설정
-                                setDrawBarShadow(false)//그래프의 그림자
-                                setDrawGridBackground(false)//격자구조 넣을건지
-                                axisLeft.run { //왼쪽 축. 즉 Y방향 축을 뜻한다.
-                                    axisMaximum = 101f //100 위치에 선을 그리기 위해 101f로 맥시멈을 정해주었다
-                                    axisMinimum = 0f // 최소값 0
-                                    granularity = 50f // 50 단위마다 선을 그리려고 granularity 설정 해 주었다.
-                                    //위 설정이 20f였다면 총 5개의 선이 그려졌을 것
-                                    setDrawLabels(true) // 값 적는거 허용 (0, 50, 100)
-                                    setDrawGridLines(true) //격자 라인 활용
-                                    setDrawAxisLine(false) // 축 그리기 설정
-                                    axisLineColor = ContextCompat.getColor(context,R.color.black) // 축 색깔 설정
-                                    gridColor = ContextCompat.getColor(context,R.color.blue) // 축 아닌 격자 색깔 설정
-                                    textColor = ContextCompat.getColor(context,R.color.blue) // 라벨 텍스트 컬러 설정
-                                    textSize = 14f //라벨 텍스트 크기
-                                }
-                                xAxis.run {
-                                    position = XAxis.XAxisPosition.BOTTOM//X축을 아래에다가 둔다.
-                                    granularity = 1f // 1 단위만큼 간격 두기
-                                    setDrawAxisLine(true) // 축 그림
-                                    setDrawGridLines(false) // 격자
-                                    textColor = ContextCompat.getColor(context,R.color.black) //라벨 색상
-                                    valueFormatter = MyXAxisFormatter() // 축 라벨 값 바꿔주기 위함
-                                    textSize = 12f // 텍스트 크기
-                                }
-                                axisRight.isEnabled = false // 오른쪽 Y축을 안보이게 해줌.
-                                setTouchEnabled(false) // 그래프 터치해도 아무 변화없게 막음
-                                animateY(1000) // 밑에서부터 올라오는 애니매이션 적용
-                                legend.isEnabled = false //차트 범례 설정
-
-                            }
-                            var set = BarDataSet(entries,"DataSet")//데이터셋 초기화 하기
-                            set.color = ContextCompat.getColor(requireContext()!!,R.color.red)
-
-                            val dataSet :ArrayList<IBarDataSet> = ArrayList()
-                            dataSet.add(set)
-                            val data = BarData(dataSet)
-                            data.barWidth = 0.3f//막대 너비 설정하기
-                            binding.chart.run {
-                                this.data = data //차트의 데이터를 data로 설정해줌.
-                                setFitBars(true)
-                                invalidate()
-                            }
-                        }
+            }
                         override fun onFailure(call: Call<UserWeekResponse>, t: Throwable) {
                         }
-                    })
+       })
 
+        event = "B"
+        supplementService.userWeek(token,event).enqueue(object :Callback<UserWeekResponse>{
+            override fun onResponse(
+                call: Call<UserWeekResponse>,
+                response: Response<UserWeekResponse>
+            ) {
+
+
+                b_today = response.body()!!.today.toFloat()
+                b_oneDayAgo = response.body()!!.oneDayAgo.toFloat()
+                b_twoDayAgo = response.body()!!.twoDayAgo.toFloat()
+                b_threeDayAgo = response.body()!!.threeDayAgo.toFloat()// 여기 디비 수정 해야됨.
+                b_fourDayAgo= response.body()!!.fourDayAgo.toFloat()
+                b_fiveDayAgo = response.body()!!.fiveDayAgo.toFloat()
+                b_sixDayAgo = response.body()!!.sixDayAgo.toFloat()
+
+                println(response.body()!!)
+
+                val entries = ArrayList<BarEntry>()
+//                entries.add(BarEntry(1.2f,sixDayAgo))
+//                entries.add(BarEntry(2.2f,fiveDayAgo))
+//                entries.add(BarEntry(3.2f,fourDayAgo))
+//                entries.add(BarEntry(4.2f,threeDayAgo))
+//                entries.add(BarEntry(5.2f,twoDayAgo))
+//                entries.add(BarEntry(6.2f,oneDayAgo))
+//                entries.add(BarEntry(7.2f,today))
+
+                var list_data = ArrayList<Float>()
+
+                list_data.add(r_sixDayAgo)
+                list_data.add(r_sixDayAgo)
+                list_data.add(r_sixDayAgo)
+                list_data.add(r_sixDayAgo)
+
+
+                entries.add(BarEntry(0.9f,r_sixDayAgo))
+                entries.add(BarEntry(1.2f,b_sixDayAgo))
+                entries.add(BarEntry(1.9f,r_fiveDayAgo))
+                entries.add(BarEntry(2.2f,b_fiveDayAgo))
+                entries.add(BarEntry(2.9f,r_fourDayAgo))
+                entries.add(BarEntry(3.2f,b_fourDayAgo))
+                entries.add(BarEntry(3.9f,r_threeDayAgo))
+                entries.add(BarEntry(4.2f,b_threeDayAgo))
+                entries.add(BarEntry(4.9f,r_twoDayAgo))
+                entries.add(BarEntry(5.2f,b_twoDayAgo))
+                entries.add(BarEntry(5.9f,r_oneDayAgo))
+                entries.add(BarEntry(6.2f,b_oneDayAgo))
+                entries.add(BarEntry(6.9f,r_today))
+                entries.add(BarEntry(7.2f,b_today))
+
+
+                binding.chart.run {
+                    description.isEnabled = false //차트 옆에 별도로 표기되는 description이다. false로 설정하여 안보이게 했다.
+                    setMaxVisibleValueCount(14) // 최대 보이는 그래프 개수를 7개로 정해주었다.
+                    setPinchZoom(false) // 핀치줌(두손가락으로 줌인 줌 아웃하는것) 설정
+                    setDrawBarShadow(false)//그래프의 그림자
+                    setDrawGridBackground(false)//격자구조 넣을건지
+                    axisLeft.run { //왼쪽 축. 즉 Y방향 축을 뜻한다.
+                        axisMaximum = 10000f //100 위치에 선을 그리기 위해 101f로 맥시멈을 정해주었다
+                        axisMinimum = 0f // 최소값 0
+                        granularity = 1000f // 50 단위마다 선을 그리려고 granularity 설정 해 주었다.
+                        //위 설정이 20f였다면 총 5개의 선이 그려졌을 것
+                        setDrawLabels(true) // 값 적는거 허용 (0, 50, 100)
+                        setDrawGridLines(true) //격자 라인 활용
+                        setDrawAxisLine(false) // 축 그리기 설정
+                        axisLineColor = ContextCompat.getColor(context,R.color.black) // 축 색깔 설정
+                        gridColor = ContextCompat.getColor(context,R.color.blue) // 축 아닌 격자 색깔 설정
+                        textColor = ContextCompat.getColor(context,R.color.blue) // 라벨 텍스트 컬러 설정
+                        textSize = 14f //라벨 텍스트 크기
+                    }
+                    xAxis.run {
+                        position = XAxis.XAxisPosition.BOTTOM//X축을 아래에다가 둔다.
+                        granularity = 1f // 1 단위만큼 간격 두기
+                        setDrawAxisLine(true) // 축 그림
+                        setDrawGridLines(false) // 격자
+                        textColor = ContextCompat.getColor(context,R.color.black) //라벨 색상
+                        valueFormatter = MyXAxisFormatter() // 축 라벨 값 바꿔주기 위함
+                        textSize = 12f // 텍스트 크기
+                    }
+                    axisRight.isEnabled =false  // 오른쪽 Y축을 안보이게 해줌.
+                    setTouchEnabled(false) // 그래프 터치해도 아무 변화없게 막음
+                    animateY(1500) // 밑에서부터 올라오는 애니매이션 적용
+                    legend.isEnabled = false //차트 범례 설정
+
+                }
+                var set = BarDataSet(entries,"DataSet")//데이터셋 초기화 하기
+                set.color = ContextCompat.getColor(requireContext()!!,R.color.red)
+
+                val dataSet :ArrayList<IBarDataSet> = ArrayList()
+                dataSet.add(set)
+                val data = BarData(dataSet)
+                data.barWidth = 0.2f//막대 너비 설정하기
+                binding.chart.run {
+                    this.data = data //차트의 데이터를 data로 설정해줌.
+                    setFitBars(true)
+                    invalidate()
                 }
             }
 
-            override fun onNothingSelected(p0: AdapterView<*>?) {
+            override fun onFailure(call: Call<UserWeekResponse>, t: Throwable) {
                 TODO("Not yet implemented")
             }
-        }
+        })
 
-        binding.spProfileMeSpinner.setSelection(1)
+
+
+
  supplementService.userGet(token.toString()).enqueue(object : Callback<LoginUserResponse>{
             override fun onResponse(
                 call: Call<LoginUserResponse>,
@@ -344,6 +306,15 @@ class ProfileMeFragment : Fragment(){
                     TODO("Not yet implemented")
                 }
             })
+
+
+
+            var autologin: String = "false"
+
+            val editor = sharedPreference.edit()
+            editor.putString("autologin", autologin)
+            println("여긴 자동로그인 맞나 아닌가"+ autologin)
+            editor.apply()
         }
 
 
