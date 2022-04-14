@@ -107,13 +107,15 @@ class HomeFragment : Fragment()  {
                             UserData(
                                 ContextCompat.getDrawable(
                                     requireContext(),
-                                    R.drawable.sakai
-                                )!!,
+                                    R.drawable.map
+                                )!!
+                                ,
                                 response.body()!!.data[i].user.name,
                                 response.body()!!.data[i].title,
                                 i,
                                 response.body()!!.data[i].created_at,
                                 response.body()!!.current_page,
+                                response.body()!!.data[i].map_image
                             )
                         )
                     }
@@ -164,7 +166,8 @@ class HomeFragment : Fragment()  {
                                             response.body()!!.data[i].title,
                                             i,
                                             response.body()!!.data[i].created_at,
-                                            response.body()!!.current_page
+                                            response.body()!!.current_page,
+                                            response.body()!!.data[i].map_image
                                         )
                                     )
                                 }

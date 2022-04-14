@@ -9,6 +9,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.viewpager2.widget.ViewPager2
+import com.bumptech.glide.Glide
 import com.bumptech.glide.util.Util
 import com.example.capstonandroid.R
 import com.example.capstonandroid.Utils
@@ -80,6 +81,20 @@ class SNSDetailsActivity : AppCompatActivity() {
 
                  if(response.isSuccessful){
 
+                     val defaultImage = R.drawable.map
+                     val url = response.body()!!.data[data_num]!!.map_image[0].url
+                     println(url)
+
+
+                     Glide.with(this@SNSDetailsActivity)
+                         .load(url) // 불러올 이미지 url
+                         .placeholder(defaultImage) // 이미지 로딩 시작하기 전 표시할 이미지
+                         .error(defaultImage) // 로딩 에러 발생 시 표시할 이미지
+                         .fallback(defaultImage) // 로드할 url 이 비어있을(null 등) 경우 표시할 이미지
+                         .into(binding.imageView) // 이미지를 넣을 뷰
+
+
+
                     binding.title.setText(response.body()!!.data[data_num]!!.title)
 //                     binding.content.setText(response.body()!!.data[data_num]!!.content)
 //                     println(response.body()!!.data[data_num]!!.likes.size)
@@ -108,7 +123,7 @@ class SNSDetailsActivity : AppCompatActivity() {
                      binding.kind.setText("종류 : " + kind)
                      binding.averageSpeed.setText("평균 속도 : "+average_speed +" Km/h")
                      binding.altitude.setText("고도 : "+altitude)
-                     binding.distance.setText("거리 : "+(distance/10)+" Km")
+                     binding.distance.setText("거리 : "+String.format("%.2f",distance/1000)+" Km")
                  }  else{
                      println("실패함ㅋㅋ")
                      println(response.body())

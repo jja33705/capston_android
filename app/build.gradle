@@ -50,6 +50,10 @@ dependencies {
 //  다이얼로그 화면 구현
     implementation 'com.github.ybq:Android-SpinKit:1.4.0'
 
+//  url 사진 바로 들고오기ㅋㅋ
+
+    implementation 'com.github.bumptech.glide:glide:4.9.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
 
     // 안드로이드 내부 db (room 라이브러리)
     def roomVersion = "2.4.2"
