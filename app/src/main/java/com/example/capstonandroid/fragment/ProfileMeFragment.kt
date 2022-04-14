@@ -1,6 +1,7 @@
 package com.example.capstonandroid.fragment
 
 import android.Manifest
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
@@ -11,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -29,6 +31,7 @@ import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
+import com.github.mikephil.charting.utils.ColorTemplate
 import kotlinx.android.synthetic.main.fragment_target_me.*
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -59,7 +62,8 @@ class ProfileMeFragment : Fragment(){
     private val binding get() = mBinding!!
 
 
-
+    private var chart_max :Float = 0.0f;
+    private var chart_min :Float = 0.0f;
 
 //    private val binding: FragmentProfileMeBinding get() = _binding!!
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -115,134 +119,159 @@ class ProfileMeFragment : Fragment(){
         var token = "Bearer " + sharedPreference.getString("TOKEN","")
         println("프로필 미 프래그먼트 + "+token)
 
-        var event = ""
 
         var sData = resources.getStringArray(R.array.my_array)
 
-        event= "R"
-       supplementService.userWeek(token, event).enqueue(object : Callback<UserWeekResponse>{
-            override fun onResponse(
-                   call: Call<UserWeekResponse>,
-                   response: Response<UserWeekResponse>
-                        ) {
-                            r_today = response.body()!!.today.toFloat()
-                            r_oneDayAgo = response.body()!!.oneDayAgo.toFloat()
-                            r_twoDayAgo = response.body()!!.twoDayAgo.toFloat()
-                            r_threeDayAgo = response.body()!!.threeDayAgo.toFloat()// 여기 디비 수정 해야됨.
-                            r_fourDayAgo= response.body()!!.fourDayAgo.toFloat()
-                            r_fiveDayAgo = response.body()!!.fiveDayAgo.toFloat()
-                            r_sixDayAgo = response.body()!!.sixDayAgo.toFloat()
 
-                            println(response.body()!!)
-
-            }
-                        override fun onFailure(call: Call<UserWeekResponse>, t: Throwable) {
-                        }
-       })
-
-        event = "B"
-        supplementService.userWeek(token,event).enqueue(object :Callback<UserWeekResponse>{
+        supplementService.userWeek(token, "R").enqueue(object : Callback<UserWeekResponse>{
             override fun onResponse(
                 call: Call<UserWeekResponse>,
                 response: Response<UserWeekResponse>
             ) {
+                r_today = response.body()!!.today.toFloat()/1000
+                r_oneDayAgo = response.body()!!.oneDayAgo.toFloat()/1000
+                r_twoDayAgo = response.body()!!.twoDayAgo.toFloat()/1000
+                r_threeDayAgo = response.body()!!.threeDayAgo.toFloat()/1000// 여기 디비 수정 해야됨.
+                r_fourDayAgo= response.body()!!.fourDayAgo.toFloat()/1000
+                r_fiveDayAgo = response.body()!!.fiveDayAgo.toFloat()/1000
+                r_sixDayAgo = response.body()!!.sixDayAgo.toFloat()/1000
+
+                println("라이딩"+response.body()!!)
+
+                supplementService.userWeek(token,"B").enqueue(object :Callback<UserWeekResponse>{
+                    override fun onResponse(
+                        call: Call<UserWeekResponse>,
+                        response: Response<UserWeekResponse>
+                    ) {
 
 
-                b_today = response.body()!!.today.toFloat()
-                b_oneDayAgo = response.body()!!.oneDayAgo.toFloat()
-                b_twoDayAgo = response.body()!!.twoDayAgo.toFloat()
-                b_threeDayAgo = response.body()!!.threeDayAgo.toFloat()// 여기 디비 수정 해야됨.
-                b_fourDayAgo= response.body()!!.fourDayAgo.toFloat()
-                b_fiveDayAgo = response.body()!!.fiveDayAgo.toFloat()
-                b_sixDayAgo = response.body()!!.sixDayAgo.toFloat()
 
-                println(response.body()!!)
+                        b_today = response.body()!!.today.toFloat()/1000
+                        b_oneDayAgo = response.body()!!.oneDayAgo.toFloat()/1000
+                        b_twoDayAgo = response.body()!!.twoDayAgo.toFloat()/1000
+                        b_threeDayAgo = response.body()!!.threeDayAgo.toFloat()/1000// 여기 디비 수정 해야됨.
+                        b_fourDayAgo= response.body()!!.fourDayAgo.toFloat()/1000
+                        b_fiveDayAgo = response.body()!!.fiveDayAgo.toFloat()/1000
+                        b_sixDayAgo = response.body()!!.sixDayAgo.toFloat()/1000
 
-                val entries = ArrayList<BarEntry>()
-//                entries.add(BarEntry(1.2f,sixDayAgo))
-//                entries.add(BarEntry(2.2f,fiveDayAgo))
-//                entries.add(BarEntry(3.2f,fourDayAgo))
-//                entries.add(BarEntry(4.2f,threeDayAgo))
-//                entries.add(BarEntry(5.2f,twoDayAgo))
-//                entries.add(BarEntry(6.2f,oneDayAgo))
-//                entries.add(BarEntry(7.2f,today))
+                        println(response.body()!!)
 
-                var list_data = ArrayList<Float>()
+//                val entries2 = ArrayList<BarEntry>()
+//
+//                entries.add(BarEntry(0.9f,r_sixDayAgo))
+//                entries.add(BarEntry(1.2f,b_sixDayAgo))
+//                entries.add(BarEntry(1.9f,r_fiveDayAgo))
+//                entries.add(BarEntry(2.2f,b_fiveDayAgo))
+//                entries.add(BarEntry(2.9f,r_fourDayAgo))
+//                entries.add(BarEntry(3.2f,b_fourDayAgo))
+//                entries.add(BarEntry(3.9f,r_threeDayAgo))
+//                entries.add(BarEntry(4.2f,b_threeDayAgo))
+//                entries.add(BarEntry(4.9f,r_twoDayAgo))
+//                entries.add(BarEntry(5.2f,b_twoDayAgo))
+//                entries.add(BarEntry(5.9f,r_oneDayAgo))
+//                entries.add(BarEntry(6.2f,b_oneDayAgo))
+//                entries.add(BarEntry(6.9f,r_today))
+//                entries.add(BarEntry(7.2f,b_today))
 
-                list_data.add(r_sixDayAgo)
-                list_data.add(r_sixDayAgo)
-                list_data.add(r_sixDayAgo)
-                list_data.add(r_sixDayAgo)
+                        val entries = ArrayList<BarEntry>()
 
-
-                entries.add(BarEntry(0.9f,r_sixDayAgo))
-                entries.add(BarEntry(1.2f,b_sixDayAgo))
-                entries.add(BarEntry(1.9f,r_fiveDayAgo))
-                entries.add(BarEntry(2.2f,b_fiveDayAgo))
-                entries.add(BarEntry(2.9f,r_fourDayAgo))
-                entries.add(BarEntry(3.2f,b_fourDayAgo))
-                entries.add(BarEntry(3.9f,r_threeDayAgo))
-                entries.add(BarEntry(4.2f,b_threeDayAgo))
-                entries.add(BarEntry(4.9f,r_twoDayAgo))
-                entries.add(BarEntry(5.2f,b_twoDayAgo))
-                entries.add(BarEntry(5.9f,r_oneDayAgo))
-                entries.add(BarEntry(6.2f,b_oneDayAgo))
-                entries.add(BarEntry(6.9f,r_today))
-                entries.add(BarEntry(7.2f,b_today))
+                        entries.add(BarEntry(0.9f,r_sixDayAgo))
+                        entries.add(BarEntry(1.9f,r_fiveDayAgo))
+                        entries.add(BarEntry(2.9f,r_fourDayAgo))
+                        entries.add(BarEntry(3.9f,r_threeDayAgo))
+                        entries.add(BarEntry(4.9f,r_twoDayAgo))
+                        entries.add(BarEntry(5.9f,r_oneDayAgo))
+                        entries.add(BarEntry(6.9f,r_today))
 
 
-                binding.chart.run {
-                    description.isEnabled = false //차트 옆에 별도로 표기되는 description이다. false로 설정하여 안보이게 했다.
-                    setMaxVisibleValueCount(14) // 최대 보이는 그래프 개수를 7개로 정해주었다.
-                    setPinchZoom(false) // 핀치줌(두손가락으로 줌인 줌 아웃하는것) 설정
-                    setDrawBarShadow(false)//그래프의 그림자
-                    setDrawGridBackground(false)//격자구조 넣을건지
-                    axisLeft.run { //왼쪽 축. 즉 Y방향 축을 뜻한다.
-                        axisMaximum = 10000f //100 위치에 선을 그리기 위해 101f로 맥시멈을 정해주었다
-                        axisMinimum = 0f // 최소값 0
-                        granularity = 1000f // 50 단위마다 선을 그리려고 granularity 설정 해 주었다.
-                        //위 설정이 20f였다면 총 5개의 선이 그려졌을 것
-                        setDrawLabels(true) // 값 적는거 허용 (0, 50, 100)
-                        setDrawGridLines(true) //격자 라인 활용
-                        setDrawAxisLine(false) // 축 그리기 설정
-                        axisLineColor = ContextCompat.getColor(context,R.color.black) // 축 색깔 설정
-                        gridColor = ContextCompat.getColor(context,R.color.blue) // 축 아닌 격자 색깔 설정
-                        textColor = ContextCompat.getColor(context,R.color.blue) // 라벨 텍스트 컬러 설정
-                        textSize = 14f //라벨 텍스트 크기
+                        val entries2 = ArrayList<BarEntry>()
+
+                        entries2.add(BarEntry(1.2f,b_sixDayAgo))
+                        entries2.add(BarEntry(2.2f,b_fiveDayAgo))
+                        entries2.add(BarEntry(3.2f,b_fourDayAgo))
+                        entries2.add(BarEntry(4.2f,b_threeDayAgo))
+                        entries2.add(BarEntry(5.2f,b_twoDayAgo))
+                        entries2.add(BarEntry(6.2f,b_oneDayAgo))
+                        entries2.add(BarEntry(7.2f,b_today))
+
+                        val arr: Array<Float> = arrayOf(r_sixDayAgo, b_sixDayAgo, r_fiveDayAgo,b_fiveDayAgo,r_fourDayAgo,b_fourDayAgo,r_threeDayAgo,b_threeDayAgo,
+                            r_twoDayAgo,b_twoDayAgo,r_oneDayAgo,b_oneDayAgo,r_today,b_today)
+
+
+                        var max = arr[0]
+                        for( i in 0 until arr.lastIndex){
+                            if(max < arr[i]){   // 부호만 바꾸면 최대값이 구해진다.
+                                max = arr[i]
+                            }
+                            chart_max = max
+                        }
+
+                        binding.chart.run {
+                            description.isEnabled = false //차트 옆에 별도로 표기되는 description이다. false로 설정하여 안보이게 했다.
+                            setMaxVisibleValueCount(14) // 최대 보이는 그래프 개수를 7개로 정해주었다.
+                            setPinchZoom(false) // 핀치줌(두손가락으로 줌인 줌 아웃하는것) 설정
+                            setDrawBarShadow(false)//그래프의 그림자
+                            setDrawGridBackground(false)//격자구조 넣을건지
+                            axisLeft.run { //왼쪽 축. 즉 Y방향 축을 뜻한다.
+                                axisMaximum = chart_max //100 위치에 선을 그리기 위해 101f로 맥시멈을 정해주었다
+                                axisMinimum = 0f // 최소값 0
+                                granularity = chart_max/5 // 50 단위마다 선을 그리려고 granularity 설정 해 주었다.
+                                //위 설정이 20f였다면 총 5개의 선이 그려졌을 것
+                                setDrawLabels(true) // 값 적는거 허용 (0, 50, 100)
+                                setDrawGridLines(false) //격자 라인 활용
+                                setDrawAxisLine(false) // 축 그리기 설정
+                                axisLineColor = ContextCompat.getColor(context,R.color.black) // 축 색깔 설정
+                                gridColor = ContextCompat.getColor(context,R.color.blue) // 축 아닌 격자 색깔 설정
+                                textColor = ContextCompat.getColor(context,R.color.blue) // 라벨 텍스트 컬러 설정
+                                textSize = 14f //라벨 텍스트 크기
+
+                            }
+                            xAxis.run {
+                                position = XAxis.XAxisPosition.BOTTOM//X축을 아래에다가 둔다.
+                                granularity = 1f // 1 단위만큼 간격 두기
+                                setDrawAxisLine(true) // 축 그림
+                                setDrawGridLines(false) // 격자
+                                textColor = ContextCompat.getColor(context,R.color.black) //라벨 색상
+                                valueFormatter = MyXAxisFormatter() // 축 라벨 값 바꿔주기 위함
+                                textSize = 12f // 텍스트 크기
+                            }
+                            axisRight.isEnabled =false  // 오른쪽 Y축을 안보이게 해줌.
+                            setTouchEnabled(false) // 그래프 터치해도 아무 변화없게 막음
+                            animateY(1500) // 밑에서부터 올라오는 애니매이션 적용
+                            legend.isEnabled = false //차트 범례 설정
+
+                        }
+
+
+                        var set = BarDataSet(entries,"DataSet")//데이터셋 초기화 하기
+                        var set2 = BarDataSet(entries2,"DataSet")// 데이터 셋 초기화하게
+
+                        set.color = ColorTemplate.rgb("#ff7b22")
+                        set2.color =ColorTemplate.rgb("#001102")
+
+
+                        val data = BarData(set,set2)
+                        data.barWidth = 0.2f//막대 너비 설정하기
+
+                        binding.chart.run {
+                            this.data = data //차트의 데이터를 data로 설정해줌.
+                            setFitBars(true)
+                            invalidate()
+                        }
+
                     }
-                    xAxis.run {
-                        position = XAxis.XAxisPosition.BOTTOM//X축을 아래에다가 둔다.
-                        granularity = 1f // 1 단위만큼 간격 두기
-                        setDrawAxisLine(true) // 축 그림
-                        setDrawGridLines(false) // 격자
-                        textColor = ContextCompat.getColor(context,R.color.black) //라벨 색상
-                        valueFormatter = MyXAxisFormatter() // 축 라벨 값 바꿔주기 위함
-                        textSize = 12f // 텍스트 크기
+
+                    override fun onFailure(call: Call<UserWeekResponse>, t: Throwable) {
+                        TODO("Not yet implemented")
                     }
-                    axisRight.isEnabled =false  // 오른쪽 Y축을 안보이게 해줌.
-                    setTouchEnabled(false) // 그래프 터치해도 아무 변화없게 막음
-                    animateY(1500) // 밑에서부터 올라오는 애니매이션 적용
-                    legend.isEnabled = false //차트 범례 설정
+                })
 
-                }
-                var set = BarDataSet(entries,"DataSet")//데이터셋 초기화 하기
-                set.color = ContextCompat.getColor(requireContext()!!,R.color.red)
-
-                val dataSet :ArrayList<IBarDataSet> = ArrayList()
-                dataSet.add(set)
-                val data = BarData(dataSet)
-                data.barWidth = 0.2f//막대 너비 설정하기
-                binding.chart.run {
-                    this.data = data //차트의 데이터를 data로 설정해줌.
-                    setFitBars(true)
-                    invalidate()
-                }
             }
-
             override fun onFailure(call: Call<UserWeekResponse>, t: Throwable) {
-                TODO("Not yet implemented")
             }
         })
+
+
 
 
 
@@ -281,40 +310,55 @@ class ProfileMeFragment : Fragment(){
         val loginActivity = Intent(requireContext(), LoginActivity::class.java)
 
         binding.logout.setOnClickListener {
-            supplementService.logOut(token.toString()).enqueue(object : Callback<LogoutResponse> {
-                override fun onResponse(
-                    call: Call<LogoutResponse>,
-                    response: Response<LogoutResponse>
-                ) {
-                    if (response.isSuccessful) {
-                        println("로그아웃이 성공되었습니다! 성공 ")
-                        Toast.makeText(requireContext(),"로그아웃 성공 했습니다!", Toast.LENGTH_SHORT).show()
+
+
+            val builder = AlertDialog.Builder(requireContext())
+            builder.setTitle("정말 로그아웃 할 것입니까?")
+                .setPositiveButton("확인", DialogInterface.OnClickListener{ dialog, id->
+
+                    supplementService.logOut(token.toString()).enqueue(object : Callback<LogoutResponse> {
+                        override fun onResponse(
+                            call: Call<LogoutResponse>,
+                            response: Response<LogoutResponse>
+                        ) {
+                            if (response.isSuccessful) {
+                                println("로그아웃이 성공되었습니다! 성공 ")
+                                Toast.makeText(requireContext(),"로그아웃 성공 했습니다!", Toast.LENGTH_SHORT).show()
 
 //                  콜백 응답으로 온것
-                        println(response.body())
-                        startActivity(loginActivity)
+                                println(response.body())
+                                startActivity(loginActivity)
 
-                    } else {
-                        println("갔지만 실패")
-                        println(response.body())
-                        println(response.message())
-                        println(response.code())
-                    }
-                }
+                            } else {
+                                println("갔지만 실패")
+                                println(response.body())
+                                println(response.message())
+                                println(response.code())
+                            }
+                        }
 
-                override fun onFailure(call: Call<LogoutResponse>, t: Throwable) {
-                    TODO("Not yet implemented")
-                }
-            })
+                        override fun onFailure(call: Call<LogoutResponse>, t: Throwable) {
+                            TODO("Not yet implemented")
+                        }
+                    })
 
 
 
-            var autologin: String = "false"
+                    var autologin: String = "false"
 
-            val editor = sharedPreference.edit()
-            editor.putString("autologin", autologin)
-            println("여긴 자동로그인 맞나 아닌가"+ autologin)
-            editor.apply()
+                    val editor = sharedPreference.edit()
+                    editor.putString("autologin", autologin)
+                    println("여긴 자동로그인 맞나 아닌가"+ autologin)
+                    editor.apply()
+
+                })
+                .setNegativeButton("취소",DialogInterface.OnClickListener{ dialog,id ->
+                    println("취소 하셨네요")
+                })
+
+            builder.show()
+
+
         }
 
 

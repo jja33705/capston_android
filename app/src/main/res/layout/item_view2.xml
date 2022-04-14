@@ -14,15 +14,14 @@
         android:orientation="horizontal"
         android:layout_gravity="center_horizontal"
         android:layout_margin="5dp">
-        <ImageButton
-
-            android:id="@+id/imageButton"
-            android:layout_margin="5dp"
+        <ImageView
             android:layout_width="30dp"
-            android:layout_height="30dp"
             android:layout_gravity="center_vertical"
-            android:src="@drawable/main_profile"
-           ></ImageButton>
+            android:layout_margin="5dp"
+            android:layout_height="30dp"
+            android:src="@drawable/profile">
+
+        </ImageView>
         <TextView
             android:hint="이름"
             android:includeFontPadding="false"
@@ -50,7 +49,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_margin="5dp">
 
             <TextView
                 android:text="제목"
