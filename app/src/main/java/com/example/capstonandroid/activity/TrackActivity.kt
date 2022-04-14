@@ -4,7 +4,9 @@ import android.content.Intent
 import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.example.capstonandroid.R
 import com.example.capstonandroid.Utils
@@ -33,6 +35,9 @@ class TrackActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var retrofit: Retrofit // 레트로핏 인스턴스
     private lateinit var supplementService: BackendApi // api
 
+    private lateinit var trackMarker: View // 커스텀 마커 뷰
+    private lateinit var trackMarkerTextView: TextView // 커스텀 마커 텍스트 뷰
+
     private lateinit var trackId: String
 
     private lateinit var track: Track
@@ -59,6 +64,9 @@ class TrackActivity : AppCompatActivity(), OnMapReadyCallback {
         trackId = intent.getStringExtra("trackId")!!
 
         initRetrofit()
+
+        trackMarker = LayoutInflater.from(this).inflate(R.layout.track_and_name, null)!!
+        trackMarkerTextView = trackMarker.findViewById(R.id.tv_marker) as TextView
 
         // 전체 랭킹 버튼 눌렀을 때
         binding.buttonAllRank.setOnClickListener {
@@ -91,6 +99,7 @@ class TrackActivity : AppCompatActivity(), OnMapReadyCallback {
                 binding.tvTrackTitle.text = track.trackName
                 binding.tvTrackDistance.text = "${Utils.distanceToText(track.totalDistance)}km"
                 binding.tvTrackDescription.text = track.description
+                binding.tvTrackSlope.text = "${track.avgSlope}%"
                 if (track.event == "B") {
                     binding.trackExerciseKindIcon.setImageResource(R.drawable.cycle)
                 }
@@ -155,20 +164,13 @@ class TrackActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         // 출발점 마커 추가
+        trackMarkerTextView.text = track.trackName
         mGoogleMap.addMarker(
             MarkerOptions()
                 .position(startLatLng)
                 .title("출발점")
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.start_marker))
+                .icon(BitmapDescriptorFactory.fromBitmap(Utils.createBitmapFromView(trackMarker)))
                 .anchor(0.5F, 0.9F))
-
-        // 도착점 마커 추가
-        mGoogleMap.addMarker(
-            MarkerOptions()
-                .position(endLatLng)
-                .title("도착점")
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.goal_flag))
-                .anchor(0F, 1F))
 
         // 카메라 업데이트
         val bounds: LatLngBounds = builder.build()

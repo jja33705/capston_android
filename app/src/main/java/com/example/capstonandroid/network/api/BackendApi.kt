@@ -74,9 +74,6 @@ interface BackendApi {
 //  @POST("post/store") // 기록 저장
 //  fun storePost(@Body record: Track) : Call<Track>
 
-//    @POST("post/store") // 포스트 작성
-//    suspend fun postRecordActivity(@Header("Authorization") token: String, @Body postRecordActivity: PostRecordActivity): Response<ResponseMessage>
-
     @Multipart
     @POST("post/store") // 포스트 작성
     suspend fun postRecordActivity(
@@ -101,7 +98,7 @@ interface BackendApi {
     @GET("match/rank") // 랭크 랜덤 매칭
     suspend fun rankMatching(@Header("Authorization") token: String, @Query("track_id") trackId: String): Response<RankMatchingResponse>
 
-    @GET("match/gpsData") // gps 데이터 받기
+    @GET("gpsData") // gps 데이터 받기
     suspend fun getGpsData(@Header("Authorization") token: String, @Query("gpsId") gpsId: String): Response<GetGpsDataResponse>
 
     @GET("tracks/search") // 트랙 리스트 받기

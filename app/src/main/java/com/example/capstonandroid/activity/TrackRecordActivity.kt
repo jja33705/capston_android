@@ -64,6 +64,13 @@ class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.S
 
     private lateinit var checkpointList: ArrayList<Location> // 체크포인트 리스트
 
+    private lateinit var mPolyline: Polyline // 내가 달린 구간 폴리라인
+
+    // 트랙 관련
+    private lateinit var trackPolyline: Polyline
+    private var trackStartPointMarker: Marker? = null // 트랙 시작점 마커
+    private var trackEndPointMarker: Marker? = null // 트랙 끝점 마커
+
     private lateinit var latLngList: ArrayList<LatLng> // 폴리라인에 넣을 위치 리스트
     private var mLocationMarker: Marker? = null // 내 위치 마커
     private var mLocationBack: Marker? = null
@@ -117,6 +124,11 @@ class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.S
 
                 // 시작 영역 없앰
                 canStartAreaCircle.remove()
+
+                // 기존 트랙은 투명하게
+                trackPolyline.color = resources.getColor(R.color.no_selected_polyline_color, null)
+                trackEndPointMarker?.alpha = 0.3F
+                trackStartPointMarker?.alpha = 0.3F
             }
         }
 
@@ -199,6 +211,11 @@ class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.S
                 binding.tvInformation.visibility = View.GONE // 정보 창 없앰
                 canStartAreaCircle.remove() // 시작 영역 제거
 
+                // 기존 트랙은 투명하게
+                trackPolyline.color = resources.getColor(R.color.no_selected_polyline_color, null)
+                trackEndPointMarker?.alpha = 0.3F
+                trackStartPointMarker?.alpha = 0.3F
+
                 // 마지막 위치 가져오고 마커 생성
                 beforeLatLng = LatLng(TrackRecordService.mLocation.latitude, TrackRecordService.mLocation.longitude)
                 mLocationMarker = mGoogleMap.addMarker(MarkerOptions()
@@ -229,6 +246,7 @@ class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.S
     }
 
     // 중간에 액티비티 재실행 시 db에 있는 gps 데이터 다시 가져오고 폴리라인 그려줌
+    @SuppressLint("NewApi")
     private fun loadGpsDataFromDatabaseAndDrawPolyline() {
         CoroutineScope(Dispatchers.Main + job).launch {
             val gpsDataList = withContext(Dispatchers.IO) {
@@ -246,7 +264,15 @@ class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.S
                 latLngListInner
             }
 
-            println("withContext 끝나고 내려옴")
+            mGoogleMap.addMarker(MarkerOptions()
+                .position(latLngList[0])
+                .icon(Utils.getMarkerIconFromDrawable(resources.getDrawable(R.drawable.record_start_point, null)))
+                .anchor(0.5F, 0.5F))
+
+            mPolyline = mGoogleMap.addPolyline(PolylineOptions()
+                .addAll(latLngList)
+                .color(resources.getColor(R.color.mainColor, null))
+                .width(12F)) // 그림 그림
 
             registerLocalBroadcastReceiver()
         }
@@ -293,7 +319,7 @@ class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.S
                 trackLatLngList.add(LatLng(coordinate[1], coordinate[0]))
                 println("${coordinate[1]}, ${coordinate[0]}")
             }
-            mGoogleMap.addPolyline(PolylineOptions()
+            trackPolyline = mGoogleMap.addPolyline(PolylineOptions()
                 .clickable(true)
                 .addAll(trackLatLngList)
                 .color(ContextCompat.getColor(this, R.color.main_color))
@@ -318,7 +344,7 @@ class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.S
             }
 
             // 출발점 마커 추가
-            mGoogleMap.addMarker(MarkerOptions()
+            trackStartPointMarker = mGoogleMap.addMarker(MarkerOptions()
                 .position(LatLng(startPoint.latitude, startPoint.longitude))
                 .title("출발점")
                 .icon(Utils.getMarkerIconFromDrawable(resources.getDrawable(R.drawable.start_point_marker,null)))
@@ -332,7 +358,7 @@ class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.S
                 .strokeWidth(0F))
 
             // 도착점 마커 추가
-            mGoogleMap.addMarker(MarkerOptions()
+            trackEndPointMarker = mGoogleMap.addMarker(MarkerOptions()
                 .position(LatLng(track.gps.coordinates[track.gps.coordinates.size - 1][1], track.gps.coordinates[track.gps.coordinates.size - 1][0]))
                 .title("도착점")
                 .icon(Utils.getMarkerIconFromDrawable(resources.getDrawable(R.drawable.end_point_marker,null)))
@@ -350,70 +376,75 @@ class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.S
 
     @SuppressLint("NewApi")
     private fun predictLocation() {
-        // 내 위치 예측
-        var myIncreaseSumDistance = 0F // 한계치까지만 비교하기 위한 내 위치 증가깂
+        CoroutineScope(Dispatchers.Main).launch {
+            launch(Dispatchers.Default) {
+                // 내 위치 예측
+                var myIncreaseSumDistance = 0F // 한계치까지만 비교하기 위한 내 위치 증가깂
 
-        var myBeforeLocation = Location("start") // 트랙 위에서 현재 내 위치라고 예상되는 지점
-        myBeforeLocation.latitude =
-            track.gps.coordinates[TrackRecordService.myLocationIndexOnTrack][1]
-        myBeforeLocation.longitude =
-            track.gps.coordinates[TrackRecordService.myLocationIndexOnTrack][0]
+                var myBeforeLocation = Location("start") // 트랙 위에서 현재 내 위치라고 예상되는 지점
+                myBeforeLocation.latitude =
+                    track.gps.coordinates[TrackRecordService.myLocationIndexOnTrack][1]
+                myBeforeLocation.longitude =
+                    track.gps.coordinates[TrackRecordService.myLocationIndexOnTrack][0]
 
-        var myMinDistance =
-            TrackRecordService.mLocation.distanceTo(myBeforeLocation) // 가장 작은 거리 차이인 지점과의 거리차이
+                var myMinDistance =
+                    TrackRecordService.mLocation.distanceTo(myBeforeLocation) // 가장 작은 거리 차이인 지점과의 거리차이
 
-        var myPredictedLocation = TrackRecordService.myLocationIndexOnTrack // 예상하는 트랙위의 내 위치
+                var myPredictedLocation = TrackRecordService.myLocationIndexOnTrack // 예상하는 트랙위의 내 위치
 
-        // 이동할 수 있는 가장 최대 거리라고 생각하는 지점까지 반복하며 트랙 위에서 어디와 가장 가까운지 구함
-        println("$myPredictedLocation ${track.gps.coordinates.size}")
-        for (i in myPredictedLocation + 1 until track.gps.coordinates.size) {
-            var location = Location("flag")
-            location.latitude = track.gps.coordinates[i][1]
-            location.longitude = track.gps.coordinates[i][0]
+                // 이동할 수 있는 가장 최대 거리라고 생각하는 지점까지 반복하며 트랙 위에서 어디와 가장 가까운지 구함
+                println("$myPredictedLocation ${track.gps.coordinates.size}")
+                for (i in myPredictedLocation + 1 until track.gps.coordinates.size) {
+                    var location = Location("flag")
+                    location.latitude = track.gps.coordinates[i][1]
+                    location.longitude = track.gps.coordinates[i][0]
 
-            // 이동할 수 있는 가장 최대 거리를 넘어서면 반복문 종료
-            myIncreaseSumDistance += myBeforeLocation.distanceTo(location)
-            if (myIncreaseSumDistance / (second - TrackRecordService.myBeforeLocationChangedSecond) >= TrackRecordService.MAX_DISTANCE) {
-                break
+                    // 이동할 수 있는 가장 최대 거리를 넘어서면 반복문 종료
+                    myIncreaseSumDistance += myBeforeLocation.distanceTo(location)
+                    if (myIncreaseSumDistance / (second - TrackRecordService.myBeforeLocationChangedSecond) >= TrackRecordService.MAX_DISTANCE) {
+                        break
+                    }
+
+                    val distance = location.distanceTo(TrackRecordService.mLocation)
+                    if (distance <= myMinDistance) {
+                        myMinDistance = distance
+                        myPredictedLocation = i
+                    }
+
+                    myBeforeLocation = location
+                }
+
+                // 내 트랙 위에서의 누적 이동 거리 갱신해줌
+                for (i in TrackRecordService.myLocationIndexOnTrack until myPredictedLocation) {
+                    val beforeLocation = Location("before")
+                    beforeLocation.latitude = track.gps.coordinates[i][1]
+                    beforeLocation.longitude = track.gps.coordinates[i][0]
+                    val afterLocation = Location("after")
+                    afterLocation.latitude = track.gps.coordinates[i + 1][1]
+                    afterLocation.longitude = track.gps.coordinates[i + 1][0]
+                    TrackRecordService.mySumDistanceOnTrack += beforeLocation.distanceTo(afterLocation)
+                }
+
+                TrackRecordService.myLocationIndexOnTrack = myPredictedLocation // 내 예상 지점 갱신
+            }.join()
+
+            // 끝에 도착했는지 여기서 체크하자
+            println("끝에 도착했는지 체크: ${TrackRecordService.myLocationIndexOnTrack}, ${track.gps.coordinates.size-1}")
+            if (TrackRecordService.myLocationIndexOnTrack == track.gps.coordinates.size-1) {
+                // 종료하기전 스냅샷 찍음
+                val builder: LatLngBounds.Builder = LatLngBounds.Builder() // 카메라 이동을 위한 빌더
+                for (latLng in latLngList) {
+                    builder.include(latLng) // 카메라안에 들어와야 하는 지점들 추가
+                }
+                // 카메라 업데이트
+                val bounds: LatLngBounds = builder.build()
+                mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 200))
+
+                mGoogleMap.snapshot(this@TrackRecordActivity)
             }
 
-            val distance = location.distanceTo(TrackRecordService.mLocation)
-            if (distance <= myMinDistance) {
-                myMinDistance = distance
-                myPredictedLocation = i
-            }
-
-            myBeforeLocation = location
+            TrackRecordService.myBeforeLocationChangedSecond = second
         }
-
-        // 내 트랙 위에서의 누적 이동 거리 갱신해줌
-        for (i in TrackRecordService.myLocationIndexOnTrack until myPredictedLocation) {
-            val beforeLocation = Location("before")
-            beforeLocation.latitude = track.gps.coordinates[i][1]
-            beforeLocation.longitude = track.gps.coordinates[i][0]
-            val afterLocation = Location("after")
-            afterLocation.latitude = track.gps.coordinates[i + 1][1]
-            afterLocation.longitude = track.gps.coordinates[i + 1][0]
-            TrackRecordService.mySumDistanceOnTrack += beforeLocation.distanceTo(afterLocation)
-        }
-
-        TrackRecordService.myLocationIndexOnTrack = myPredictedLocation // 내 예상 지점 갱신
-
-        // 끝에 도착했는지 여기서 체크하자
-        if (TrackRecordService.myLocationIndexOnTrack == track.gps.coordinates.size) {
-            // 종료하기전 스냅샷 찍음
-            val builder: LatLngBounds.Builder = LatLngBounds.Builder() // 카메라 이동을 위한 빌더
-            for (latLng in latLngList) {
-                builder.include(latLng) // 카메라안에 들어와야 하는 지점들 추가
-            }
-            // 카메라 업데이트
-            val bounds: LatLngBounds = builder.build()
-            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 200))
-
-            mGoogleMap.snapshot(this)
-        }
-
-        TrackRecordService.myBeforeLocationChangedSecond = second
     }
 
     // 권한 확인
@@ -522,6 +553,17 @@ class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.S
                     println("업데이트 시작 위치 받음")
                     val recordStartLatLng = intent?.getParcelableExtra<LatLng>(TrackRecordService.LAT_LNG)!!
                     latLngList.add(recordStartLatLng)
+
+                    mGoogleMap.addMarker(MarkerOptions()
+                        .position(recordStartLatLng)
+                        .icon(Utils.getMarkerIconFromDrawable(resources.getDrawable(R.drawable.record_start_point, null)))
+                        .anchor(0.5F, 0.5F))
+
+                    mPolyline = mGoogleMap.addPolyline(PolylineOptions()
+                        .addAll(latLngList)
+                        .color(resources.getColor(R.color.mainColor, null))
+                        .width(12F)) // 그림 그림
+
                     beforeLatLng = recordStartLatLng
                 }
 
@@ -547,12 +589,11 @@ class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.S
                         mLocationBack?.position = latLng
 
                         latLngList.add(latLng)
+                        mPolyline.points = latLngList
 
                         beforeLatLng = latLng
 
-                        CoroutineScope(Dispatchers.Default).launch {
-                            predictLocation()
-                        }
+                        predictLocation()
                     }
                 }
             }

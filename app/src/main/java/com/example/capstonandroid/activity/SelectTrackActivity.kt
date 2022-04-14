@@ -346,6 +346,7 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, SelectExerc
         println(selectedTrackId)
         binding.tvTrackTitle.text = trackMap[selectedTrackId]?.trackName
         binding.tvTrackDistance.text = "${Utils.distanceToText(trackMap[selectedTrackId]!!.totalDistance)}km"
+        binding.tvTrackSlope.text = "${trackMap[selectedTrackId]?.avgSlope}%"
         persistentBottomSheet.state = BottomSheetBehavior.STATE_COLLAPSED
 
         // 투명도 조절로 선택된 느낌 줌

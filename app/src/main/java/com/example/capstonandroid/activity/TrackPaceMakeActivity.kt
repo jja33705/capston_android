@@ -8,8 +8,11 @@ import android.graphics.Bitmap
 import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.speech.tts.TextToSpeech
 import android.view.LayoutInflater
 import android.view.View
+import android.view.WindowInsets
+import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -22,6 +25,7 @@ import com.example.capstonandroid.*
 import com.example.capstonandroid.databinding.ActivityTrackPaceMakeBinding
 import com.example.capstonandroid.db.AppDatabase
 import com.example.capstonandroid.db.dao.GpsDataDao
+import com.example.capstonandroid.db.dao.OpponentGpsDataDao
 import com.example.capstonandroid.network.RetrofitClient
 import com.example.capstonandroid.network.api.BackendApi
 import com.example.capstonandroid.network.dto.Track
@@ -33,6 +37,8 @@ import com.google.android.gms.maps.model.*
 import kotlinx.coroutines.*
 import retrofit2.Retrofit
 import java.io.FileOutputStream
+import java.util.*
+import kotlin.collections.ArrayList
 
 class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.SnapshotReadyCallback {
 
@@ -50,8 +56,12 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
 
     private lateinit var mGoogleMap: GoogleMap
 
+    private lateinit var textToSpeech: TextToSpeech // tts
+    private var textToSpeechInitialized = false // tts 초기화 됐는지
+
     // db dao 핸들
     private lateinit var gpsDataDao: GpsDataDao
+    private lateinit var opponentGpsDataDao: OpponentGpsDataDao
 
     private lateinit var track: Track
 
@@ -78,7 +88,16 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
 
     private var second = 0 // 초
 
-    private lateinit var latLngList: ArrayList<LatLng> // 폴리라인에 넣을 위치 리스트
+    private lateinit var latLngList: ArrayList<LatLng> // 폴리라인 만들 위치 리스트
+    private lateinit var opponentLatLngList: ArrayList<LatLng> // 상대 폴리라인 만들 위치 리스트
+
+    private lateinit var mPolyline: Polyline // 내가 달린 구간 폴리라인
+    private lateinit var opponentPolyline: Polyline // 상대 달린 구간 폴리라인
+
+    // 트랙 관련
+    private lateinit var trackPolyline: Polyline
+    private var trackStartPointMarker: Marker? = null // 트랙 시작점 마커
+    private var trackEndPointMarker: Marker? = null // 트랙 끝점 마커
 
     // 내마커 아이콘
     private lateinit var myMarkerIcon: View // 커스텀 마커 뷰
@@ -100,6 +119,7 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
         supportActionBar?.hide()
 
         latLngList = ArrayList()
+        opponentLatLngList = ArrayList()
 
         // 인텐트로 넘어온 옵션값 받음
         val intent = intent
@@ -114,9 +134,18 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
         println(" (TrackPaceMake) opponentGpsDataId $opponentGpsDataId")
         println(" (TrackPaceMake) opponentPostId $opponentPostId")
 
+        textToSpeech = TextToSpeech(this) {
+            if (it == TextToSpeech.SUCCESS) {
+                textToSpeech.language = Locale.JAPANESE
+
+                textToSpeechInitialized = true
+            }
+        }
+
         // db 사용 설정
         val db = AppDatabase.getInstance(applicationContext)!!
         gpsDataDao = db.gpsDataDao()
+        opponentGpsDataDao = db.opponentGpsDataDao()
 
         job = Job() // job 생성
 
@@ -153,6 +182,11 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
 
                 // 시작 영역 없앰
                 canStartAreaCircle.remove()
+
+                // 기존 트랙은 투명하게
+                trackPolyline.color = resources.getColor(R.color.no_selected_polyline_color, null)
+                trackEndPointMarker?.alpha = 0.3F
+                trackStartPointMarker?.alpha = 0.3F
 
                 binding.tvPaceMake.visibility = View.VISIBLE // 페이스메이커와의 차이 정보 보이게
             }
@@ -234,17 +268,23 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
                 // 시작 영역 없앰
                 canStartAreaCircle.remove()
 
+                trackPolyline.color = resources.getColor(R.color.no_selected_polyline_color, null)
+                trackEndPointMarker?.alpha = 0.3F
+                trackStartPointMarker?.alpha = 0.3F
+
                 // 위치 가져오고 내 마커 생성
                 beforeLatLng = LatLng(TrackPaceMakeService.mLocation.latitude, TrackPaceMakeService.mLocation.longitude)
                 mLocationMarker = mGoogleMap.addMarker(MarkerOptions()
                     .position(beforeLatLng)
-                    .icon(BitmapDescriptorFactory.fromBitmap(Utils.createBitmapFromView(myMarkerIcon))))
+                    .icon(BitmapDescriptorFactory.fromBitmap(Utils.createBitmapFromView(myMarkerIcon)))
+                    .anchor(0.5F, 0.5F))
 
                 // 상대 위치 마커 생성
                 opponentMarkerUserNameTextView.text = TrackPaceMakeService.opponentUserName
                 opponentLocationMarker = mGoogleMap.addMarker(MarkerOptions()
                     .position(LatLng(TrackPaceMakeService.opponentLocation.latitude, TrackPaceMakeService.opponentLocation.longitude))
-                    .icon(BitmapDescriptorFactory.fromBitmap(Utils.createBitmapFromView(opponentMarkerIcon))))
+                    .icon(BitmapDescriptorFactory.fromBitmap(Utils.createBitmapFromView(opponentMarkerIcon)))
+                    .anchor(0.5F, 0.5F))
 
                 binding.tvPaceMake.visibility = View.VISIBLE // 페이스메이크 창 보이게
 
@@ -269,6 +309,7 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
     }
 
     // 중간에 액티비티 재실행 시 db에 있는 gps 데이터 다시 가져오고 폴리라인 그려줌
+    @SuppressLint("NewApi")
     private fun loadGpsDataFromDatabaseAndDrawPolyline() {
         CoroutineScope(Dispatchers.Main + job).launch {
             val gpsDataList = withContext(Dispatchers.IO) {
@@ -287,7 +328,34 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
                 latLngListInner
             }
 
-            println("withContext 끝나고 내려옴")
+            mGoogleMap.addMarker(MarkerOptions()
+                .position(latLngList[0])
+                .icon(Utils.getMarkerIconFromDrawable(resources.getDrawable(R.drawable.record_start_point, null)))
+                .anchor(0.5F, 0.5F))
+
+            mPolyline = mGoogleMap.addPolyline(PolylineOptions()
+                .addAll(latLngList)
+                .color(resources.getColor(R.color.mainColor, null))
+                .width(12F)) // 그림 그림
+
+            val opponentGpsDataList = withContext(Dispatchers.IO) {
+                opponentGpsDataDao.getOpponentGpsDataUntilSecond(second)
+            }
+
+            // 선 그리기
+            opponentLatLngList = withContext(Dispatchers.Default) {
+                val latLngListInner = ArrayList<LatLng>()
+                for (gpsData in opponentGpsDataList) {
+                    latLngListInner.add(LatLng(gpsData.lat, gpsData.lng))
+                    println("withContext 내부 for 문 수행 중")
+                }
+                latLngListInner
+            }
+
+            opponentPolyline = mGoogleMap.addPolyline(PolylineOptions()
+                .addAll(latLngList)
+                .color(resources.getColor(R.color.opponent_polyline_color, null))
+                .width(12F)) // 그림 그림
 
             registerLocalBroadcastReceiver()
         }
@@ -358,20 +426,6 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
         }
 
         TrackPaceMakeService.myLocationIndexOnTrack = myPredictedLocation // 내 예상 지점 갱신
-
-        // 끝에 도착했는지 여기서 체크하자
-        if (TrackPaceMakeService.myLocationIndexOnTrack == track.gps.coordinates.size - 1) {
-            // 종료하기전 스냅샷 찍음
-            val builder: LatLngBounds.Builder = LatLngBounds.Builder() // 카메라 이동을 위한 빌더
-            for (latLng in latLngList) {
-                builder.include(latLng) // 카메라안에 들어와야 하는 지점들 추가
-            }
-            // 카메라 업데이트
-            val bounds: LatLngBounds = builder.build()
-            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 200))
-
-            mGoogleMap.snapshot(this)
-        }
 
         TrackPaceMakeService.myBeforeLocationChangedSecond = second
     }
@@ -455,7 +509,7 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
             for (coordinate in track.gps.coordinates) {
                 trackLatLngList.add(LatLng(coordinate[1], coordinate[0]))
             }
-            mGoogleMap.addPolyline(
+            trackPolyline = mGoogleMap.addPolyline(
                 PolylineOptions()
                 .clickable(true)
                 .addAll(trackLatLngList)
@@ -482,7 +536,7 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
             }
 
             // 출발점 마커 추가
-            mGoogleMap.addMarker(
+            trackStartPointMarker = mGoogleMap.addMarker(
                 MarkerOptions()
                 .position(LatLng(startPoint.latitude, startPoint.longitude))
                 .title("출발점")
@@ -498,7 +552,7 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
                 .strokeWidth(0F))
 
             // 도착점 마커 추가
-            mGoogleMap.addMarker(
+            trackEndPointMarker = mGoogleMap.addMarker(
                 MarkerOptions()
                 .position(LatLng(track.gps.coordinates[track.gps.coordinates.size - 1][1], track.gps.coordinates[track.gps.coordinates.size - 1][0]))
                 .title("도착점")
@@ -615,6 +669,17 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
                     // 내 기록 시작 위치 받음.
                     val recordStartLatLng = intent?.getParcelableExtra<LatLng>(TrackPaceMakeService.LAT_LNG)!!
                     latLngList.add(recordStartLatLng)
+
+                    mGoogleMap.addMarker(MarkerOptions()
+                        .position(recordStartLatLng)
+                        .icon(Utils.getMarkerIconFromDrawable(resources.getDrawable(R.drawable.record_start_point, null)))
+                        .anchor(0.5F, 0.5F))
+
+                    mPolyline = mGoogleMap.addPolyline(PolylineOptions()
+                        .addAll(latLngList)
+                        .color(resources.getColor(R.color.mainColor, null))
+                        .width(12F)) // 그림 그림
+
                     beforeLatLng = recordStartLatLng
                 }
 
@@ -637,6 +702,10 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
 
                         val opponentLatLng = intent?.getParcelableExtra<LatLng>(TrackPaceMakeService.OPPONENT_LAT_LNG)!! // 상대 위치
                         opponentLocationMarker?.position = opponentLatLng // 상대 마커 이동
+
+                        // 상대 폴리라인 갱신
+                        opponentLatLngList.add(opponentLatLng)
+                        opponentPolyline.points = opponentLatLngList
                     }
 
                     // 내 위치 바꼈을 때
@@ -652,7 +721,10 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
                         mLocationMarker?.setIcon(BitmapDescriptorFactory.fromBitmap(Utils.createBitmapFromView(myMarkerIcon)))
 
                         mLocationMarker?.position = latLng // 마커 이동
+
+                        // 폴리라인 갱신
                         latLngList.add(beforeLatLng)
+                        mPolyline.points = latLngList
 
                         beforeLatLng = latLng
                     }
@@ -672,15 +744,46 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
                             }
                             val predictLocationDifference = TrackPaceMakeService.mySumDistanceOnTrack - TrackPaceMakeService.opponentSumDistanceOnTrack
                             if (predictLocationDifference >= 0) {
-                                binding.tvPaceMake.text = "${TrackPaceMakeService.opponentUserName}보다 약 ${predictLocationDifference}m 앞서는 중"
+                                binding.tvPaceMake.setCompoundDrawablesWithIntrinsicBounds(resources.getDrawable(R.drawable.direction_north, null), null, null, null)
+                                binding.tvPaceMake.text = "${TrackPaceMakeService.opponentUserName}より約${predictLocationDifference.toInt()}m前"
                             } else {
-                                binding.tvPaceMake.text = "${TrackPaceMakeService.opponentUserName}보다 약 ${predictLocationDifference * -1}m 뒤처지는 중"
+                                binding.tvPaceMake.setCompoundDrawablesWithIntrinsicBounds(resources.getDrawable(R.drawable.direction_south, null), null, null, null)
+                                binding.tvPaceMake.text = "${TrackPaceMakeService.opponentUserName}より約${predictLocationDifference.toInt()*-1}m後ろ"
                             }
+
+//                            // 끝에 도착했는지 여기서 체크하자
+//                            if (TrackPaceMakeService.myLocationIndexOnTrack == track.gps.coordinates.size - 1) {
+//                                // 종료하기전 스냅샷 찍음
+//                                val builder: LatLngBounds.Builder = LatLngBounds.Builder() // 카메라 이동을 위한 빌더
+//                                for (latLng in latLngList) {
+//                                    builder.include(latLng) // 카메라안에 들어와야 하는 지점들 추가
+//                                }
+//                                // 카메라 업데이트
+//                                val bounds: LatLngBounds = builder.build()
+//                                mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 200))
+//
+//                                mGoogleMap.snapshot(this@TrackPaceMakeActivity)
+//                            }
+                        }
+                    }
+                    // 30초간격으로 음성 알림
+                    if (textToSpeechInitialized && (second % 30 == 0)) { // 초기화된 상태일때 30초 간격으로 페이스에 대해 음성 안내
+                        val predictLocationDifference = TrackPaceMakeService.mySumDistanceOnTrack - TrackPaceMakeService.opponentSumDistanceOnTrack
+                        if (predictLocationDifference >= 0) {
+                            textToSpeech.speak("相手より約${predictLocationDifference.toInt()}メートル前です。", TextToSpeech.QUEUE_FLUSH, null, "abc")
+                        } else {
+                            textToSpeech.speak("相手より約${predictLocationDifference.toInt()*-1}メートル後ろです。", TextToSpeech.QUEUE_FLUSH, null, "abc")
                         }
                     }
                 }
                 TrackPaceMakeService.OPPONENT_START_LAT_LNG -> { // 상대 시작 위치
                     val opponentLatLng = intent?.getParcelableExtra<LatLng>(TrackPaceMakeService.OPPONENT_LAT_LNG)!!
+                    opponentLatLngList.add(opponentLatLng)
+
+                    opponentPolyline = mGoogleMap.addPolyline(PolylineOptions()
+                        .addAll(latLngList)
+                        .color(resources.getColor(R.color.opponent_polyline_color, null))
+                        .width(12F)) // 그림 그림
 
                     // 상대 위치 마커 생성
                     opponentMarkerUserNameTextView.text = TrackPaceMakeService.opponentUserName
@@ -693,6 +796,8 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
         }
     }
 
+    // 스냅샷 찍었을 때 콜백
+    @SuppressLint("NewApi")
     override fun onSnapshotReady(snapshot: Bitmap?) {
         //앱 내부 cache 저장소: /data/user/0/com.example.capstonandroid/cache
 

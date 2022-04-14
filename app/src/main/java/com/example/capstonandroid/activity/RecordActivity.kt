@@ -173,6 +173,7 @@ class RecordActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.Snapsh
     }
 
     // 중간에 액티비티 재실행 시 db에 있는 gps 데이터 다시 가져오고 폴리라인 그려줌
+    @SuppressLint("NewApi")
     private fun loadGpsDataFromDatabaseAndDrawPolyline() {
         CoroutineScope(Dispatchers.Main + job).launch {
             val gpsDataList = withContext(Dispatchers.IO) {
@@ -190,11 +191,14 @@ class RecordActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.Snapsh
                 latLngListInner
             }
 
-            println("withContext 끝나고 내려옴")
+            mGoogleMap.addMarker(MarkerOptions()
+                .position(latLngList[0])
+                .icon(Utils.getMarkerIconFromDrawable(resources.getDrawable(R.drawable.record_start_point, null)))
+                .anchor(0.5F, 0.5F))
 
             mPolyline = mGoogleMap.addPolyline(PolylineOptions()
                 .addAll(latLngList)
-                .color(ContextCompat.getColor(this@RecordActivity, R.color.main_color))
+                .color(resources.getColor(R.color.mainColor, null))
                 .width(12F)) // 그림 그림
 
             registerLocalBroadcastReceiver()
@@ -335,9 +339,14 @@ class RecordActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.Snapsh
                     println("업데이트 시작 위치 받음")
                     val recordStartLatLng = intent?.getParcelableExtra<LatLng>(RecordService.LAT_LNG)!!
                     latLngList.add(recordStartLatLng)
+                    mGoogleMap.addMarker(MarkerOptions()
+                        .position(recordStartLatLng)
+                        .icon(Utils.getMarkerIconFromDrawable(resources.getDrawable(R.drawable.record_start_point, null)))
+                        .anchor(0.5F, 0.5F))
+
                     mPolyline = mGoogleMap.addPolyline(PolylineOptions()
                         .addAll(latLngList)
-                        .color(resources.getColor(R.color.main_color, null))
+                        .color(resources.getColor(R.color.mainColor, null))
                         .width(12F)) // 그림 그림
                     beforeLatLng = recordStartLatLng
                 }
