@@ -296,9 +296,9 @@ class TrackPaceMakeService : Service() {
 
                             // 상대 시작 위치 가져오기
                             opponentLocation = Location("opponentLocation")
-                            val opponentGpsData = opponentGpsDataDao.getOpponentGpsDataBySecond(second)
-                            opponentLocation.latitude = opponentGpsData.lat
-                            opponentLocation.longitude = opponentGpsData.lng
+                            val opponentStartGpsData = opponentGpsDataDao.getOpponentGpsDataBySecond(second)
+                            opponentLocation.latitude = opponentStartGpsData.lat
+                            opponentLocation.longitude = opponentStartGpsData.lng
 
                             println("다 넣었을까: ${opponentGpsDataDao.getAllOpponentGpsData()}")
                         }.join()

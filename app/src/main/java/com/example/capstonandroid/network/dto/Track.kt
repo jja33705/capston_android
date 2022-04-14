@@ -11,5 +11,6 @@ data class Track(
     val gps: Gps,
     val totalDistance: Double,
     val trackName: String,
+    val avgSlope: Double,
     val user: UserIdAndName
 )

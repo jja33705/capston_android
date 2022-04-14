@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name = "mainColor">#1890ff</color>
+    <color name ="mainColor">#1890ff</color>
     <color name="colorPrimary">#ededed</color>
     <color name="colorPrimaryDark">#e1e1e1</color>
     <color name="colorLightGray">#f1f1f1</color>
@@ -34,4 +34,6 @@
     <color name="gold_color">#ffd700</color>
     <color name="default_marker_color">#4284F4</color>
     <color name="default_marker_color_opacity">#4D4284F4</color>
+    <color name="start_point_color">#00FF00</color>
+    <color name="opponent_polyline_color">#DC143C</color>
 </resources>
