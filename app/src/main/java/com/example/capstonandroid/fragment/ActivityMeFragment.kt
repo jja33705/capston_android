@@ -94,17 +94,19 @@ class ActivityMeFragment : Fragment() {
                     println(response.body()!!.data.size.toString()+"ㅇㅁㄴㅇㄴㅁㅇㄴㅁㅇㅁㄴㅇㅁㄴㅇㄴㅁㅇ")
 
                     for (i in 0..response.body()!!.data.size -1) {
+
                         list2.add(
                             UserData(
                                 ContextCompat.getDrawable(
                                     requireContext(),
-                                    R.drawable.sakai
+                                    R.drawable.lock
                                 )!!,
                                 response.body()!!.data[i].title,
                                 response.body()!!.data[i].user.name,
                                 i,
                                 response.body()!!.data[i].created_at,
-                                response.body()!!.current_page
+                                response.body()!!.current_page,
+                                response.body()!!.data[i].map_image
                             )
                         )
                     }
@@ -150,6 +152,7 @@ class ActivityMeFragment : Fragment() {
                                             i,
                                             response.body()!!.data[i].created_at,
                                             response.body()!!.current_page,
+                                            response.body()!!.data[i].map_image
                                         )
                                     )
                                 }
