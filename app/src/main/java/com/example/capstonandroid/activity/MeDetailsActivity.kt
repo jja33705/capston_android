@@ -83,12 +83,23 @@ class MeDetailsActivity : AppCompatActivity() {
                     distance = response.body()!!.data[data_num]!!.distance
                     kind = response.body()!!.data[data_num]!!.kind
 
-                    binding.time.setText("시간 : "+time)
-                    binding.calorie.setText("칼로리 : "+calorie)
+
+                    if(time>3600){
+                        binding.time.setText("시간 : "+time.toInt()/3600+"시간 "+time/60.toInt()+"분 "+time.toInt()%60+"초")
+                    }else if (time>60){
+                        binding.time.setText("시간 : "+time.toInt()/60+"분 "+time.toInt()%60+"초")
+                    }else {
+                        binding.time.setText("시간 : "+time.toInt()%60+"초")
+                    }
+
+                    binding.content.setText(content)
+                    binding.calorie.setText("칼로리 : "+calorie+" Cal")
                     binding.kind.setText("종류 : " + kind)
-                    binding.averageSpeed.setText("평균 속도 : "+average_speed)
+                    binding.averageSpeed.setText("평균 속도 : "+average_speed +" Km/h")
                     binding.altitude.setText("고도 : "+altitude)
-                    binding.distance.setText("거리 : "+distance)
+                    binding.distance.setText("거리 : "+(distance/10)+" Km")
+
+
                     println("콘텐츠"+content)
                     println("랭스"+range)
                     if(range=="private"){

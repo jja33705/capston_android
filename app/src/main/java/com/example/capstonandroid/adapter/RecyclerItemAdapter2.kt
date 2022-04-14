@@ -12,6 +12,7 @@ import com.example.capstonandroid.network.api.BackendApi
 import com.example.capstonandroid.network.dto.UserData
 import retrofit2.Retrofit
 
+// 여기가 SNS쪽
 class RecyclerUserAdapter2(
     private val items: ArrayList<UserData>,
     private val onClick: (UserData) -> Unit) : RecyclerView.Adapter<RecyclerUserAdapter2.ViewHolder>() {
@@ -43,6 +44,7 @@ class RecyclerUserAdapter2(
             view.findViewById<TextView>(R.id.txtUser_name).text = item.title
             view.findViewById<TextView>(R.id.txtUser_created_id).text = item.created_id
             view.setOnClickListener(listener)
+
         }
     }
 }

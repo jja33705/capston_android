@@ -8,8 +8,11 @@ import android.graphics.Bitmap
 import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.speech.tts.TextToSpeech
 import android.view.LayoutInflater
 import android.view.View
+import android.view.WindowInsets
+import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -22,6 +25,7 @@ import com.example.capstonandroid.*
 import com.example.capstonandroid.databinding.ActivityTrackPaceMakeBinding
 import com.example.capstonandroid.db.AppDatabase
 import com.example.capstonandroid.db.dao.GpsDataDao
+import com.example.capstonandroid.db.dao.OpponentGpsDataDao
 import com.example.capstonandroid.network.RetrofitClient
 import com.example.capstonandroid.network.api.BackendApi
 import com.example.capstonandroid.network.dto.Track
@@ -33,6 +37,8 @@ import com.google.android.gms.maps.model.*
 import kotlinx.coroutines.*
 import retrofit2.Retrofit
 import java.io.FileOutputStream
+import java.util.*
+import kotlin.collections.ArrayList
 
 class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.SnapshotReadyCallback {
 
@@ -50,8 +56,12 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
 
     private lateinit var mGoogleMap: GoogleMap
 
+    private lateinit var textToSpeech: TextToSpeech // tts
+    private var textToSpeechInitialized = false // tts 초기화 됐는지
+
     // db dao 핸들
     private lateinit var gpsDataDao: GpsDataDao
+    private lateinit var opponentGpsDataDao: OpponentGpsDataDao
 
     private lateinit var track: Track
 
@@ -124,9 +134,18 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
         println(" (TrackPaceMake) opponentGpsDataId $opponentGpsDataId")
         println(" (TrackPaceMake) opponentPostId $opponentPostId")
 
+        textToSpeech = TextToSpeech(this) {
+            if (it == TextToSpeech.SUCCESS) {
+                textToSpeech.language = Locale.JAPANESE
+
+                textToSpeechInitialized = true
+            }
+        }
+
         // db 사용 설정
         val db = AppDatabase.getInstance(applicationContext)!!
         gpsDataDao = db.gpsDataDao()
+        opponentGpsDataDao = db.opponentGpsDataDao()
 
         job = Job() // job 생성
 
@@ -317,6 +336,25 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
             mPolyline = mGoogleMap.addPolyline(PolylineOptions()
                 .addAll(latLngList)
                 .color(resources.getColor(R.color.mainColor, null))
+                .width(12F)) // 그림 그림
+
+            val opponentGpsDataList = withContext(Dispatchers.IO) {
+                opponentGpsDataDao.getOpponentGpsDataUntilSecond(second)
+            }
+
+            // 선 그리기
+            opponentLatLngList = withContext(Dispatchers.Default) {
+                val latLngListInner = ArrayList<LatLng>()
+                for (gpsData in opponentGpsDataList) {
+                    latLngListInner.add(LatLng(gpsData.lat, gpsData.lng))
+                    println("withContext 내부 for 문 수행 중")
+                }
+                latLngListInner
+            }
+
+            opponentPolyline = mGoogleMap.addPolyline(PolylineOptions()
+                .addAll(latLngList)
+                .color(resources.getColor(R.color.opponent_polyline_color, null))
                 .width(12F)) // 그림 그림
 
             registerLocalBroadcastReceiver()
@@ -707,25 +745,34 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
                             val predictLocationDifference = TrackPaceMakeService.mySumDistanceOnTrack - TrackPaceMakeService.opponentSumDistanceOnTrack
                             if (predictLocationDifference >= 0) {
                                 binding.tvPaceMake.setCompoundDrawablesWithIntrinsicBounds(resources.getDrawable(R.drawable.direction_north, null), null, null, null)
-                                binding.tvPaceMake.text = "${TrackPaceMakeService.opponentUserName}より約${predictLocationDifference}m前"
+                                binding.tvPaceMake.text = "${TrackPaceMakeService.opponentUserName}より約${predictLocationDifference.toInt()}m前"
                             } else {
                                 binding.tvPaceMake.setCompoundDrawablesWithIntrinsicBounds(resources.getDrawable(R.drawable.direction_south, null), null, null, null)
-                                binding.tvPaceMake.text = "${TrackPaceMakeService.opponentUserName}より約${predictLocationDifference * -1}m後ろ"
+                                binding.tvPaceMake.text = "${TrackPaceMakeService.opponentUserName}より約${predictLocationDifference.toInt()*-1}m後ろ"
                             }
 
-                            // 끝에 도착했는지 여기서 체크하자
-                            if (TrackPaceMakeService.myLocationIndexOnTrack == track.gps.coordinates.size - 1) {
-                                // 종료하기전 스냅샷 찍음
-                                val builder: LatLngBounds.Builder = LatLngBounds.Builder() // 카메라 이동을 위한 빌더
-                                for (latLng in latLngList) {
-                                    builder.include(latLng) // 카메라안에 들어와야 하는 지점들 추가
-                                }
-                                // 카메라 업데이트
-                                val bounds: LatLngBounds = builder.build()
-                                mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 200))
-
-                                mGoogleMap.snapshot(this@TrackPaceMakeActivity)
-                            }
+//                            // 끝에 도착했는지 여기서 체크하자
+//                            if (TrackPaceMakeService.myLocationIndexOnTrack == track.gps.coordinates.size - 1) {
+//                                // 종료하기전 스냅샷 찍음
+//                                val builder: LatLngBounds.Builder = LatLngBounds.Builder() // 카메라 이동을 위한 빌더
+//                                for (latLng in latLngList) {
+//                                    builder.include(latLng) // 카메라안에 들어와야 하는 지점들 추가
+//                                }
+//                                // 카메라 업데이트
+//                                val bounds: LatLngBounds = builder.build()
+//                                mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 200))
+//
+//                                mGoogleMap.snapshot(this@TrackPaceMakeActivity)
+//                            }
+                        }
+                    }
+                    // 30초간격으로 음성 알림
+                    if (textToSpeechInitialized && (second % 30 == 0)) { // 초기화된 상태일때 30초 간격으로 페이스에 대해 음성 안내
+                        val predictLocationDifference = TrackPaceMakeService.mySumDistanceOnTrack - TrackPaceMakeService.opponentSumDistanceOnTrack
+                        if (predictLocationDifference >= 0) {
+                            textToSpeech.speak("相手より約${predictLocationDifference.toInt()}メートル前です。", TextToSpeech.QUEUE_FLUSH, null, "abc")
+                        } else {
+                            textToSpeech.speak("相手より約${predictLocationDifference.toInt()*-1}メートル後ろです。", TextToSpeech.QUEUE_FLUSH, null, "abc")
                         }
                     }
                 }

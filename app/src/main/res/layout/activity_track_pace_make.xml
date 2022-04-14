@@ -160,7 +160,7 @@
                 android:id="@+id/tv_pace_make"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="相手より約４m前"
+                android:text="相手より約0m前"
                 android:fontFamily="@font/noto_sans_jp_regular"
                 android:includeFontPadding="false"
                 android:textSize="20dp"

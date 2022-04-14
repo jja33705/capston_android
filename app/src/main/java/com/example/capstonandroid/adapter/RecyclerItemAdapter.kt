@@ -11,6 +11,7 @@ import com.example.capstonandroid.network.RetrofitClient
 import com.example.capstonandroid.network.api.BackendApi
 import com.example.capstonandroid.network.dto.UserData
 import retrofit2.Retrofit
+// 여기가 Me
 
 class RecyclerUserAdapter(
     private val items: ArrayList<UserData>,
