@@ -52,6 +52,9 @@ interface BackendApi {
     @POST("comment/store/{postID}") // 댓글 등록..
     fun commentSend(@Header("Authorization")token: String, @Path("postID") postID:Int,@Body commentSend: CommentSend) : Call<CommentSendResponse>
 
+    @POST("follow/{userID}")
+    fun userFollow(@Header("Authorization") token : String , @Path("postID") postID : Int) : Call<FollowResponse>
+
     @DELETE("post/{postID}")
 
 

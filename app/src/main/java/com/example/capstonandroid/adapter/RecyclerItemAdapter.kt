@@ -52,15 +52,27 @@ class RecyclerUserAdapter(
             view.setOnClickListener(listener)
 
             val defaultImage = R.drawable.map
-            val url = item.map_image[0].url
 
-            Glide.with(itemView.context)
-                .load(url) // 불러올 이미지 url
-                .placeholder(defaultImage) // 이미지 로딩 시작하기 전 표시할 이미지
-                .error(defaultImage) // 로딩 에러 발생 시 표시할 이미지
-                .fallback(defaultImage) // 로드할 url 이 비어있을(null 등) 경우 표시할 이미지
-                .into(itemView.imageView)
+            if(item.map_image.size==0){
+                var url = ""
 
-        }
+                Glide.with(itemView.context)
+                    .load(url) // 불러올 이미지 url
+                    .placeholder(defaultImage) // 이미지 로딩 시작하기 전 표시할 이미지
+                    .error(defaultImage) // 로딩 에러 발생 시 표시할 이미지
+                    .fallback(defaultImage) // 로드할 url 이 비어있을(null 등) 경우 표시할 이미지
+                    .into(itemView.imageView)
+
+            }else {
+
+                var url = item.map_image[0].url
+
+                Glide.with(itemView.context)
+                    .load(url) // 불러올 이미지 url
+                    .placeholder(defaultImage) // 이미지 로딩 시작하기 전 표시할 이미지
+                    .error(defaultImage) // 로딩 에러 발생 시 표시할 이미지
+                    .fallback(defaultImage) // 로드할 url 이 비어있을(null 등) 경우 표시할 이미지
+                    .into(itemView.imageView)
+            }}
     }
 }

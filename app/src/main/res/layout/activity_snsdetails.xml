@@ -18,7 +18,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp">
+            android:layout_margin="10dp"
+            android:orientation="vertical">
 
             <EditText
                 android:id="@+id/title"
@@ -33,7 +34,44 @@
                 android:hint="제목"
                 android:includeFontPadding="false"
                 android:textSize="24dp" />
-        </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <ImageView
+                    android:src="@drawable/profile"
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"></ImageView>
+                <TextView
+                    android:text="고길동"
+                    android:textSize="18sp"
+                    android:layout_gravity="center_vertical"
+                    android:id="@+id/username"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                </TextView>
+                <Button
+                    android:layout_gravity="center_vertical"
+                    android:text="팔로우"
+                    android:textSize="10sp"
+                    android:id="@+id/followbutton"
+                    android:layout_width="60dp"
+                    android:layout_height="40dp">
+
+                </Button>
+
+                <TextView
+                    android:layout_gravity="center_vertical"
+                    android:text="2022-04-13T04:57:26.119Z"
+                    android:id="@+id/createdate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                </TextView>
+            </LinearLayout>
+           </LinearLayout>
 
         <ImageView
             android:id="@+id/imageView"

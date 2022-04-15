@@ -203,8 +203,13 @@ class ProfileMeFragment : Fragment(){
                             if(max < arr[i]){   // 부호만 바꾸면 최대값이 구해진다.
                                 max = arr[i]
                             }
-                            chart_max = max
-                        }
+
+                            if (max<5)
+                            {
+                                chart_max = 5f
+                            }else {
+                                chart_max = max
+                            }}
 
                         binding.chart.run {
                             description.isEnabled = false //차트 옆에 별도로 표기되는 description이다. false로 설정하여 안보이게 했다.
