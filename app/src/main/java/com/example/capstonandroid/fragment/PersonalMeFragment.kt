@@ -48,7 +48,7 @@ class PersonalMeFragment : Fragment() {
 
     }
     inner class MyXAxisFormatter : ValueFormatter(){
-        private val days = arrayOf("6일전","5일전","4일전","3일전","그저께","어제","오늘")
+        private val days = arrayOf("6日前","５日前","４日前","３日前","一昨日","昨日","今日")
         override fun getAxisLabel(value: Float, axis: AxisBase?): String {
             return days.getOrNull(value.toInt()-1) ?: value.toString()
         }

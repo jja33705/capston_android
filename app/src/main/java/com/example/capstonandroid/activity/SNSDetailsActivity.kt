@@ -116,7 +116,7 @@ class SNSDetailsActivity : AppCompatActivity() {
                     binding.title.setText(response.body()!!.data[data_num]!!.title)
 //                     binding.content.setText(response.body()!!.data[data_num]!!.content)
 //                     println(response.body()!!.data[data_num]!!.likes.size)
-                    binding.like.setText("좋아요 갯수 : "+response.body()!!.data[data_num]!!.likes.size.toString())
+                    binding.like.setText("いいね！： "+response.body()!!.data[data_num]!!.likes.size.toString())
                      postID = response.body()!!.data[data_num]!!.id
                      println(postID)
 
@@ -131,19 +131,19 @@ class SNSDetailsActivity : AppCompatActivity() {
                     createdate = response.body()!!.data[data_num]!!.created_at
                     userID = response.body()!!.data[data_num]!!.user_id
                      if(time>3600){
-                         binding.time.setText("시간 : "+time.toInt()/3600+"시간 "+time/60.toInt()+"분 "+time.toInt()%60+"초")
+                         binding.time.setText("時間 : "+time.toInt()/3600+"時間 "+time/60.toInt()+"分 "+time.toInt()%60+"秒")
                      }else if (time>60){
-                         binding.time.setText("시간 : "+time.toInt()/60+"분 "+time.toInt()%60+"초")
+                         binding.time.setText("時間 : "+time.toInt()/60+"分 "+time.toInt()%60+"秒")
                      }else {
-                         binding.time.setText("시간 : "+time.toInt()%60+"초")
+                         binding.time.setText("時間 : "+time.toInt()%60+"秒")
                      }
 
                      binding.content.setText(content)
-                     binding.calorie.setText("칼로리 : "+calorie+" Cal")
-                     binding.kind.setText("종류 : " + kind)
-                     binding.averageSpeed.setText("평균 속도 : "+average_speed +" Km/h")
-                     binding.altitude.setText("고도 : "+altitude)
-                     binding.distance.setText("거리 : "+String.format("%.2f",distance/1000)+" Km")
+                     binding.calorie.setText("カロリー : "+calorie+" Cal")
+                     binding.kind.setText("種類 : " + kind)
+                     binding.averageSpeed.setText("平均速度 : "+average_speed +" Km/h")
+                     binding.altitude.setText("高度 : "+altitude)
+                     binding.distance.setText("距離 : "+String.format("%.2f",distance/1000)+" Km")
                      binding.username.setText(username)
                      binding.createdate.setText(createdate)
                  }  else{
@@ -175,7 +175,7 @@ class SNSDetailsActivity : AppCompatActivity() {
                             override fun onResponse(call: Call<SNSResponse>, response: Response<SNSResponse>) {
 
                                 if(response.isSuccessful){
-                                    binding.like.setText("좋아요 갯수 : "+response.body()!!.data[data_num]!!.likes.size.toString())
+                                    binding.like.setText("いいね！："+response.body()!!.data[data_num]!!.likes.size.toString())
 
                                 }  else{
                                     println("실패함ㅋㅋ")
