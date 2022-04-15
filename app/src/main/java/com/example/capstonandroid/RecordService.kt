@@ -46,7 +46,7 @@ class RecordService : Service() {
     companion object {
         var isStarted = false // 시작 했는지
         var exerciseKind = "" // 운동 종류
-        lateinit var mLocation: Location // 음... 액티비티에서 이전 위치 바로 초기화해야 하니까 여기에 놓자
+        var mLocation: Location? = null // 음... 액티비티에서 이전 위치 바로 초기화해야 하니까 여기에 놓자
 
         private const val PREFIX = "com.example.capstonandroid.recordservice"
 
@@ -95,7 +95,7 @@ class RecordService : Service() {
                     // 로컬 프로드캐스트를 통해 위치를 보낸다.
                     val intent = Intent(ACTION_BROADCAST)
                     intent.putExtra("flag", BEFORE_START_LOCATION_UPDATE)
-                    intent.putExtra(LAT_LNG, LatLng(mLocation.latitude, mLocation.longitude))
+                    intent.putExtra(LAT_LNG, LatLng(mLocation!!.latitude, mLocation!!.longitude))
                     LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intent)
                 }
             }
@@ -120,23 +120,23 @@ class RecordService : Service() {
             override fun run() {
                 second ++
 
-                val locationChanged = (mLocation.latitude != beforeLocation.latitude) || (mLocation.longitude != beforeLocation.longitude)
+                val locationChanged = (mLocation!!.latitude != beforeLocation.latitude) || (mLocation!!.longitude != beforeLocation.longitude)
 
                 // 위치가 다르면 수행할 작업들
                 if (locationChanged) {
                     // 고도가 만약 더 크면 누적 상승 고도 더해줌
-                    if (beforeLocation.altitude < mLocation.altitude) {
-                        sumAltitude += mLocation.altitude - beforeLocation.altitude
+                    if (beforeLocation.altitude < mLocation!!.altitude) {
+                        sumAltitude += mLocation!!.altitude - beforeLocation.altitude
                     }
 
                     // 거리 구해줌
                     distance += beforeLocation.distanceTo(mLocation)
                     println("거리: $distance")
 
-                    beforeLocation = mLocation
+                    beforeLocation = mLocation!!
 
                     // db에 저장
-                    gpsDataDao.insertGpsData(GpsData(second, mLocation.latitude, mLocation.longitude, mLocation.speed, distance, mLocation.altitude))
+                    gpsDataDao.insertGpsData(GpsData(second, mLocation!!.latitude, mLocation!!.longitude, mLocation!!.speed, distance, mLocation!!.altitude))
                 }
 
                 // 평균속도
@@ -160,7 +160,7 @@ class RecordService : Service() {
                 // 업데이트된 것 브로드캐스트
                 val intent = Intent(ACTION_BROADCAST)
                 intent.putExtra("flag", AFTER_START_UPDATE)
-                intent.putExtra(LAT_LNG, LatLng(mLocation.latitude, mLocation.longitude))
+                intent.putExtra(LAT_LNG, LatLng(mLocation!!.latitude, mLocation!!.longitude))
                 intent.putExtra(SECOND, second)
                 intent.putExtra(DISTANCE, distance)
                 intent.putExtra(AVG_SPEED, avgSpeed)
@@ -210,18 +210,18 @@ class RecordService : Service() {
                 CoroutineScope(Dispatchers.Main).launch {
                     isStarted = true
 
-                    beforeLocation = mLocation
+                    beforeLocation = mLocation!!
 
                     // 시작위치 db에 저장
                     launch(Dispatchers.IO) {
                         gpsDataDao.deleteAllGpsData()
-                        gpsDataDao.insertGpsData(GpsData(second, mLocation.latitude, mLocation.longitude, mLocation.speed, distance, mLocation.altitude))
+                        gpsDataDao.insertGpsData(GpsData(second, mLocation!!.latitude, mLocation!!.longitude, mLocation!!.speed, distance, mLocation!!.altitude))
                     }.join()
 
                     // 시작 위치 보냄
                     val intent = Intent(ACTION_BROADCAST)
                     intent.putExtra("flag", RECORD_START_LAT_LNG)
-                    intent.putExtra(LAT_LNG, LatLng(mLocation.latitude, mLocation.longitude))
+                    intent.putExtra(LAT_LNG, LatLng(mLocation!!.latitude, mLocation!!.longitude))
                     LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intent)
 
                     // 타이머 시작
@@ -289,6 +289,8 @@ class RecordService : Service() {
         mFusedLocationClient.removeLocationUpdates(mLocationCallback) // 위치 업데이트 제거
 
         isStarted = false
+        exerciseKind = ""
+        mLocation = null
 
         stopForeground(true)
         stopSelf()

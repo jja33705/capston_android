@@ -64,6 +64,8 @@ class RankMatchingActivity : AppCompatActivity() {
                         responseIntent.putExtra("matchSuccess", true)
                         responseIntent.putExtra("opponentGpsDataId", post.gps_id)
                         responseIntent.putExtra("opponentPostId", post.id)
+
+                        delay(3000)
                     }
 
                     // 매칭할 기록이 없을 때
@@ -74,8 +76,6 @@ class RankMatchingActivity : AppCompatActivity() {
                     }
                 }
             }
-
-            delay(3000)
 
             setResult(TrackActivity.RANK_MATCHING_ACTIVITY_REQUEST_CODE, responseIntent)
             finish()

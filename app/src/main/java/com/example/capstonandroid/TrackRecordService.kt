@@ -47,7 +47,7 @@ class TrackRecordService : Service() {
         var trackName = ""
         var exerciseKind = ""
         var trackId = ""
-        lateinit var mLocation: Location
+        var mLocation: Location? = null
         var myLocationIndexOnTrack = 0
         var mySumDistanceOnTrack = 0F // 내가 이동한 트랙위의 거리
         var myBeforeLocationChangedSecond = 0 // 이전 내 위치 바뀐 시간
@@ -99,7 +99,7 @@ class TrackRecordService : Service() {
                     // 로컬 프로드캐스트를 통해 위치를 보낸다.
                     val intent = Intent(ACTION_BROADCAST)
                     intent.putExtra("flag", BEFORE_START_LOCATION_UPDATE)
-                    intent.putExtra(LAT_LNG, LatLng(mLocation.latitude, mLocation.longitude))
+                    intent.putExtra(LAT_LNG, LatLng(mLocation!!.latitude, mLocation!!.longitude))
                     LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intent)
                 }
             }
@@ -124,21 +124,21 @@ class TrackRecordService : Service() {
             override fun run() {
                 second ++
 
-                val locationChanged = (beforeLocation.latitude != mLocation.latitude) || (beforeLocation.longitude != mLocation.longitude)
+                val locationChanged = (beforeLocation.latitude != mLocation!!.latitude) || (beforeLocation.longitude != mLocation!!.longitude)
 
                 if (locationChanged) {
                     // 고도가 만약 더 크면 누적 상승 고도 더해줌
-                    if (beforeLocation.altitude < mLocation.altitude) {
-                        sumAltitude += mLocation.altitude - beforeLocation.altitude
+                    if (beforeLocation.altitude < mLocation!!.altitude) {
+                        sumAltitude += mLocation!!.altitude - beforeLocation.altitude
                     }
 
                     // 거리 구해줌
                     distance += beforeLocation.distanceTo(mLocation)
 
-                    beforeLocation = mLocation
+                    beforeLocation = mLocation!!
 
                     // db에 저장
-                    gpsDataDao.insertGpsData(GpsData(second, mLocation.latitude, mLocation.longitude, mLocation.speed, distance, mLocation.altitude))
+                    gpsDataDao.insertGpsData(GpsData(second, mLocation!!.latitude, mLocation!!.longitude, mLocation!!.speed, distance, mLocation!!.altitude))
                 }
 
                 //평균속도
@@ -162,7 +162,7 @@ class TrackRecordService : Service() {
                 // 업데이트된 것 브로드캐스트
                 val intent = Intent(ACTION_BROADCAST)
                 intent.putExtra("flag", AFTER_START_UPDATE)
-                intent.putExtra(LAT_LNG, LatLng(mLocation.latitude, mLocation.longitude))
+                intent.putExtra(LAT_LNG, LatLng(mLocation!!.latitude, mLocation!!.longitude))
                 intent.putExtra(SECOND, second)
                 intent.putExtra(DISTANCE, distance)
                 intent.putExtra(AVG_SPEED, avgSpeed)
@@ -218,18 +218,18 @@ class TrackRecordService : Service() {
                 CoroutineScope(Dispatchers.Main).launch {
                     isStarted = true
 
-                    beforeLocation = mLocation
+                    beforeLocation = mLocation!!
 
                     // 시작위치 db에 저장
                     launch(Dispatchers.IO) {
                         gpsDataDao.deleteAllGpsData()
-                        gpsDataDao.insertGpsData(GpsData(second, mLocation.latitude, mLocation.longitude, mLocation.speed, distance, mLocation.altitude))
+                        gpsDataDao.insertGpsData(GpsData(second, mLocation!!.latitude, mLocation!!.longitude, mLocation!!.speed, distance, mLocation!!.altitude))
                     }.join()
 
                     // 시작 위치 보냄
                     val intent = Intent(ACTION_BROADCAST)
                     intent.putExtra("flag", RECORD_START_LAT_LNG)
-                    intent.putExtra(LAT_LNG, LatLng(mLocation.latitude, mLocation.longitude))
+                    intent.putExtra(LAT_LNG, LatLng(mLocation!!.latitude, mLocation!!.longitude))
                     LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intent)
 
                     // 타이머 시작
@@ -300,6 +300,13 @@ class TrackRecordService : Service() {
         timer.cancel() // 타이머 제거
 
         isStarted = false
+        trackName = ""
+        exerciseKind = ""
+        trackId = ""
+        mLocation = null
+        myLocationIndexOnTrack = 0
+        mySumDistanceOnTrack = 0F
+        myBeforeLocationChangedSecond = 0
 
         stopForeground(true)
         stopSelf()

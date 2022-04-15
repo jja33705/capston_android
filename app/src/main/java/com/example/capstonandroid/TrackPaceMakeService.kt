@@ -67,11 +67,11 @@ class TrackPaceMakeService : Service() {
         var opponentPostId = 0
         var opponentGpsDataId = ""
         var opponentUserName = ""
-        lateinit var mLocation: Location // 내 위치
+        var mLocation: Location? = null // 내 위치
         var myLocationIndexOnTrack = 0 // 내가 트랙 위에 어디쯤 존재하는지
         var mySumDistanceOnTrack = 0F // 내가 이동한 트랙위의 거리
         var myBeforeLocationChangedSecond = 0 // 이전 내 위치 바뀐 시간
-        lateinit var opponentLocation: Location // 상대 위치
+        var opponentLocation: Location? = null // 상대 위치
         var opponentLocationIndexOnTrack = 0 // 상대가 트랙 위에 어디쯤 존재하는지
         var opponentSumDistanceOnTrack = 0F
         var opponentBeforeLocationChangedSecond = 0 // 이전 상대 위치 바뀐 시간
@@ -131,7 +131,7 @@ class TrackPaceMakeService : Service() {
                     // 로컬 프로드캐스트를 통해 위치를 보낸다.
                     val intent = Intent(ACTION_BROADCAST)
                     intent.putExtra("flag", BEFORE_START_LOCATION_UPDATE)
-                    intent.putExtra(LAT_LNG, LatLng(mLocation.latitude, mLocation.longitude))
+                    intent.putExtra(LAT_LNG, LatLng(mLocation!!.latitude, mLocation!!.longitude))
                     LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intent)
                 }
             }
@@ -155,21 +155,21 @@ class TrackPaceMakeService : Service() {
             override fun run() {
                 second ++
 
-                val locationChanged = (beforeLocation.latitude != mLocation.latitude) || (beforeLocation.longitude != mLocation.longitude)
+                val locationChanged = (beforeLocation.latitude != mLocation!!.latitude) || (beforeLocation.longitude != mLocation!!.longitude)
 
                 if (locationChanged) {
                     // 고도가 만약 더 크면 누적 상승 고도 더해줌
-                    if (beforeLocation.altitude < mLocation.altitude) {
-                        sumAltitude += mLocation.altitude - beforeLocation.altitude
+                    if (beforeLocation.altitude < mLocation!!.altitude) {
+                        sumAltitude += mLocation!!.altitude - beforeLocation.altitude
                     }
 
                     // 거리 구해줌
                     distance += beforeLocation.distanceTo(mLocation)
 
-                    beforeLocation = mLocation
+                    beforeLocation = mLocation!!
 
                     // 내 현재 상태 db에 저장
-                    gpsDataDao.insertGpsData(GpsData(second, mLocation.latitude, mLocation.longitude, mLocation.speed, distance, mLocation.altitude))
+                    gpsDataDao.insertGpsData(GpsData(second, mLocation!!.latitude, mLocation!!.longitude, mLocation!!.speed, distance, mLocation!!.altitude))
                 }
 
                 //평균속도
@@ -185,8 +185,8 @@ class TrackPaceMakeService : Service() {
                 if (opponentLocationChanged) {
                     // 상대 현재 상태 가져오기
                     opponentGpsData = opponentGpsDataDao.getOpponentGpsDataBySecond(second)
-                    opponentLocation.latitude = opponentGpsData.lat
-                    opponentLocation.longitude = opponentGpsData.lng
+                    opponentLocation!!.latitude = opponentGpsData.lat
+                    opponentLocation!!.longitude = opponentGpsData.lng
 
                     // 상대방 속도
                     opponentSpeed = opponentGpsData.speed
@@ -208,13 +208,13 @@ class TrackPaceMakeService : Service() {
                 // 업데이트된 것 브로드캐스트
                 val intent = Intent(ACTION_BROADCAST)
                 intent.putExtra("flag", AFTER_START_UPDATE)
-                intent.putExtra(LAT_LNG, LatLng(mLocation.latitude, mLocation.longitude))
-                intent.putExtra(OPPONENT_LAT_LNG, LatLng(opponentLocation.latitude, opponentLocation.longitude))
+                intent.putExtra(LAT_LNG, LatLng(mLocation!!.latitude, mLocation!!.longitude))
+                intent.putExtra(OPPONENT_LAT_LNG, LatLng(opponentLocation!!.latitude, opponentLocation!!.longitude))
                 intent.putExtra(SECOND, second)
                 intent.putExtra(DISTANCE, distance)
                 intent.putExtra(AVG_SPEED, avgSpeed)
                 intent.putExtra(CALORIE, calorie)
-                intent.putExtra(SPEED, mLocation.speed)
+                intent.putExtra(SPEED, mLocation!!.speed)
                 intent.putExtra(LOCATION_CHANGED, locationChanged)
                 intent.putExtra(OPPONENT_SPEED, opponentSpeed)
                 intent.putExtra(OPPONENT_LOCATION_CHANGED, opponentLocationChanged)
@@ -297,8 +297,8 @@ class TrackPaceMakeService : Service() {
                             // 상대 시작 위치 가져오기
                             opponentLocation = Location("opponentLocation")
                             val opponentStartGpsData = opponentGpsDataDao.getOpponentGpsDataBySecond(second)
-                            opponentLocation.latitude = opponentStartGpsData.lat
-                            opponentLocation.longitude = opponentStartGpsData.lng
+                            opponentLocation!!.latitude = opponentStartGpsData.lat
+                            opponentLocation!!.longitude = opponentStartGpsData.lng
 
                             println("다 넣었을까: ${opponentGpsDataDao.getAllOpponentGpsData()}")
                         }.join()
@@ -306,7 +306,7 @@ class TrackPaceMakeService : Service() {
                         // 상대 시작위치 보냄
                         val intent = Intent(ACTION_BROADCAST)
                         intent.putExtra("flag", OPPONENT_START_LAT_LNG)
-                        intent.putExtra(OPPONENT_LAT_LNG, LatLng(opponentLocation.latitude, opponentLocation.longitude))
+                        intent.putExtra(OPPONENT_LAT_LNG, LatLng(opponentLocation!!.latitude, opponentLocation!!.longitude))
                         LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intent)
                     }
                     createLocationRequest() // 위치 업데이트 시작
@@ -316,19 +316,19 @@ class TrackPaceMakeService : Service() {
                 CoroutineScope(Dispatchers.Main).launch {
                     isStarted = true
 
-                    beforeLocation = mLocation
+                    beforeLocation = mLocation!!
 
                     launch(Dispatchers.IO) {
                         // 시작위치 db에 저장
                         gpsDataDao.deleteAllGpsData()
-                        gpsDataDao.insertGpsData(GpsData(second, mLocation.latitude, mLocation.longitude, mLocation.speed, distance, mLocation.altitude))
+                        gpsDataDao.insertGpsData(GpsData(second, mLocation!!.latitude, mLocation!!.longitude, mLocation!!.speed, distance, mLocation!!.altitude))
                     }.join()
 
                     // 시작 위치 보냄
                     val intent = Intent(ACTION_BROADCAST)
                     intent.putExtra("flag", RECORD_START_LAT_LNG)
-                    intent.putExtra(LAT_LNG, LatLng(mLocation.latitude, mLocation.longitude))
-                    intent.putExtra(OPPONENT_LAT_LNG, LatLng(opponentLocation.latitude, opponentLocation.longitude))
+                    intent.putExtra(LAT_LNG, LatLng(mLocation!!.latitude, mLocation!!.longitude))
+                    intent.putExtra(OPPONENT_LAT_LNG, LatLng(opponentLocation!!.latitude, opponentLocation!!.longitude))
                     LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intent)
 
                     // 타이머 시작
@@ -399,6 +399,21 @@ class TrackPaceMakeService : Service() {
         timer.cancel() // 타이머 제거
 
         isStarted = false
+        trackName = ""
+        trackId = ""
+        exerciseKind = ""
+        matchType = ""
+        opponentPostId = 0
+        opponentGpsDataId = ""
+        opponentUserName = ""
+        mLocation = null
+        myLocationIndexOnTrack = 0
+        mySumDistanceOnTrack = 0F
+        myBeforeLocationChangedSecond = 0
+        opponentLocation = null
+        opponentLocationIndexOnTrack = 0
+        opponentSumDistanceOnTrack = 0F
+        opponentBeforeLocationChangedSecond = 0
 
         stopForeground(true)
         stopSelf()

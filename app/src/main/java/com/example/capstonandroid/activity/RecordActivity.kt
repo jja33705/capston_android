@@ -146,7 +146,7 @@ class RecordActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.Snapsh
             binding.tvInformation.visibility = View.GONE // 정보 창 없앰
 
             // 마지막 위치 가져오고 마커 생성
-            beforeLatLng = LatLng(RecordService.mLocation.latitude, RecordService.mLocation.longitude)
+            beforeLatLng = LatLng(RecordService.mLocation!!.latitude, RecordService.mLocation!!.longitude)
             mLocationMarker = mGoogleMap.addMarker(MarkerOptions()
                 .position(beforeLatLng)
                 .icon(Utils.getMarkerIconFromDrawable(resources.getDrawable(R.drawable.circle_basic_marker, null)))

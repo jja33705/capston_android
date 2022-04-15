@@ -161,11 +161,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="相手より約0m前"
+                android:textColor="@color/black"
                 android:fontFamily="@font/noto_sans_jp_regular"
                 android:includeFontPadding="false"
                 android:textSize="20dp"
                 android:padding="7dp"
-                android:visibility="visible"
+                android:visibility="gone"
                 android:drawableLeft="@drawable/direction_north"
                 >
             </TextView>

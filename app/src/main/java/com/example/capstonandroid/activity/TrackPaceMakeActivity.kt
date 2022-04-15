@@ -273,7 +273,7 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
                 trackStartPointMarker?.alpha = 0.4F
 
                 // 위치 가져오고 내 마커 생성
-                beforeLatLng = LatLng(TrackPaceMakeService.mLocation.latitude, TrackPaceMakeService.mLocation.longitude)
+                beforeLatLng = LatLng(TrackPaceMakeService.mLocation!!.latitude, TrackPaceMakeService.mLocation!!.longitude)
                 mLocationMarker = mGoogleMap.addMarker(MarkerOptions()
                     .position(beforeLatLng)
                     .icon(BitmapDescriptorFactory.fromBitmap(Utils.createBitmapFromView(myMarkerIcon)))
@@ -282,7 +282,7 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
                 // 상대 위치 마커 생성
                 opponentMarkerUserNameTextView.text = TrackPaceMakeService.opponentUserName
                 opponentLocationMarker = mGoogleMap.addMarker(MarkerOptions()
-                    .position(LatLng(TrackPaceMakeService.opponentLocation.latitude, TrackPaceMakeService.opponentLocation.longitude))
+                    .position(LatLng(TrackPaceMakeService.opponentLocation!!.latitude, TrackPaceMakeService.opponentLocation!!.longitude))
                     .icon(BitmapDescriptorFactory.fromBitmap(Utils.createBitmapFromView(opponentMarkerIcon)))
                     .anchor(0.5F, 0.5F))
 
@@ -388,7 +388,7 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
             track.gps.coordinates[TrackPaceMakeService.myLocationIndexOnTrack][0]
 
         var myMinDistance =
-            TrackPaceMakeService.mLocation.distanceTo(myBeforeLocation) // 가장 작은 거리 차이인 지점과의 거리차이
+            TrackPaceMakeService.mLocation!!.distanceTo(myBeforeLocation) // 가장 작은 거리 차이인 지점과의 거리차이
 
         var myPredictedLocation = TrackPaceMakeService.myLocationIndexOnTrack // 예상하는 트랙위의 내 위치
 
@@ -440,7 +440,7 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
             track.gps.coordinates[TrackPaceMakeService.opponentLocationIndexOnTrack][0]
 
         var opponentMinDistance =
-            TrackPaceMakeService.opponentLocation.distanceTo(opponentBeforeLocation) // 가장 작은 거리 차이인 지점과의 거리차이
+            TrackPaceMakeService.opponentLocation!!.distanceTo(opponentBeforeLocation) // 가장 작은 거리 차이인 지점과의 거리차이
 
         var opponentPredictedLocation =
             TrackPaceMakeService.opponentLocationIndexOnTrack // 예상하는 트랙위의 내 위치
@@ -684,53 +684,53 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
                 }
 
                 TrackPaceMakeService.AFTER_START_UPDATE -> { // 기록 시작 후 초마다 받는 업데이트
-                    second = intent?.getIntExtra(TrackPaceMakeService.SECOND, 0)
-                    binding.tvTime.text = Utils.timeToText(second)
+                    CoroutineScope(Dispatchers.Main).launch {
+                        second = intent?.getIntExtra(TrackPaceMakeService.SECOND, 0)
+                        binding.tvTime.text = Utils.timeToText(second)
 
-                    val avgSpeed = intent?.getDoubleExtra(TrackPaceMakeService.AVG_SPEED, 0.0)
-                    binding.tvAvgSpeed.text = Utils.formatDoublePointTwo(avgSpeed)
+                        val avgSpeed = intent?.getDoubleExtra(TrackPaceMakeService.AVG_SPEED, 0.0)
+                        binding.tvAvgSpeed.text = Utils.formatDoublePointTwo(avgSpeed)
 
-                    val calorie = intent?.getDoubleExtra(TrackPaceMakeService.CALORIE, 0.0)
-                    binding.tvKcal.text = Utils.formatDoublePointTwo(calorie)
+                        val calorie = intent?.getDoubleExtra(TrackPaceMakeService.CALORIE, 0.0)
+                        binding.tvKcal.text = Utils.formatDoublePointTwo(calorie)
 
-                    // 상대 위치 바꼈을 떄
-                    val opponentLocationChanged = intent?.getBooleanExtra(TrackPaceMakeService.OPPONENT_LOCATION_CHANGED, true)
-                    if (opponentLocationChanged) {
-                        val opponentSpeed = intent?.getFloatExtra(TrackPaceMakeService.OPPONENT_SPEED, 0F)
-                        opponentMarkerIconTextView.text = Utils.speedToText(opponentSpeed)
-                        opponentLocationMarker?.setIcon(BitmapDescriptorFactory.fromBitmap(Utils.createBitmapFromView(opponentMarkerIcon))) // 속도 변경
+                        // 상대 위치 바꼈을 떄
+                        val opponentLocationChanged = intent?.getBooleanExtra(TrackPaceMakeService.OPPONENT_LOCATION_CHANGED, true)
+                        if (opponentLocationChanged) {
+                            val opponentSpeed = intent?.getFloatExtra(TrackPaceMakeService.OPPONENT_SPEED, 0F)
+                            opponentMarkerIconTextView.text = Utils.speedToText(opponentSpeed)
+                            opponentLocationMarker?.setIcon(BitmapDescriptorFactory.fromBitmap(Utils.createBitmapFromView(opponentMarkerIcon))) // 속도 변경
 
-                        val opponentLatLng = intent?.getParcelableExtra<LatLng>(TrackPaceMakeService.OPPONENT_LAT_LNG)!! // 상대 위치
-                        opponentLocationMarker?.position = opponentLatLng // 상대 마커 이동
+                            val opponentLatLng = intent?.getParcelableExtra<LatLng>(TrackPaceMakeService.OPPONENT_LAT_LNG)!! // 상대 위치
+                            opponentLocationMarker?.position = opponentLatLng // 상대 마커 이동
 
-                        // 상대 폴리라인 갱신
-                        opponentLatLngList.add(opponentLatLng)
-                        opponentPolyline.points = opponentLatLngList
-                    }
+                            // 상대 폴리라인 갱신
+                            opponentLatLngList.add(opponentLatLng)
+                            opponentPolyline.points = opponentLatLngList
+                        }
 
-                    // 내 위치 바꼈을 때
-                    val locationChanged = intent?.getBooleanExtra(TrackPaceMakeService.LOCATION_CHANGED, true)
-                    if (locationChanged) {
-                        val latLng = intent?.getParcelableExtra<LatLng>(TrackPaceMakeService.LAT_LNG)!!
+                        // 내 위치 바꼈을 때
+                        val locationChanged = intent?.getBooleanExtra(TrackPaceMakeService.LOCATION_CHANGED, true)
+                        if (locationChanged) {
+                            val latLng = intent?.getParcelableExtra<LatLng>(TrackPaceMakeService.LAT_LNG)!!
 
-                        val distance = intent?.getDoubleExtra(TrackPaceMakeService.DISTANCE, 0.0)
-                        binding.tvDistance.text = Utils.distanceToText(distance)
+                            val distance = intent?.getDoubleExtra(TrackPaceMakeService.DISTANCE, 0.0)
+                            binding.tvDistance.text = Utils.distanceToText(distance)
 
-                        val speed = intent?.getFloatExtra(TrackPaceMakeService.SPEED, 0F)
-                        myMarkerIconTextView.text = Utils.speedToText(speed)
-                        mLocationMarker?.setIcon(BitmapDescriptorFactory.fromBitmap(Utils.createBitmapFromView(myMarkerIcon)))
+                            val speed = intent?.getFloatExtra(TrackPaceMakeService.SPEED, 0F)
+                            myMarkerIconTextView.text = Utils.speedToText(speed)
+                            mLocationMarker?.setIcon(BitmapDescriptorFactory.fromBitmap(Utils.createBitmapFromView(myMarkerIcon)))
 
-                        mLocationMarker?.position = latLng // 마커 이동
+                            mLocationMarker?.position = latLng // 마커 이동
 
-                        // 폴리라인 갱신
-                        latLngList.add(beforeLatLng)
-                        mPolyline.points = latLngList
+                            // 폴리라인 갱신
+                            latLngList.add(beforeLatLng)
+                            mPolyline.points = latLngList
 
-                        beforeLatLng = latLng
-                    }
-                    // 뭔가 위치 바뀐거 있으면 서로간의 거리 다시 구함.
-                    if (locationChanged || opponentLocationChanged) {
-                        CoroutineScope(Dispatchers.Main).launch {
+                            beforeLatLng = latLng
+                        }
+                        // 뭔가 위치 바뀐거 있으면 서로간의 거리 다시 구함.
+                        if (locationChanged || opponentLocationChanged) {
                             if (locationChanged) {
                                 launch(Dispatchers.Default) {
                                     predictLocation()
@@ -751,30 +751,32 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
                                 binding.tvPaceMake.text = "${TrackPaceMakeService.opponentUserName}より約${predictLocationDifference.toInt()*-1}m後ろ"
                             }
 
-//                            // 끝에 도착했는지 여기서 체크하자
-//                            if (TrackPaceMakeService.myLocationIndexOnTrack == track.gps.coordinates.size - 1) {
-//                                // 종료하기전 스냅샷 찍음
-//                                val builder: LatLngBounds.Builder = LatLngBounds.Builder() // 카메라 이동을 위한 빌더
-//                                for (latLng in latLngList) {
-//                                    builder.include(latLng) // 카메라안에 들어와야 하는 지점들 추가
-//                                }
-//                                // 카메라 업데이트
-//                                val bounds: LatLngBounds = builder.build()
-//                                mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 200))
-//
-//                                mGoogleMap.snapshot(this@TrackPaceMakeActivity)
-//                            }
+                            // 끝에 도착했는지 여기서 체크하자
+                            if (TrackPaceMakeService.myLocationIndexOnTrack == track.gps.coordinates.size - 1) {
+                                // 종료하기전 스냅샷 찍음
+                                val builder: LatLngBounds.Builder = LatLngBounds.Builder() // 카메라 이동을 위한 빌더
+                                for (latLng in latLngList) {
+                                    builder.include(latLng) // 카메라안에 들어와야 하는 지점들 추가
+                                }
+                                // 카메라 업데이트
+                                val bounds: LatLngBounds = builder.build()
+                                mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 200))
+
+                                mGoogleMap.snapshot(this@TrackPaceMakeActivity)
+                            }
+                        }
+                        // 30초간격으로 음성 알림
+                        println("내 거리: ${TrackPaceMakeService.mySumDistanceOnTrack}, 상대 거리: ${TrackPaceMakeService.opponentSumDistanceOnTrack}")
+                        if (textToSpeechInitialized && (second % 30 == 0)) { // 초기화된 상태일때 30초 간격으로 페이스에 대해 음성 안내
+                            val predictLocationDifference = TrackPaceMakeService.mySumDistanceOnTrack - TrackPaceMakeService.opponentSumDistanceOnTrack
+                            if (predictLocationDifference >= 0) {
+                                textToSpeech.speak("${TrackPaceMakeService.opponentUserName}より やく ${predictLocationDifference.toInt()}メートル前です。", TextToSpeech.QUEUE_FLUSH, null, "abc")
+                            } else {
+                                textToSpeech.speak("${TrackPaceMakeService.opponentUserName}より やく ${predictLocationDifference.toInt()*-1}メートル後ろです。", TextToSpeech.QUEUE_FLUSH, null, "abc")
+                            }
                         }
                     }
-                    // 30초간격으로 음성 알림
-                    if (textToSpeechInitialized && (second % 30 == 0)) { // 초기화된 상태일때 30초 간격으로 페이스에 대해 음성 안내
-                        val predictLocationDifference = TrackPaceMakeService.mySumDistanceOnTrack - TrackPaceMakeService.opponentSumDistanceOnTrack
-                        if (predictLocationDifference >= 0) {
-                            textToSpeech.speak("相手より約${predictLocationDifference.toInt()}メートル前です。", TextToSpeech.QUEUE_FLUSH, null, "abc")
-                        } else {
-                            textToSpeech.speak("相手より約${predictLocationDifference.toInt()*-1}メートル後ろです。", TextToSpeech.QUEUE_FLUSH, null, "abc")
-                        }
-                    }
+
                 }
                 TrackPaceMakeService.OPPONENT_START_LAT_LNG -> { // 상대 시작 위치
                     val opponentLatLng = intent?.getParcelableExtra<LatLng>(TrackPaceMakeService.OPPONENT_LAT_LNG)!!

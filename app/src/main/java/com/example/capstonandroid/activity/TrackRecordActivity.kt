@@ -217,7 +217,7 @@ class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.S
                 trackStartPointMarker?.alpha = 0.4F
 
                 // 마지막 위치 가져오고 마커 생성
-                beforeLatLng = LatLng(TrackRecordService.mLocation.latitude, TrackRecordService.mLocation.longitude)
+                beforeLatLng = LatLng(TrackRecordService.mLocation!!.latitude, TrackRecordService.mLocation!!.longitude)
                 mLocationMarker = mGoogleMap.addMarker(MarkerOptions()
                     .position(beforeLatLng)
                     .icon(Utils.getMarkerIconFromDrawable(resources.getDrawable(R.drawable.circle_basic_marker, null)))
@@ -388,7 +388,7 @@ class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.S
                     track.gps.coordinates[TrackRecordService.myLocationIndexOnTrack][0]
 
                 var myMinDistance =
-                    TrackRecordService.mLocation.distanceTo(myBeforeLocation) // 가장 작은 거리 차이인 지점과의 거리차이
+                    TrackRecordService.mLocation!!.distanceTo(myBeforeLocation) // 가장 작은 거리 차이인 지점과의 거리차이
 
                 var myPredictedLocation = TrackRecordService.myLocationIndexOnTrack // 예상하는 트랙위의 내 위치
 
