@@ -352,7 +352,7 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, SelectExerc
         // 투명도 조절로 선택된 느낌 줌
         for (trackId in trackMap.keys) {
             if (trackId != selectedTrackId) {
-                markerMap[trackId]?.alpha = 0.25F
+                markerMap[trackId]?.alpha = 0.4F
                 polylineMap[trackId]?.color = ContextCompat.getColor(this, R.color.no_selected_polyline_color)
             } else {
                 markerMap[trackId]?.alpha = 1F

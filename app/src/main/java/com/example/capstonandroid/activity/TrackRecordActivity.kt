@@ -127,8 +127,8 @@ class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.S
 
                 // 기존 트랙은 투명하게
                 trackPolyline.color = resources.getColor(R.color.no_selected_polyline_color, null)
-                trackEndPointMarker?.alpha = 0.3F
-                trackStartPointMarker?.alpha = 0.3F
+                trackEndPointMarker?.alpha = 0.4F
+                trackStartPointMarker?.alpha = 0.4F
             }
         }
 
@@ -213,8 +213,8 @@ class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.S
 
                 // 기존 트랙은 투명하게
                 trackPolyline.color = resources.getColor(R.color.no_selected_polyline_color, null)
-                trackEndPointMarker?.alpha = 0.3F
-                trackStartPointMarker?.alpha = 0.3F
+                trackEndPointMarker?.alpha = 0.4F
+                trackStartPointMarker?.alpha = 0.4F
 
                 // 마지막 위치 가져오고 마커 생성
                 beforeLatLng = LatLng(TrackRecordService.mLocation.latitude, TrackRecordService.mLocation.longitude)

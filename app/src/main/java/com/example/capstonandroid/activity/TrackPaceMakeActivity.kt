@@ -185,8 +185,8 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
 
                 // 기존 트랙은 투명하게
                 trackPolyline.color = resources.getColor(R.color.no_selected_polyline_color, null)
-                trackEndPointMarker?.alpha = 0.3F
-                trackStartPointMarker?.alpha = 0.3F
+                trackEndPointMarker?.alpha = 0.4F
+                trackStartPointMarker?.alpha = 0.4F
 
                 binding.tvPaceMake.visibility = View.VISIBLE // 페이스메이커와의 차이 정보 보이게
             }
@@ -269,8 +269,8 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
                 canStartAreaCircle.remove()
 
                 trackPolyline.color = resources.getColor(R.color.no_selected_polyline_color, null)
-                trackEndPointMarker?.alpha = 0.3F
-                trackStartPointMarker?.alpha = 0.3F
+                trackEndPointMarker?.alpha = 0.4F
+                trackStartPointMarker?.alpha = 0.4F
 
                 // 위치 가져오고 내 마커 생성
                 beforeLatLng = LatLng(TrackPaceMakeService.mLocation.latitude, TrackPaceMakeService.mLocation.longitude)
@@ -557,7 +557,7 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
                 .position(LatLng(track.gps.coordinates[track.gps.coordinates.size - 1][1], track.gps.coordinates[track.gps.coordinates.size - 1][0]))
                 .title("도착점")
                 .icon(Utils.getMarkerIconFromDrawable(resources.getDrawable(R.drawable.end_point_marker,null)))
-                .anchor(0F, 1F))
+                .anchor(0.25F, 0.9F))
 
             mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(track.gps.coordinates[0][1], track.gps.coordinates[0][0]), 18.0f)) // 화면 이동
 
