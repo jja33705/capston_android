@@ -31,7 +31,6 @@
                 android:background="@null"
                 android:focusable="false"
                 android:fontFamily="@font/noto_sans_jp_black"
-                android:hint="제목"
                 android:includeFontPadding="false"
                 android:textSize="24dp" />
 
@@ -45,7 +44,6 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"></ImageView>
                 <TextView
-                    android:text="고길동"
                     android:textSize="18sp"
                     android:layout_gravity="center_vertical"
                     android:id="@+id/username"
@@ -54,10 +52,10 @@
                 </TextView>
                 <Button
                     android:layout_gravity="center_vertical"
-                    android:text="팔로우"
+                    android:text="フォロー"
                     android:textSize="10sp"
                     android:id="@+id/followbutton"
-                    android:layout_width="60dp"
+                    android:layout_width="70dp"
                     android:layout_height="40dp">
 
                 </Button>
@@ -128,7 +126,6 @@
                 android:includeFontPadding="false"
                 android:id="@+id/content"
                 android:fontFamily="@font/noto_sans_jp_black"
-                android:text="내용 : "
                 android:textSize="20sp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">

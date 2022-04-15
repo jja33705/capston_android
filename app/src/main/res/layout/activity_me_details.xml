@@ -209,7 +209,7 @@
                 android:id="@+id/editButton"
                 android:layout_width="90dp"
                 android:layout_height="30dp"
-                android:text="수정"
+                android:text="修正"
                 android:layout_marginRight="10dp"
                 android:visibility="gone"></Button>
 <!--            <Button-->

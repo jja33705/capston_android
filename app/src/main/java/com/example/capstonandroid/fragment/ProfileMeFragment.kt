@@ -73,7 +73,7 @@ class ProfileMeFragment : Fragment(){
     }
 
     inner class MyXAxisFormatter : ValueFormatter(){
-        private val days = arrayOf("6일전","5일전","4일전","3일전","그저께","어제","오늘")
+        private val days = arrayOf("6日前","５日前","４日前","３日前","一昨日","昨日","今日")
         override fun getAxisLabel(value: Float, axis: AxisBase?): String {
             return days.getOrNull(value.toInt()-1) ?: value.toString()
         }
@@ -294,8 +294,8 @@ class ProfileMeFragment : Fragment(){
                     var user_mmr = loginuserResponse?.mmr
 
                     binding.tvProfileMeName.setText(user_name)
-                    binding.tvProfileMeFollowers.setText("팔로워 : " + user_followers)
-                    binding.tvProfileMeFollowings.setText("팔로윙 : "+user_followings)
+                    binding.tvProfileMeFollowers.setText("フォロワー : " + user_followers)
+                    binding.tvProfileMeFollowings.setText("フォロー中 : "+user_followings)
                     binding.tvProfileMeMmr.setText("MMR : " + user_mmr)
 
 
@@ -318,7 +318,7 @@ class ProfileMeFragment : Fragment(){
 
 
             val builder = AlertDialog.Builder(requireContext())
-            builder.setTitle("정말 로그아웃 할 것입니까?")
+            builder.setTitle("本当にログアウトしますか。")
                 .setPositiveButton("확인", DialogInterface.OnClickListener{ dialog, id->
 
                     supplementService.logOut(token.toString()).enqueue(object : Callback<LogoutResponse> {

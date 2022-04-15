@@ -50,7 +50,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:background="@null"
-                    android:hint="댓글을 입력하세요!"></EditText>
+                    android:hint="コメントを入力してください！"></EditText>
 
                 <Button
                     android:includeFontPadding="false"
@@ -61,7 +61,7 @@
                     android:background="@drawable/login_button"
                     android:layout_width="70dp"
                     android:layout_height="50dp"
-                    android:text="입력">
+                    android:text="入力">
 
                 </Button>
 

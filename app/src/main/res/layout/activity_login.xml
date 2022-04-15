@@ -78,7 +78,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="자동 로그인"></CheckBox>
+                android:text="自動ログイン"></CheckBox>
 
             <TextView
                 android:id="@+id/forgot_email"
@@ -88,7 +88,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="13dp"
-                android:text="계정을 잊으셨나요?"></TextView>
+                android:text="アカウントを忘れましたか。"></TextView>
 
             <TextView
                 android:includeFontPadding="false"
@@ -96,7 +96,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="13dp"
-                android:text="또는"></TextView>
+                android:text="または"></TextView>
 
             <TextView
                 android:includeFontPadding="false"
@@ -106,7 +106,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="13dp"
-                android:text="새로운 계정 생성"
+                android:text="新しいアカウント作成"
                 android:clickable="true"/>
 
         </LinearLayout>

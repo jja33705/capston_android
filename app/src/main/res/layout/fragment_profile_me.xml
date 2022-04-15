@@ -182,7 +182,7 @@
             android:id="@+id/logout"
             android:layout_width="match_parent"
             android:layout_height="30dp"
-            android:text="로그아웃"></Button>
+            android:text="ログアウト"></Button>
 
 <!--        <Button-->
 <!--            android:layout_margin="5dp"-->

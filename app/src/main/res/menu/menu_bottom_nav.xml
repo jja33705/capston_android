@@ -10,16 +10,16 @@
         android:icon="@drawable/track"
         android:enabled="true"
         android:checkable="false"
-        android:title="트랙" />
+        android:title="トラック" />
     <item
         android:id="@+id/recordActivity"
         android:icon="@drawable/record"
         android:enabled="true"
         android:checkable="false"
-        android:title="레코딩" />
+        android:title="レコーディング" />
     <item
         android:id="@+id/meFragment"
         android:icon="@drawable/me_personal"
         android:enabled="true"
-        android:title="유저" />
+        android:title="ユーザー" />
 </menu>

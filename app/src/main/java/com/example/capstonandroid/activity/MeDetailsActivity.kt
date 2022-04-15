@@ -109,19 +109,19 @@ class MeDetailsActivity : AppCompatActivity() {
                     username = response.body()!!.data[data_num]!!.user.name
 
                     if(time>3600){
-                        binding.time.setText("시간 : "+time.toInt()/3600+"시간 "+time/60.toInt()+"분 "+time.toInt()%60+"초")
+                        binding.time.setText("時間 : "+time.toInt()/3600+"時間 "+time/60.toInt()+"分 "+time.toInt()%60+"秒")
                     }else if (time>60){
-                        binding.time.setText("시간 : "+time.toInt()/60+"분 "+time.toInt()%60+"초")
+                        binding.time.setText("時間 : "+time.toInt()/60+"分 "+time.toInt()%60+"秒")
                     }else {
-                        binding.time.setText("시간 : "+time.toInt()%60+"초")
+                        binding.time.setText("時間 : "+time.toInt()%60+"秒")
                     }
 
                     binding.content.setText(content)
-                    binding.calorie.setText("칼로리 : "+calorie+" Cal")
-                    binding.kind.setText("종류 : " + kind)
-                    binding.averageSpeed.setText("평균 속도 : "+average_speed +" Km/h")
-                    binding.altitude.setText("고도 : "+altitude)
-                    binding.distance.setText("거리 : "+String.format("%.2f",distance/1000)+" Km")
+                    binding.calorie.setText("カロリー : "+calorie+" Cal")
+                    binding.kind.setText("種類 : " + kind)
+                    binding.averageSpeed.setText("平均速度 : "+average_speed +" Km/h")
+                    binding.altitude.setText("高度 : "+altitude)
+                    binding.distance.setText("距離 : "+String.format("%.2f",distance/1000)+" Km")
 
                     println("콘텐츠"+content)
                     println("랭스"+range)
@@ -150,8 +150,8 @@ class MeDetailsActivity : AppCompatActivity() {
         binding.deleteButton.setOnClickListener {
 
             val builder = AlertDialog.Builder(this)
-            builder.setTitle("정말 삭제 할 것입니까?")
-                .setPositiveButton("확인", DialogInterface.OnClickListener{ dialog,id->
+            builder.setTitle("本当に削除しますか。")
+                .setPositiveButton("はい", DialogInterface.OnClickListener{ dialog,id->
                     println("삭제하기전 페이지?? 뭘까요ㅋㅋ"+postID)
                     supplementService.postDelete(token,postID).enqueue(object : Callback<DeleteResponse> {
                         override fun onResponse(call: Call<DeleteResponse>, response: Response<DeleteResponse>) {
@@ -164,7 +164,7 @@ class MeDetailsActivity : AppCompatActivity() {
                         }
                     })
                 })
-                .setNegativeButton("취소",DialogInterface.OnClickListener{ dialog,id ->
+                .setNegativeButton("いいえ",DialogInterface.OnClickListener{ dialog,id ->
                     println("취소 하셨네요")
                 })
 
@@ -177,13 +177,13 @@ class MeDetailsActivity : AppCompatActivity() {
 
             val rangeName :String
              if (range=="public"){
-                 rangeName = "비공개"
+                 rangeName = "非公開"
              }else {
-                 rangeName = "공개"
+                 rangeName = "公開"
              }
             val builder = AlertDialog.Builder(this)
-            builder.setTitle("정말 " +  rangeName +" 하시겠습니까?")
-                .setPositiveButton("확인", DialogInterface.OnClickListener{ dialog,id->
+            builder.setTitle("本当に" +  rangeName +"しますか。")
+                .setPositiveButton("はい", DialogInterface.OnClickListener{ dialog,id->
 
                     if(range=="public"){
                         val update = Update(
@@ -236,7 +236,7 @@ class MeDetailsActivity : AppCompatActivity() {
                         binding.range.setImageResource(R.drawable.lockaa)
                     }
                 })
-                .setNegativeButton("취소",DialogInterface.OnClickListener{ dialog,id ->
+                .setNegativeButton("いいえ",DialogInterface.OnClickListener{ dialog,id ->
                     println("취소 하셨네요")
                 })
 
@@ -278,8 +278,8 @@ class MeDetailsActivity : AppCompatActivity() {
 
 
             val builder = AlertDialog.Builder(this)
-            builder.setTitle("정말 수정 할 것입니까?")
-                .setPositiveButton("확인", DialogInterface.OnClickListener{ dialog,id->
+            builder.setTitle("本当に修正しますか。")
+                .setPositiveButton("はい", DialogInterface.OnClickListener{ dialog,id->
                     title = binding.title.text.toString()
                     content = binding.content.text.toString()
 
@@ -309,7 +309,7 @@ class MeDetailsActivity : AppCompatActivity() {
                         }
                     })
                 })
-                .setNegativeButton("취소",DialogInterface.OnClickListener{ dialog,id ->
+                .setNegativeButton("いいえ",DialogInterface.OnClickListener{ dialog,id ->
                     println("취소 하셨네요")
                 })
 
