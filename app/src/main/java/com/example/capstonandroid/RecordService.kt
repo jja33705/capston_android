@@ -142,6 +142,7 @@ class RecordService : Service() {
                 // 평균속도
                 if (second > 0) {
                     avgSpeed = (distance / 1000) / (second.toDouble() / 3600)
+                    println(avgSpeed)
                 }
 
                 // 칼로리

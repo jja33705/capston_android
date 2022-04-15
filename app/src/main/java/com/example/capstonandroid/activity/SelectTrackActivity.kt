@@ -2,16 +2,20 @@ package com.example.capstonandroid.activity
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Dialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
+import android.view.Window
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -47,6 +51,8 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, SelectExerc
     private lateinit var supplementService: BackendApi // api
 
     private lateinit var persistentBottomSheet: BottomSheetBehavior<View>
+
+    private lateinit var rankMatchingDialog: Dialog // 커스텀 다이얼로그
 
     private lateinit var mFusedLocationClient: FusedLocationProviderClient // 통합 위치 제공자 핸들
 
@@ -92,6 +98,11 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, SelectExerc
                 mLocationBack?.position = LatLng(mLocation.latitude, mLocation.longitude)
             }
         }
+
+        // 커스텀 다이얼로그 초기화
+        rankMatchingDialog = Dialog(this)
+        rankMatchingDialog.requestWindowFeature(Window.FEATURE_NO_TITLE) // 타이틀 제거
+        rankMatchingDialog.setContentView(R.layout.rank_matching_dialog)
 
         job = Job() // job 생성
 
@@ -177,9 +188,51 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, SelectExerc
         }
         // 랭크전 눌렀을때 리스너 등록
         binding.buttonRank.setOnClickListener {
-            val intent = Intent(this, RankMatchingActivity::class.java)
-            intent.putExtra("trackId", selectedTrackId)
-            activityResultLauncher.launch(intent)
+//            val intent = Intent(this, RankMatchingActivity::class.java)
+//            intent.putExtra("trackId", selectedTrackId)
+//            activityResultLauncher.launch(intent)
+
+            CoroutineScope(Dispatchers.Main).launch {
+                val token = "Bearer " + getSharedPreferences("other", MODE_PRIVATE).getString("TOKEN", "")!!
+                val rankMatchingResponse = supplementService.rankMatching(token, selectedTrackId!!)
+                if (rankMatchingResponse.isSuccessful) {
+                    when (rankMatchingResponse.code()) {
+                        200 -> {
+                            val post = rankMatchingResponse.body()!!.post
+                            val user = rankMatchingResponse.body()!!.user
+
+                            val userNameTextView: TextView = rankMatchingDialog.findViewById(R.id.tv_vs_user_name)
+                            userNameTextView.text = user.name
+                            val mmrTextView: TextView = rankMatchingDialog.findViewById(R.id.tv_vs_mmr)
+                            mmrTextView.text = post.mmr.toString()
+                            val postNameTextView: TextView = rankMatchingDialog.findViewById(R.id.tv_vs_post_name)
+                            postNameTextView.text = post.title
+                            val avgSpeedTextView: TextView = rankMatchingDialog.findViewById(R.id.tv_vs_avg_speed)
+                            avgSpeedTextView.text = Utils.formatDoublePointTwo(post.average_speed)
+                            val timeTextView: TextView = rankMatchingDialog.findViewById(R.id.tv_vs_time)
+                            timeTextView.text = Utils.timeToText(post.time)
+
+                            rankMatchingDialog.show()
+                            rankMatchingDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT)) // 모서리 둥글게 하기 위해서
+
+                            delay(3000)
+
+                            val intent = Intent(this@SelectTrackActivity, TrackPaceMakeActivity::class.java)
+                            intent.putExtra("matchType", "랭크")
+                            intent.putExtra("exerciseKind", exerciseKind)
+                            intent.putExtra("trackId", selectedTrackId)
+                            intent.putExtra("opponentGpsDataId", post.gps_id)
+                            intent.putExtra("opponentPostId", post.id)
+                            startActivity(intent)
+                            finish()
+                        }
+                        204 -> {
+                            Toast.makeText(this@SelectTrackActivity, "적당한 매칭 상대가 없습니다.", Toast.LENGTH_SHORT).show()
+                        }
+
+                    }
+                }
+            }
         }
 
         // 밑에서 올라오는 바텀시트 설정
