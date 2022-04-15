@@ -17,8 +17,10 @@ import com.example.capstonandroid.adapter.ViewPagerAdapter
 import com.example.capstonandroid.databinding.*
 import com.example.capstonandroid.network.RetrofitClient
 import com.example.capstonandroid.network.api.BackendApi
+import com.example.capstonandroid.network.dto.FollowResponse
 import com.example.capstonandroid.network.dto.LikeResponse
 import com.example.capstonandroid.network.dto.SNSResponse
+import kotlinx.android.synthetic.main.track_and_name.view.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -38,6 +40,10 @@ class SNSDetailsActivity : AppCompatActivity() {
     private var distance: Double = 0.0;
     private var kind = "";
     private var content = "";
+    private var createdate = ""
+
+    private var username = "";
+    private var userID = 0
 
     lateinit var binding: ActivitySnsdetailsBinding
 
@@ -82,16 +88,28 @@ class SNSDetailsActivity : AppCompatActivity() {
                  if(response.isSuccessful){
 
                      val defaultImage = R.drawable.map
-                     val url = response.body()!!.data[data_num]!!.map_image[0].url
-                     println(url)
 
 
-                     Glide.with(this@SNSDetailsActivity)
-                         .load(url) // 불러올 이미지 url
-                         .placeholder(defaultImage) // 이미지 로딩 시작하기 전 표시할 이미지
-                         .error(defaultImage) // 로딩 에러 발생 시 표시할 이미지
-                         .fallback(defaultImage) // 로드할 url 이 비어있을(null 등) 경우 표시할 이미지
-                         .into(binding.imageView) // 이미지를 넣을 뷰
+                     if(response.body()!!.data[data_num].map_image.size==0){
+                         var url = ""
+                         Glide.with(this@SNSDetailsActivity)
+                             .load(url) // 불러올 이미지 url
+                             .placeholder(defaultImage) // 이미지 로딩 시작하기 전 표시할 이미지
+                             .error(defaultImage) // 로딩 에러 발생 시 표시할 이미지
+                             .fallback(defaultImage) // 로드할 url 이 비어있을(null 등) 경우 표시할 이미지
+                             .into(binding.imageView) // 이미지를 넣을 뷰
+
+                     }else {
+
+                         val url = response.body()!!.data[data_num]!!.map_image[0].url
+                         Glide.with(this@SNSDetailsActivity)
+                             .load(url) // 불러올 이미지 url
+                             .placeholder(defaultImage) // 이미지 로딩 시작하기 전 표시할 이미지
+                             .error(defaultImage) // 로딩 에러 발생 시 표시할 이미지
+                             .fallback(defaultImage) // 로드할 url 이 비어있을(null 등) 경우 표시할 이미지
+                             .into(binding.imageView) // 이미지를 넣을 뷰
+                     }
+
 
 
 
@@ -109,7 +127,9 @@ class SNSDetailsActivity : AppCompatActivity() {
                      distance = response.body()!!.data[data_num]!!.distance
                      kind = response.body()!!.data[data_num]!!.kind
                      content = response.body()!!.data[data_num]!!.content
-
+                     username = response.body()!!.data[data_num]!!.user.name
+                    createdate = response.body()!!.data[data_num]!!.created_at
+                    userID = response.body()!!.data[data_num]!!.user_id
                      if(time>3600){
                          binding.time.setText("시간 : "+time.toInt()/3600+"시간 "+time/60.toInt()+"분 "+time.toInt()%60+"초")
                      }else if (time>60){
@@ -124,6 +144,8 @@ class SNSDetailsActivity : AppCompatActivity() {
                      binding.averageSpeed.setText("평균 속도 : "+average_speed +" Km/h")
                      binding.altitude.setText("고도 : "+altitude)
                      binding.distance.setText("거리 : "+String.format("%.2f",distance/1000)+" Km")
+                     binding.username.setText(username)
+                     binding.createdate.setText(createdate)
                  }  else{
                      println("실패함ㅋㅋ")
                      println(response.body())
@@ -189,7 +211,20 @@ class SNSDetailsActivity : AppCompatActivity() {
             startActivity(nextIntent)
         }
 
+        binding.followbutton.setOnClickListener {
+            supplementService.userFollow(token,userID).enqueue(object : Callback<FollowResponse>{
+                override fun onResponse(
+                    call: Call<FollowResponse>,
+                    response: Response<FollowResponse>
+                ) {
+                    binding.followbutton.setText("언팔로우")
+                }
 
+                override fun onFailure(call: Call<FollowResponse>, t: Throwable) {
+                    TODO("Not yet implemented")
+                }
+            })
+        }
 }
     private fun initRetrofit(){
         retrofit = RetrofitClient.getInstance()

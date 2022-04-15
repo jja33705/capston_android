@@ -43,6 +43,8 @@ class MeDetailsActivity : AppCompatActivity() {
     private var altitude: Double = 0.0;
     private var distance: Double = 0.0;
     private var kind = "";
+    
+    private var username = "";
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_me_details)
@@ -69,17 +71,25 @@ class MeDetailsActivity : AppCompatActivity() {
 
 
                     val defaultImage = R.drawable.map
-                    val url = response.body()!!.data[data_num]!!.map_image[0].url
-                    println(url)
+                    if(response.body()!!.data[data_num].map_image.size==0){
+                        var url = ""
+                        Glide.with(this@MeDetailsActivity)
+                            .load(url) // 불러올 이미지 url
+                            .placeholder(defaultImage) // 이미지 로딩 시작하기 전 표시할 이미지
+                            .error(defaultImage) // 로딩 에러 발생 시 표시할 이미지
+                            .fallback(defaultImage) // 로드할 url 이 비어있을(null 등) 경우 표시할 이미지
+                            .into(binding.imageView) // 이미지를 넣을 뷰
 
+                    }else {
 
-                    Glide.with(this@MeDetailsActivity)
-                        .load(url) // 불러올 이미지 url
-                        .placeholder(defaultImage) // 이미지 로딩 시작하기 전 표시할 이미지
-                        .error(defaultImage) // 로딩 에러 발생 시 표시할 이미지
-                        .fallback(defaultImage) // 로드할 url 이 비어있을(null 등) 경우 표시할 이미지
-                        .into(binding.imageView) // 이미지를 넣을 뷰
-
+                        val url = response.body()!!.data[data_num]!!.map_image[0].url
+                        Glide.with(this@MeDetailsActivity)
+                            .load(url) // 불러올 이미지 url
+                            .placeholder(defaultImage) // 이미지 로딩 시작하기 전 표시할 이미지
+                            .error(defaultImage) // 로딩 에러 발생 시 표시할 이미지
+                            .fallback(defaultImage) // 로드할 url 이 비어있을(null 등) 경우 표시할 이미지
+                            .into(binding.imageView) // 이미지를 넣을 뷰
+                    }
                     println(response.body()!!.data[data_num]!!.title)
 
                     binding.title.setText(response.body()!!.data[data_num]!!.title)
@@ -96,7 +106,7 @@ class MeDetailsActivity : AppCompatActivity() {
                     altitude = response.body()!!.data[data_num]!!.altitude
                     distance = response.body()!!.data[data_num]!!.distance
                     kind = response.body()!!.data[data_num]!!.kind
-
+                    username = response.body()!!.data[data_num]!!.user.name
 
                     if(time>3600){
                         binding.time.setText("시간 : "+time.toInt()/3600+"시간 "+time/60.toInt()+"분 "+time.toInt()%60+"초")
@@ -112,7 +122,6 @@ class MeDetailsActivity : AppCompatActivity() {
                     binding.averageSpeed.setText("평균 속도 : "+average_speed +" Km/h")
                     binding.altitude.setText("고도 : "+altitude)
                     binding.distance.setText("거리 : "+String.format("%.2f",distance/1000)+" Km")
-
 
                     println("콘텐츠"+content)
                     println("랭스"+range)
