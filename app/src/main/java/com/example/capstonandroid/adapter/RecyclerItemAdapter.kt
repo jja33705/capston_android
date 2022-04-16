@@ -63,9 +63,9 @@ class RecyclerUserAdapter(
             val date = item.created_id // your date
 // date is already in Standard ISO format so you don't need custom formatted
 //                     val date = "2021-12-16T16:42:00.000000Z" // your date
-            val dateTime : ZonedDateTime = OffsetDateTime.parse(date).toZonedDateTime()  // parsed date
+            val dateTime : ZonedDateTime = OffsetDateTime.parse(date).toZonedDateTime().plusHours(9)  // parsed date
 // format date object to specific format if needed
-            val formatter = DateTimeFormatter.ofPattern("yyyy年 MMM dd日 a HH時 mm分 ", Locale.JAPANESE)
+            val formatter = DateTimeFormatter.ofPattern("yyyy年 MMM dd日 HH時 mm分 ", Locale.JAPANESE)
             println( dateTime.format(formatter).toString()) // output : Dec 16, 2021 16:42
 //                     yyyy-MM-dd HH:mm:ss z
 

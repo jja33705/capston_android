@@ -37,7 +37,7 @@
             android:textSize="18dp"></TextView>
         <TextView
             android:gravity="right"
-            android:layout_gravity="center_vertical"
+            android:layout_gravity="center|center_vertical"
             android:includeFontPadding="false"
             android:fontFamily="@font/noto_sans_jp_black"
             android:id="@+id/txtUser_created_id"
