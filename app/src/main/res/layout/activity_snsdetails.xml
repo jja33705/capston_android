@@ -35,22 +35,29 @@
                 android:textSize="24dp" />
 
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_gravity="center_vertical">
                 <ImageView
                     android:src="@drawable/profile"
                     android:layout_gravity="center_vertical"
+                    android:layout_marginRight="10dp"
                     android:layout_width="30dp"
                     android:layout_height="30dp"></ImageView>
                 <TextView
+                    android:includeFontPadding="false"
+                    android:fontFamily="@font/noto_sans_jp_black"
+                    android:text="홍길동"
                     android:textSize="18sp"
                     android:layout_gravity="center_vertical"
                     android:id="@+id/username"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp">
                 </TextView>
                 <Button
+                    android:visibility="gone"
                     android:layout_gravity="center_vertical"
                     android:text="フォロー"
                     android:textSize="10sp"
@@ -61,11 +68,15 @@
                 </Button>
 
                 <TextView
-                    android:layout_gravity="center_vertical"
-                    android:text="2022-04-13T04:57:26.119Z"
+                    android:includeFontPadding="false"
+                    android:fontFamily="@font/noto_sans_jp_black"
+                    android:gravity="right"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="10dp"
                     android:id="@+id/createdate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="2022-04-13T04:57:26.119Z">
 
                 </TextView>
             </LinearLayout>

@@ -12,10 +12,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_gravity="center_horizontal"
+        android:layout_gravity="center_vertical"
         android:layout_margin="5dp">
         <ImageView
             android:layout_width="30dp"
+
             android:layout_gravity="center_vertical"
             android:layout_margin="5dp"
             android:layout_height="30dp"
@@ -35,14 +36,15 @@
             android:textColor="#666666"
             android:textSize="18dp"></TextView>
         <TextView
-            android:layout_gravity="center"
-            android:gravity="center"
+            android:gravity="right"
+            android:layout_gravity="center_vertical"
             android:includeFontPadding="false"
             android:fontFamily="@font/noto_sans_jp_black"
             android:id="@+id/txtUser_created_id"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="30dp"
             android:text="날짜"
+            android:layout_marginRight="10dp"
             android:textColor="#666666"
             android:textSize="15dp" />
     </LinearLayout>

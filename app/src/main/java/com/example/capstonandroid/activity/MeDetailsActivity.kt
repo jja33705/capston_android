@@ -4,11 +4,13 @@ package com.example.capstonandroid.activity
 
 import android.content.DialogInterface
 import android.content.Intent
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.InputType.TYPE_NULL
 import android.view.View
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
@@ -22,6 +24,10 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
+import java.time.OffsetDateTime
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
+import java.util.*
 
 class MeDetailsActivity : AppCompatActivity() {
 
@@ -65,6 +71,7 @@ class MeDetailsActivity : AppCompatActivity() {
         println("여기는 좀 .. " + token)
 
         supplementService.myIndex(token, data_page).enqueue(object : Callback<MySNSResponse> {
+            @RequiresApi(Build.VERSION_CODES.O)
             override fun onResponse(call: Call<MySNSResponse>, response: Response<MySNSResponse>) {
                 if (response.isSuccessful) {
 
@@ -108,6 +115,16 @@ class MeDetailsActivity : AppCompatActivity() {
                     kind = response.body()!!.data[data_num]!!.kind
                     username = response.body()!!.data[data_num]!!.user.name
 
+                    val date = response.body()!!.data[data_num]!!.created_at // your date
+// date is already in Standard ISO format so you don't need custom formatted
+//                     val date = "2021-12-16T16:42:00.000000Z" // your date
+                    val dateTime : ZonedDateTime = OffsetDateTime.parse(date).toZonedDateTime()  // parsed date
+// format date object to specific format if needed
+                    val formatter = DateTimeFormatter.ofPattern("yyyy年 MMM dd日 a HH時 mm分 ", Locale.JAPANESE)
+                    println( dateTime.format(formatter).toString()) // output : Dec 16, 2021 16:42
+//                     yyyy-MM-dd HH:mm:ss z
+
+                     binding.createdate.setText(dateTime.format(formatter).toString())
                     if(time>3600){
                         binding.time.setText("時間 : "+time.toInt()/3600+"時間 "+time/60.toInt()+"分 "+time.toInt()%60+"秒")
                     }else if (time>60){

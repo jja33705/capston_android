@@ -5,6 +5,7 @@ package com.example.capstonandroid.activity
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -21,6 +22,8 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import java.text.SimpleDateFormat
+import java.time.*
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 class SNSDetailsActivity : AppCompatActivity() {
@@ -129,11 +132,23 @@ class SNSDetailsActivity : AppCompatActivity() {
 
 
 
+
                     userID = response.body()!!.data[data_num]!!.user_id
 
 
 //                     println("시간 시간 : "+Utils.timeToText(time.toInt()))
 
+
+                     val date = response.body()!!.data[data_num]!!.created_at // your date
+// date is already in Standard ISO format so you don't need custom formatted
+//                     val date = "2021-12-16T16:42:00.000000Z" // your date
+                     val dateTime : ZonedDateTime = OffsetDateTime.parse(date).toZonedDateTime()  // parsed date
+// format date object to specific format if needed
+                     val formatter = DateTimeFormatter.ofPattern("yyyy年 MMM dd日 a HH時 mm分 ", Locale.JAPANESE)
+                     println( dateTime.format(formatter).toString()) // output : Dec 16, 2021 16:42
+//                     yyyy-MM-dd HH:mm:ss z
+
+//                     binding.createdate.setText(dateTime.format(formatter).toString())
 
                     // 문자열
 
@@ -152,7 +167,7 @@ class SNSDetailsActivity : AppCompatActivity() {
                      binding.altitude.setText("高度 : "+altitude)
                      binding.distance.setText("距離 : "+String.format("%.2f",distance/1000)+" Km")
                      binding.username.setText(username)
-                     binding.createdate.setText(createdate)
+                     binding.createdate.setText(dateTime.format(formatter).toString())
                  }  else{
                      println("실패함ㅋㅋ")
                      println(response.body())
@@ -232,7 +247,9 @@ class SNSDetailsActivity : AppCompatActivity() {
                 }
             })
         }
+
 }
+
     private fun initRetrofit(){
         retrofit = RetrofitClient.getInstance()
         supplementService = retrofit.create(BackendApi::class.java);
