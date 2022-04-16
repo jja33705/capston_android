@@ -11,7 +11,7 @@
         android:id="@+id/mefragment_target"
         android:enabled="true"
         android:icon="@drawable/target"
-        android:title="個人目標" />
+        android:title="目標" />
     <item
         android:id="@+id/mefragment_activity"
         android:enabled="true"

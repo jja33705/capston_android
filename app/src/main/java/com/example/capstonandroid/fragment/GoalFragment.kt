@@ -9,11 +9,10 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.core.content.ContextCompat
 import com.example.capstonandroid.R
-import com.example.capstonandroid.databinding.FragmentTargetMeBinding
+import com.example.capstonandroid.databinding.FragmentGoalBinding
 import com.example.capstonandroid.network.api.BackendApi
 import com.example.capstonandroid.network.RetrofitClient
 import com.example.capstonandroid.network.dto.UserWeekResponse
-import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.*
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
@@ -37,16 +36,10 @@ class PersonalMeFragment : Fragment() {
     private var param2: String? = null
 
     // 바인딩 객체 타입에 ?를 붙여서 null을 허용 해줘야한다. ( onDestroy 될 때 완벽하게 제거를 하기위해 )
-    private var mBinding: FragmentTargetMeBinding? = null
+    private var mBinding: FragmentGoalBinding? = null
     // 매번 null 체크를 할 필요 없이 편의성을 위해 바인딩 변수 재 선언
     private val binding get() = mBinding!!
 
-
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
     inner class MyXAxisFormatter : ValueFormatter(){
         private val days = arrayOf("6日前","５日前","４日前","３日前","一昨日","昨日","今日")
         override fun getAxisLabel(value: Float, axis: AxisBase?): String {
@@ -60,7 +53,7 @@ class PersonalMeFragment : Fragment() {
     ): View? {
 
         // Inflate the layout for this fragment
-        mBinding = FragmentTargetMeBinding.inflate(inflater, container, false)
+        mBinding = FragmentGoalBinding.inflate(inflater, container, false)
 
 
         arguments?.let {

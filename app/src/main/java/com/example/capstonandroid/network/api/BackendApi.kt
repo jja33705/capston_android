@@ -60,7 +60,7 @@ interface BackendApi {
 
     @POST("post/image")
     fun imageTest(@Header("Authorization") token : String ,
-                  @Part images : MultipartBody.Part?): Call<ImageResponse>
+                  @Part images : MultipartBody.Part?): Call<Image>
 
 
 
@@ -100,6 +100,9 @@ interface BackendApi {
 
     @GET("match/rank") // 랭크 랜덤 매칭
     suspend fun rankMatching(@Header("Authorization") token: String, @Query("track_id") trackId: String): Response<RankMatchingResponse>
+
+    @GET("match/friendly") // 친선전 리스트
+    suspend fun friendlyMatching(@Header("Authorization") token: String, @Query("track_id") trackId: String, @Query("page") page: Int): Response<FriendlyMatchingResponse>
 
     @GET("gpsData") // gps 데이터 받기
     suspend fun getGpsData(@Header("Authorization") token: String, @Query("gpsId") gpsId: String): Response<GetGpsDataResponse>

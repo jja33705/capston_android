@@ -13,7 +13,6 @@ import com.example.capstonandroid.Utils
 import com.example.capstonandroid.databinding.ActivityTrackBinding
 import com.example.capstonandroid.network.RetrofitClient
 import com.example.capstonandroid.network.api.BackendApi
-import com.example.capstonandroid.network.dto.Data
 import com.example.capstonandroid.network.dto.Post
 import com.example.capstonandroid.network.dto.Track
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -42,15 +41,11 @@ class TrackActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var track: Track
 
-    private lateinit var firstRank: Data
+    private lateinit var firstRank: Post
 
     // 시작점, 끝점
     private lateinit var startLatLng: LatLng
     private lateinit var endLatLng: LatLng
-
-    companion object {
-        const val RANK_MATCHING_ACTIVITY_REQUEST_CODE = 888
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -2,7 +2,7 @@ package com.example.capstonandroid.network.dto
 
 data class RankingResponse(
     val current_page: Int,
-    val `data`: List<Data>,
+    val `data`: List<Post>,
     val first_page_url: String,
     val from: Int,
     val last_page: Int,
