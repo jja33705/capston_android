@@ -9,8 +9,8 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="20dp"
-        android:text="相手を探しました"
+        android:padding="15dp"
+        android:text="相手を探しました！"
         android:textSize="20sp"
         android:includeFontPadding="false"
         android:fontFamily="@font/noto_sans_jp_bold"
@@ -27,51 +27,152 @@
         >
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_marginTop="30dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="15dp"
+            android:layout_gravity="center"
             >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ユーザー: "
+                android:fontFamily="@font/noto_sans_jp_regular"
+                android:includeFontPadding="false"
+                android:textSize="15sp"
+                >
+            </TextView>
+
+            <TextView
+                android:id="@+id/tv_vs_user_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="홍길동"
+                android:fontFamily="@font/noto_sans_jp_bold"
+                android:includeFontPadding="false"
+                android:textColor="@color/black"
+                android:textSize="15sp"></TextView>
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/tv_vs_user_name"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
             android:layout_gravity="center"
-            android:text="알랄라라라랄라라"
-            android:textColor="@color/black"
-            android:textSize="20sp"></TextView>
-
-        <TextView
-            android:id="@+id/tv_vs_post_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="아침운동"
-            android:textColor="@color/black"
-            android:fontFamily="@font/noto_sans_jp_bold"
-            android:includeFontPadding="false"
-            android:textSize="40sp"
-            android:layout_gravity="center"
-            android:layout_marginVertical="10dp"></TextView>
-
-        <TextView
-            android:id="@+id/tv_vs_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="ddd:ddd:dd:d"></TextView>
-
-        <TextView
-            android:id="@+id/tv_vs_avg_speed"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="24km/h"></TextView>
-
-        <TextView
-            android:id="@+id/tv_vs_mmr"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="2000"
+            android:layout_marginBottom="15dp"
             >
-        </TextView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="タイトル: "
+                android:textSize="20dp"
+                android:fontFamily="@font/noto_sans_jp_regular"
+                android:includeFontPadding="false"
+                >
+            </TextView>
+
+            <TextView
+                android:id="@+id/tv_vs_post_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="아침운동"
+                android:textColor="@color/black"
+                android:fontFamily="@font/noto_sans_jp_bold"
+                android:includeFontPadding="false"
+                android:textSize="20sp"
+                android:layout_gravity="center"></TextView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center"
+            android:layout_marginBottom="15dp"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="所要時間: "
+                android:textSize="20dp"
+                android:fontFamily="@font/noto_sans_jp_regular"
+                android:includeFontPadding="false"
+                >
+            </TextView>
+
+            <TextView
+                android:id="@+id/tv_vs_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="00:00:00"
+                android:textColor="@color/black"
+                android:fontFamily="@font/noto_sans_jp_bold"
+                android:includeFontPadding="false"
+                android:textSize="20sp"
+                android:layout_gravity="center"></TextView>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center"
+            android:layout_marginBottom="15dp"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="平均時速: "
+                android:textSize="20dp"
+                android:fontFamily="@font/noto_sans_jp_regular"
+                android:includeFontPadding="false"
+                >
+            </TextView>
+
+            <TextView
+                android:id="@+id/tv_vs_avg_speed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="24km/h"
+                android:textColor="@color/black"
+                android:fontFamily="@font/noto_sans_jp_bold"
+                android:includeFontPadding="false"
+                android:textSize="20sp"
+                android:layout_gravity="center"></TextView>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="運動点数: "
+                android:textSize="20dp"
+                android:fontFamily="@font/noto_sans_jp_regular"
+                android:includeFontPadding="false"
+                >
+            </TextView>
+
+            <TextView
+                android:id="@+id/tv_vs_mmr"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2000"
+                android:textColor="@color/black"
+                android:fontFamily="@font/noto_sans_jp_bold"
+                android:includeFontPadding="false"
+                android:textSize="20sp"
+                android:layout_gravity="center"></TextView>
+        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>

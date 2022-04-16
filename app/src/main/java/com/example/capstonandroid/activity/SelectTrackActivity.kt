@@ -21,10 +21,12 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.capstonandroid.*
 import com.example.capstonandroid.R
-import com.example.capstonandroid.SelectExerciseKindBottomSheetClickListener
-import com.example.capstonandroid.SelectExerciseKindBottomSheetDialog
-import com.example.capstonandroid.Utils
+import com.example.capstonandroid.adapter.FriendlyMatchingRecyclerViewAdapter
+import com.example.capstonandroid.adapter.RankingRecyclerViewAdapter
 import com.example.capstonandroid.databinding.ActivitySelectTrackBinding
 import com.example.capstonandroid.network.dto.Track
 import com.example.capstonandroid.network.api.BackendApi
@@ -52,7 +54,8 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, SelectExerc
 
     private lateinit var persistentBottomSheet: BottomSheetBehavior<View>
 
-    private lateinit var rankMatchingDialog: Dialog // 커스텀 다이얼로그
+    private lateinit var rankMatchingDialog: Dialog // 랭크매치 다이얼로그
+    private lateinit var friendlyMatchingDialog: Dialog // 친선전 다이얼로그
 
     private lateinit var mFusedLocationClient: FusedLocationProviderClient // 통합 위치 제공자 핸들
 
@@ -61,6 +64,14 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, SelectExerc
     private lateinit var mLocation: Location // 내 위치
 
     private lateinit var job: Job // 코루틴 동작을 제어하기 위한 job
+
+    // 친선전 리사이클러뷰 구현을 위해
+    private var page = 1 // 현재 페이지
+    private var isNext = false // 다음 페이지 있는지
+    private var isLoading = false
+    private lateinit var friendlyMatchingItemList: ArrayList<FriendlyMatchingItem?>
+    private lateinit var friendlyMatchingRecyclerViewAdapter: FriendlyMatchingRecyclerViewAdapter
+    private lateinit var friendlyMatchingRecyclerView: RecyclerView
 
     private lateinit var trackMap: HashMap<String, Track> // 트랙 맵
     private lateinit var markerMap: HashMap<String, Marker> // 마커 맵
@@ -75,10 +86,6 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, SelectExerc
 
     private lateinit var trackMarker: View // 커스텀 마커 뷰
     private lateinit var trackMarkerTextView: TextView // 커스텀 마커 텍스트 뷰
-
-    companion object {
-        const val RANK_MATCHING_ACTIVITY_REQUEST_CODE = 888
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -99,7 +106,7 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, SelectExerc
             }
         }
 
-        // 커스텀 다이얼로그 초기화
+        // 랭크매치 커스텀 다이얼로그 초기화
         rankMatchingDialog = Dialog(this)
         rankMatchingDialog.requestWindowFeature(Window.FEATURE_NO_TITLE) // 타이틀 제거
         rankMatchingDialog.setContentView(R.layout.rank_matching_dialog)
@@ -144,31 +151,6 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, SelectExerc
             initTracks()
         }
 
-        // 액티비티 이동 후 답을 받는 콜백
-        val activityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-
-            // 액티비티에서 응답 왔을 때
-            if (result.resultCode == RANK_MATCHING_ACTIVITY_REQUEST_CODE) {
-                val responseIntent = result.data!!
-
-                // 매치 성공했는지 아닌지에 따라 분기처리
-                if (responseIntent.getBooleanExtra("matchSuccess", false)) {
-                    println(responseIntent.getStringExtra("gpsDataId"))
-
-                    val intent = Intent(this, TrackPaceMakeActivity::class.java)
-                    intent.putExtra("matchType", "랭크")
-                    intent.putExtra("exerciseKind", exerciseKind)
-                    intent.putExtra("trackId", selectedTrackId)
-                    intent.putExtra("opponentGpsDataId", responseIntent.getStringExtra("opponentGpsDataId"))
-                    intent.putExtra("opponentPostId", responseIntent.getIntExtra("opponentPostId", 0))
-                    startActivity(intent)
-                    finish()
-                } else {
-                    println("실패")
-                }
-            }
-        }
-
         // 혼자하기 눌렀을때 리스너 등록
         binding.buttonNormal.setOnClickListener {
             val intent = Intent(this, TrackRecordActivity::class.java)
@@ -179,18 +161,87 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, SelectExerc
         }
         // 친선전 눌렀을때 리스너 등록
         binding.buttonFriendly.setOnClickListener {
-            val intent = Intent(this, TrackPaceMakeActivity::class.java)
-            intent.putExtra("trackId", selectedTrackId)
-            intent.putExtra("matchType", "친선")
-            intent.putExtra("exerciseKind", exerciseKind)
-            startActivity(intent)
-            finish()
+            CoroutineScope(Dispatchers.Main).launch {
+                // 초기화
+                page = 1 // 현재 페이지
+                isNext = false // 다음 페이지 있는지
+                isLoading = false
+                friendlyMatchingItemList = ArrayList()
+
+                // 친선전 커스텀 다이얼로그 초기화
+                friendlyMatchingDialog = Dialog(this@SelectTrackActivity)
+                friendlyMatchingDialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+                friendlyMatchingDialog.setContentView(R.layout.friendly_matching_dialog)
+
+                friendlyMatchingRecyclerView = friendlyMatchingDialog.findViewById(R.id.recycler_view_friendly_match)
+
+                friendlyMatchingRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                    override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                        super.onScrolled(recyclerView, dx, dy)
+                        if (isNext) {
+                            if (!isLoading) {
+                                if ((recyclerView.layoutManager as LinearLayoutManager?)!!.findLastCompletelyVisibleItemPosition() == friendlyMatchingItemList.size - 1) {
+                                    getMoreFriendlyMatching()
+                                    isLoading = true
+                                }
+                            }
+                        }
+                    }
+                })
+
+                // 다이얼로그 띄움
+                friendlyMatchingDialog.show()
+                friendlyMatchingDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+                // 초기값 받아옴
+                val token = "Bearer " + getSharedPreferences("other", MODE_PRIVATE).getString("TOKEN", "")!!
+                val friendlyMatchingResponse = supplementService.friendlyMatching(token, selectedTrackId!!, page)
+                if (friendlyMatchingResponse.isSuccessful) {
+                    when (friendlyMatchingResponse.code()) {
+                        200 -> {
+                            if (friendlyMatchingResponse.body()!!.followPostList.total == 0) {
+                                isNext = false
+                                Toast.makeText(this@SelectTrackActivity, "아무 기록도 없습니다.", Toast.LENGTH_SHORT).show()
+                            } else {
+                                val friendlyMatchingList =
+                                    friendlyMatchingResponse.body()!!.followPostList.data
+                                for (friendlyMatch in friendlyMatchingList) {
+                                    val friendlyMatchingItem = FriendlyMatchingItem(friendlyMatch.title, friendlyMatch.img, friendlyMatch.user.name, friendlyMatch.date, friendlyMatch.time, friendlyMatch.average_speed, friendlyMatch.gps_id, friendlyMatch.id
+                                    )
+                                    friendlyMatchingItemList.add(friendlyMatchingItem)
+                                }
+                                if (friendlyMatchingResponse.body()!!.followPostList.next_page_url != null) {
+                                    page += 1
+                                    isNext = true
+                                } else {
+                                    isNext = false
+                                }
+                            }
+                        }
+                    }
+                }
+                friendlyMatchingRecyclerViewAdapter = FriendlyMatchingRecyclerViewAdapter(friendlyMatchingItemList)
+                friendlyMatchingRecyclerView.adapter = friendlyMatchingRecyclerViewAdapter
+                // 아이템 클릭 리스너 등록
+                friendlyMatchingRecyclerViewAdapter.setOnItemClickListener(object : FriendlyMatchingRecyclerViewAdapter.OnItemClickListener {
+                    override fun onItemClick(position: Int) {
+                        val intent = Intent(this@SelectTrackActivity, TrackPaceMakeActivity::class.java)
+                        intent.putExtra("matchType", "친선")
+                        intent.putExtra("exerciseKind", exerciseKind)
+                        intent.putExtra("trackId", selectedTrackId)
+                        intent.putExtra("opponentGpsDataId", friendlyMatchingItemList[position]!!.opponentGpsDataId)
+                        intent.putExtra("opponentPostId", friendlyMatchingItemList[position]!!.opponentPostId)
+                        startActivity(intent)
+
+                        friendlyMatchingDialog.dismiss()
+                        finish()
+                    }
+
+                })
+            }
         }
         // 랭크전 눌렀을때 리스너 등록
         binding.buttonRank.setOnClickListener {
-//            val intent = Intent(this, RankMatchingActivity::class.java)
-//            intent.putExtra("trackId", selectedTrackId)
-//            activityResultLauncher.launch(intent)
 
             CoroutineScope(Dispatchers.Main).launch {
                 val token = "Bearer " + getSharedPreferences("other", MODE_PRIVATE).getString("TOKEN", "")!!
@@ -208,7 +259,7 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, SelectExerc
                             val postNameTextView: TextView = rankMatchingDialog.findViewById(R.id.tv_vs_post_name)
                             postNameTextView.text = post.title
                             val avgSpeedTextView: TextView = rankMatchingDialog.findViewById(R.id.tv_vs_avg_speed)
-                            avgSpeedTextView.text = Utils.formatDoublePointTwo(post.average_speed)
+                            avgSpeedTextView.text = "${Utils.formatDoublePointTwo(post.average_speed)}km"
                             val timeTextView: TextView = rankMatchingDialog.findViewById(R.id.tv_vs_time)
                             timeTextView.text = Utils.timeToText(post.time)
 
@@ -224,6 +275,8 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, SelectExerc
                             intent.putExtra("opponentGpsDataId", post.gps_id)
                             intent.putExtra("opponentPostId", post.id)
                             startActivity(intent)
+
+                            rankMatchingDialog.dismiss()
                             finish()
                         }
                         204 -> {
@@ -277,6 +330,48 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, SelectExerc
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+    }
+
+    private fun getMoreFriendlyMatching() {
+        val runnable = Runnable {
+            friendlyMatchingItemList.add(null)
+            friendlyMatchingRecyclerViewAdapter.notifyItemInserted(friendlyMatchingItemList.size - 1)
+        }
+        friendlyMatchingRecyclerView.post(runnable)
+
+        CoroutineScope(Dispatchers.Main).launch {
+            delay(2000)
+
+            friendlyMatchingItemList.removeAt(friendlyMatchingItemList.size - 1)
+            friendlyMatchingRecyclerViewAdapter.notifyItemRemoved(friendlyMatchingItemList.size)
+
+            val token = "Bearer " + getSharedPreferences("other", MODE_PRIVATE).getString("TOKEN", "")!!
+            val friendlyMatchingResponse = supplementService.friendlyMatching(token, selectedTrackId!!, page)
+
+            if (friendlyMatchingResponse.isSuccessful) {
+                when (friendlyMatchingResponse.code()) {
+                    200 -> {
+                        val friendlyMatchingList = friendlyMatchingResponse.body()!!.followPostList.data
+                        for (friendlyMatching in friendlyMatchingList) {
+                            val friendlyMatchingItem = FriendlyMatchingItem(friendlyMatching.title, friendlyMatching.img, friendlyMatching.user.name, friendlyMatching.date, friendlyMatching.time, friendlyMatching.average_speed, friendlyMatching.gps_id, friendlyMatching.id)
+                            friendlyMatchingItemList.add(friendlyMatchingItem)
+                        }
+
+                        friendlyMatchingRecyclerViewAdapter.updateItem(friendlyMatchingItemList)
+                        friendlyMatchingRecyclerViewAdapter.notifyDataSetChanged()
+                        if (friendlyMatchingResponse.body()!!.followPostList.next_page_url != null) {
+                            page += 1
+                            isNext = true
+                        } else {
+                            isNext = false
+                        }
+                    }
+                    204 -> {
+                        isNext = false
+                    }
+                }
+            }
+        }
     }
 
     // 보이는 지도에 맞게 트랙 가져와 지도에 그려 줌

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="44dp"
+    android:orientation="vertical"
+    >
+
+    <LinearLayout
+        android:id="@+id/friendly_match_item_linear_layout"
+        android:layout_width="match_parent"
+        android:layout_height="43dp"
+        android:orientation="horizontal"
+        android:weightSum="20"
+        android:clickable="true"
+        android:background="?android:attr/selectableItemBackground"
+        >
+
+        <TextView
+            android:layout_weight="5"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:layout_marginLeft="10dp"
+            android:id="@+id/tv_post_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="아침운동"
+            android:textSize="12dp"
+            android:fontFamily="@font/noto_sans_jp_bold"
+            android:textColor="@color/black"
+            android:includeFontPadding="false"
+            android:layout_gravity="center"
+            >
+        </TextView>
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_weight="2"
+            android:layout_marginLeft="20dp"
+            android:id="@+id/img_user"
+            android:layout_marginRight="5dp"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:src="@mipmap/ic_launcher_round"
+            android:layout_gravity="center"
+            >
+        </de.hdodenhof.circleimageview.CircleImageView>
+
+        <LinearLayout
+            android:layout_weight="6"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="center"
+            >
+
+            <TextView
+                android:id="@+id/tv_user_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="홍길동"
+                android:fontFamily="@font/noto_sans_jp_regular"
+                android:includeFontPadding="false"
+                android:layout_marginBottom="3dp"
+                android:textColor="@color/black"
+                >
+            </TextView>
+            <TextView
+                android:id="@+id/tv_ranking_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1999.99.99"
+                android:fontFamily="@font/noto_sans_jp_light"
+                android:includeFontPadding="false"
+                android:textColor="@color/black"
+                >
+            </TextView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:gravity="center"
+            android:layout_weight="6"
+            android:layout_marginRight="10dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="center"
+            >
+
+            <TextView
+                android:id="@+id/tv_ranking_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="tt:mm:ss"
+                android:fontFamily="@font/noto_sans_jp_regular"
+                android:includeFontPadding="false"
+                android:layout_marginBottom="3dp"
+                android:textColor="@color/black"
+                >
+            </TextView>
+            <TextView
+                android:id="@+id/tv_ranking_speed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5.18km"
+                android:fontFamily="@font/noto_sans_jp_light"
+                android:includeFontPadding="false"
+                android:textColor="@color/black"
+                >
+            </TextView>
+        </LinearLayout>
+
+        <ImageView
+            android:layout_weight="1"
+            android:layout_marginRight="15dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/arrow_forward"
+            >
+        </ImageView>
+
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:src="@drawable/horizontal_line"
+        >
+    </ImageView>
+</LinearLayout>

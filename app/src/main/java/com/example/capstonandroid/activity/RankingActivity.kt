@@ -83,7 +83,7 @@ class RankingActivity : AppCompatActivity() {
                         println("초기 개수: ${rankingResponse.body()!!.data.size}")
                         for (i in 0 until rankingResponse.body()!!.data.size) {
                             val activity = rankingResponse.body()!!.data[i]
-                            val rankingItem = RankingItem(i+1, activity.img, activity.user.name, activity.date, activity.time, activity.average_speed)
+                            val rankingItem = RankingItem(i+1, "sadf", activity.user.name, activity.date, activity.time, activity.average_speed)
                             rankingItemList.add(rankingItem)
                         }
 
