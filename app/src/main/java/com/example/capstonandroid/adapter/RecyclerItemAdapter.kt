@@ -15,6 +15,10 @@ import kotlinx.android.synthetic.main.item_view2.view.*
 import kotlinx.android.synthetic.main.track_and_name.view.*
 import kotlinx.android.synthetic.main.track_and_name.view.imageView
 import retrofit2.Retrofit
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
+
 // 여기가 Me
 
 class RecyclerUserAdapter(
@@ -46,7 +50,13 @@ class RecyclerUserAdapter(
         fun bind(listener: View.OnClickListener, item: UserData) {
             view.findViewById<TextView>(R.id.txtUser_title).text = item.name
             view.findViewById<TextView>(R.id.txtUser_name).text = item.title
-            view.findViewById<TextView>(R.id.txtUser_created_id).text = item.created_id
+
+            println(item.created_id)
+//                     val value = SimpleDateFormat("yyyy년 MM월 dd일 EE요일 a hh시 mm분", Locale.getDefault()).format( Calendar.getInstance().timeInMillis )
+            val post_time = SimpleDateFormat("yyyy년 MM월 dd일a hh시 mm분", Locale.KOREAN).format( Calendar.getInstance().timeInMillis )
+            println("현재시간은?" +post_time )
+
+            view.findViewById<TextView>(R.id.txtUser_created_id).text = post_time
             view.findViewById<TextView>(R.id.page).text = item.page.toString()
 
             view.setOnClickListener(listener)
