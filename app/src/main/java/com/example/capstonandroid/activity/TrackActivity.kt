@@ -145,15 +145,12 @@ class TrackActivity : AppCompatActivity(), OnMapReadyCallback {
                 .width(12F))
 
         // 체크포인트 추가
-        for (i in track.checkPoint.indices) {
-            val location = Location("checkpoint")
-            location.latitude = track.checkPoint[i][1]
-            location.longitude = track.checkPoint[i][0]
+        for (checkpointIndex in track.checkPoint) {
 
             mGoogleMap.addMarker(
                 MarkerOptions()
-                    .position(LatLng(location.latitude, location.longitude))
-                    .title("체크포인트 ${i + 1}")
+                    .position(LatLng(track.gps.coordinates[checkpointIndex][1], track.gps.coordinates[checkpointIndex][0]))
+                    .title("체크포인트")
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.checkpoint_before))
                     .anchor(0.5F, 0.5F))
         }

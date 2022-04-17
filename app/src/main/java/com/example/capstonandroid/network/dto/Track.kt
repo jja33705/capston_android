@@ -4,7 +4,7 @@ data class Track(
     val __v: Int,
     val _id: String,
     val altitude: List<Double>,
-    val checkPoint: List<List<Double>>,
+    val checkPoint: List<Int>,
     val createdAt: String,
     val description: String,
     val event: String,

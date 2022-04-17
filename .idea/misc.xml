@@ -30,12 +30,14 @@
         <entry key="..\:/Users/sakai/capston_android/app/src/main/res/menu/search_menu.xml" value="0.20416666666666666" />
         <entry key="app/src/main/res/drawable-v24/push_icon.xml" value="0.2125" />
         <entry key="app/src/main/res/drawable/TrackMarker.xml" value="0.213" />
+        <entry key="app/src/main/res/drawable/alert_icon.xml" value="0.218" />
         <entry key="app/src/main/res/drawable/arrow_down.xml" value="0.2285" />
         <entry key="app/src/main/res/drawable/arrow_forward.xml" value="0.2045" />
         <entry key="app/src/main/res/drawable/bottom_sheet_background.xml" value="0.2185" />
         <entry key="app/src/main/res/drawable/bottom_sheet_horizontal_bar.xml" value="0.2185" />
         <entry key="app/src/main/res/drawable/buttonstyle.xml" value="0.2285" />
         <entry key="app/src/main/res/drawable/category_button_background.xml" value="0.2185" />
+        <entry key="app/src/main/res/drawable/checkpoint_after.xml" value="0.2225" />
         <entry key="app/src/main/res/drawable/checkpoint_before.xml" value="0.2765" />
         <entry key="app/src/main/res/drawable/circle_basic_marker.xml" value="0.2285" />
         <entry key="app/src/main/res/drawable/circle_basic_marker_back.xml" value="0.2285" />
@@ -88,12 +90,13 @@
         <entry key="app/src/main/res/layout/activity_ranking.xml" value="0.39807891845703125" />
         <entry key="app/src/main/res/layout/activity_record.xml" value="0.37506713867187497" />
         <entry key="app/src/main/res/layout/activity_select_match_type.xml" value="0.26979166666666665" />
-        <entry key="app/src/main/res/layout/activity_select_track.xml" value="0.3032868048454042" />
+        <entry key="app/src/main/res/layout/activity_select_track.xml" value="0.33432165591962293" />
         <entry key="app/src/main/res/layout/activity_snsdetails.xml" value="0.22760416666666666" />
         <entry key="app/src/main/res/layout/activity_track.xml" value="0.3145827218387903" />
         <entry key="app/src/main/res/layout/activity_track_pace_make.xml" value="0.34814814814814815" />
         <entry key="app/src/main/res/layout/activity_track_record.xml" value="0.25047607421875" />
         <entry key="app/src/main/res/layout/bottom_sheet.xml" value="0.36875" />
+        <entry key="app/src/main/res/layout/checkpoint_dialog.xml" value="0.2911458333333333" />
         <entry key="app/src/main/res/layout/dialog_loading.xml" value="0.34791666666666665" />
         <entry key="app/src/main/res/layout/fragment_activity_me.xml" value="0.36875" />
         <entry key="app/src/main/res/layout/fragment_goal.xml" value="0.34791666666666665" />
@@ -106,6 +109,7 @@
         <entry key="app/src/main/res/layout/fragment_running.xml" value="0.3828125" />
         <entry key="app/src/main/res/layout/fragment_track.xml" value="0.23908640543619786" />
         <entry key="app/src/main/res/layout/friendly_match_dialog.xml" value="0.34791666666666665" />
+        <entry key="app/src/main/res/layout/friendly_matching_detail_dialog.xml" value="0.34791666666666665" />
         <entry key="app/src/main/res/layout/friendly_matching_dialog.xml" value="0.253125" />
         <entry key="app/src/main/res/layout/friendly_matching_item.xml" value="0.34791666666666665" />
         <entry key="app/src/main/res/layout/goal_item.xml" value="0.34791666666666665" />
@@ -131,10 +135,6 @@
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.2745" />
       </map>
     </option>
-  </component>
-  <component name="ProjectPlainTextFileTypeManager">
-    <file url="file://$PROJECT_DIR$/app/src/main/java/com/example/capstonandroid/network/dto/Record.kt" />
-    <file url="file://$PROJECT_DIR$/app/src/main/res/layout/test2.xml" />
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />

@@ -2,6 +2,7 @@ package com.example.capstonandroid.activity
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -201,7 +202,7 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, SelectExerc
                         200 -> {
                             if (friendlyMatchingResponse.body()!!.followPostList.total == 0) {
                                 isNext = false
-                                Toast.makeText(this@SelectTrackActivity, "아무 기록도 없습니다.", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(this@SelectTrackActivity, "フォロワー, 自分の中でこのトラックを走った記録がありません", Toast.LENGTH_SHORT).show()
                             } else {
                                 val friendlyMatchingList =
                                     friendlyMatchingResponse.body()!!.followPostList.data
@@ -225,18 +226,27 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, SelectExerc
                 // 아이템 클릭 리스너 등록
                 friendlyMatchingRecyclerViewAdapter.setOnItemClickListener(object : FriendlyMatchingRecyclerViewAdapter.OnItemClickListener {
                     override fun onItemClick(position: Int) {
-                        val intent = Intent(this@SelectTrackActivity, TrackPaceMakeActivity::class.java)
-                        intent.putExtra("matchType", "친선")
-                        intent.putExtra("exerciseKind", exerciseKind)
-                        intent.putExtra("trackId", selectedTrackId)
-                        intent.putExtra("opponentGpsDataId", friendlyMatchingItemList[position]!!.opponentGpsDataId)
-                        intent.putExtra("opponentPostId", friendlyMatchingItemList[position]!!.opponentPostId)
-                        startActivity(intent)
+                        AlertDialog.Builder(this@SelectTrackActivity)
+                            .setTitle("親善競技")
+                            .setMessage("${friendlyMatchingItemList[position]!!.userName}と一緒に走りますか")
+                            .setPositiveButton("はい") { _, _ ->
+                                val intent = Intent(this@SelectTrackActivity, TrackPaceMakeActivity::class.java)
+                                intent.putExtra("matchType", "친선")
+                                intent.putExtra("exerciseKind", exerciseKind)
+                                intent.putExtra("trackId", selectedTrackId)
+                                intent.putExtra("opponentGpsDataId", friendlyMatchingItemList[position]!!.opponentGpsDataId)
+                                intent.putExtra("opponentPostId", friendlyMatchingItemList[position]!!.opponentPostId)
+                                startActivity(intent)
 
-                        friendlyMatchingDialog.dismiss()
-                        finish()
+                                friendlyMatchingDialog.dismiss()
+                                finish()
+                            }
+                            .setNegativeButton("キャンセル") {_, _ ->
+
+                            }
+                            .create()
+                            .show()
                     }
-
                 })
             }
         }

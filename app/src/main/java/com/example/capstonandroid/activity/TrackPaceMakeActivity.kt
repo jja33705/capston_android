@@ -2,17 +2,20 @@ package com.example.capstonandroid.activity
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Dialog
 import android.content.*
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import android.speech.tts.TextToSpeech
 import android.view.LayoutInflater
 import android.view.View
-import android.view.WindowInsets
-import android.view.WindowManager
+import android.view.Window
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -34,6 +37,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
+import kotlinx.android.synthetic.main.checkpoint_dialog.*
 import kotlinx.coroutines.*
 import retrofit2.Retrofit
 import java.io.FileOutputStream
@@ -59,6 +63,9 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
     private lateinit var textToSpeech: TextToSpeech // tts
     private var textToSpeechInitialized = false // tts 초기화 됐는지
 
+    private lateinit var checkpointMarkerList: ArrayList<Marker>
+    private lateinit var checkpointDialog: Dialog
+
     // db dao 핸들
     private lateinit var gpsDataDao: GpsDataDao
     private lateinit var opponentGpsDataDao: OpponentGpsDataDao
@@ -76,8 +83,6 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
     private lateinit var canStartAreaCircle: Circle // 시작 가능한 반경 원
 
     private lateinit var job: Job // 코루틴 동작을 제어하기 위한 job
-
-    private lateinit var checkpointList: ArrayList<Location> // 체크포인트 리스트
 
     private var mLocationMarker: Marker? = null // 내 위치 마커
     private var opponentLocationMarker: Marker? = null // 상대 위치 마커
@@ -118,8 +123,14 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
 
         supportActionBar?.hide()
 
+        // 체크포인트 커스텀 다이얼로그 초기화
+        checkpointDialog = Dialog(this)
+        checkpointDialog.requestWindowFeature(Window.FEATURE_NO_TITLE) // 타이틀 제거
+        checkpointDialog.setContentView(R.layout.checkpoint_dialog)
+
         latLngList = ArrayList()
         opponentLatLngList = ArrayList()
+        checkpointMarkerList = ArrayList()
 
         // 인텐트로 넘어온 옵션값 받음
         val intent = intent
@@ -517,22 +528,15 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
                 .width(12F))
 
             // 체크포인트 추가
-            println("체크포인트")
-            println(track.checkPoint)
-
-            checkpointList = ArrayList()
-            for (i in track.checkPoint.indices) {
-                val location = Location("checkpoint")
-                location.latitude = track.checkPoint[i][1]
-                location.longitude = track.checkPoint[i][0]
-                checkpointList.add(location)
-
-                mGoogleMap.addMarker(
+            for (checkpointIndex in track.checkPoint) {
+                val checkpointMarker = mGoogleMap.addMarker(
                     MarkerOptions()
-                    .position(LatLng(location.latitude, location.longitude))
-                    .title("체크포인트 ${i + 1}")
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.checkpoint_before))
-                    .anchor(0.5F, 0.5F))
+                    .position(LatLng(track.gps.coordinates[checkpointIndex][1], track.gps.coordinates[checkpointIndex][0]))
+                    .title("체크포인트")
+                    .icon(Utils.getMarkerIconFromDrawable(resources.getDrawable(R.drawable.checkpoint_before,null)))
+                    .anchor(0.5F, 0.5F))!!
+
+                checkpointMarkerList.add(checkpointMarker)
             }
 
             // 출발점 마커 추가
@@ -735,6 +739,42 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
                                 launch(Dispatchers.Default) {
                                     predictLocation()
                                 }.join()
+
+                                // 끝에 도착했는지 여기서 체크하자
+                                if (TrackPaceMakeService.myLocationIndexOnTrack == track.gps.coordinates.size - 1) {
+                                    // 종료하기전 스냅샷 찍음
+                                    val builder: LatLngBounds.Builder = LatLngBounds.Builder() // 카메라 이동을 위한 빌더
+                                    for (latLng in latLngList) {
+                                        builder.include(latLng) // 카메라안에 들어와야 하는 지점들 추가
+                                    }
+                                    // 카메라 업데이트
+                                    val bounds: LatLngBounds = builder.build()
+                                    mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 200))
+
+                                    mGoogleMap.snapshot(this@TrackPaceMakeActivity)
+                                }
+
+                                // 체크포인트 있으면 검사
+                                if (track.checkPoint.size > TrackPaceMakeService.checkpointIndex) {
+                                    if (TrackPaceMakeService.myLocationIndexOnTrack >= track.checkPoint[TrackPaceMakeService.checkpointIndex]) {
+                                        val token = "Bearer " + getSharedPreferences("other", MODE_PRIVATE).getString("TOKEN", "")!!
+                                        val checkpointResponse = supplementService.checkpoint(token, TrackPaceMakeService.checkpointIndex, trackId, second)
+                                        checkpointMarkerList[TrackRecordService.checkpointIndex].setIcon(Utils.getMarkerIconFromDrawable(resources.getDrawable(R.drawable.checkpoint_after,null)))
+                                        // 다이얼로그 띄움
+                                        checkpointDialog.checkpoint_pace.text = "上位${checkpointResponse.body()!!.rank.toInt()}パーセントのペースです。"
+                                        checkpointDialog.show()
+                                        checkpointDialog.window?.setBackgroundDrawable(
+                                            ColorDrawable(Color.TRANSPARENT)
+                                        )
+                                        Handler(mainLooper).postDelayed({
+                                            checkpointDialog.dismiss()
+                                        }, 3000)
+                                        if (textToSpeechInitialized) {
+                                            textToSpeech.speak("チェックポイントを通過しました。上位${checkpointResponse.body()!!.rank.toInt()}パーセントのペースです。", TextToSpeech.QUEUE_FLUSH, null, "abc")
+                                        }
+                                        TrackPaceMakeService.checkpointIndex += 1
+                                    }
+                                }
                             }
 
                             if (opponentLocationChanged) {
@@ -749,20 +789,6 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
                             } else {
                                 binding.tvPaceMake.setCompoundDrawablesWithIntrinsicBounds(resources.getDrawable(R.drawable.direction_south, null), null, null, null)
                                 binding.tvPaceMake.text = "${TrackPaceMakeService.opponentUserName}より約${predictLocationDifference.toInt()*-1}m後ろ"
-                            }
-
-                            // 끝에 도착했는지 여기서 체크하자
-                            if (TrackPaceMakeService.myLocationIndexOnTrack == track.gps.coordinates.size - 1) {
-                                // 종료하기전 스냅샷 찍음
-                                val builder: LatLngBounds.Builder = LatLngBounds.Builder() // 카메라 이동을 위한 빌더
-                                for (latLng in latLngList) {
-                                    builder.include(latLng) // 카메라안에 들어와야 하는 지점들 추가
-                                }
-                                // 카메라 업데이트
-                                val bounds: LatLngBounds = builder.build()
-                                mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 200))
-
-                                mGoogleMap.snapshot(this@TrackPaceMakeActivity)
                             }
                         }
                         // 30초간격으로 음성 알림

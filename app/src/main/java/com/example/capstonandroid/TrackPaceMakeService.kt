@@ -71,6 +71,7 @@ class TrackPaceMakeService : Service() {
         var myLocationIndexOnTrack = 0 // 내가 트랙 위에 어디쯤 존재하는지
         var mySumDistanceOnTrack = 0F // 내가 이동한 트랙위의 거리
         var myBeforeLocationChangedSecond = 0 // 이전 내 위치 바뀐 시간
+        var checkpointIndex = 0
         var opponentLocation: Location? = null // 상대 위치
         var opponentLocationIndexOnTrack = 0 // 상대가 트랙 위에 어디쯤 존재하는지
         var opponentSumDistanceOnTrack = 0F
@@ -398,6 +399,7 @@ class TrackPaceMakeService : Service() {
         mFusedLocationClient.removeLocationUpdates(mLocationCallback) // 위치 업데이트 제거
         timer.cancel() // 타이머 제거
 
+        // companion object 리셋
         isStarted = false
         trackName = ""
         trackId = ""
@@ -411,6 +413,7 @@ class TrackPaceMakeService : Service() {
         mySumDistanceOnTrack = 0F
         myBeforeLocationChangedSecond = 0
         opponentLocation = null
+        checkpointIndex = 0
         opponentLocationIndexOnTrack = 0
         opponentSumDistanceOnTrack = 0F
         opponentBeforeLocationChangedSecond = 0

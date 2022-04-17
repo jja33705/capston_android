@@ -289,6 +289,7 @@ class RecordService : Service() {
         timer.cancel() // 타이머 제거
         mFusedLocationClient.removeLocationUpdates(mLocationCallback) // 위치 업데이트 제거
 
+        // companion object 리셋
         isStarted = false
         exerciseKind = ""
         mLocation = null

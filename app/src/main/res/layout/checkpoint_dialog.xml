@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="300dp"
+    android:layout_height="150dp"
+    android:layout_gravity="center"
+    android:orientation="vertical"
+    android:background="@drawable/round_background">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:text="チェックポイント通過！"
+        android:textSize="20sp"
+        android:includeFontPadding="false"
+        android:fontFamily="@font/noto_sans_jp_bold"
+        android:textColor="@color/white"
+        android:background="@drawable/dialog_title_background"
+        >
+    </TextView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="10dp"
+        android:orientation="vertical"
+        >
+
+        <TextView
+            android:id="@+id/checkpoint_pace"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="現時点で上位4％です"
+            android:fontFamily="@font/noto_sans_jp_regular"
+            android:textSize="24dp"
+            android:layout_gravity="center"
+            >
+        </TextView>
+
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -4,12 +4,18 @@ package com.example.capstonandroid.activity
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Dialog
 import android.content.*
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.location.Location
 import android.os.Bundle
+import android.os.Handler
+import android.speech.tts.TextToSpeech
 import android.view.View
+import android.view.Window
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
@@ -29,9 +35,12 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
+import kotlinx.android.synthetic.main.checkpoint_dialog.*
 import kotlinx.coroutines.*
 import retrofit2.Retrofit
 import java.io.FileOutputStream
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.SnapshotReadyCallback {
@@ -62,14 +71,17 @@ class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.S
 
     private lateinit var job: Job // 코루틴 동작을 제어하기 위한 job
 
-    private lateinit var checkpointList: ArrayList<Location> // 체크포인트 리스트
-
     private lateinit var mPolyline: Polyline // 내가 달린 구간 폴리라인
+
+    private lateinit var textToSpeech: TextToSpeech // tts
+    private var textToSpeechInitialized = false // tts 초기화 됐는지
 
     // 트랙 관련
     private lateinit var trackPolyline: Polyline
     private var trackStartPointMarker: Marker? = null // 트랙 시작점 마커
     private var trackEndPointMarker: Marker? = null // 트랙 끝점 마커
+    private lateinit var checkpointMarkerList: ArrayList<Marker>
+    private lateinit var checkpointDialog: Dialog
 
     private lateinit var latLngList: ArrayList<LatLng> // 폴리라인에 넣을 위치 리스트
     private var mLocationMarker: Marker? = null // 내 위치 마커
@@ -92,12 +104,28 @@ class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.S
 
         latLngList = ArrayList()
 
+        // 체크포인트 커스텀 다이얼로그 초기화
+        checkpointDialog = Dialog(this)
+        checkpointDialog.requestWindowFeature(Window.FEATURE_NO_TITLE) // 타이틀 제거
+        checkpointDialog.setContentView(R.layout.checkpoint_dialog)
+
+        checkpointMarkerList = ArrayList()
+
         // 인텐트로 넘어온 옵션값 받음
         val intent = intent
         exerciseKind = intent.getStringExtra("exerciseKind")!!
         trackId = intent.getStringExtra("trackId")!!
         println("exerciseKind $exerciseKind")
         println("trackId $trackId")
+
+        textToSpeech = TextToSpeech(this) {
+            if (it == TextToSpeech.SUCCESS) {
+                textToSpeech.language = Locale.JAPANESE
+
+                textToSpeechInitialized = true
+            }
+        }
+
 
         // db 사용 설정
         val db = AppDatabase.getInstance(applicationContext)!!
@@ -329,18 +357,14 @@ class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.S
             println("체크포인트")
             println(track.checkPoint)
 
-            checkpointList = ArrayList()
-            for (i in track.checkPoint.indices) {
-                val location = Location("checkpoint")
-                location.latitude = track.checkPoint[i][1]
-                location.longitude = track.checkPoint[i][0]
-                checkpointList.add(location)
+            for (checkpointIndex in track.checkPoint) {
 
-                mGoogleMap.addMarker(MarkerOptions()
-                    .position(LatLng(location.latitude, location.longitude))
-                    .title("체크포인트 ${i + 1}")
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.checkpoint_before))
-                    .anchor(0.5F, 0.5F))
+                val checkpointMarker = mGoogleMap.addMarker(MarkerOptions()
+                    .position(LatLng(track.gps.coordinates[checkpointIndex][1], track.gps.coordinates[checkpointIndex][0]))
+                    .title("체크포인트")
+                    .icon(Utils.getMarkerIconFromDrawable(resources.getDrawable(R.drawable.checkpoint_before,null)))
+                    .anchor(0.5F, 0.5F))!!
+                checkpointMarkerList.add(checkpointMarker)
             }
 
             // 출발점 마커 추가
@@ -444,6 +468,29 @@ class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.S
             }
 
             TrackRecordService.myBeforeLocationChangedSecond = second
+
+            // 체크포인트 있으면 검사
+            if (track != null)
+            if (track.checkPoint.size > TrackRecordService.checkpointIndex) {
+                if (TrackRecordService.myLocationIndexOnTrack >= track.checkPoint[TrackRecordService.checkpointIndex]) {
+                    val token = "Bearer " + getSharedPreferences("other", MODE_PRIVATE).getString("TOKEN", "")!!
+                    val checkpointResponse = supplementService.checkpoint(token, TrackRecordService.checkpointIndex, trackId, second)
+                    checkpointMarkerList[TrackRecordService.checkpointIndex].setIcon(Utils.getMarkerIconFromDrawable(resources.getDrawable(R.drawable.checkpoint_after,null)))
+                    // 다이얼로그 띄움
+                    checkpointDialog.checkpoint_pace.text = "上位${checkpointResponse.body()!!.rank.toInt()}パーセントのペースです。"
+                    checkpointDialog.show()
+                    checkpointDialog.window?.setBackgroundDrawable(
+                        ColorDrawable(Color.TRANSPARENT)
+                    )
+                    Handler(mainLooper).postDelayed({
+                        checkpointDialog.dismiss()
+                    }, 3000)
+                    if (textToSpeechInitialized) {
+                        textToSpeech.speak("上位${checkpointResponse.body()!!.rank.toInt()}パーセントです。", TextToSpeech.QUEUE_FLUSH, null, "abc")
+                    }
+                    TrackRecordService.checkpointIndex += 1
+                }
+            }
         }
     }
 

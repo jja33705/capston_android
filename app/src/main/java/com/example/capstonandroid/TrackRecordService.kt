@@ -15,6 +15,7 @@ import com.example.capstonandroid.db.dao.GpsDataDao
 import com.example.capstonandroid.db.entity.GpsData
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.tasks.Task
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -48,6 +49,7 @@ class TrackRecordService : Service() {
         var exerciseKind = ""
         var trackId = ""
         var mLocation: Location? = null
+        var checkpointIndex = 0
         var myLocationIndexOnTrack = 0
         var mySumDistanceOnTrack = 0F // 내가 이동한 트랙위의 거리
         var myBeforeLocationChangedSecond = 0 // 이전 내 위치 바뀐 시간
@@ -257,9 +259,6 @@ class TrackRecordService : Service() {
                 stopService()
             }
         }
-
-
-
         return START_NOT_STICKY // 서비스 중단하면 재생성하지 않는다.
     }
 
@@ -299,11 +298,13 @@ class TrackRecordService : Service() {
         mFusedLocationClient.removeLocationUpdates(mLocationCallback) // 위치 업데이트 제거
         timer.cancel() // 타이머 제거
 
+        // companion object 리셋
         isStarted = false
         trackName = ""
         exerciseKind = ""
         trackId = ""
         mLocation = null
+        checkpointIndex = 0
         myLocationIndexOnTrack = 0
         mySumDistanceOnTrack = 0F
         myBeforeLocationChangedSecond = 0
