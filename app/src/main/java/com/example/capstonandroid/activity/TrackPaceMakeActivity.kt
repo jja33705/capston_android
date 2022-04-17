@@ -659,8 +659,8 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
                     mLocation.latitude = latLng.latitude
                     mLocation.longitude = latLng.longitude
 
-//                    inCanStartArea = mLocation.distanceTo(startPoint) < 20.0
-                    inCanStartArea = true
+                    inCanStartArea = mLocation.distanceTo(startPoint) < 20.0
+//                    inCanStartArea = true
                     println("시작 가능 위치 내인지: $inCanStartArea")
                     if (inCanStartArea) {
                         binding.tvInformation.visibility = View.GONE
@@ -719,7 +719,7 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
                             val latLng = intent?.getParcelableExtra<LatLng>(TrackPaceMakeService.LAT_LNG)!!
 
                             val distance = intent?.getDoubleExtra(TrackPaceMakeService.DISTANCE, 0.0)
-                            binding.tvDistance.text = Utils.distanceToText(distance)
+                            binding.tvDistance.text = String.format("%.2f", distance)
 
                             val speed = intent?.getFloatExtra(TrackPaceMakeService.SPEED, 0F)
                             myMarkerIconTextView.text = Utils.speedToText(speed)
@@ -739,6 +739,9 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
                                 launch(Dispatchers.Default) {
                                     predictLocation()
                                 }.join()
+
+                                 // 예상 지점
+//                                mGoogleMap.addMarker(MarkerOptions().position(LatLng(track.gps.coordinates[TrackPaceMakeService.myLocationIndexOnTrack][1], track.gps.coordinates[TrackPaceMakeService.myLocationIndexOnTrack][0])))
 
                                 // 끝에 도착했는지 여기서 체크하자
                                 if (TrackPaceMakeService.myLocationIndexOnTrack == track.gps.coordinates.size - 1) {

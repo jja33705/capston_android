@@ -452,6 +452,9 @@ class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.S
                 TrackRecordService.myLocationIndexOnTrack = myPredictedLocation // 내 예상 지점 갱신
             }.join()
 
+//            // 예상 지점
+//            mGoogleMap.addMarker(MarkerOptions().position(LatLng(track.gps.coordinates[TrackRecordService.myLocationIndexOnTrack][1], track.gps.coordinates[TrackRecordService.myLocationIndexOnTrack][0])))
+
             // 끝에 도착했는지 여기서 체크하자
             println("끝에 도착했는지 체크: ${TrackRecordService.myLocationIndexOnTrack}, ${track.gps.coordinates.size-1}")
             if (TrackRecordService.myLocationIndexOnTrack == track.gps.coordinates.size-1) {
@@ -587,8 +590,8 @@ class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.S
                     mLocation.latitude = latLng.latitude
                     mLocation.longitude = latLng.longitude
 
-//                    inCanStartArea = mLocation.distanceTo(startPoint) < 20.0
-                    inCanStartArea = true
+                    inCanStartArea = mLocation.distanceTo(startPoint) < 20.0
+//                    inCanStartArea = true
                     println("시작 가능 위치 내인지: $inCanStartArea")
                     if (inCanStartArea) {
                         binding.tvInformation.visibility = View.GONE
@@ -630,7 +633,7 @@ class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.S
                         val latLng = intent?.getParcelableExtra<LatLng>(TrackRecordService.LAT_LNG)!!
 
                         val distance = intent?.getDoubleExtra(TrackRecordService.DISTANCE, 0.0)
-                        binding.tvDistance.text = Utils.distanceToText(distance)
+                        binding.tvDistance.text = String.format("%.2f", distance)
 
                         mLocationMarker?.position = latLng // 마커 이동
                         mLocationBack?.position = latLng
