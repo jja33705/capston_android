@@ -54,7 +54,7 @@ class MeDetailsActivity : AppCompatActivity() {
 
 
     private var oppenent_name = ""
-    private var oppenent_kind = ""
+    private var oppenent_title = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_me_details)
@@ -122,21 +122,7 @@ class MeDetailsActivity : AppCompatActivity() {
 
                     if(response.body()!!.data[data_num]!!.opponent_post==null){}else {
                          oppenent_name = response.body()!!.data[data_num]!!.opponent_post.user.name
-                        if(response.body()!!.data[data_num]!!.opponent_post.kind.equals("자유")) {
-
-                            oppenent_kind = "自由"
-//                             binding.kind.setText("種類 : 自由")
-                        }else if(response.body()!!.data[data_num]!!.opponent_post.kind.equals("싱글")){
-//                             binding.kind.setText("種類 : シングル")
-                            oppenent_kind = "シングル"
-                        }else if(response.body()!!.data[data_num]!!.opponent_post.kind.equals("친선")){
-//                             binding.kind.setText("種類 : 練習")
-                            oppenent_kind = "練習"
-                        }else if(response.body()!!.data[data_num]!!.opponent_post.kind.equals("랭크")){
-//                             binding.kind.setText("種類 : ランク")
-                            oppenent_kind = "ランク"
-                        }
-                        oppenent_kind = response.body()!!.data[data_num]!!.opponent_post.kind
+                        oppenent_title = response.body()!!.data[data_num]!!.opponent_post.title
 
                     }
                     val date = response.body()!!.data[data_num]!!.created_at // your date
@@ -174,7 +160,7 @@ class MeDetailsActivity : AppCompatActivity() {
 
                     if(response.body()!!.data[data_num]!!.opponent_post==null){}else {
                         binding.oppenent.visibility = View.VISIBLE
-                        binding.oppenent.setText(oppenent_name+"様と"+oppenent_kind+"をしました")
+                        binding.oppenent.setText(oppenent_name+"様の"+"「"+oppenent_title+"」"+"と一緒に走りました！")
                     }
                     println("콘텐츠"+content)
                     println("랭스"+range)

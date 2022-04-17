@@ -127,25 +127,16 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginLeft="10dp"
-                android:fontFamily="@font/noto_sans_jp_regular"
+                android:fontFamily="@font/noto_sans_jp_bold"
                 android:includeFontPadding="false" />
 
-            <TextView
-                android:visibility="gone"
-                android:id="@+id/oppenent"
-                android:gravity="right"
-                android:layout_gravity="center"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="~と ~をしました">
-
-            </TextView>
         </LinearLayout>
 
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="vertical"
             android:padding="10dp">
             <TextView
                 android:includeFontPadding="false"
@@ -154,6 +145,20 @@
                 android:textSize="20sp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
+            </TextView>
+
+            <TextView
+                android:fontFamily="@font/noto_sans_jp_regular"
+                android:includeFontPadding="false"
+                android:paddingTop="5dp"
+                android:visibility="gone"
+                android:id="@+id/oppenent"
+                android:gravity="right"
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="~と ~をしました">
 
             </TextView>
         </LinearLayout>
