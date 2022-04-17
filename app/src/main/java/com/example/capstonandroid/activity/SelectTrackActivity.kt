@@ -236,6 +236,8 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, SelectExerc
                                 intent.putExtra("trackId", selectedTrackId)
                                 intent.putExtra("opponentGpsDataId", friendlyMatchingItemList[position]!!.opponentGpsDataId)
                                 intent.putExtra("opponentPostId", friendlyMatchingItemList[position]!!.opponentPostId)
+                                intent.putExtra("opponentAvgSpeed", friendlyMatchingItemList[position]!!.speed)
+                                intent.putExtra("opponentTime", friendlyMatchingItemList[position]!!.time)
                                 startActivity(intent)
 
                                 friendlyMatchingDialog.dismiss()
@@ -284,6 +286,8 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, SelectExerc
                             intent.putExtra("trackId", selectedTrackId)
                             intent.putExtra("opponentGpsDataId", post.gps_id)
                             intent.putExtra("opponentPostId", post.id)
+                            intent.putExtra("opponentAvgSpeed", post.average_speed)
+                            intent.putExtra("opponentTime", post.time)
                             startActivity(intent)
 
                             rankMatchingDialog.dismiss()
