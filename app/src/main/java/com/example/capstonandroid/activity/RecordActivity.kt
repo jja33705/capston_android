@@ -370,6 +370,7 @@ class RecordActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.Snapsh
 
                         mLocationMarker?.position = latLng // 마커 이동
                         mLocationBack?.position = latLng
+                        mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, mGoogleMap.cameraPosition.zoom)) // 화면 이동
 
                         // 폴리라인 새로 그림
                         latLngList.add(latLng)

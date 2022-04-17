@@ -59,6 +59,9 @@ class HomeFragment : Fragment()  {
     private var page = 0      // 현재 페이지
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // 함수 초기화
+        initRetrofit()
     }
 
     fun refreshFragment(fragment: Fragment, fragmentManager: FragmentManager) {
@@ -74,141 +77,6 @@ class HomeFragment : Fragment()  {
     ): View? {
         // Inflate the layout for this fragment
         mBinding = FragmentHomeBinding.inflate(inflater, container, false)
-
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-//      함수 초기화
-        initRetrofit()
-
-        page = 1       // 현재 페이지
-        val sharedPreference = requireActivity().getSharedPreferences("other", 0)
-
-//      이 타입이 디폴트 값
-        var token = "Bearer " + sharedPreference.getString("TOKEN","")
-        println("홈 프레그먼트"+token)
-
-
-        val list = ArrayList<UserData>()
-        val adapter = RecyclerUserAdapter2(list, { data -> adapterOnClick(data) })
-
-        supplementService.SNSIndex(token, page).enqueue(object : Callback<SNSResponse>{
-            override fun onResponse(
-                call: Call<SNSResponse>,
-                response: Response<SNSResponse>
-            ) {
-                println(response.body())
-
-                if (response.body()!!.data.size == 0){
-                    binding.message.setText("SNSリストがありません。")
-                }
-                if(response.isSuccessful) {
-
-                    println(response.javaClass.name)
-                    if(response.body()!!.data==null){
-                        return
-                    }else {
-                    println(response.body()!!.data.size)
-
-
-                    for (i in 0..response.body()!!.data.size-1) {
-
-                        list.add(
-                            UserData(
-                                ContextCompat.getDrawable(
-                                    requireContext(),
-                                    R.drawable.map
-                                )!!
-                                ,
-                                response.body()!!.data[i].user.name,
-                                response.body()!!.data[i].title,
-                                i,
-                                response.body()!!.data[i].created_at,
-                                response.body()!!.current_page,
-                                response.body()!!.data[i].img,
-
-                                response.body()!!.data[i].user.profile,
-                                response.body()!!.data[i].likes.size
-                            )
-                        )
-                    }
-                  lstUser.adapter = adapter
-                    lstUser.addItemDecoration(DistanceItemDecorator(10))
-
-                    page ++
-                    println(page.toString() +"찍어보자")
-                }}
-                else{
-                    println("실패함ㅋㅋ")
-                    println(response.body())
-                    println(response.message())
-                }
-            }
-
-            override fun onFailure(call: Call<SNSResponse>, t: Throwable) {
-                println("아예 가지도 않음ㅋㅋ")
-                println(t.message)
-            }
-        })
-
-
-        binding.lstUser.addOnScrollListener(object : RecyclerView.OnScrollListener(){
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-
-                if (!binding.lstUser.canScrollVertically(1)){
-
-                    supplementService.SNSIndex(token, page).enqueue(object : Callback<SNSResponse>{
-                        override fun onResponse(
-                            call: Call<SNSResponse>,
-                            response: Response<SNSResponse>
-                        ) {
-
-                            println(response.body()!!.data)
-                            if(response.isSuccessful&&response.body()!!.data.size!==0) {
-//                                LoadingDialog(requireContext()).show()
-                                    showLoadingDialog()
-                                for (i in 0..response.body()!!.data.size - 1) {
-                                    list.add(
-                                        UserData(
-                                            ContextCompat.getDrawable(
-                                                requireContext(),
-                                                R.drawable.sakai
-                                            )!!,
-                                            response.body()!!.data[i].user.name,
-                                            response.body()!!.data[i].title,
-                                            i,
-                                            response.body()!!.data[i].created_at,
-                                            response.body()!!.current_page,
-                                            response.body()!!.data[i].img,
-                                            response.body()!!.data[i].user.profile,
-                                            response.body()!!.data[i].likes.size
-
-
-                                        )
-                                    )
-                                }
-                                lstUser.adapter!!.notifyItemInserted(10)
-
-                                    page ++
-
-                                tt = "finish"
-                            }else{
-
-                            }
-                        }
-
-                        override fun onFailure(call: Call<SNSResponse>, t: Throwable) {
-                            TODO("Not yet implemented")
-                        }
-                    })
-
-                }
-
-
-            }
-            })
         return binding.root
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -270,6 +138,150 @@ class HomeFragment : Fragment()  {
 
             }
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        println("HomeFragment: onStart 호출")
+
+        arguments?.let {
+            param1 = it.getString(ARG_PARAM1)
+            param2 = it.getString(ARG_PARAM2)
+        }
+//
+
+        page = 1       // 현재 페이지
+        val sharedPreference = requireActivity().getSharedPreferences("other", 0)
+
+//      이 타입이 디폴트 값
+        var token = "Bearer " + sharedPreference.getString("TOKEN","")
+        println("홈 프레그먼트"+token)
+
+
+        val list = ArrayList<UserData>()
+        val adapter = RecyclerUserAdapter2(list, { data -> adapterOnClick(data) })
+
+        supplementService.SNSIndex(token, page).enqueue(object : Callback<SNSResponse>{
+            override fun onResponse(
+                call: Call<SNSResponse>,
+                response: Response<SNSResponse>
+            ) {
+                println(response.body())
+
+                if (response.body()!!.data.size == 0){
+                    binding.message.setText("SNSリストがありません。")
+                }
+                if(response.isSuccessful) {
+
+                    println(response.javaClass.name)
+                    if(response.body()!!.data==null){
+                        return
+                    }else {
+                        println(response.body()!!.data.size)
+
+
+                        for (i in 0..response.body()!!.data.size-1) {
+
+                            list.add(
+                                UserData(
+                                    ContextCompat.getDrawable(
+                                        requireContext(),
+                                        R.drawable.map
+                                    )!!
+                                    ,
+                                    response.body()!!.data[i].user.name,
+                                    response.body()!!.data[i].title,
+                                    i,
+                                    response.body()!!.data[i].created_at,
+                                    response.body()!!.current_page,
+                                    response.body()!!.data[i].img,
+
+                                    response.body()!!.data[i].user.profile,
+                                    response.body()!!.data[i].likes.size
+                                )
+                            )
+                        }
+                        lstUser.adapter = adapter
+                        lstUser.addItemDecoration(DistanceItemDecorator(10))
+
+                        page ++
+                        println(page.toString() +"찍어보자")
+                    }}
+                else{
+                    println("실패함ㅋㅋ")
+                    println(response.body())
+                    println(response.message())
+                }
+            }
+
+            override fun onFailure(call: Call<SNSResponse>, t: Throwable) {
+                println("아예 가지도 않음ㅋㅋ")
+                println(t.message)
+            }
+        })
+
+
+        binding.lstUser.addOnScrollListener(object : RecyclerView.OnScrollListener(){
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                if (!binding.lstUser.canScrollVertically(1)){
+
+                    supplementService.SNSIndex(token, page).enqueue(object : Callback<SNSResponse>{
+                        override fun onResponse(
+                            call: Call<SNSResponse>,
+                            response: Response<SNSResponse>
+                        ) {
+
+                            println(response.body()!!.data)
+                            if(response.isSuccessful&&response.body()!!.data.size!==0) {
+//                                LoadingDialog(requireContext()).show()
+                                showLoadingDialog()
+                                for (i in 0..response.body()!!.data.size - 1) {
+                                    list.add(
+                                        UserData(
+                                            ContextCompat.getDrawable(
+                                                requireContext(),
+                                                R.drawable.sakai
+                                            )!!,
+                                            response.body()!!.data[i].user.name,
+                                            response.body()!!.data[i].title,
+                                            i,
+                                            response.body()!!.data[i].created_at,
+                                            response.body()!!.current_page,
+                                            response.body()!!.data[i].img,
+                                            response.body()!!.data[i].user.profile,
+                                            response.body()!!.data[i].likes.size
+
+
+                                        )
+                                    )
+                                }
+                                lstUser.adapter!!.notifyItemInserted(10)
+
+                                page ++
+
+                                tt = "finish"
+                            }else{
+
+                            }
+                        }
+
+                        override fun onFailure(call: Call<SNSResponse>, t: Throwable) {
+                            TODO("Not yet implemented")
+                        }
+                    })
+
+                }
+
+
+            }
+        })
+    }
+
+    override fun onResume() {
+        super.onResume()
+        println("HomeFragment: onResume 호출")
     }
 
 

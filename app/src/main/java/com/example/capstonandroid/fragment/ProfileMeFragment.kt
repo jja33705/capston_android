@@ -114,13 +114,13 @@ class ProfileMeFragment : Fragment(){
                 call: Call<UserWeekResponse>,
                 response: Response<UserWeekResponse>
             ) {
-                r_today = response.body()!!.today.toFloat()/1000
-                r_oneDayAgo = response.body()!!.oneDayAgo.toFloat()/1000
-                r_twoDayAgo = response.body()!!.twoDayAgo.toFloat()/1000
-                r_threeDayAgo = response.body()!!.threeDayAgo.toFloat()/1000// 여기 디비 수정 해야됨.
-                r_fourDayAgo= response.body()!!.fourDayAgo.toFloat()/1000
-                r_fiveDayAgo = response.body()!!.fiveDayAgo.toFloat()/1000
-                r_sixDayAgo = response.body()!!.sixDayAgo.toFloat()/1000
+                r_today = response.body()!!.today.toFloat()
+                r_oneDayAgo = response.body()!!.oneDayAgo.toFloat()
+                r_twoDayAgo = response.body()!!.twoDayAgo.toFloat()
+                r_threeDayAgo = response.body()!!.threeDayAgo.toFloat()// 여기 디비 수정 해야됨.
+                r_fourDayAgo= response.body()!!.fourDayAgo.toFloat()
+                r_fiveDayAgo = response.body()!!.fiveDayAgo.toFloat()
+                r_sixDayAgo = response.body()!!.sixDayAgo.toFloat()
 
                 println("라이딩"+response.body()!!)
 
@@ -132,13 +132,13 @@ class ProfileMeFragment : Fragment(){
 
 
 
-                        b_today = response.body()!!.today.toFloat()/1000
-                        b_oneDayAgo = response.body()!!.oneDayAgo.toFloat()/1000
-                        b_twoDayAgo = response.body()!!.twoDayAgo.toFloat()/1000
-                        b_threeDayAgo = response.body()!!.threeDayAgo.toFloat()/1000// 여기 디비 수정 해야됨.
-                        b_fourDayAgo= response.body()!!.fourDayAgo.toFloat()/1000
-                        b_fiveDayAgo = response.body()!!.fiveDayAgo.toFloat()/1000
-                        b_sixDayAgo = response.body()!!.sixDayAgo.toFloat()/1000
+                        b_today = response.body()!!.today.toFloat()
+                        b_oneDayAgo = response.body()!!.oneDayAgo.toFloat()
+                        b_twoDayAgo = response.body()!!.twoDayAgo.toFloat()
+                        b_threeDayAgo = response.body()!!.threeDayAgo.toFloat()// 여기 디비 수정 해야됨.
+                        b_fourDayAgo= response.body()!!.fourDayAgo.toFloat()
+                        b_fiveDayAgo = response.body()!!.fiveDayAgo.toFloat()
+                        b_sixDayAgo = response.body()!!.sixDayAgo.toFloat()
 
                         println(response.body()!!)
 

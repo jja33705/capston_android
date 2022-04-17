@@ -680,8 +680,8 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
                     mLocation.latitude = latLng.latitude
                     mLocation.longitude = latLng.longitude
 
-                    inCanStartArea = mLocation.distanceTo(startPoint) < 20.0
-//                    inCanStartArea = true
+//                    inCanStartArea = mLocation.distanceTo(startPoint) < 20.0
+                    inCanStartArea = true
                     println("시작 가능 위치 내인지: $inCanStartArea")
                     if (inCanStartArea) {
                         binding.tvInformation.visibility = View.GONE
@@ -747,6 +747,7 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
                             mLocationMarker?.setIcon(BitmapDescriptorFactory.fromBitmap(Utils.createBitmapFromView(myMarkerIcon)))
 
                             mLocationMarker?.position = latLng // 마커 이동
+                            mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, mGoogleMap.cameraPosition.zoom)) // 화면 이동
 
                             // 폴리라인 갱신
                             latLngList.add(beforeLatLng)
@@ -791,9 +792,9 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
                                             checkpointDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
                                             Handler(mainLooper).postDelayed({
                                                 checkpointDialog.dismiss()
-                                            }, 3000)
+                                            }, 6000)
                                             if (textToSpeechInitialized) {
-                                                textToSpeech.speak("チェックポイントを通過しました。上位${checkpointResponse.body()!!.rank.toInt()}パーセントのペースです。", TextToSpeech.QUEUE_FLUSH, null, "abc")
+                                                textToSpeech.speak("チェックポイントを通過しました。上位${checkpointResponse.body()!!.rank.toInt()}パーセントのペースです。", TextToSpeech.QUEUE_ADD, null, "abc")
                                             }
                                         }
                                         checkpointMarkerList[TrackPaceMakeService.checkpointIndex].setIcon(Utils.getMarkerIconFromDrawable(resources.getDrawable(R.drawable.checkpoint_after,null)))
@@ -821,9 +822,9 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
                         if (textToSpeechInitialized && (second % 30 == 0)) { // 초기화된 상태일때 30초 간격으로 페이스에 대해 음성 안내
                             val predictLocationDifference = TrackPaceMakeService.mySumDistanceOnTrack - TrackPaceMakeService.opponentSumDistanceOnTrack
                             if (predictLocationDifference >= 0) {
-                                textToSpeech.speak("${TrackPaceMakeService.opponentUserName}より やく ${predictLocationDifference.toInt()}メートル前です。", TextToSpeech.QUEUE_FLUSH, null, "abc")
+                                textToSpeech.speak("${TrackPaceMakeService.opponentUserName}より やく ${predictLocationDifference.toInt()}メートル前です。", TextToSpeech.QUEUE_ADD, null, "abc")
                             } else {
-                                textToSpeech.speak("${TrackPaceMakeService.opponentUserName}より やく ${predictLocationDifference.toInt()*-1}メートル後ろです。", TextToSpeech.QUEUE_FLUSH, null, "abc")
+                                textToSpeech.speak("${TrackPaceMakeService.opponentUserName}より やく ${predictLocationDifference.toInt()*-1}メートル後ろです。", TextToSpeech.QUEUE_ADD, null, "abc")
                             }
                         }
                     }

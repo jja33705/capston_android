@@ -58,7 +58,7 @@ class RankingRecyclerViewAdapter(rankingItemList: ArrayList<RankingItem?>) : Rec
         fun bind(ranking: RankingItem) {
             binding.tvRanking.text = ranking.ranking.toString()
             binding.tvRankingDate.text = ranking.date
-            binding.tvRankingSpeed.text = Utils.formatDoublePointTwo(ranking.speed)
+            binding.tvRankingSpeed.text = "${Utils.formatDoublePointTwo(ranking.speed)}km/h"
             binding.tvRankingTime.text = Utils.timeToText(ranking.time)
             binding.tvUserName.text = ranking.userName
         }

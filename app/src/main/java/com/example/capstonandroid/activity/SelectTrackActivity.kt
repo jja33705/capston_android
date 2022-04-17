@@ -507,7 +507,7 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, SelectExerc
         selectedTrackId = newSelectedTrackId
         println(selectedTrackId)
         binding.tvTrackTitle.text = trackMap[selectedTrackId]?.trackName
-        binding.tvTrackDistance.text = "${Utils.distanceToText(trackMap[selectedTrackId]!!.totalDistance)}km"
+        binding.tvTrackDistance.text = "${"%.2f".format(trackMap[selectedTrackId]!!.totalDistance)}km"
         binding.tvTrackSlope.text = "${trackMap[selectedTrackId]?.avgSlope}%"
         persistentBottomSheet.state = BottomSheetBehavior.STATE_COLLAPSED
 

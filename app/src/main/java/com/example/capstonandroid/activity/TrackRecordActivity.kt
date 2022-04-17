@@ -492,9 +492,9 @@ class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.S
                         )
                         Handler(mainLooper).postDelayed({
                             checkpointDialog.dismiss()
-                        }, 3000)
+                        }, 6000)
                         if (textToSpeechInitialized) {
-                            textToSpeech.speak("上位${checkpointResponse.body()!!.rank.toInt()}パーセントです。", TextToSpeech.QUEUE_FLUSH, null, "abc")
+                            textToSpeech.speak("上位${checkpointResponse.body()!!.rank.toInt()}パーセントです。", TextToSpeech.QUEUE_ADD, null, "abc")
                         }
                     }
                     checkpointMarkerList[TrackRecordService.checkpointIndex].setIcon(Utils.getMarkerIconFromDrawable(resources.getDrawable(R.drawable.checkpoint_after,null)))
@@ -644,6 +644,7 @@ class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.S
 
                         mLocationMarker?.position = latLng // 마커 이동
                         mLocationBack?.position = latLng
+                        mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, mGoogleMap.cameraPosition.zoom)) // 화면 이동
 
                         latLngList.add(latLng)
                         mPolyline.points = latLngList

@@ -92,7 +92,7 @@ class TrackActivity : AppCompatActivity(), OnMapReadyCallback {
                 track = trackResponse.body()!!
 
                 binding.tvTrackTitle.text = track.trackName
-                binding.tvTrackDistance.text = "${Utils.distanceToText(track.totalDistance)}km"
+                binding.tvTrackDistance.text = "${"%.2f".format(track.totalDistance)}km"
                 binding.tvTrackDescription.text = track.description
                 binding.tvTrackSlope.text = "${track.avgSlope}%"
                 if (track.event == "B") {
@@ -151,7 +151,7 @@ class TrackActivity : AppCompatActivity(), OnMapReadyCallback {
                 MarkerOptions()
                     .position(LatLng(track.gps.coordinates[checkpointIndex][1], track.gps.coordinates[checkpointIndex][0]))
                     .title("체크포인트")
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.checkpoint_before))
+                    .icon(Utils.getMarkerIconFromDrawable(resources.getDrawable(R.drawable.checkpoint_before,null)))
                     .anchor(0.5F, 0.5F))
         }
 
@@ -166,6 +166,6 @@ class TrackActivity : AppCompatActivity(), OnMapReadyCallback {
 
         // 카메라 업데이트
         val bounds: LatLngBounds = builder.build()
-        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 200))
+        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 150))
     }
 }
