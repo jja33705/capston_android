@@ -60,8 +60,7 @@ class RecyclerCommentAdapter(
             view.user_content.text = item.content
 
 
-
-            val date = item.created_at// your date
+            val date = item.created_at // your date
 // date is already in Standard ISO format so you don't need custom formatted
 //                     val date = "2021-12-16T16:42:00.000000Z" // your date
             val dateTime : ZonedDateTime = OffsetDateTime.parse(date).toZonedDateTime().plusHours(9)  // parsed date
