@@ -95,6 +95,9 @@ class HomeFragment : Fragment()  {
             ) {
                 println(response.body())
 
+                if (response.body()!!.data.size == 0){
+                    binding.message.setText("記録がありません。")
+                }
                 if(response.isSuccessful) {
 
                     println(response.javaClass.name)

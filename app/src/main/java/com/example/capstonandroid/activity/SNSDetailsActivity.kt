@@ -218,7 +218,7 @@ class SNSDetailsActivity : AppCompatActivity() {
                     response: Response<LikeResponse>
                 ) {
                     if (response.isSuccessful){
-                        Toast.makeText(this@SNSDetailsActivity,"좋아요 눌렀습니다.",Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@SNSDetailsActivity,"いいねしました",Toast.LENGTH_SHORT).show()
                         supplementService.SNSIndex(token,data_page).enqueue(object : Callback<SNSResponse> {
                             override fun onResponse(call: Call<SNSResponse>, response: Response<SNSResponse>) {
 
@@ -239,7 +239,7 @@ class SNSDetailsActivity : AppCompatActivity() {
                         })
                     }else {
 
-                        Toast.makeText(this@SNSDetailsActivity,"좋아요 실패했습니다.",Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@SNSDetailsActivity,"いいねエラー",Toast.LENGTH_SHORT).show()
                     }
                 }
 
