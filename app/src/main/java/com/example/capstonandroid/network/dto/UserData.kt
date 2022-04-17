@@ -11,4 +11,5 @@ data class UserData(
     val page : Int,
     val map_image: String,
     val profile : String,
+    val likesize : Int
     )

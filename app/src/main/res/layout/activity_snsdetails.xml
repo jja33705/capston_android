@@ -84,17 +84,19 @@
            </LinearLayout>
 
         <ImageView
+            android:background="@drawable/round_border2"
+            android:padding="7.5dp"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
             android:id="@+id/imageView"
-            android:layout_width="match_parent"
             android:layout_height="300dp"
             android:layout_centerHorizontal="true"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:padding="3dp" />
+            android:layout_marginRight="10dp"/>
 
         <LinearLayout
             android:id="@+id/function_nav"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/imageView"
             android:layout_marginLeft="10dp"
@@ -127,6 +129,17 @@
                 android:layout_marginLeft="10dp"
                 android:fontFamily="@font/noto_sans_jp_regular"
                 android:includeFontPadding="false" />
+
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/oppenent"
+                android:gravity="right"
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="~と ~をしました">
+
+            </TextView>
         </LinearLayout>
 
 

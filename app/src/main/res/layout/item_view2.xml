@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="370dp"
+    android:layout_height="wrap_content"
     android:layout_marginTop="10dp"
     android:layout_marginRight="10dp"
     android:layout_marginLeft="10dp"
@@ -17,7 +17,6 @@
         <ImageView
             android:id="@+id/userImage"
             android:layout_width="30dp"
-
             android:layout_gravity="center_vertical"
             android:layout_margin="5dp"
             android:layout_height="30dp"
@@ -72,18 +71,28 @@
                 android:textSize="24dp" />
             <ImageView
 
+                android:background="@drawable/round_border2"
                 android:layout_marginRight="10dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginBottom="10dp"
                 android:id="@+id/imageView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:padding="7.5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="320dp"
                 android:layout_gravity="center"/>
 
-            <LinearLayout
+            <TextView
+                android:visibility="gone"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="10dp"
+                android:text="ㅇㅁㄴㅇ"
+                android:id="@+id/like2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-            </LinearLayout>
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:fontFamily="@font/noto_sans_jp_regular"
+                android:includeFontPadding="false" />
+
         </LinearLayout>
     </LinearLayout>

@@ -18,7 +18,7 @@ data class Post(
     val likes: List<Like>,
     val map_image: List<MapImage>,
     val mmr: Int,
-    val opponent_id: Int,
+    val opponent_post: Post,
     val range: String,
     val time: Int,
     val title: String,

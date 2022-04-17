@@ -8,6 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.capstonandroid.R
@@ -73,7 +74,12 @@ class RecyclerUserAdapter2(
 
             view.findViewById<TextView>(R.id.txtUser_created_id).text = dateTime.format(formatter).toString()
 
+            println("여긴 어디인가" + item.likesize.toString())
 
+            if(item.likesize>0) {
+                view.findViewById<TextView>(R.id.like2).visibility = View.VISIBLE
+                view.findViewById<TextView>(R.id.like2).text = "いいね！： " + item.likesize.toString()
+            }
             view.setOnClickListener(listener)
 
             val defaultImage = R.drawable.map
