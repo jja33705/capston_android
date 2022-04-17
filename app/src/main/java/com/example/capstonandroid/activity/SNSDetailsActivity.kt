@@ -17,6 +17,7 @@ import com.example.capstonandroid.network.api.BackendApi
 import com.example.capstonandroid.network.dto.FollowResponse
 import com.example.capstonandroid.network.dto.LikeResponse
 import com.example.capstonandroid.network.dto.SNSResponse
+import kotlinx.android.synthetic.main.item_view2.view.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -91,7 +92,7 @@ class SNSDetailsActivity : AppCompatActivity() {
                      val defaultImage = R.drawable.map
 
 
-                     if(response.body()!!.data[data_num].map_image.size==0){
+                     if(response.body()!!.data[data_num].img ==null){
                          var url = ""
                          Glide.with(this@SNSDetailsActivity)
                              .load(url) // 불러올 이미지 url
@@ -102,7 +103,7 @@ class SNSDetailsActivity : AppCompatActivity() {
 
                      }else {
 
-                         val url = response.body()!!.data[data_num]!!.map_image[0].url
+                         val url = response.body()!!.data[data_num]!!.img
                          Glide.with(this@SNSDetailsActivity)
                              .load(url) // 불러올 이미지 url
                              .placeholder(defaultImage) // 이미지 로딩 시작하기 전 표시할 이미지
@@ -113,6 +114,31 @@ class SNSDetailsActivity : AppCompatActivity() {
 
 
 
+                     val defaultImage2 = R.drawable.profile
+
+                     if(response.body()!!.data[data_num]!!.user.profile==null||response.body()!!.data[data_num]!!.user.profile.equals("")){
+                         var url = ""
+
+                         Glide.with(this@SNSDetailsActivity)
+                             .load(url) // 불러올 이미지 url
+                             .placeholder(defaultImage2) // 이미지 로딩 시작하기 전 표시할 이미지
+                             .error(defaultImage2) // 로딩 에러 발생 시 표시할 이미지
+                             .fallback(defaultImage2) // 로드할 url 이 비어있을(null 등) 경우 표시할 이미지
+                             .circleCrop()
+                             .into(binding.profile)
+
+                     }else {
+
+                         var url = response.body()!!.data[data_num]!!.user.profile
+
+                         Glide.with(this@SNSDetailsActivity)
+                             .load(url) // 불러올 이미지 url
+                             .placeholder(defaultImage2) // 이미지 로딩 시작하기 전 표시할 이미지
+                             .error(defaultImage2) // 로딩 에러 발생 시 표시할 이미지
+                             .fallback(defaultImage2) // 로드할 url 이 비어있을(null 등) 경우 표시할 이미지
+                             .circleCrop()
+                             .into(binding.profile)
+                     }
 
                     binding.title.setText(response.body()!!.data[data_num]!!.title)
 //                     binding.content.setText(response.body()!!.data[data_num]!!.content)
