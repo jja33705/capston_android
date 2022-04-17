@@ -139,7 +139,7 @@ class LoginActivity : AppCompatActivity() {
 
 
 
-                        Toast.makeText(this@LoginActivity,"로그인 성공 했습니다!", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@LoginActivity,"ログインしました", Toast.LENGTH_SHORT).show()
                         startActivity(nextIntent)
                         finish()
                     }else {
@@ -149,7 +149,7 @@ class LoginActivity : AppCompatActivity() {
                         println(response.body())
                         println(response.message())
                         println(response.code())
-                        Toast.makeText(this@LoginActivity,"로그인 실패 했습니다!", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@LoginActivity,"ログインエラー", Toast.LENGTH_SHORT).show()
 
                     }
                 }

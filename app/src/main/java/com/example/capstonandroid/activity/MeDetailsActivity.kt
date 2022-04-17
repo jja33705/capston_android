@@ -138,8 +138,8 @@ class MeDetailsActivity : AppCompatActivity() {
                     binding.calorie.setText("カロリー : "+calorie+" Cal")
                     binding.kind.setText("種類 : " + kind)
                     binding.averageSpeed.setText("平均速度 : "+average_speed +" Km/h")
-                    binding.altitude.setText("高度 : "+altitude)
-                    binding.distance.setText("距離 : "+String.format("%.2f",distance/1000)+" Km")
+                    binding.altitude.setText("累積高度 : "+String.format("%.0f",altitude)+" m")
+                    binding.distance.setText("累積距離 : "+String.format("%.2f",distance)+" Km")
 
                     println("콘텐츠"+content)
                     println("랭스"+range)

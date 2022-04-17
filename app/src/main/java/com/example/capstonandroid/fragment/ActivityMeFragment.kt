@@ -90,7 +90,9 @@ class ActivityMeFragment : Fragment() {
                 if (response.isSuccessful) {
                     println(response.body())
 
-
+                    if (response.body()!!.data.size == 0){
+                        binding.message.setText("記録がありません。")
+                    }
                     println(response.body()!!.data.size.toString()+"ㅇㅁㄴㅇㄴㅁㅇㄴㅁㅇㅁㄴㅇㅁㄴㅇㄴㅁㅇ")
 
                     for (i in 0..response.body()!!.data.size -1) {

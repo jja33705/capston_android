@@ -190,8 +190,8 @@ class SNSDetailsActivity : AppCompatActivity() {
                      binding.calorie.setText("カロリー : "+calorie+" Cal")
                      binding.kind.setText("種類 : " + kind)
                      binding.averageSpeed.setText("平均速度 : "+average_speed +" Km/h")
-                     binding.altitude.setText("高度 : "+altitude)
-                     binding.distance.setText("距離 : "+String.format("%.2f",distance/1000)+" Km")
+                     binding.altitude.setText("累積高度 : "+String.format("%.0f",altitude)+" m")
+                     binding.distance.setText("累積距離 : "+String.format("%.2f",distance)+" Km")
                      binding.username.setText(username)
                      binding.createdate.setText(dateTime.format(formatter).toString())
                  }  else{
@@ -218,7 +218,7 @@ class SNSDetailsActivity : AppCompatActivity() {
                     response: Response<LikeResponse>
                 ) {
                     if (response.isSuccessful){
-                        Toast.makeText(this@SNSDetailsActivity,"좋아요 눌렀습니다.",Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@SNSDetailsActivity,"いいねしました",Toast.LENGTH_SHORT).show()
                         supplementService.SNSIndex(token,data_page).enqueue(object : Callback<SNSResponse> {
                             override fun onResponse(call: Call<SNSResponse>, response: Response<SNSResponse>) {
 
@@ -239,7 +239,7 @@ class SNSDetailsActivity : AppCompatActivity() {
                         })
                     }else {
 
-                        Toast.makeText(this@SNSDetailsActivity,"좋아요 실패했습니다.",Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@SNSDetailsActivity,"いいね",Toast.LENGTH_SHORT).show()
                     }
                 }
 

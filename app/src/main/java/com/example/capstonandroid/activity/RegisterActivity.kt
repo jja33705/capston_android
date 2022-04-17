@@ -54,10 +54,7 @@ class RegisterActivity : AppCompatActivity() {
 
             var password:String = binding.etRegisterPassword.text.toString()
 
-
             var weight:String = binding.etRegisterWeight.text.toString()
-
-            var profile:String = binding.etRegisterProfile.text.toString()
 
             var birth:String = binding.etRegisterBirth.text.toString()
 
@@ -71,7 +68,7 @@ class RegisterActivity : AppCompatActivity() {
                 password = password.toString(),
                 sex = sex.toString(),
                 weight = weight.toString(),
-                profile = profile.toString(),
+                profile = "https://run-images.s3.ap-northeast-2.amazonaws.com/image/cwAEPdfU9dIfQsrofPwFkR8GJWuqvtWAOmNpDpSx.png",
                 birth = birth.toString(),
                 introduce = introduce.toString(),
                 location = location.toString()

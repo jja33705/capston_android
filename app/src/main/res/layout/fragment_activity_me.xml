@@ -9,6 +9,7 @@
     tools:context="fragment.ActivityMeFragment">
 
     <LinearLayout
+        android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -21,11 +22,12 @@
 
     <TextView
         android:id="@+id/message"
-        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="활동 기록이 없습니다!"
+        android:gravity="center"
+        android:text=""
         android:textSize="24dp"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

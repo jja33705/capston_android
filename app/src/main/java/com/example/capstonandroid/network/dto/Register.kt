@@ -9,5 +9,5 @@ data class Register(
     val password: String,
     val profile: String,
     val sex: String,
-    val weight: String
+    val weight: String,
 )

@@ -315,8 +315,8 @@ class ProfileMeFragment : Fragment(){
                             response: Response<LogoutResponse>
                         ) {
                             if (response.isSuccessful) {
-                                println("로그아웃이 성공되었습니다! 성공 ")
-                                Toast.makeText(requireContext(),"로그아웃 성공 했습니다!", Toast.LENGTH_SHORT).show()
+                                println("ログインしました")
+                                Toast.makeText(requireContext(),"ログアウトしました", Toast.LENGTH_SHORT).show()
 
 //                  콜백 응답으로 온것
                                 println(response.body())
