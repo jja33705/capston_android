@@ -96,7 +96,7 @@ class HomeFragment : Fragment()  {
                 println(response.body())
 
                 if (response.body()!!.data.size == 0){
-                    binding.message.setText("記録がありません。")
+                    binding.message.setText("SNSリストがありません。")
                 }
                 if(response.isSuccessful) {
 
@@ -105,7 +105,10 @@ class HomeFragment : Fragment()  {
                         return
                     }else {
                     println(response.body()!!.data.size)
+
+
                     for (i in 0..response.body()!!.data.size-1) {
+
                         list.add(
                             UserData(
                                 ContextCompat.getDrawable(
@@ -119,6 +122,7 @@ class HomeFragment : Fragment()  {
                                 response.body()!!.data[i].created_at,
                                 response.body()!!.current_page,
                                 response.body()!!.data[i].img,
+
                                 response.body()!!.data[i].user.profile
                             )
                         )
