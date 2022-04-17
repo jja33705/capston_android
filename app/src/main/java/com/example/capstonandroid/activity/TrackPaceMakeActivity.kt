@@ -38,6 +38,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import kotlinx.android.synthetic.main.checkpoint_dialog.*
+import kotlinx.android.synthetic.main.complete_record_dialog.*
 import kotlinx.coroutines.*
 import retrofit2.Retrofit
 import java.io.FileOutputStream
@@ -54,6 +55,8 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
     private lateinit var trackId: String
     private lateinit var opponentGpsDataId: String // 상대방의 gps data id
     private var opponentPostId = 0 // 상대방 post id
+    private var opponentAvgSpeed = 0.0
+    private var opponentTime = 0
 
     private lateinit var retrofit: Retrofit // 레트로핏 인스턴스
     private lateinit var supplementService: BackendApi // api
@@ -65,6 +68,9 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
 
     private lateinit var checkpointMarkerList: ArrayList<Marker>
     private lateinit var checkpointDialog: Dialog
+
+    // 완료시 비교화면 dialog
+    private lateinit var completeRecordDialog: Dialog
 
     // db dao 핸들
     private lateinit var gpsDataDao: GpsDataDao
@@ -128,6 +134,12 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
         checkpointDialog.requestWindowFeature(Window.FEATURE_NO_TITLE) // 타이틀 제거
         checkpointDialog.setContentView(R.layout.checkpoint_dialog)
 
+        // 완료시 커스텀 다이얼로그 초기화
+        completeRecordDialog = Dialog(this)
+        completeRecordDialog.requestWindowFeature(Window.FEATURE_NO_TITLE) // 타이틀 제거
+        completeRecordDialog.setContentView(R.layout.complete_record_dialog)
+        completeRecordDialog.setCancelable(false) // 화면 밖 터치해서 종료 방지
+
         latLngList = ArrayList()
         opponentLatLngList = ArrayList()
         checkpointMarkerList = ArrayList()
@@ -139,6 +151,8 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
         trackId = intent.getStringExtra("trackId")!!
         opponentGpsDataId = intent.getStringExtra("opponentGpsDataId")!!
         opponentPostId = intent.getIntExtra("opponentPostId", 0)!!
+        opponentAvgSpeed = intent.getDoubleExtra("opponentAvgSpeed", 0.0)
+        opponentTime = intent.getIntExtra("opponentTime", 0)
         println(" (TrackPaceMake) exerciseKind $exerciseKind")
         println(" (TrackPaceMake) matchType $matchType")
         println(" (TrackPaceMake) trackId $trackId")
@@ -297,6 +311,11 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
                     .icon(BitmapDescriptorFactory.fromBitmap(Utils.createBitmapFromView(opponentMarkerIcon)))
                     .anchor(0.5F, 0.5F))
 
+                // 통과한 체크포인트는 바꿔줌
+                for (i in 0 until TrackPaceMakeService.checkpointIndex) {
+                    checkpointMarkerList[i].setIcon(Utils.getMarkerIconFromDrawable(resources.getDrawable(R.drawable.checkpoint_after,null)))
+                }
+
                 binding.tvPaceMake.visibility = View.VISIBLE // 페이스메이크 창 보이게
 
                 mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(beforeLatLng, 18.0f)) // 화면 이동
@@ -314,6 +333,8 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
                 intent.putExtra("matchType", matchType)
                 intent.putExtra("opponentPostId", opponentPostId)
                 intent.putExtra("opponentGpsDataId", opponentGpsDataId)
+                intent.putExtra("opponentAvgSpeed", opponentAvgSpeed)
+                intent.putExtra("opponentTime", opponentTime)
                 startForegroundService(intent)
             }
         }
@@ -735,6 +756,7 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
                         }
                         // 뭔가 위치 바뀐거 있으면 서로간의 거리 다시 구함.
                         if (locationChanged || opponentLocationChanged) {
+                            // 내 위치가 바꼈으면 검사
                             if (locationChanged) {
                                 launch(Dispatchers.Default) {
                                     predictLocation()
@@ -762,19 +784,19 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
                                     if (TrackPaceMakeService.myLocationIndexOnTrack >= track.checkPoint[TrackPaceMakeService.checkpointIndex]) {
                                         val token = "Bearer " + getSharedPreferences("other", MODE_PRIVATE).getString("TOKEN", "")!!
                                         val checkpointResponse = supplementService.checkpoint(token, TrackPaceMakeService.checkpointIndex, trackId, second)
-                                        checkpointMarkerList[TrackRecordService.checkpointIndex].setIcon(Utils.getMarkerIconFromDrawable(resources.getDrawable(R.drawable.checkpoint_after,null)))
-                                        // 다이얼로그 띄움
-                                        checkpointDialog.checkpoint_pace.text = "上位${checkpointResponse.body()!!.rank.toInt()}パーセントのペースです。"
-                                        checkpointDialog.show()
-                                        checkpointDialog.window?.setBackgroundDrawable(
-                                            ColorDrawable(Color.TRANSPARENT)
-                                        )
-                                        Handler(mainLooper).postDelayed({
-                                            checkpointDialog.dismiss()
-                                        }, 3000)
-                                        if (textToSpeechInitialized) {
-                                            textToSpeech.speak("チェックポイントを通過しました。上位${checkpointResponse.body()!!.rank.toInt()}パーセントのペースです。", TextToSpeech.QUEUE_FLUSH, null, "abc")
+                                        if (checkpointResponse.isSuccessful) {
+                                            // 다이얼로그 띄움
+                                            checkpointDialog.checkpoint_pace.text = "上位${checkpointResponse.body()!!.rank.toInt()}パーセントのペースです。"
+                                            checkpointDialog.show()
+                                            checkpointDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                                            Handler(mainLooper).postDelayed({
+                                                checkpointDialog.dismiss()
+                                            }, 3000)
+                                            if (textToSpeechInitialized) {
+                                                textToSpeech.speak("チェックポイントを通過しました。上位${checkpointResponse.body()!!.rank.toInt()}パーセントのペースです。", TextToSpeech.QUEUE_FLUSH, null, "abc")
+                                            }
                                         }
+                                        checkpointMarkerList[TrackPaceMakeService.checkpointIndex].setIcon(Utils.getMarkerIconFromDrawable(resources.getDrawable(R.drawable.checkpoint_after,null)))
                                         TrackPaceMakeService.checkpointIndex += 1
                                     }
                                 }
@@ -832,6 +854,10 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
     override fun onSnapshotReady(snapshot: Bitmap?) {
         //앱 내부 cache 저장소: /data/user/0/com.example.capstonandroid/cache
 
+        val completeRecordIntent = Intent(this@TrackPaceMakeActivity, TrackPaceMakeService::class.java)
+        completeRecordIntent.action = TrackPaceMakeService.COMPLETE_RECORD
+        startForegroundService(completeRecordIntent)
+
         // 이미 있는 이미지는 삭제
         val file = cacheDir
         val fileList = file.listFiles()
@@ -847,9 +873,21 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
         fileOutputStream.close()
         println("이미지 저장 끝남")
 
-        val intent = Intent(this@TrackPaceMakeActivity, TrackPaceMakeService::class.java)
-        intent.action = TrackPaceMakeService.COMPLETE_RECORD
-        startForegroundService(intent)
-        finish()
+        completeRecordDialog.tv_opponent_name.text = TrackPaceMakeService.opponentUserName
+        completeRecordDialog.tv_my_avg_speed.text = "${binding.tvAvgSpeed.text}km/h"
+        completeRecordDialog.tv_opponent_avg_speed.text = "${TrackPaceMakeService.opponentAvgSpeed}km/h"
+        completeRecordDialog.tv_my_time.text = Utils.timeToText(second)
+        completeRecordDialog.tv_opponent_time.text = Utils.timeToText(TrackPaceMakeService.opponentTime)
+        completeRecordDialog.show()
+        completeRecordDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        completeRecordDialog.btn_upload.setOnClickListener {
+            val uploadPostIntent = Intent(this@TrackPaceMakeActivity, TrackPaceMakeService::class.java)
+            uploadPostIntent.action = TrackPaceMakeService.UPLOAD_POST
+            startForegroundService(uploadPostIntent)
+            finish()
+        }
+
+
     }
 }

@@ -256,6 +256,11 @@ class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.S
                     .alpha(0.3F)
                     .anchor(0.5F, 0.5F))
 
+                // 통과한 체크포인트는 바꿔줌
+                for (i in 0 until TrackRecordService.checkpointIndex) {
+                    checkpointMarkerList[i].setIcon(Utils.getMarkerIconFromDrawable(resources.getDrawable(R.drawable.checkpoint_after,null)))
+                }
+
                 mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(beforeLatLng, 18.0f)) // 화면 이동
 
                 loadGpsDataFromDatabaseAndDrawPolyline()
@@ -478,19 +483,21 @@ class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.S
                 if (TrackRecordService.myLocationIndexOnTrack >= track.checkPoint[TrackRecordService.checkpointIndex]) {
                     val token = "Bearer " + getSharedPreferences("other", MODE_PRIVATE).getString("TOKEN", "")!!
                     val checkpointResponse = supplementService.checkpoint(token, TrackRecordService.checkpointIndex, trackId, second)
-                    checkpointMarkerList[TrackRecordService.checkpointIndex].setIcon(Utils.getMarkerIconFromDrawable(resources.getDrawable(R.drawable.checkpoint_after,null)))
-                    // 다이얼로그 띄움
-                    checkpointDialog.checkpoint_pace.text = "上位${checkpointResponse.body()!!.rank.toInt()}パーセントのペースです。"
-                    checkpointDialog.show()
-                    checkpointDialog.window?.setBackgroundDrawable(
-                        ColorDrawable(Color.TRANSPARENT)
-                    )
-                    Handler(mainLooper).postDelayed({
-                        checkpointDialog.dismiss()
-                    }, 3000)
-                    if (textToSpeechInitialized) {
-                        textToSpeech.speak("上位${checkpointResponse.body()!!.rank.toInt()}パーセントです。", TextToSpeech.QUEUE_FLUSH, null, "abc")
+                    if (checkpointResponse.isSuccessful) {
+                        // 다이얼로그 띄움
+                        checkpointDialog.checkpoint_pace.text = "上位${checkpointResponse.body()!!.rank.toInt()}パーセントのペースです。"
+                        checkpointDialog.show()
+                        checkpointDialog.window?.setBackgroundDrawable(
+                            ColorDrawable(Color.TRANSPARENT)
+                        )
+                        Handler(mainLooper).postDelayed({
+                            checkpointDialog.dismiss()
+                        }, 3000)
+                        if (textToSpeechInitialized) {
+                            textToSpeech.speak("上位${checkpointResponse.body()!!.rank.toInt()}パーセントです。", TextToSpeech.QUEUE_FLUSH, null, "abc")
+                        }
                     }
+                    checkpointMarkerList[TrackRecordService.checkpointIndex].setIcon(Utils.getMarkerIconFromDrawable(resources.getDrawable(R.drawable.checkpoint_after,null)))
                     TrackRecordService.checkpointIndex += 1
                 }
             }

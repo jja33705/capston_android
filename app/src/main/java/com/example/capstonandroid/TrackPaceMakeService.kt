@@ -76,6 +76,8 @@ class TrackPaceMakeService : Service() {
         var opponentLocationIndexOnTrack = 0 // 상대가 트랙 위에 어디쯤 존재하는지
         var opponentSumDistanceOnTrack = 0F
         var opponentBeforeLocationChangedSecond = 0 // 이전 상대 위치 바뀐 시간
+        var opponentAvgSpeed = 0.0
+        var opponentTime = 0
 
         private const val PREFIX = "com.example.capstonandroid.trackpacemakeservice"
 
@@ -90,6 +92,7 @@ class TrackPaceMakeService : Service() {
         const val STOP_SERVICE = "${PREFIX}.STOP_SERVICE"
         const val START_PROCESS = "${PREFIX}.STOP_PROCESS"
         const val COMPLETE_RECORD = "${PREFIX}.COMPLETE_RECORD"
+        const val UPLOAD_POST = "${PREFIX}.UPLOAD_POST"
 
         // flag
         const val OPPONENT_START_LAT_LNG = "${PREFIX}.OPPONENT_START_LAT_LNG"
@@ -235,6 +238,8 @@ class TrackPaceMakeService : Service() {
         activityIntent.putExtra("trackId", trackId)
         activityIntent.putExtra("opponentGpsDataId", opponentGpsDataId)
         activityIntent.putExtra("opponentPostId", opponentPostId)
+        activityIntent.putExtra("opponentAvgSpeed", opponentAvgSpeed)
+        activityIntent.putExtra("opponentTime", opponentTime)
 
         val activityPendingIntent = PendingIntent.getActivity(this, 0, activityIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
 
@@ -275,7 +280,13 @@ class TrackPaceMakeService : Service() {
                 matchType = intent.getStringExtra("matchType")!!
                 opponentPostId = intent.getIntExtra("opponentPostId", 0)
                 opponentGpsDataId = intent.getStringExtra("opponentGpsDataId")!!
+                opponentAvgSpeed = intent.getDoubleExtra("opponentAvgSpeed", 0.0)
+                opponentTime = intent.getIntExtra("opponentTime", 0)
+
                 mNotificationManager.notify(NOTIFICATION_ID, getNotification())
+
+                println("상대 평균속도: $opponentAvgSpeed")
+                println("상대 시간: $opponentTime")
 
                 // 상대 gps data 가져와서 db에 넣고 액티비티로 보냄
                 CoroutineScope(Dispatchers.Main).launch {
@@ -337,6 +348,9 @@ class TrackPaceMakeService : Service() {
                 }
             }
             COMPLETE_RECORD -> { // 기록 끝
+                stopRecord()
+            }
+            UPLOAD_POST -> {
                 val intent = Intent(this@TrackPaceMakeService, CompleteRecordActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 intent.putExtra("avgSpeed", avgSpeed)
@@ -354,6 +368,7 @@ class TrackPaceMakeService : Service() {
                 stopService()
             }
             STOP_SERVICE -> { // 서비스 종료
+                stopRecord()
                 stopService()
             }
         }
@@ -395,10 +410,13 @@ class TrackPaceMakeService : Service() {
         }
     }
 
-    private fun stopService() {
+    // 콜백 다 제거해서 더이상 업데이트 안되도록 수정
+    private fun stopRecord() {
         mFusedLocationClient.removeLocationUpdates(mLocationCallback) // 위치 업데이트 제거
         timer.cancel() // 타이머 제거
+    }
 
+    private fun stopService() {
         // companion object 리셋
         isStarted = false
         trackName = ""
@@ -417,6 +435,8 @@ class TrackPaceMakeService : Service() {
         opponentLocationIndexOnTrack = 0
         opponentSumDistanceOnTrack = 0F
         opponentBeforeLocationChangedSecond = 0
+        opponentAvgSpeed = 0.0
+        opponentTime = 0
 
         stopForeground(true)
         stopSelf()

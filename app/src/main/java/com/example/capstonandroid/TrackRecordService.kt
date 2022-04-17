@@ -294,6 +294,10 @@ class TrackRecordService : Service() {
         }
     }
 
+    private fun stopRecord() {
+
+    }
+
     private fun stopService() {
         mFusedLocationClient.removeLocationUpdates(mLocationCallback) // 위치 업데이트 제거
         timer.cancel() // 타이머 제거
