@@ -237,8 +237,8 @@ class ProfileMeFragment : Fragment(){
                         var set = BarDataSet(entries,"DataSet")//데이터셋 초기화 하기
                         var set2 = BarDataSet(entries2,"DataSet")// 데이터 셋 초기화하게
 
-                        set.color = ColorTemplate.rgb("#ff7b22")
-                        set2.color =ColorTemplate.rgb("#001102")
+                        set.color = ColorTemplate.rgb("#6fcdcd")
+                        set2.color =ColorTemplate.rgb("#5db5ef")
 
 
                         val data = BarData(set,set2)

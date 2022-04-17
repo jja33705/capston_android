@@ -36,4 +36,6 @@
     <color name="default_marker_color_opacity">#4D4284F4</color>
     <color name="start_point_color">#00FF00</color>
     <color name="opponent_polyline_color">#DC143C</color>
+    <color name="g_r">#6fcdcd</color>
+    <color name="g_rr">#5db5ef</color>
 </resources>
