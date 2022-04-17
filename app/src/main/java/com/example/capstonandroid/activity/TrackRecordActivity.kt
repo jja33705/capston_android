@@ -452,8 +452,8 @@ class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.S
                 TrackRecordService.myLocationIndexOnTrack = myPredictedLocation // 내 예상 지점 갱신
             }.join()
 
-            // 예상 지점
-            mGoogleMap.addMarker(MarkerOptions().position(LatLng(track.gps.coordinates[TrackRecordService.myLocationIndexOnTrack][1], track.gps.coordinates[TrackRecordService.myLocationIndexOnTrack][0])))
+//            // 예상 지점
+//            mGoogleMap.addMarker(MarkerOptions().position(LatLng(track.gps.coordinates[TrackRecordService.myLocationIndexOnTrack][1], track.gps.coordinates[TrackRecordService.myLocationIndexOnTrack][0])))
 
             // 끝에 도착했는지 여기서 체크하자
             println("끝에 도착했는지 체크: ${TrackRecordService.myLocationIndexOnTrack}, ${track.gps.coordinates.size-1}")

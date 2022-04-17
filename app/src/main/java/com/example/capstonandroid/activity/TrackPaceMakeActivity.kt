@@ -740,7 +740,7 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
                                     predictLocation()
                                 }.join()
 
-                                mGoogleMap.addMarker(MarkerOptions().position(LatLng(track.gps.coordinates[TrackPaceMakeService.myLocationIndexOnTrack][1], track.gps.coordinates[TrackPaceMakeService.myLocationIndexOnTrack][0])))
+//                                mGoogleMap.addMarker(MarkerOptions().position(LatLng(track.gps.coordinates[TrackPaceMakeService.myLocationIndexOnTrack][1], track.gps.coordinates[TrackPaceMakeService.myLocationIndexOnTrack][0])))
 
                                 // 끝에 도착했는지 여기서 체크하자
                                 if (TrackPaceMakeService.myLocationIndexOnTrack == track.gps.coordinates.size - 1) {
