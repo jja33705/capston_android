@@ -161,8 +161,8 @@ class SNSDetailsActivity : AppCompatActivity() {
                      username = response.body()!!.data[data_num]!!.user.name
 
                      if(response.body()!!.data[data_num]!!.opponent_post==null){}else {
-//                         oppenent_name = response.body()!!.data[data_num]!!.opponent_post.user.name
-                         oppenent_kind = response.body()!!.data[data_num]!!.kind
+                         oppenent_name = response.body()!!.data[data_num]!!.opponent_post.user.name
+                         oppenent_kind = response.body()!!.data[data_num]!!.opponent_post.kind
                      }
 
 

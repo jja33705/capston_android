@@ -36,6 +36,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
             android:orientation="horizontal">
             <TextView
                 android:includeFontPadding="false"
@@ -50,15 +52,16 @@
             </TextView>
         </LinearLayout>
         <ImageView
-            android:padding="3dp"
+            android:background="@drawable/round_border2"
+            android:padding="7.5dp"
             android:id="@+id/imageView"
-            android:layout_width="match_parent"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
             android:layout_height="300dp"
             android:layout_centerHorizontal="true"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:layout_marginBottom="10dp"
-            android:src="@drawable/map" />
+            android:layout_marginBottom="10dp" />
         <LinearLayout
             android:id="@+id/function_nav"
             android:layout_width="match_parent"

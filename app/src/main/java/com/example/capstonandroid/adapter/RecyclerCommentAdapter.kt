@@ -81,7 +81,7 @@ class RecyclerCommentAdapter(
                     .placeholder(defaultImage3) // 이미지 로딩 시작하기 전 표시할 이미지
                     .error(defaultImage3) // 로딩 에러 발생 시 표시할 이미지
                     .fallback(defaultImage3) // 로드할 url 이 비어있을(null 등) 경우 표시할 이미지
-                    .into(itemView.imageView)
+                    .into(itemView.profile_comment)
 
             }else {
 
@@ -92,11 +92,11 @@ class RecyclerCommentAdapter(
                     .placeholder(defaultImage3) // 이미지 로딩 시작하기 전 표시할 이미지
                     .error(defaultImage3) // 로딩 에러 발생 시 표시할 이미지
                     .fallback(defaultImage3) // 로드할 url 이 비어있을(null 등) 경우 표시할 이미지
-                    .into(itemView.imageView)
+                    .into(itemView.profile_comment)
             }
 
             view.findViewById<TextView>(R.id.user_created_at).text = dateTime.format(formatter).toString()
-            view.user_updated_at.text = item.updated_at
+
             view.deleteButton.setOnClickListener {
                 println("안녕하세요 여긴 댓글 삭제 버튼입니다.!  "+item.commentID+"눌렀습니다.")
 
