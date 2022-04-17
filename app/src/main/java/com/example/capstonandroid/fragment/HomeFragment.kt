@@ -199,8 +199,8 @@ class HomeFragment : Fragment()  {
     }
 
     private fun adapterOnClick(data: UserData) {
-        Toast.makeText(requireContext(), "FunCall Clicked -> ID : ${data.title}, Name : ${data.name}", Toast.LENGTH_SHORT).show()
-        println(data.data_num)
+//        Toast.makeText(requireContext(), "FunCall Clicked -> ID : ${data.title}, Name : ${data.name}", Toast.LENGTH_SHORT).show()
+//        println(data.data_num)
 
         val nextIntent = Intent(requireContext(), SNSDetailsActivity::class.java)
         nextIntent.putExtra("data_num", data.data_num)

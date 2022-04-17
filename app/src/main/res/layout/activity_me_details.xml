@@ -30,6 +30,24 @@
                 android:focusable="false"
                 android:hint="제목"
                 android:textSize="24dp" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:orientation="horizontal">
+            <TextView
+                android:includeFontPadding="false"
+                android:fontFamily="@font/noto_sans_jp_black"
+                android:layout_marginRight="10dp"
+                android:layout_gravity="center_vertical"
+                android:text="2022-04-13T04:57:26.119Z"
+                android:id="@+id/createdate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+            </TextView>
         </LinearLayout>
         <ImageView
             android:padding="3dp"

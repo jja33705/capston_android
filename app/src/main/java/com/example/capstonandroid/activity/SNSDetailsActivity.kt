@@ -3,28 +3,28 @@ package com.example.capstonandroid.activity
 // SNS 누르면 자세히 뜨는 것
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
+import android.os.Build
 import android.os.Bundle
-import android.widget.TextView
+import android.util.Log
 import android.widget.Toast
-import androidx.core.content.ContentProviderCompat.requireContext
-import androidx.viewpager2.widget.ViewPager2
+import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
-import com.bumptech.glide.util.Util
 import com.example.capstonandroid.R
-import com.example.capstonandroid.Utils
-import com.example.capstonandroid.adapter.ViewPagerAdapter
-import com.example.capstonandroid.databinding.*
+import com.example.capstonandroid.databinding.ActivitySnsdetailsBinding
 import com.example.capstonandroid.network.RetrofitClient
 import com.example.capstonandroid.network.api.BackendApi
 import com.example.capstonandroid.network.dto.FollowResponse
 import com.example.capstonandroid.network.dto.LikeResponse
 import com.example.capstonandroid.network.dto.SNSResponse
-import kotlinx.android.synthetic.main.track_and_name.view.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
+import java.text.SimpleDateFormat
+import java.time.*
+import java.time.format.DateTimeFormatter
+import java.util.*
 
 class SNSDetailsActivity : AppCompatActivity() {
     private  lateinit var  retrofit: Retrofit  //레트로핏
@@ -83,6 +83,7 @@ class SNSDetailsActivity : AppCompatActivity() {
 
 
          supplementService.SNSIndex(token,data_page).enqueue(object : Callback<SNSResponse> {
+             @RequiresApi(Build.VERSION_CODES.O)
              override fun onResponse(call: Call<SNSResponse>, response: Response<SNSResponse>) {
 
                  if(response.isSuccessful){
@@ -117,19 +118,40 @@ class SNSDetailsActivity : AppCompatActivity() {
 //                     binding.content.setText(response.body()!!.data[data_num]!!.content)
 //                     println(response.body()!!.data[data_num]!!.likes.size)
                     binding.like.setText("いいね！： "+response.body()!!.data[data_num]!!.likes.size.toString())
-                     postID = response.body()!!.data[data_num]!!.id
+                     postID = response.body()!!.data[data_num].id
                      println(postID)
 
                      time = response.body()!!.data[data_num]!!.time.toDouble()
                      calorie = response.body()!!.data[data_num]!!.calorie
                      average_speed = response.body()!!.data[data_num]!!.average_speed
                      altitude = response.body()!!.data[data_num]!!.altitude
-                     distance = response.body()!!.data[data_num]!!.distance
+                     distance = response.body()!!.data[data_num].distance
                      kind = response.body()!!.data[data_num]!!.kind
                      content = response.body()!!.data[data_num]!!.content
                      username = response.body()!!.data[data_num]!!.user.name
-                    createdate = response.body()!!.data[data_num]!!.created_at
+
+
+
+
                     userID = response.body()!!.data[data_num]!!.user_id
+
+
+//                     println("시간 시간 : "+Utils.timeToText(time.toInt()))
+
+
+                     val date = response.body()!!.data[data_num]!!.created_at // your date
+// date is already in Standard ISO format so you don't need custom formatted
+//                     val date = "2021-12-16T16:42:00.000000Z" // your date
+                     val dateTime : ZonedDateTime = OffsetDateTime.parse(date).toZonedDateTime().plusHours(9)  // parsed date
+// format date object to specific format if needed
+                     val formatter = DateTimeFormatter.ofPattern("yyyy年 MMM dd日 HH時 mm分 ", Locale.JAPANESE)
+                     println( dateTime.format(formatter).toString()) // output : Dec 16, 2021 16:42
+//                     yyyy-MM-dd HH:mm:ss z
+
+//                     binding.createdate.setText(dateTime.format(formatter).toString())
+
+                    // 문자열
+
                      if(time>3600){
                          binding.time.setText("時間 : "+time.toInt()/3600+"時間 "+time/60.toInt()+"分 "+time.toInt()%60+"秒")
                      }else if (time>60){
@@ -145,7 +167,7 @@ class SNSDetailsActivity : AppCompatActivity() {
                      binding.altitude.setText("高度 : "+altitude)
                      binding.distance.setText("距離 : "+String.format("%.2f",distance/1000)+" Km")
                      binding.username.setText(username)
-                     binding.createdate.setText(createdate)
+                     binding.createdate.setText(dateTime.format(formatter).toString())
                  }  else{
                      println("실패함ㅋㅋ")
                      println(response.body())
@@ -225,7 +247,9 @@ class SNSDetailsActivity : AppCompatActivity() {
                 }
             })
         }
+
 }
+
     private fun initRetrofit(){
         retrofit = RetrofitClient.getInstance()
         supplementService = retrofit.create(BackendApi::class.java);

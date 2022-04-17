@@ -1,10 +1,12 @@
 package com.example.capstonandroid.adapter
 
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.capstonandroid.R
@@ -15,6 +17,13 @@ import kotlinx.android.synthetic.main.item_view2.view.*
 import kotlinx.android.synthetic.main.track_and_name.view.*
 import kotlinx.android.synthetic.main.track_and_name.view.imageView
 import retrofit2.Retrofit
+import java.text.SimpleDateFormat
+import java.time.OffsetDateTime
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
+import java.util.*
+import kotlin.collections.ArrayList
+
 // 여기가 Me
 
 class RecyclerUserAdapter(
@@ -23,6 +32,7 @@ class RecyclerUserAdapter(
 
     override fun getItemCount(): Int = items.size
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: RecyclerUserAdapter.ViewHolder, position: Int) {
         val item = items[position]
         val listener = View.OnClickListener { it ->
@@ -43,10 +53,23 @@ class RecyclerUserAdapter(
 
     class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         private var view: View = v
+        @RequiresApi(Build.VERSION_CODES.O)
         fun bind(listener: View.OnClickListener, item: UserData) {
             view.findViewById<TextView>(R.id.txtUser_title).text = item.name
             view.findViewById<TextView>(R.id.txtUser_name).text = item.title
-            view.findViewById<TextView>(R.id.txtUser_created_id).text = item.created_id
+
+            println(item.created_id)
+
+            val date = item.created_id // your date
+// date is already in Standard ISO format so you don't need custom formatted
+//                     val date = "2021-12-16T16:42:00.000000Z" // your date
+            val dateTime : ZonedDateTime = OffsetDateTime.parse(date).toZonedDateTime().plusHours(9)  // parsed date
+// format date object to specific format if needed
+            val formatter = DateTimeFormatter.ofPattern("yyyy年 MMM dd日 HH時 mm分 ", Locale.JAPANESE)
+            println( dateTime.format(formatter).toString()) // output : Dec 16, 2021 16:42
+//                     yyyy-MM-dd HH:mm:ss z
+
+            view.findViewById<TextView>(R.id.txtUser_created_id).text = dateTime.format(formatter).toString()
             view.findViewById<TextView>(R.id.page).text = item.page.toString()
 
             view.setOnClickListener(listener)
