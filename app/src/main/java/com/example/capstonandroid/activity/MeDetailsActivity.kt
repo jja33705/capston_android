@@ -122,7 +122,22 @@ class MeDetailsActivity : AppCompatActivity() {
 
                     if(response.body()!!.data[data_num]!!.opponent_post==null){}else {
                          oppenent_name = response.body()!!.data[data_num]!!.opponent_post.user.name
+                        if(response.body()!!.data[data_num]!!.opponent_post.kind.equals("자유")) {
+
+                            oppenent_kind = "自由"
+//                             binding.kind.setText("種類 : 自由")
+                        }else if(response.body()!!.data[data_num]!!.opponent_post.kind.equals("싱글")){
+//                             binding.kind.setText("種類 : シングル")
+                            oppenent_kind = "シングル"
+                        }else if(response.body()!!.data[data_num]!!.opponent_post.kind.equals("친선")){
+//                             binding.kind.setText("種類 : 練習")
+                            oppenent_kind = "練習"
+                        }else if(response.body()!!.data[data_num]!!.opponent_post.kind.equals("랭크")){
+//                             binding.kind.setText("種類 : ランク")
+                            oppenent_kind = "ランク"
+                        }
                         oppenent_kind = response.body()!!.data[data_num]!!.opponent_post.kind
+
                     }
                     val date = response.body()!!.data[data_num]!!.created_at // your date
 // date is already in Standard ISO format so you don't need custom formatted
