@@ -286,8 +286,12 @@ class ProfileMeFragment : Fragment(){
                 if (loginuserResponse?.profile.equals(null)||loginuserResponse?.profile.equals("img")){
                         binding.tvProfileMePicture.setImageResource(R.drawable.main_profile)
                     }else {
-                        val url = "https://cdn.pixabay.com/photo/2021/08/03/07/03/orange-6518675_960_720.jpg"
-                        Glide.with(this@ProfileMeFragment).load(url).circleCrop().into(binding.tvProfileMePicture)
+
+                        val url = response.body()!!.profile
+                        Glide.with(this@ProfileMeFragment)
+                            .load(url)
+                            .circleCrop()
+                            .into(binding.tvProfileMePicture)
                     }
             }
 

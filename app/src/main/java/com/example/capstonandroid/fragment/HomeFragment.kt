@@ -115,7 +115,8 @@ class HomeFragment : Fragment()  {
                                 i,
                                 response.body()!!.data[i].created_at,
                                 response.body()!!.current_page,
-                                response.body()!!.data[i].map_image
+                                response.body()!!.data[i].img,
+                                response.body()!!.data[i].user.profile
                             )
                         )
                     }
@@ -167,11 +168,13 @@ class HomeFragment : Fragment()  {
                                             i,
                                             response.body()!!.data[i].created_at,
                                             response.body()!!.current_page,
-                                            response.body()!!.data[i].map_image
+                                            response.body()!!.data[i].img,
+                                            response.body()!!.data[i].user.profile
+
+
                                         )
                                     )
                                 }
-
                                 lstUser.adapter!!.notifyItemInserted(10)
 
                                     page ++

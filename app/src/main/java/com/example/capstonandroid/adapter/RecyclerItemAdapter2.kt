@@ -15,6 +15,7 @@ import com.example.capstonandroid.network.RetrofitClient
 import com.example.capstonandroid.network.api.BackendApi
 import com.example.capstonandroid.network.dto.UserData
 import kotlinx.android.synthetic.main.item_view.view.*
+import kotlinx.android.synthetic.main.item_view2.view.*
 import kotlinx.android.synthetic.main.track_and_name.view.*
 import kotlinx.android.synthetic.main.track_and_name.view.imageView
 import kotlinx.android.synthetic.main.view_item_layout.view.*
@@ -77,7 +78,7 @@ class RecyclerUserAdapter2(
 
             val defaultImage = R.drawable.map
 
-            if(item.map_image.size==0){
+            if(item.map_image==null){
                 var url = ""
 
                 Glide.with(itemView.context)
@@ -89,7 +90,7 @@ class RecyclerUserAdapter2(
 
             }else {
 
-                var url = item.map_image[0].url
+                var url = item.map_image
 
                 Glide.with(itemView.context)
                     .load(url) // 불러올 이미지 url
@@ -99,7 +100,31 @@ class RecyclerUserAdapter2(
                     .into(itemView.imageView)
             }
 
+            val defaultImage2 = R.drawable.profile
 
+            if(item.profile==null||item.profile.equals("")){
+                var url = ""
+
+                Glide.with(itemView.context)
+                    .load(url) // 불러올 이미지 url
+                    .placeholder(defaultImage2) // 이미지 로딩 시작하기 전 표시할 이미지
+                    .error(defaultImage2) // 로딩 에러 발생 시 표시할 이미지
+                    .fallback(defaultImage2) // 로드할 url 이 비어있을(null 등) 경우 표시할 이미지
+                    .circleCrop()
+                    .into(itemView.userImage)
+
+            }else {
+
+                var url = item.profile
+
+                Glide.with(itemView.context)
+                    .load(url) // 불러올 이미지 url
+                    .placeholder(defaultImage2) // 이미지 로딩 시작하기 전 표시할 이미지
+                    .error(defaultImage2) // 로딩 에러 발생 시 표시할 이미지
+                    .fallback(defaultImage2) // 로드할 url 이 비어있을(null 등) 경우 표시할 이미지
+                    .circleCrop()
+                    .into(itemView.userImage)
+            }
         }
     }
 }

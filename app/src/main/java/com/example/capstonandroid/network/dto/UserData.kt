@@ -9,5 +9,6 @@ data class UserData(
     val data_num : Int,
     val created_id : String,
     val page : Int,
-    val map_image: List<MapImage>,
+    val map_image: String,
+    val profile : String,
     )

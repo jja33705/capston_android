@@ -78,7 +78,7 @@ class MeDetailsActivity : AppCompatActivity() {
 
 
                     val defaultImage = R.drawable.map
-                    if(response.body()!!.data[data_num].map_image.size==0){
+                    if(response.body()!!.data[data_num].img ==null){
                         var url = ""
                         Glide.with(this@MeDetailsActivity)
                             .load(url) // 불러올 이미지 url
@@ -89,7 +89,7 @@ class MeDetailsActivity : AppCompatActivity() {
 
                     }else {
 
-                        val url = response.body()!!.data[data_num]!!.map_image[0].url
+                        val url = response.body()!!.data[data_num]!!.img
                         Glide.with(this@MeDetailsActivity)
                             .load(url) // 불러올 이미지 url
                             .placeholder(defaultImage) // 이미지 로딩 시작하기 전 표시할 이미지
@@ -97,6 +97,7 @@ class MeDetailsActivity : AppCompatActivity() {
                             .fallback(defaultImage) // 로드할 url 이 비어있을(null 등) 경우 표시할 이미지
                             .into(binding.imageView) // 이미지를 넣을 뷰
                     }
+
                     println(response.body()!!.data[data_num]!!.title)
 
                     binding.title.setText(response.body()!!.data[data_num]!!.title)

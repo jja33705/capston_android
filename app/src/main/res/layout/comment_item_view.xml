@@ -59,7 +59,9 @@
                 android:text="내용"></TextView>
             <TextView
                 android:id="@+id/user_created_at"
-                android:layout_width="320dp"
+                android:gravity="right"
+                android:layout_marginRight="10dp"
+                android:layout_width="match_parent"
                 android:layout_height="20dp"
                 android:includeFontPadding="false"
                 android:fontFamily="@font/noto_sans_jp_medium"

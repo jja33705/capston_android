@@ -4,6 +4,7 @@ import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -76,7 +77,7 @@ class RecyclerUserAdapter(
 
             val defaultImage = R.drawable.map
 
-            if(item.map_image.size==0){
+            if(item.map_image==null){
                 var url = ""
 
                 Glide.with(itemView.context)
@@ -88,7 +89,7 @@ class RecyclerUserAdapter(
 
             }else {
 
-                var url = item.map_image[0].url
+                var url = item.map_image
 
                 Glide.with(itemView.context)
                     .load(url) // 불러올 이미지 url
@@ -96,6 +97,15 @@ class RecyclerUserAdapter(
                     .error(defaultImage) // 로딩 에러 발생 시 표시할 이미지
                     .fallback(defaultImage) // 로드할 url 이 비어있을(null 등) 경우 표시할 이미지
                     .into(itemView.imageView)
-            }}
+            }
+
+
+
+
+
+
+
+
+        }
     }
 }
