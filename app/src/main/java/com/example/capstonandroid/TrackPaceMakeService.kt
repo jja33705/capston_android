@@ -47,7 +47,7 @@ class TrackPaceMakeService : Service() {
     // 내 관련 정보
     private var sumAltitude: Double = 0.0 // 누적 상승 고도
     private var second: Int = 0 // 시간 (초)
-    private var distance = 0.0 // 거리 (m)
+    private var distance = 0.0 // 거리 (km)
     private var avgSpeed = 0.0 // 평균 속도
     private var calorie = 0.0 // 칼로리
 
@@ -165,7 +165,7 @@ class TrackPaceMakeService : Service() {
                     }
 
                     // 거리 구해줌
-                    distance += beforeLocation.distanceTo(mLocation)
+                    distance += (beforeLocation.distanceTo(mLocation) / 1000)
 
                     beforeLocation = mLocation!!
 
@@ -175,7 +175,7 @@ class TrackPaceMakeService : Service() {
 
                 //평균속도
                 if (second > 0) {
-                    avgSpeed = (distance / 1000) / (second.toDouble() / 3600)
+                    avgSpeed = distance / (second.toDouble() / 3600)
                 }
 
                 // 이 시간에 상대 기록된 상대 운동 데이터 있는지

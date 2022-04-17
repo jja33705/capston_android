@@ -105,6 +105,7 @@
         <entry key="app/src/main/res/layout/activity_track_pace_make.xml" value="0.34814814814814815" />
         <entry key="app/src/main/res/layout/activity_track_record.xml" value="0.25047607421875" />
         <entry key="app/src/main/res/layout/bottom_sheet.xml" value="0.36875" />
+        <entry key="app/src/main/res/layout/checkpoint_dialog.xml" value="0.2984375" />
         <entry key="app/src/main/res/layout/fragment_activity_me.xml" value="0.36875" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.19791666666666666" />
         <entry key="app/src/main/res/layout/fragment_me.xml" value="0.21197916666666666" />

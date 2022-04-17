@@ -30,9 +30,9 @@
             android:id="@+id/checkpoint_pace"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="現時点で上位4％です"
+            android:text="上位4％です"
             android:fontFamily="@font/noto_sans_jp_regular"
-            android:textSize="24dp"
+            android:textSize="20dp"
             android:layout_gravity="center"
             >
         </TextView>

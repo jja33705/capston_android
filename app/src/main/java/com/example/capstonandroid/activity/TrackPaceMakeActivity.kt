@@ -719,7 +719,7 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
                             val latLng = intent?.getParcelableExtra<LatLng>(TrackPaceMakeService.LAT_LNG)!!
 
                             val distance = intent?.getDoubleExtra(TrackPaceMakeService.DISTANCE, 0.0)
-                            binding.tvDistance.text = Utils.distanceToText(distance)
+                            binding.tvDistance.text = String.format("%.2f", distance)
 
                             val speed = intent?.getFloatExtra(TrackPaceMakeService.SPEED, 0F)
                             myMarkerIconTextView.text = Utils.speedToText(speed)
@@ -740,6 +740,7 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
                                     predictLocation()
                                 }.join()
 
+                                 // 예상 지점
 //                                mGoogleMap.addMarker(MarkerOptions().position(LatLng(track.gps.coordinates[TrackPaceMakeService.myLocationIndexOnTrack][1], track.gps.coordinates[TrackPaceMakeService.myLocationIndexOnTrack][0])))
 
                                 // 끝에 도착했는지 여기서 체크하자

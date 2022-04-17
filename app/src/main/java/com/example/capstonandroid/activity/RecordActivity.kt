@@ -366,7 +366,7 @@ class RecordActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.Snapsh
                         val latLng = intent?.getParcelableExtra<LatLng>(RecordService.LAT_LNG)!!
 
                         val distance = intent?.getDoubleExtra(RecordService.DISTANCE, 0.0)
-                        binding.tvDistance.text = Utils.distanceToText(distance)
+                        binding.tvDistance.text = String.format("%.2f", distance)
 
                         mLocationMarker?.position = latLng // 마커 이동
                         mLocationBack?.position = latLng

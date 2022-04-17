@@ -130,7 +130,7 @@ class RecordService : Service() {
                     }
 
                     // 거리 구해줌
-                    distance += beforeLocation.distanceTo(mLocation)
+                    distance += (beforeLocation.distanceTo(mLocation) / 1000)
                     println("거리: $distance")
 
                     beforeLocation = mLocation!!
@@ -141,8 +141,7 @@ class RecordService : Service() {
 
                 // 평균속도
                 if (second > 0) {
-                    avgSpeed = (distance / 1000) / (second.toDouble() / 3600)
-                    println(avgSpeed)
+                    avgSpeed = distance / (second.toDouble() / 3600)
                 }
 
                 // 칼로리
