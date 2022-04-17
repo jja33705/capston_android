@@ -109,7 +109,8 @@ class ActivityMeFragment : Fragment() {
                                 response.body()!!.data[i].created_at,
                                 response.body()!!.current_page,
                                 response.body()!!.data[i].img,
-                                response.body()!!.data[i].user.profile
+                                response.body()!!.data[i].user.profile,
+                                response.body()!!.data[i].likes.size
                             )
                         )
                     }
@@ -156,7 +157,8 @@ class ActivityMeFragment : Fragment() {
                                             response.body()!!.data[i].created_at,
                                             response.body()!!.current_page,
                                             response.body()!!.data[i].img,
-                                            response.body()!!.data[i].user.profile
+                                            response.body()!!.data[i].user.profile,
+                                            response.body()!!.data[i].likes.size
                                         )
                                     )
                                 }

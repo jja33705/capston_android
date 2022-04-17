@@ -51,6 +51,10 @@ class MeDetailsActivity : AppCompatActivity() {
     private var kind = "";
     
     private var username = "";
+
+
+    private var oppenent_name = ""
+    private var oppenent_kind = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_me_details)
@@ -116,6 +120,10 @@ class MeDetailsActivity : AppCompatActivity() {
                     kind = response.body()!!.data[data_num]!!.kind
                     username = response.body()!!.data[data_num]!!.user.name
 
+                    if(response.body()!!.data[data_num]!!.opponent_post==null){}else {
+                         oppenent_name = response.body()!!.data[data_num]!!.opponent_post.user.name
+                        oppenent_kind = response.body()!!.data[data_num]!!.opponent_post.kind
+                    }
                     val date = response.body()!!.data[data_num]!!.created_at // your date
 // date is already in Standard ISO format so you don't need custom formatted
 //                     val date = "2021-12-16T16:42:00.000000Z" // your date
@@ -136,11 +144,23 @@ class MeDetailsActivity : AppCompatActivity() {
 
                     binding.content.setText(content)
                     binding.calorie.setText("カロリー : "+calorie+" Cal")
-                    binding.kind.setText("種類 : " + kind)
+                    if(kind.equals("자유")) {
+                        binding.kind.setText("種類 : 自由")
+                    }else if(kind.equals("싱글")){
+                        binding.kind.setText("種類 : シングル")
+                    }else if(kind.equals("친선")){
+                        binding.kind.setText("種類 : 練習")
+                    }else if(kind.equals("랭크")){
+                        binding.kind.setText("種類 : ランク")
+                    }
                     binding.averageSpeed.setText("平均速度 : "+average_speed +" Km/h")
                     binding.altitude.setText("累積高度 : "+String.format("%.0f",altitude)+" m")
                     binding.distance.setText("累積距離 : "+String.format("%.2f",distance)+" Km")
 
+                    if(response.body()!!.data[data_num]!!.opponent_post==null){}else {
+                        binding.oppenent.visibility = View.VISIBLE
+                        binding.oppenent.setText(oppenent_name+"様と"+oppenent_kind+"をしました")
+                    }
                     println("콘텐츠"+content)
                     println("랭스"+range)
                     if(range=="private"){

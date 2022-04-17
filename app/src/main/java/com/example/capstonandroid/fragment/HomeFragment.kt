@@ -6,17 +6,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.RecyclerView
 import com.dj.loadingdialog.LoadingDialog
 import com.example.capstonandroid.R
 import com.example.capstonandroid.activity.SNSDetailsActivity
-import com.example.capstonandroid.adapter.RecyclerUserAdapter
 import com.example.capstonandroid.adapter.RecyclerUserAdapter2
 import com.example.capstonandroid.databinding.FragmentHomeBinding
 import com.example.capstonandroid.network.RetrofitClient
@@ -62,6 +60,13 @@ class HomeFragment : Fragment()  {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
+
+    fun refreshFragment(fragment: Fragment, fragmentManager: FragmentManager) {
+        var ft: FragmentTransaction = fragmentManager.beginTransaction()
+        ft.detach(fragment).attach(fragment).commit()
+    }
+
+//    refreshFragment(this, getFragmentManager())
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -123,7 +128,8 @@ class HomeFragment : Fragment()  {
                                 response.body()!!.current_page,
                                 response.body()!!.data[i].img,
 
-                                response.body()!!.data[i].user.profile
+                                response.body()!!.data[i].user.profile,
+                                response.body()!!.data[i].likes.size
                             )
                         )
                     }
@@ -176,7 +182,8 @@ class HomeFragment : Fragment()  {
                                             response.body()!!.data[i].created_at,
                                             response.body()!!.current_page,
                                             response.body()!!.data[i].img,
-                                            response.body()!!.data[i].user.profile
+                                            response.body()!!.data[i].user.profile,
+                                            response.body()!!.data[i].likes.size
 
 
                                         )

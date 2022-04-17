@@ -7,11 +7,13 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.capstonandroid.R
 import com.example.capstonandroid.network.RetrofitClient
 import com.example.capstonandroid.network.api.BackendApi
 import com.example.capstonandroid.network.dto.CommentData
 import kotlinx.android.synthetic.main.comment_item_view.view.*
+import kotlinx.android.synthetic.main.track_and_name.view.*
 import retrofit2.Retrofit
 import java.time.OffsetDateTime
 import java.time.ZonedDateTime
@@ -69,6 +71,30 @@ class RecyclerCommentAdapter(
             println( dateTime.format(formatter).toString()) // output : Dec 16, 2021 16:42
 //                     yyyy-MM-dd HH:mm:ss z
 
+            val defaultImage3 = R.drawable.profile
+
+            if(item.profile==null){
+                var url = ""
+
+                Glide.with(itemView.context)
+                    .load(url) // 불러올 이미지 url
+                    .placeholder(defaultImage3) // 이미지 로딩 시작하기 전 표시할 이미지
+                    .error(defaultImage3) // 로딩 에러 발생 시 표시할 이미지
+                    .fallback(defaultImage3) // 로드할 url 이 비어있을(null 등) 경우 표시할 이미지
+                    .into(itemView.imageView)
+
+            }else {
+
+                var url = item.profile
+
+                Glide.with(itemView.context)
+                    .load(url) // 불러올 이미지 url
+                    .placeholder(defaultImage3) // 이미지 로딩 시작하기 전 표시할 이미지
+                    .error(defaultImage3) // 로딩 에러 발생 시 표시할 이미지
+                    .fallback(defaultImage3) // 로드할 url 이 비어있을(null 등) 경우 표시할 이미지
+                    .into(itemView.imageView)
+            }
+
             view.findViewById<TextView>(R.id.user_created_at).text = dateTime.format(formatter).toString()
             view.user_updated_at.text = item.updated_at
             view.deleteButton.setOnClickListener {
@@ -76,6 +102,7 @@ class RecyclerCommentAdapter(
 
             }
             view.setOnClickListener(listener)
+
         }
 
     }

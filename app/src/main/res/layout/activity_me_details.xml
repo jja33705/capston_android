@@ -61,7 +61,7 @@
             android:src="@drawable/map" />
         <LinearLayout
             android:id="@+id/function_nav"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/imageView"
             android:layout_marginLeft="10dp"
@@ -100,6 +100,15 @@
                 android:layout_height="30dp"
                 android:src="@drawable/delete"
                 android:text="삭제"></ImageButton>
+
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/oppenent"
+                android:gravity="right"
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="~と ~をしました"></TextView>
         </LinearLayout>
 
 

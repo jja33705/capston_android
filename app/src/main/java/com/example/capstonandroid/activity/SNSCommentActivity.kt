@@ -92,7 +92,8 @@ class SNSCommentActivity : AppCompatActivity()
                                 response.body()!!.data[data_num].comment[i].content,
                                 response.body()!!.data[data_num].comment[i].created_at,
                                 response.body()!!.data[data_num].comment[i].updated_at,
-                                response.body()!!.data[data_num].comment[i].id
+                                response.body()!!.data[data_num].comment[i].id,
+                                response.body()!!.data[data_num].comment[i].user.profile
 
                             )
                         )
@@ -148,7 +149,8 @@ class SNSCommentActivity : AppCompatActivity()
                                         response.body()!!.data[data_num].comment[datasize-1].content,
                                         response.body()!!.data[data_num].comment[datasize-1].created_at,
                                         response.body()!!.data[data_num].comment[datasize-1].updated_at,
-                                        response.body()!!.data[data_num].comment[datasize-1].id
+                                        response.body()!!.data[data_num].comment[datasize-1].id,
+                                        response.body()!!.data[data_num].comment[datasize-1].user.profile
                                     )
                                 )
                                 binding.lstUser3.adapter = adapter

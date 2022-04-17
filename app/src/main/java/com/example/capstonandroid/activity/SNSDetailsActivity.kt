@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -45,6 +46,9 @@ class SNSDetailsActivity : AppCompatActivity() {
 
     private var username = "";
     private var userID = 0
+
+    private var oppenent_name = ""
+    private var oppenent_kind = ""
 
     lateinit var binding: ActivitySnsdetailsBinding
 
@@ -156,7 +160,10 @@ class SNSDetailsActivity : AppCompatActivity() {
                      content = response.body()!!.data[data_num]!!.content
                      username = response.body()!!.data[data_num]!!.user.name
 
-
+                     if(response.body()!!.data[data_num]!!.opponent_post==null){}else {
+//                         oppenent_name = response.body()!!.data[data_num]!!.opponent_post.user.name
+                         oppenent_kind = response.body()!!.data[data_num]!!.kind
+                     }
 
 
                     userID = response.body()!!.data[data_num]!!.user_id
@@ -188,12 +195,26 @@ class SNSDetailsActivity : AppCompatActivity() {
 
                      binding.content.setText(content)
                      binding.calorie.setText("カロリー : "+calorie+" Cal")
-                     binding.kind.setText("種類 : " + kind)
+                     if(kind.equals("자유")) {
+                         binding.kind.setText("種類 : 自由")
+                     }else if(kind.equals("싱글")){
+                         binding.kind.setText("種類 : シングル")
+                     }else if(kind.equals("친선")){
+                         binding.kind.setText("種類 : 練習")
+                     }else if(kind.equals("랭크")){
+                         binding.kind.setText("種類 : ランク")
+                     }
                      binding.averageSpeed.setText("平均速度 : "+average_speed +" Km/h")
                      binding.altitude.setText("累積高度 : "+String.format("%.0f",altitude)+" m")
                      binding.distance.setText("累積距離 : "+String.format("%.2f",distance)+" Km")
                      binding.username.setText(username)
                      binding.createdate.setText(dateTime.format(formatter).toString())
+
+                     if(response.body()!!.data[data_num]!!.opponent_post==null){}else {
+                         binding.oppenent.visibility = View.VISIBLE
+                         binding.oppenent.setText(oppenent_name+"様と"+oppenent_kind+"をしました")
+                     }
+
                  }  else{
                      println("실패함ㅋㅋ")
                      println(response.body())
