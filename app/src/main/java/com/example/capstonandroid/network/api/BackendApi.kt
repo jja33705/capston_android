@@ -121,4 +121,7 @@ interface BackendApi {
 
     @GET("tracks/checkPoint") // 체크포인트에서 보내는 요청
     suspend fun checkpoint(@Header("Authorization") token: String, @Query("checkPoint") checkPointIndex: Int, @Query("track_id") trackId: String, @Query("time") time: Int): Response<CheckpointResponse>
+
+    @GET("user") // 유저확인
+    suspend fun getUser(@Header("Authorization") token: String): Response<User>
 }

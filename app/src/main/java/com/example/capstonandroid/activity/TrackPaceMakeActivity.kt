@@ -822,9 +822,9 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
                         if (textToSpeechInitialized && (second % 30 == 0)) { // 초기화된 상태일때 30초 간격으로 페이스에 대해 음성 안내
                             val predictLocationDifference = TrackPaceMakeService.mySumDistanceOnTrack - TrackPaceMakeService.opponentSumDistanceOnTrack
                             if (predictLocationDifference >= 0) {
-                                textToSpeech.speak("${TrackPaceMakeService.opponentUserName}より やく ${predictLocationDifference.toInt()}メートルまえです。", TextToSpeech.QUEUE_ADD, null, "abc")
+                                textToSpeech.speak("${TrackPaceMakeService.opponentUserName}より やく ${predictLocationDifference.toInt()}メートル　まえです。", TextToSpeech.QUEUE_ADD, null, "abc")
                             } else {
-                                textToSpeech.speak("${TrackPaceMakeService.opponentUserName}より やく ${predictLocationDifference.toInt()*-1}メートルうしろです。", TextToSpeech.QUEUE_ADD, null, "abc")
+                                textToSpeech.speak("${TrackPaceMakeService.opponentUserName}より やく ${predictLocationDifference.toInt()*-1}メートル　うしろです。", TextToSpeech.QUEUE_ADD, null, "abc")
                             }
                         }
                     }
