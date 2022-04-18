@@ -57,10 +57,13 @@ interface BackendApi {
 
     @DELETE("post/{postID}")
 
-
     @POST("post/image")
     fun imageTest(@Header("Authorization") token : String ,
                   @Part images : MultipartBody.Part?): Call<Image>
+
+    @GET("record/type")
+    fun userExerciseRate(@Header("Authorization") token :String): Call<UserExerciseRateResponse>
+
 
 
 
