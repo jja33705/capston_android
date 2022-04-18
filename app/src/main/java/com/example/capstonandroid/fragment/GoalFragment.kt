@@ -93,63 +93,171 @@ class PersonalMeFragment : Fragment() {
 
 
                 if(user_riding==0.0&&user_running==0.0)
-                {
+                { println("정보가 없어요~")
                 }else if(user_riding==0.0){
                     entries.add(PieEntry(user_running.toFloat(),"달리기"))
+
+                    val colorsItems = ArrayList<Int>()
+                    colorsItems.add(ColorTemplate.rgb("#6fcdcd"))
+                    colorsItems.add(ColorTemplate.getHoloBlue())
+
+                    val pieDataSet = PieDataSet(entries,"")
+                    pieDataSet.apply {
+                        colors = colorsItems
+                        valueTextColor = Color.BLACK
+                        valueTextSize = 14f
+
+                    }
+                    val pieData = PieData(pieDataSet)
+                    binding.userExerciseChart.apply {
+                        data = pieData
+                        description.isEnabled = false
+                        isRotationEnabled = false
+                        centerText = "나의 운동 비율"
+                        setCenterTextSize(14f)
+                        setEntryLabelColor(Color.BLACK)
+
+                        setTouchEnabled(false) // 그래프 터치해도 아무 변화없게 막음
+                        animateY(1000,Easing.EaseInOutQuad)
+                        animate()
+                    }
+
+                    binding.userGoalRunning.apply {
+                        data = pieData
+                        description.isEnabled = false
+                        isRotationEnabled = false
+                        centerText = "나의 운동 비율"
+                        setCenterTextSize(14f)
+                        setEntryLabelColor(Color.BLACK)
+
+                        setTouchEnabled(false) // 그래프 터치해도 아무 변화없게 막음
+                        animateY(1000,Easing.EaseInOutQuad)
+                        animate()
+                    }
+
+                    binding.userGoalRidding.apply {
+                        data = pieData
+                        description.isEnabled = false
+                        isRotationEnabled = false
+                        centerText = "나의 운동 비율"
+                        setCenterTextSize(14f)
+                        setEntryLabelColor(Color.BLACK)
+
+                        setTouchEnabled(false) // 그래프 터치해도 아무 변화없게 막음
+                        animateY(1000,Easing.EaseInOutQuad)
+                        animate()
+                    }
                 }else if(user_running==0.0){
                     entries.add(PieEntry(user_riding.toFloat(),"자전거"))
-                }
 
-                val colorsItems = ArrayList<Int>()
-                colorsItems.add(ColorTemplate.rgb("#5db5ef"))
-                colorsItems.add(ColorTemplate.rgb("#6fcdcd"))
-                colorsItems.add(ColorTemplate.getHoloBlue())
 
-                val pieDataSet = PieDataSet(entries,"")
-                pieDataSet.apply {
-                    colors = colorsItems
-                    valueTextColor = Color.BLACK
-                    valueTextSize = 14f
+                    val colorsItems = ArrayList<Int>()
+                    colorsItems.add(ColorTemplate.rgb("#5db5ef"))
+                    colorsItems.add(ColorTemplate.getHoloBlue())
 
-                }
-                val pieData = PieData(pieDataSet)
-                binding.userExerciseChart.apply {
-                    data = pieData
-                    description.isEnabled = false
-                    isRotationEnabled = false
-                    centerText = "나의 운동 비율"
-                    setCenterTextSize(14f)
-                    setEntryLabelColor(Color.BLACK)
+                    val pieDataSet = PieDataSet(entries,"")
+                    pieDataSet.apply {
+                        colors = colorsItems
+                        valueTextColor = Color.BLACK
+                        valueTextSize = 14f
 
-                    setTouchEnabled(false) // 그래프 터치해도 아무 변화없게 막음
-                    animateY(1000,Easing.EaseInOutQuad)
-                    animate()
-                }
+                    }
+                    val pieData = PieData(pieDataSet)
+                    binding.userExerciseChart.apply {
+                        data = pieData
+                        description.isEnabled = false
+                        isRotationEnabled = false
+                        centerText = "나의 운동 비율"
+                        setCenterTextSize(14f)
+                        setEntryLabelColor(Color.BLACK)
 
-                binding.userGoalRunning.apply {
-                    data = pieData
-                    description.isEnabled = false
-                    isRotationEnabled = false
-                    centerText = "나의 운동 비율"
-                    setCenterTextSize(14f)
-                    setEntryLabelColor(Color.BLACK)
+                        setTouchEnabled(false) // 그래프 터치해도 아무 변화없게 막음
+                        animateY(1000,Easing.EaseInOutQuad)
+                        animate()
+                    }
 
-                    setTouchEnabled(false) // 그래프 터치해도 아무 변화없게 막음
-                    animateY(1000,Easing.EaseInOutQuad)
-                    animate()
-                }
+                    binding.userGoalRunning.apply {
+                        data = pieData
+                        description.isEnabled = false
+                        isRotationEnabled = false
+                        centerText = "나의 운동 비율"
+                        setCenterTextSize(14f)
+                        setEntryLabelColor(Color.BLACK)
 
-                binding.userGoalRidding.apply {
-                    data = pieData
-                    description.isEnabled = false
-                    isRotationEnabled = false
-                    centerText = "나의 운동 비율"
-                    setCenterTextSize(14f)
-                    setEntryLabelColor(Color.BLACK)
+                        setTouchEnabled(false) // 그래프 터치해도 아무 변화없게 막음
+                        animateY(1000,Easing.EaseInOutQuad)
+                        animate()
+                    }
 
-                    setTouchEnabled(false) // 그래프 터치해도 아무 변화없게 막음
-                    animateY(1000,Easing.EaseInOutQuad)
-                    animate()
+                    binding.userGoalRidding.apply {
+                        data = pieData
+                        description.isEnabled = false
+                        isRotationEnabled = false
+                        centerText = "나의 운동 비율"
+                        setCenterTextSize(14f)
+                        setEntryLabelColor(Color.BLACK)
+
+                        setTouchEnabled(false) // 그래프 터치해도 아무 변화없게 막음
+                        animateY(1000,Easing.EaseInOutQuad)
+                        animate()
+                    }
+                }else {
+
+
+                    entries.add(PieEntry(user_riding.toFloat(), "자전거"))
+                    entries.add(PieEntry(user_running.toFloat(), "달리기"))
+
+                    val colorsItems = ArrayList<Int>()
+                    colorsItems.add(ColorTemplate.rgb("#5db5ef"))
+                    colorsItems.add(ColorTemplate.rgb("#6fcdcd"))
+                    colorsItems.add(ColorTemplate.getHoloBlue())
+
+                    val pieDataSet = PieDataSet(entries, "")
+                    pieDataSet.apply {
+                        colors = colorsItems
+                        valueTextColor = Color.BLACK
+                        valueTextSize = 14f
+
+                    }
+                    val pieData = PieData(pieDataSet)
+                    binding.userExerciseChart.apply {
+                        data = pieData
+                        description.isEnabled = false
+                        isRotationEnabled = false
+                        centerText = "나의 운동 비율"
+                        setCenterTextSize(14f)
+                        setEntryLabelColor(Color.BLACK)
+
+                        setTouchEnabled(false) // 그래프 터치해도 아무 변화없게 막음
+                        animateY(1000, Easing.EaseInOutQuad)
+                        animate()
+                    }
+
+                    binding.userGoalRunning.apply {
+                        data = pieData
+                        description.isEnabled = false
+                        isRotationEnabled = false
+                        centerText = "나의 운동 비율"
+                        setCenterTextSize(14f)
+                        setEntryLabelColor(Color.BLACK)
+
+                        setTouchEnabled(false) // 그래프 터치해도 아무 변화없게 막음
+                        animateY(1000, Easing.EaseInOutQuad)
+                        animate()
+                    }
+
+                    binding.userGoalRidding.apply {
+                        data = pieData
+                        description.isEnabled = false
+                        isRotationEnabled = false
+                        centerText = "나의 운동 비율"
+                        setCenterTextSize(14f)
+                        setEntryLabelColor(Color.BLACK)
+
+                        setTouchEnabled(false) // 그래프 터치해도 아무 변화없게 막음
+                        animateY(1000, Easing.EaseInOutQuad)
+                        animate()
+                    }
                 }
             }
 
