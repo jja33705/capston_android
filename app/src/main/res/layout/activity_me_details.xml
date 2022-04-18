@@ -154,7 +154,7 @@
             android:fontFamily="@font/noto_sans_jp_regular"
             android:includeFontPadding="false"
             android:text="시간 : "
-            android:textSize="16sp"></TextView>
+            android:textSize="15sp"></TextView>
 
         <TextView
             android:id="@+id/calorie"
@@ -163,7 +163,7 @@
             android:fontFamily="@font/noto_sans_jp_regular"
             android:includeFontPadding="false"
             android:text="칼로리 : "
-            android:textSize="16sp"></TextView>
+            android:textSize="15sp"></TextView>
 
         <TextView
             android:id="@+id/kind"
@@ -172,7 +172,7 @@
             android:fontFamily="@font/noto_sans_jp_regular"
             android:includeFontPadding="false"
             android:text="종류 : "
-            android:textSize="16sp"></TextView>
+            android:textSize="15sp"></TextView>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -186,7 +186,7 @@
             android:fontFamily="@font/noto_sans_jp_regular"
             android:includeFontPadding="false"
             android:text="평균 속도 : "
-            android:textSize="16sp"></TextView>
+            android:textSize="15sp"></TextView>
 
         <TextView
             android:id="@+id/altitude"
@@ -195,7 +195,7 @@
             android:fontFamily="@font/noto_sans_jp_regular"
             android:includeFontPadding="false"
             android:text="고도 : "
-            android:textSize="16sp"></TextView>
+            android:textSize="15sp"></TextView>
         <TextView
             android:id="@+id/distance"
             android:layout_width="wrap_content"
@@ -203,7 +203,7 @@
             android:fontFamily="@font/noto_sans_jp_regular"
             android:includeFontPadding="false"
             android:text="거리 : "
-            android:textSize="16sp"></TextView>
+            android:textSize="15sp"></TextView>
 
     </LinearLayout>
 </LinearLayout>
