@@ -116,6 +116,9 @@ interface BackendApi {
     @GET("ranking/track") // 트랙 랭킹 받기
     suspend fun getRanking(@Header("Authorization") token: String, @Query("track_id") id: String, @Query("page") page: Int): Response<RankingResponse>
 
+    @GET("ranking/myRank") // 트랙에 내 순위
+    suspend fun getMyRanking(@Header("Authorization") token: String, @Query("track_id") id: String): Response<MyRankingResponse>
+
     @GET("tracks/checkPoint") // 체크포인트에서 보내는 요청
     suspend fun checkpoint(@Header("Authorization") token: String, @Query("checkPoint") checkPointIndex: Int, @Query("track_id") trackId: String, @Query("time") time: Int): Response<CheckpointResponse>
 }

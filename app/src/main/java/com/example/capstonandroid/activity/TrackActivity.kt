@@ -104,24 +104,44 @@ class TrackActivity : AppCompatActivity(), OnMapReadyCallback {
 
                 drawTrack() // 트랙 그림
 
-                // 랭킹 가져오기
-                val rankingResponse = supplementService.getRanking(token, trackId, 1)
-                if (rankingResponse.isSuccessful) {
-                    when (rankingResponse.code()) {
-                        200 -> {
-                            firstRank = rankingResponse.body()!!.data[0]
-
-                            binding.trackRankFirstName.text = firstRank.user.name
-                            binding.trackRankFirstTime.text = Utils.timeToText(firstRank.time)
-                        }
-                        204 -> { // 아직 달린 사람 아무도 없을 때
-                            binding.trackRankFirstLinearLayout.visibility = View.GONE
-                            binding.tvTrackNoRecord.visibility = View.VISIBLE
-                        }
-                    }
-                }
             } else {
                 // 통신에러발생했을경우 처리해야함
+            }
+
+            // 랭킹 가져오기
+            val rankingResponse = supplementService.getRanking(token, trackId, 1)
+            if (rankingResponse.isSuccessful) {
+                when (rankingResponse.code()) {
+                    200 -> {
+                        firstRank = rankingResponse.body()!!.data[0]
+
+                        binding.trackRankFirstName.text = firstRank.user.name
+                        binding.trackRankFirstTime.text = Utils.timeToText(firstRank.time)
+                    }
+                    204 -> { // 아직 달린 사람 아무도 없을 때
+                        binding.trackRankFirstLinearLayout.visibility = View.GONE
+                        binding.tvTrackNoRecord.visibility = View.VISIBLE
+                    }
+                }
+            }
+
+            // 내 랭킹 가져오기
+            val myRankingResponse = supplementService.getMyRanking(token, trackId)
+            if (myRankingResponse.isSuccessful) {
+                when (myRankingResponse.code()) {
+                    200 -> {
+                        val myRankingPost = myRankingResponse.body()!!.post
+                        binding.tvMyAvgSpeed.text = "${myRankingPost.average_speed}km/h"
+                        binding.tvMyDate.text = myRankingPost.date
+                        binding.tvMyTime.text = Utils.timeToText(myRankingPost.time)
+                        binding.tvMyRank.text = myRankingResponse.body()!!.rank.toString()
+                        binding.tvMyTitle.text = myRankingPost.title
+
+                        binding.linearLayoutMyRanking.visibility = View.VISIBLE
+                    }
+                    204 -> {
+                    }
+                }
             }
         }
     }

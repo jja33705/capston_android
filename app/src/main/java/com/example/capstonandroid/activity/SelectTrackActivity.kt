@@ -27,7 +27,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.capstonandroid.*
 import com.example.capstonandroid.R
 import com.example.capstonandroid.adapter.FriendlyMatchingRecyclerViewAdapter
-import com.example.capstonandroid.adapter.RankingRecyclerViewAdapter
 import com.example.capstonandroid.databinding.ActivitySelectTrackBinding
 import com.example.capstonandroid.network.dto.Track
 import com.example.capstonandroid.network.api.BackendApi
