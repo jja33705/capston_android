@@ -42,13 +42,14 @@
                 android:text="목표 : 10km"
                 android:gravity="center">
             </TextView>
+
             <TextView
                 android:id="@+id/RunningStartDate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="시작일 : 2022-04-17"
-                android:gravity="center">
-            </TextView>
+                android:gravity="center"
+                android:text="시작일 : 2022-04-17"></TextView>
+
             <TextView
                 android:id="@+id/RunningEndDate"
                 android:layout_width="match_parent"
