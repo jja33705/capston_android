@@ -341,6 +341,7 @@ class MeDetailsActivity : AppCompatActivity() {
                                 binding.editButton.visibility = View.GONE
                             }
                             else{}
+                            finish()
                         }
 
                         override fun onFailure(call: Call<Int>, t: Throwable) {
