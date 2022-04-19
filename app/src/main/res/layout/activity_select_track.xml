@@ -56,14 +56,14 @@
     <LinearLayout
         android:id="@+id/bottom_sheet"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="500dp"
         android:background="@drawable/bottom_sheet_background"
         android:elevation="40dp"
         android:orientation="vertical"
         android:paddingHorizontal="16dp"
         android:paddingBottom="16dp"
         app:behavior_hideable="true"
-        app:behavior_peekHeight="200dp"
+        app:behavior_peekHeight="400dp"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
         <ImageView
@@ -235,6 +235,32 @@
                         android:textColor="@color/white"
                         >
                     </Button>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="私の点数: "
+                            android:fontFamily="@font/noto_sans_jp_regular"
+                            android:includeFontPadding="false"
+                            android:textColor="@color/black"
+                            >
+                        </TextView>
+                        <TextView
+                            android:id="@+id/tv_mmr"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="123"
+                            android:fontFamily="@font/noto_sans_jp_bold"
+                            android:includeFontPadding="false"
+                            android:textColor="@color/black"
+                            >
+                        </TextView>
+                    </LinearLayout>
 
                     <TextView
                         android:drawableLeft="@drawable/alert_icon"

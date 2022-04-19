@@ -122,6 +122,15 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, SelectExerc
         trackMarker = LayoutInflater.from(this).inflate(R.layout.track_and_name, null)!!
         trackMarkerTextView = trackMarker.findViewById(R.id.tv_marker) as TextView
 
+        // 내 mmr 기입
+        CoroutineScope(Dispatchers.Main).launch {
+            val token = "Bearer " + getSharedPreferences("other", MODE_PRIVATE).getString("TOKEN", "")!!
+            val userResponse = supplementService.getUser(token)
+            if (userResponse.isSuccessful) {
+                binding.tvMmr.text = userResponse.body()!!.mmr.toString()
+            }
+        }
+
         // 운동 종목 버튼 초기화
         binding.btnSelectExerciseKind.setOnClickListener {
             val selectedId = when (exerciseKind) {
@@ -159,6 +168,7 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, SelectExerc
             startActivity(intent)
             finish()
         }
+
         // 친선전 눌렀을때 리스너 등록
         binding.buttonFriendly.setOnClickListener {
             CoroutineScope(Dispatchers.Main).launch {
