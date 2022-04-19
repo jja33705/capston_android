@@ -64,8 +64,8 @@ interface BackendApi {
     @GET("record/type")
     fun userExerciseRate(@Header("Authorization") token :String): Call<UserExerciseRateResponse>
 
-
-
+    @GET("goal/check")
+    fun userGoalCheck(@Header("Authorization") token : String) : Call<UserGoalCheckResponse>
 
 
 //  재현 코드

@@ -29,25 +29,28 @@
             android:layout_weight="1"
             android:orientation="vertical">
             <com.github.mikephil.charting.charts.PieChart
-                android:id="@+id/userGoalRidding"
+                android:id="@+id/userGoalRunning"
                 android:layout_width="match_parent"
                 android:layout_weight="1"
                 android:layout_height="250dp"
                 android:layout_margin="20dp" />
 
             <TextView
+                android:id="@+id/RunningGoal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="목표 : 10km"
                 android:gravity="center">
             </TextView>
             <TextView
+                android:id="@+id/RunningStartDate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="시작일 : 2022-04-17"
                 android:gravity="center">
             </TextView>
             <TextView
+                android:id="@+id/RunningEndDate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="종료일 : 2022-04-23"
@@ -62,7 +65,7 @@
             android:orientation="vertical">
 
             <com.github.mikephil.charting.charts.PieChart
-                android:id="@+id/userGoalRunning"
+                android:id="@+id/userGoalRiding"
                 android:layout_width="match_parent"
                 android:layout_weight="1"
                 android:layout_height="250dp"
@@ -70,18 +73,21 @@
 
 
             <TextView
+                android:id="@+id/RidingGoal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="목표 : 10km"
                 android:gravity="center">
             </TextView>
             <TextView
+                android:id="@+id/RidingStartDate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="시작일 : 2022-04-17"
                 android:gravity="center">
             </TextView>
             <TextView
+                android:id="@+id/RidingEndDate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="종료일 : 2022-04-23"
@@ -89,9 +95,5 @@
             </TextView>
 
         </LinearLayout>
-
-
-
     </LinearLayout>
-
 </LinearLayout>

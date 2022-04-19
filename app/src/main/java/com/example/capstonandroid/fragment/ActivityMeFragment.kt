@@ -74,7 +74,13 @@ class ActivityMeFragment : Fragment() {
         initRetrofit()
 ////      토큰 불러오기
 
-       page = 1       // 현재 페이지
+
+        return binding.root
+    }
+
+    override fun onStart() {
+        super.onStart()
+        page = 1       // 현재 페이지
         val sharedPreference = requireActivity().getSharedPreferences("other", 0)
 
 //      이 타입이 디폴트 값
@@ -180,9 +186,7 @@ class ActivityMeFragment : Fragment() {
 
             }
         })
-        return binding.root
     }
-
     private fun adapterOnClick(data: UserData) {
 
 //        Toast.makeText(requireContext(), "FunCall Clicked -> ID : ${data.title}, Name : ${data.name}", Toast.LENGTH_SHORT).show()
