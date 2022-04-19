@@ -223,110 +223,110 @@ class PersonalMeFragment : Fragment() {
 
 
 
-        supplementService.userGoalCheck(token).enqueue(object : Callback<UserGoalCheckResponse>{
-            @RequiresApi(Build.VERSION_CODES.O)
-            override fun onResponse(
-                call: Call<UserGoalCheckResponse>,
-                response: Response<UserGoalCheckResponse>
-            ) {
-
-                user_goal_running = response.body()!!.run[0]!!.progress.toDouble()
-                user_goal_running_title = response.body()!!.run[0]!!.title
-
-
-
-                user_goal_running_StartDate = response.body()!!.run[0]!!.firstDate
-                user_goal_running_EndDate = response.body()!!.run[0]!!.lastDate
-
-
-//                val dateParse = LocalDate.parse(user_goal_running_StartDate)
-//                val year : Int = dateParse.get(ChronoField.YEAR)
-//                println(year)
-//                val month : Int = dateParse.get(ChronoField.MONTH_OF_YEAR)
-//                println(month)
-//                val day : Int = dateParse.get(ChronoField.DAY_OF_MONTH)
-//                println(day)
-
-                var date = LocalDate.parse(user_goal_running_StartDate)
-                var formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy", Locale.KOREAN)
-
-                println(date.format(formatter).toString())
-                binding.RunningGoal.setText(user_goal_running_title)
-                binding.RunningStartDate.setText("시작 : "+user_goal_running_StartDate)
-                binding.RunningEndDate.setText("종료 : "+user_goal_running_EndDate)
-
-
-                entries2.add(PieEntry(user_goal_running.toFloat(),"달리기"))
-
-                val colorsItems2 = ArrayList<Int>()
-                colorsItems2.add(ColorTemplate.rgb("#6fcdcd"))
-                colorsItems2.add(ColorTemplate.getHoloBlue())
-
-                val pieDataSet2 = PieDataSet(entries2,"")
-                pieDataSet2.apply {
-                    colors = colorsItems2
-                    valueTextColor = Color.BLACK
-                    valueTextSize = 14f
-
-                }
-
-                val pieData2 = PieData(pieDataSet2)
-                binding.userGoalRunning.apply {
-                    data = pieData2
-
-                    description.isEnabled = false
-                    isRotationEnabled = false
-                    centerText = "나의 달리기 목표"
-                    setCenterTextSize(10f)
-                    setEntryLabelColor(Color.BLACK)
-
-                    setTouchEnabled(false) // 그래프 터치해도 아무 변화없게 막음
-                    animateY(1000, Easing.EaseInOutQuad)
-                    animate()
-                }
-
-
-                user_goal_riding = response.body()!!.bike[0]!!.progress.toDouble()
-                user_goal_riding_title = response.body()!!.bike[0]!!.title
-                user_goal_riding_StartDate = response.body()!!.bike[0]!!.firstDate
-                user_goal_riding_EndDate = response.body()!!.bike[0]!!.lastDate
-
-                entries3.add(PieEntry(user_goal_riding.toFloat(),"자전거"))
-
-                val colorsItems3 = ArrayList<Int>()
-                colorsItems3.add(ColorTemplate.rgb("#5db5ef"))
-                colorsItems3.add(ColorTemplate.getHoloBlue())
-
-                val pieDataSet3 = PieDataSet(entries3,"")
-                pieDataSet3.apply {
-                    colors = colorsItems3
-                    valueTextColor = Color.BLACK
-                    valueTextSize = 14f
-
-                }
-                val pieData3 = PieData(pieDataSet3)
-                binding.userGoalRiding.apply {
-                    data = pieData3
-                    description.isEnabled = false
-                    isRotationEnabled = false
-                    centerText = "나의 달리기 목표"
-                    setCenterTextSize(10f)
-                    setEntryLabelColor(Color.BLACK)
-
-                    setTouchEnabled(false) // 그래프 터치해도 아무 변화없게 막음
-                    animateY(1000, Easing.EaseInOutQuad)
-                    animate()
-                }
-
-
-                binding.RidingGoal.setText(user_goal_riding_title)
-                binding.RidingStartDate.setText("시작 : "+user_goal_riding_StartDate)
-                binding.RidingEndDate.setText("종료 : "+user_goal_riding_EndDate)
-            }
-
-            override fun onFailure(call: Call<UserGoalCheckResponse>, t: Throwable) {
-            }
-        })
+//        supplementService.userGoalCheck(token).enqueue(object : Callback<UserGoalCheckResponse>{
+//            @RequiresApi(Build.VERSION_CODES.O)
+//            override fun onResponse(
+//                call: Call<UserGoalCheckResponse>,
+//                response: Response<UserGoalCheckResponse>
+//            ) {
+//
+//                user_goal_running = response.body()!!.run[0]!!.progress.toDouble()
+//                user_goal_running_title = response.body()!!.run[0]!!.title
+//
+//
+//
+//                user_goal_running_StartDate = response.body()!!.run[0]!!.firstDate
+//                user_goal_running_EndDate = response.body()!!.run[0]!!.lastDate
+//
+//
+////                val dateParse = LocalDate.parse(user_goal_running_StartDate)
+////                val year : Int = dateParse.get(ChronoField.YEAR)
+////                println(year)
+////                val month : Int = dateParse.get(ChronoField.MONTH_OF_YEAR)
+////                println(month)
+////                val day : Int = dateParse.get(ChronoField.DAY_OF_MONTH)
+////                println(day)
+//
+//                var date = LocalDate.parse(user_goal_running_StartDate)
+//                var formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy", Locale.KOREAN)
+//
+//                println(date.format(formatter).toString())
+//                binding.RunningGoal.setText(user_goal_running_title)
+//                binding.RunningStartDate.setText("시작 : "+user_goal_running_StartDate)
+//                binding.RunningEndDate.setText("종료 : "+user_goal_running_EndDate)
+//
+//
+//                entries2.add(PieEntry(user_goal_running.toFloat(),"달리기"))
+//
+//                val colorsItems2 = ArrayList<Int>()
+//                colorsItems2.add(ColorTemplate.rgb("#6fcdcd"))
+//                colorsItems2.add(ColorTemplate.getHoloBlue())
+//
+//                val pieDataSet2 = PieDataSet(entries2,"")
+//                pieDataSet2.apply {
+//                    colors = colorsItems2
+//                    valueTextColor = Color.BLACK
+//                    valueTextSize = 14f
+//
+//                }
+//
+//                val pieData2 = PieData(pieDataSet2)
+//                binding.userGoalRunning.apply {
+//                    data = pieData2
+//
+//                    description.isEnabled = false
+//                    isRotationEnabled = false
+//                    centerText = "나의 달리기 목표"
+//                    setCenterTextSize(10f)
+//                    setEntryLabelColor(Color.BLACK)
+//
+//                    setTouchEnabled(false) // 그래프 터치해도 아무 변화없게 막음
+//                    animateY(1000, Easing.EaseInOutQuad)
+//                    animate()
+//                }
+//
+//
+//                user_goal_riding = response.body()!!.bike[0]!!.progress.toDouble()
+//                user_goal_riding_title = response.body()!!.bike[0]!!.title
+//                user_goal_riding_StartDate = response.body()!!.bike[0]!!.firstDate
+//                user_goal_riding_EndDate = response.body()!!.bike[0]!!.lastDate
+//
+//                entries3.add(PieEntry(user_goal_riding.toFloat(),"자전거"))
+//
+//                val colorsItems3 = ArrayList<Int>()
+//                colorsItems3.add(ColorTemplate.rgb("#5db5ef"))
+//                colorsItems3.add(ColorTemplate.getHoloBlue())
+//
+//                val pieDataSet3 = PieDataSet(entries3,"")
+//                pieDataSet3.apply {
+//                    colors = colorsItems3
+//                    valueTextColor = Color.BLACK
+//                    valueTextSize = 14f
+//
+//                }
+//                val pieData3 = PieData(pieDataSet3)
+//                binding.userGoalRiding.apply {
+//                    data = pieData3
+//                    description.isEnabled = false
+//                    isRotationEnabled = false
+//                    centerText = "나의 달리기 목표"
+//                    setCenterTextSize(10f)
+//                    setEntryLabelColor(Color.BLACK)
+//
+//                    setTouchEnabled(false) // 그래프 터치해도 아무 변화없게 막음
+//                    animateY(1000, Easing.EaseInOutQuad)
+//                    animate()
+//                }
+//
+//
+//                binding.RidingGoal.setText(user_goal_riding_title)
+//                binding.RidingStartDate.setText("시작 : "+user_goal_riding_StartDate)
+//                binding.RidingEndDate.setText("종료 : "+user_goal_riding_EndDate)
+//            }
+//
+//            override fun onFailure(call: Call<UserGoalCheckResponse>, t: Throwable) {
+//            }
+//        })
 
 
 
