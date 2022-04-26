@@ -183,10 +183,6 @@ class LoginActivity : AppCompatActivity() {
 //        return super.onOptionsItemSelected(item)
 //    }
 
-    private fun makeRecyclerView(){
-
-    }
-
     private fun initRetrofit(){
         retrofit = RetrofitClient.getInstance()
         supplementService = retrofit.create(BackendApi::class.java);

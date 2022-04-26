@@ -21,6 +21,12 @@
         android:theme="@style/Theme.CapstonAndroid"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".activity.GoalBikeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.GoalRunActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.UserActivity"
             android:exported="false" />
         <activity

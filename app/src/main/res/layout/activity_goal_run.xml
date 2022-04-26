@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/run_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:hint="달리기 목표 제목을 입력하세요"/>
+
+
+
+        <EditText
+            android:id="@+id/run_goal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:hint="목표 거리를 입력하세요"/>
+        <Button
+            android:id="@+id/run_btnStartDate"
+            android:text="시작 날짜 선택"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"></Button>
+
+        <Button
+            android:id="@+id/run_btnEndDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="시작 날짜 선택"></Button>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/run_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="저장ㅋ"></Button>
+</LinearLayout>

@@ -62,30 +62,30 @@ class IntroActivity : AppCompatActivity() {
 
 
                 if(autologin=="true"){
-                supplementService.userGet(token).enqueue(object : Callback<LoginUserResponse> {
+                    supplementService.userGet(token).enqueue(object : Callback<LoginUserResponse> {
 
-                    override fun onResponse(
-                        call: Call<LoginUserResponse>,
-                        response: Response<LoginUserResponse>
-                    ) {
-                        if(response.isSuccessful){
-                            println(response.body())
-                            println("로그인이 되버렸어요")
+                        override fun onResponse(
+                            call: Call<LoginUserResponse>,
+                            response: Response<LoginUserResponse>
+                        ) {
+                            if(response.isSuccessful){
+                                println(response.body())
+                                println("로그인이 되버렸어요")
 //                  로그인 토큰 인증이 되면???
-                            startActivity(mainIntent)
-                        }else {
-                            println("로그인이 되지않아요..")
+                                startActivity(mainIntent)
+                            }else {
+                                println("로그인이 되지않아요..")
 //                  로그인 토큰 인증이 되지않으면?????
-                            println(response.message())
-                            println(response.body())
+                                println(response.message())
+                                println(response.body())
+                                startActivity(loginIntent)
+                            }
+                        }
+                        override fun onFailure(call: Call<LoginUserResponse>, t: Throwable) {
+                            println("아 아예 실패해버렸어요!")
                             startActivity(loginIntent)
                         }
-                    }
-                    override fun onFailure(call: Call<LoginUserResponse>, t: Throwable) {
-                        println("아 아예 실패해버렸어요!")
-                        startActivity(loginIntent)
-                    }
-                })}else{
+                    })}else{
 
                     startActivity(loginIntent)
                 }
