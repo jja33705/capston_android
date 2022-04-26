@@ -1,13 +1,21 @@
 package com.example.capstonandroid.fragment
 
+import android.content.DialogInterface
+import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import com.example.capstonandroid.R
+import com.example.capstonandroid.activity.GoalBikeActivity
+import com.example.capstonandroid.activity.GoalRunActivity
+import com.example.capstonandroid.activity.MainActivity
 import com.example.capstonandroid.databinding.FragmentGoalBinding
 import com.example.capstonandroid.network.RetrofitClient
 import com.example.capstonandroid.network.api.BackendApi
@@ -22,13 +30,6 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
-import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.OffsetDateTime
-import java.time.ZonedDateTime
-import java.time.format.DateTimeFormatter
-import java.time.temporal.ChronoField
-import java.util.*
 
 
 private const val ARG_PARAM1 = "param1"
@@ -108,12 +109,14 @@ class PersonalMeFragment : Fragment() {
                 call: Call<UserExerciseRateResponse>,
                 response: Response<UserExerciseRateResponse>
             ) {
-                    user_riding = response.body()!!.B
-                    user_running = response.body()!!.R
-
+//                    user_riding = response.body()!!.B
+//                    user_running = response.body()!!.R
 
                 if(user_riding==0.0&&user_running==0.0){
                     println("정보가 없어요~")
+                    binding.userExerciseChart.visibility = View.GONE
+                    binding.message3.visibility = View.VISIBLE
+
                 }
 //              라이딩 정보가 없을떄?
                 else if(user_riding==0.0){
@@ -143,12 +146,11 @@ class PersonalMeFragment : Fragment() {
                         animateY(1000,Easing.EaseInOutQuad)
                         animate()
                     }
+
 //              러닝 정보가 없을때..
                 }else if(user_running==0.0){
                     entries.add(PieEntry(user_riding.toFloat(),"자전거"))
 
-//                    entries.add(PieEntry(80f, "자전거"))
-//                    entries.add(PieEntry(20f, "달리기"))
                     val colorsItems = ArrayList<Int>()
                     colorsItems.add(ColorTemplate.rgb("#5db5ef"))
                     colorsItems.add(ColorTemplate.getHoloBlue())
@@ -230,14 +232,22 @@ class PersonalMeFragment : Fragment() {
                 response: Response<UserGoalCheckResponse>
             ) {
 
-                user_goal_running = response.body()!!.run[0]!!.progress.toDouble()
-                user_goal_running_title = response.body()!!.run[0]!!.title
 
+                if(response.body()!!.run.size==0){
+                    binding.runLayout.visibility = View.GONE
+                    binding.runLayoutEdit.visibility = View.VISIBLE
+                }
+                else {
 
+                    binding.runLayout.visibility = View.VISIBLE
+                    binding.runLayoutEdit.visibility = View.GONE
 
-                user_goal_running_StartDate = response.body()!!.run[0]!!.firstDate
-                user_goal_running_EndDate = response.body()!!.run[0]!!.lastDate
+                    user_goal_running = response.body()!!.run[0]?.progress.toDouble()
+                    user_goal_running_title = response.body()!!.run[0]?.title
 
+                    user_goal_running_StartDate = response.body()!!.run[0]!!.firstDate
+                    user_goal_running_EndDate = response.body()!!.run[0]!!.lastDate
+                }
 
 //                val dateParse = LocalDate.parse(user_goal_running_StartDate)
 //                val year : Int = dateParse.get(ChronoField.YEAR)
@@ -246,20 +256,21 @@ class PersonalMeFragment : Fragment() {
 //                println(month)
 //                val day : Int = dateParse.get(ChronoField.DAY_OF_MONTH)
 //                println(day)
-
-                var date = LocalDate.parse(user_goal_running_StartDate)
-                var formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy", Locale.KOREAN)
-
-                println(date.format(formatter).toString())
+//
+//                var date = LocalDate.parse(user_goal_running_StartDate)
+//                var formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy", Locale.KOREAN)
+//
+//                println(date.format(formatter).toString())
                 binding.RunningGoal.setText(user_goal_running_title)
                 binding.RunningStartDate.setText("시작 : "+user_goal_running_StartDate)
                 binding.RunningEndDate.setText("종료 : "+user_goal_running_EndDate)
 
 
                 entries2.add(PieEntry(user_goal_running.toFloat(),"달리기"))
-
+                entries2.add(PieEntry(100-user_goal_running.toFloat(),"남은 목표"))
                 val colorsItems2 = ArrayList<Int>()
                 colorsItems2.add(ColorTemplate.rgb("#6fcdcd"))
+                colorsItems2.add(ColorTemplate.rgb("#dcdcdc"))
                 colorsItems2.add(ColorTemplate.getHoloBlue())
 
                 val pieDataSet2 = PieDataSet(entries2,"")
@@ -273,28 +284,39 @@ class PersonalMeFragment : Fragment() {
                 val pieData2 = PieData(pieDataSet2)
                 binding.userGoalRunning.apply {
                     data = pieData2
-
                     description.isEnabled = false
                     isRotationEnabled = false
                     centerText = "나의 달리기 목표"
                     setCenterTextSize(10f)
                     setEntryLabelColor(Color.BLACK)
-
+                    maxAngle
                     setTouchEnabled(false) // 그래프 터치해도 아무 변화없게 막음
                     animateY(1000, Easing.EaseInOutQuad)
                     animate()
                 }
 
 
+                if(response.body()!!.bike.size==0){
+                    binding.bikeLayout.visibility = View.GONE
+                    binding.bikeLayoutEdit.visibility = View.VISIBLE
+                }
+
+
+                else {
+                    binding.bikeLayout.visibility = View.VISIBLE
+                    binding.bikeLayoutEdit.visibility = View.GONE
+
                 user_goal_riding = response.body()!!.bike[0]!!.progress.toDouble()
                 user_goal_riding_title = response.body()!!.bike[0]!!.title
                 user_goal_riding_StartDate = response.body()!!.bike[0]!!.firstDate
                 user_goal_riding_EndDate = response.body()!!.bike[0]!!.lastDate
 
+                }
                 entries3.add(PieEntry(user_goal_riding.toFloat(),"자전거"))
-
+                entries3.add(PieEntry(100-user_goal_riding.toFloat(),"남은 목표"))
                 val colorsItems3 = ArrayList<Int>()
                 colorsItems3.add(ColorTemplate.rgb("#5db5ef"))
+                colorsItems3.add(ColorTemplate.rgb("#dcdcdc"))
                 colorsItems3.add(ColorTemplate.getHoloBlue())
 
                 val pieDataSet3 = PieDataSet(entries3,"")
@@ -328,8 +350,18 @@ class PersonalMeFragment : Fragment() {
             }
         })
 
+        binding.runButton.setOnClickListener {
 
+            val nextIntent = Intent(requireContext(), GoalRunActivity::class.java)
 
+            startActivity(nextIntent)
+        }
+        binding.bikeButton.setOnClickListener {
+
+            val nextIntent = Intent(requireContext(), GoalBikeActivity::class.java)
+
+            startActivity(nextIntent)
+        }
     }
     companion object {
 

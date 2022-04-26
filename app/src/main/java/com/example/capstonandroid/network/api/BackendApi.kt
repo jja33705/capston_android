@@ -61,11 +61,16 @@ interface BackendApi {
     fun imageTest(@Header("Authorization") token : String ,
                   @Part images : MultipartBody.Part?): Call<Image>
 
-    @GET("record/type")
+    @GET("record/type") //운동 비율
     fun userExerciseRate(@Header("Authorization") token :String): Call<UserExerciseRateResponse>
 
-    @GET("goal/check")
+    @GET("goal/check")  //목표 체크
     fun userGoalCheck(@Header("Authorization") token : String) : Call<UserGoalCheckResponse>
+
+    @POST("goal") // 댓글 등록..
+    fun goal(@Header("Authorization")token: String,@Body goal: Goal) : Call<GoalResponse>
+
+
 
 
 //  재현 코드

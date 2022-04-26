@@ -9,91 +9,183 @@
     <LinearLayout
         android:layout_width="250dp"
         android:layout_height="250dp"
+        android:orientation="vertical"
         android:layout_gravity="center">
         <com.github.mikephil.charting.charts.PieChart
+
             android:id="@+id/userExerciseChart"
             android:layout_gravity="center"
             android:layout_width="match_parent"
             android:layout_height="250dp"
             android:layout_margin="10dp" />
+        <TextView
+            android:visibility="gone"
+            android:id="@+id/message3"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:fontFamily="@font/noto_sans_jp_bold"
+            android:text="活動記録がありません。"
+            android:textSize="18sp">
+
+        </TextView>
 
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="horizontal"
+        android:layout_weight="1"
+        android:gravity="center"
         android:layout_gravity="center">
         <LinearLayout
+            android:id="@+id/run_layout_edit"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:visibility="gone"
             android:layout_weight="1"
+            android:layout_height="match_parent"
             android:orientation="vertical">
-            <com.github.mikephil.charting.charts.PieChart
-                android:id="@+id/userGoalRunning"
-                android:layout_width="match_parent"
-                android:layout_weight="1"
-                android:layout_height="250dp"
-                android:layout_margin="20dp" />
-
             <TextView
-                android:id="@+id/RunningGoal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="목표 : 10km"
-                android:gravity="center">
-            </TextView>
-
-            <TextView
-                android:id="@+id/RunningStartDate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:id="@+id/message"
+                android:layout_gravity="center"
                 android:gravity="center"
-                android:text="시작일 : 2022-04-17"></TextView>
-
-            <TextView
-                android:id="@+id/RunningEndDate"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="종료일 : 2022-04-23"
-                android:gravity="center">
+                android:text="ランニング目標がありません。"
+                android:textSize="12sp">
+
             </TextView>
 
+            <Button
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:id="@+id/run_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ランニング追加">
+
+
+            </Button>
         </LinearLayout>
+            <LinearLayout
+                android:id="@+id/run_layout"
+                android:layout_width="match_parent"
+                android:visibility="visible"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <com.github.mikephil.charting.charts.PieChart
+                    android:id="@+id/userGoalRunning"
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:layout_height="250dp"
+                    android:layout_margin="20dp" />
+
+                <TextView
+                    android:id="@+id/RunningGoal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="목표 : 10km"
+                    android:gravity="center">
+                </TextView>
+
+                <TextView
+                    android:id="@+id/RunningStartDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="시작일 : 2022-04-17"></TextView>
+
+                <TextView
+                    android:id="@+id/RunningEndDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="종료일 : 2022-04-23"
+                    android:gravity="center">
+                </TextView>
+            </LinearLayout>
+
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_weight="1"
+            android:visibility="visible"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <com.github.mikephil.charting.charts.PieChart
-                android:id="@+id/userGoalRiding"
+
+
+            <LinearLayout
+                android:id="@+id/bike_layout_edit"
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:orientation="vertical">
+            <TextView
+                android:id="@+id/message2"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="サイクリング目標がありません。"
+                android:textSize="12sp">
+
+            </TextView>
+
+            <Button
                 android:layout_weight="1"
-                android:layout_height="250dp"
-                android:layout_margin="20dp" />
+                android:id="@+id/bike_button"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="サイクリング追加">
+            </Button>
+
+            </LinearLayout>
 
 
-            <TextView
-                android:id="@+id/RidingGoal"
+            <LinearLayout
+                android:id="@+id/bike_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="목표 : 10km"
-                android:gravity="center">
-            </TextView>
-            <TextView
-                android:id="@+id/RidingStartDate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="시작일 : 2022-04-17"
-                android:gravity="center">
-            </TextView>
-            <TextView
-                android:id="@+id/RidingEndDate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="종료일 : 2022-04-23"
-                android:gravity="center">
-            </TextView>
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <com.github.mikephil.charting.charts.PieChart
+                    android:id="@+id/userGoalRiding"
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:layout_height="250dp"
+                    android:layout_margin="20dp" />
+
+
+                <TextView
+                    android:id="@+id/RidingGoal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="목표 : 10km"
+                    android:gravity="center">
+                </TextView>
+                <TextView
+                    android:id="@+id/RidingStartDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="시작일 : 2022-04-17"
+                    android:gravity="center">
+                </TextView>
+                <TextView
+                    android:id="@+id/RidingEndDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="종료일 : 2022-04-23"
+                    android:gravity="center">
+                </TextView>
+            </LinearLayout>
+
+
 
         </LinearLayout>
     </LinearLayout>

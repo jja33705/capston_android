@@ -17,9 +17,9 @@ object RetrofitClient {
     private var instance: Retrofit? = null
     private val gson = GsonBuilder().setLenient().create()
 //   https
-//private const val BASE_URL = "https://2yubi.shop/api/"
+private const val BASE_URL = "https://2yubi.shop/api/"
 //   http
-    private const val BASE_URL = "http://3.35.239.14/api/"
+//    private const val BASE_URL = "http://3.35.239.14/api/"
 
 //    private const val BASE_URL = "http://localhost:8000/api/"
 //    private const val BASE_URL = "http://10.0.2.2:8000/api/"
