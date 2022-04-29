@@ -1,5 +1,5 @@
 package com.example.capstonandroid.network.dto
 
-data class UserSearchResponse(
+data class Follower(
     val keyword: String
 )

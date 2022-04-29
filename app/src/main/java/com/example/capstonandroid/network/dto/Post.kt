@@ -25,5 +25,6 @@ data class Post(
     val track_id: Any,
     val updated_at: String,
     val user: User,
-    val user_id: Int
+    val user_id: Int,
+    val likeCheck : Boolean
 )

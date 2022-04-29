@@ -68,7 +68,7 @@ class RegisterActivity : AppCompatActivity() {
                 password = password.toString(),
                 sex = sex.toString(),
                 weight = weight.toString(),
-                profile = "https://run-images.s3.ap-northeast-2.amazonaws.com/image/cwAEPdfU9dIfQsrofPwFkR8GJWuqvtWAOmNpDpSx.png",
+                profile = "https://run-images.s3.ap-northeast-2.amazonaws.com/default-profile/KakaoTalk_Photo_2022-04-17-14-55-41.png",
                 birth = birth.toString(),
                 introduce = introduce.toString(),
                 location = location.toString()

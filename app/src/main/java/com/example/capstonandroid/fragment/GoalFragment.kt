@@ -1,5 +1,6 @@
 package com.example.capstonandroid.fragment
 
+import android.R
 import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
@@ -8,19 +9,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
-import com.example.capstonandroid.R
+import androidx.fragment.app.FragmentTransaction
 import com.example.capstonandroid.activity.GoalBikeActivity
 import com.example.capstonandroid.activity.GoalRunActivity
-import com.example.capstonandroid.activity.MainActivity
+import com.example.capstonandroid.activity.SelectTrackActivity
 import com.example.capstonandroid.databinding.FragmentGoalBinding
 import com.example.capstonandroid.network.RetrofitClient
 import com.example.capstonandroid.network.api.BackendApi
 import com.example.capstonandroid.network.dto.UserExerciseRateResponse
 import com.example.capstonandroid.network.dto.UserGoalCheckResponse
+import com.example.capstonandroid.network.dto.goalDeleteResponse
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
@@ -70,6 +71,10 @@ class PersonalMeFragment : Fragment() {
 
     }
 
+    override fun onResume() {
+        super.onResume()
+
+    }
     override fun onStart() {
         super.onStart()
 
@@ -89,12 +94,16 @@ class PersonalMeFragment : Fragment() {
         var user_goal_riding : Double = 0.0
 
         var user_goal_running_title : String = ""
+        var user_goal_running_Goal : Int  = 0
         var user_goal_running_StartDate : String = ""
         var user_goal_running_EndDate : String = ""
+        var user_goal_running_ID : Int = 0
 
         var user_goal_riding_title : String = ""
+        var user_goal_riding_Goal : Int  = 0
         var user_goal_riding_StartDate : String = ""
         var user_goal_riding_EndDate : String = ""
+        var user_goal_riding_ID : Int = 0
 
         binding.userExerciseChart.setUsePercentValues(true)
         binding.userGoalRiding.setUsePercentValues(true)
@@ -244,9 +253,10 @@ class PersonalMeFragment : Fragment() {
 
                     user_goal_running = response.body()!!.run[0]?.progress.toDouble()
                     user_goal_running_title = response.body()!!.run[0]?.title
-
+                    user_goal_running_Goal = response.body()!!.run[0]?.goalDistance
                     user_goal_running_StartDate = response.body()!!.run[0]!!.firstDate
                     user_goal_running_EndDate = response.body()!!.run[0]!!.lastDate
+                    user_goal_running_ID = response.body()!!.run[0].id
                 }
 
 //                val dateParse = LocalDate.parse(user_goal_running_StartDate)
@@ -261,7 +271,8 @@ class PersonalMeFragment : Fragment() {
 //                var formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy", Locale.KOREAN)
 //
 //                println(date.format(formatter).toString())
-                binding.RunningGoal.setText(user_goal_running_title)
+                binding.RunningTitle.setText(user_goal_running_title)
+                binding.RunningGoal.setText("목표 거리 : "+user_goal_running_Goal.toString()+"km")
                 binding.RunningStartDate.setText("시작 : "+user_goal_running_StartDate)
                 binding.RunningEndDate.setText("종료 : "+user_goal_running_EndDate)
 
@@ -277,7 +288,7 @@ class PersonalMeFragment : Fragment() {
                 pieDataSet2.apply {
                     colors = colorsItems2
                     valueTextColor = Color.BLACK
-                    valueTextSize = 14f
+                    valueTextSize = 2f
 
                 }
 
@@ -287,7 +298,7 @@ class PersonalMeFragment : Fragment() {
                     description.isEnabled = false
                     isRotationEnabled = false
                     centerText = "나의 달리기 목표"
-                    setCenterTextSize(10f)
+                    setCenterTextSize(8f)
                     setEntryLabelColor(Color.BLACK)
                     maxAngle
                     setTouchEnabled(false) // 그래프 터치해도 아무 변화없게 막음
@@ -308,8 +319,11 @@ class PersonalMeFragment : Fragment() {
 
                 user_goal_riding = response.body()!!.bike[0]!!.progress.toDouble()
                 user_goal_riding_title = response.body()!!.bike[0]!!.title
+
+                user_goal_riding_Goal = response.body()!!.bike[0]?.goalDistance
                 user_goal_riding_StartDate = response.body()!!.bike[0]!!.firstDate
                 user_goal_riding_EndDate = response.body()!!.bike[0]!!.lastDate
+                user_goal_riding_ID = response.body()!!.bike[0].id
 
                 }
                 entries3.add(PieEntry(user_goal_riding.toFloat(),"자전거"))
@@ -323,7 +337,7 @@ class PersonalMeFragment : Fragment() {
                 pieDataSet3.apply {
                     colors = colorsItems3
                     valueTextColor = Color.BLACK
-                    valueTextSize = 14f
+                    valueTextSize = 2f
 
                 }
                 val pieData3 = PieData(pieDataSet3)
@@ -332,16 +346,15 @@ class PersonalMeFragment : Fragment() {
                     description.isEnabled = false
                     isRotationEnabled = false
                     centerText = "나의 달리기 목표"
-                    setCenterTextSize(10f)
+                    setCenterTextSize(8f)
                     setEntryLabelColor(Color.BLACK)
 
                     setTouchEnabled(false) // 그래프 터치해도 아무 변화없게 막음
                     animateY(1000, Easing.EaseInOutQuad)
                     animate()
                 }
-
-
-                binding.RidingGoal.setText(user_goal_riding_title)
+                binding.RidingTitle.setText(user_goal_riding_title)
+                binding.RidingGoal.setText("목표 거리 : "+user_goal_riding_Goal.toString()+"km")
                 binding.RidingStartDate.setText("시작 : "+user_goal_riding_StartDate)
                 binding.RidingEndDate.setText("종료 : "+user_goal_riding_EndDate)
             }
@@ -362,6 +375,62 @@ class PersonalMeFragment : Fragment() {
 
             startActivity(nextIntent)
         }
+
+        binding.userGoalRiding.setOnLongClickListener{
+
+            val builder = AlertDialog.Builder(requireContext())
+            builder.setTitle("本当に削除しますか。")
+                .setPositiveButton("はい", DialogInterface.OnClickListener{ dialog,id->
+                    supplementService.goalDelete(token,user_goal_riding_ID).enqueue(object : Callback<goalDeleteResponse> {
+                        override fun onResponse(call: Call<goalDeleteResponse>, response: Response<goalDeleteResponse>) {
+
+
+                            binding.bikeLayout.visibility = View.GONE
+                            binding.bikeLayoutEdit.visibility = View.VISIBLE
+
+
+                           }
+                        override fun onFailure(call: Call<goalDeleteResponse>, t: Throwable) {
+
+                        }
+                    })
+                })
+                .setNegativeButton("いいえ",DialogInterface.OnClickListener{ dialog,id ->
+                    println("취소 하셨네요")
+                })
+
+            builder.show()
+            true
+        }
+        binding.userGoalRunning.setOnLongClickListener{
+            val builder = AlertDialog.Builder(requireContext())
+            builder.setTitle("本当に削除しますか。")
+                .setPositiveButton("はい", DialogInterface.OnClickListener{ dialog,id->
+                    supplementService.goalDelete(token,user_goal_running_ID).enqueue(object : Callback<goalDeleteResponse> {
+                        override fun onResponse(call: Call<goalDeleteResponse>, response: Response<goalDeleteResponse>) {
+
+
+                            binding.runLayout.visibility = View.GONE
+                            binding.runLayoutEdit.visibility = View.VISIBLE
+                        }
+                        override fun onFailure(call: Call<goalDeleteResponse>, t: Throwable) {
+
+                        }
+                    })
+                })
+                .setNegativeButton("いいえ",DialogInterface.OnClickListener{ dialog,id ->
+                    println("취소 하셨네요")
+                })
+
+            builder.show()
+            true
+        }
+
+        binding.message3.setOnLongClickListener {
+            val intent = Intent(requireContext(), SelectTrackActivity::class.java)
+            startActivity(intent)
+            true
+        }
     }
     companion object {
 
@@ -375,7 +444,6 @@ class PersonalMeFragment : Fragment() {
             }
     }
 
-
     override fun onDestroy() {
         mBinding = null
         super.onDestroy()
@@ -386,3 +454,5 @@ class PersonalMeFragment : Fragment() {
         supplementService = retrofit.create(BackendApi::class.java);
     }
 }
+
+

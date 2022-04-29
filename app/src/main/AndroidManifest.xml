@@ -22,6 +22,9 @@
         android:usesCleartextTraffic="true">
 
         <activity
+            android:name=".activity.FollowerActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.GoalBikeActivity"
             android:exported="false" />
         <activity

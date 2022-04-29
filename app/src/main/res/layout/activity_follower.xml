@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/layout_shape">
+        <EditText
+            android:includeFontPadding="false"
+            android:fontFamily="@font/noto_sans_jp_black"
+            android:id="@+id/editText"
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@null"
+            android:hint="友達を検索してみましょう！"></EditText>
+
+        <Button
+            android:includeFontPadding="false"
+            android:fontFamily="@font/noto_sans_jp_black"
+            android:id="@+id/successButton"
+            android:textColor="@color/white"
+            android:layout_margin="10dp"
+            android:background="@drawable/search_icon"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:text="入力">
+
+        </Button>
+
+
+
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/follower_recyclerview"
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.52"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editText">
+
+    </androidx.recyclerview.widget.RecyclerView>
+</LinearLayout>

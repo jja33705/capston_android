@@ -87,6 +87,7 @@ class SNSDetailsActivity : AppCompatActivity() {
         println(token)
 
 
+
          supplementService.SNSIndex(token,data_page).enqueue(object : Callback<SNSResponse> {
              @RequiresApi(Build.VERSION_CODES.O)
              override fun onResponse(call: Call<SNSResponse>, response: Response<SNSResponse>) {
@@ -147,7 +148,15 @@ class SNSDetailsActivity : AppCompatActivity() {
                     binding.title.setText(response.body()!!.data[data_num]!!.title)
 //                     binding.content.setText(response.body()!!.data[data_num]!!.content)
 //                     println(response.body()!!.data[data_num]!!.likes.size)
-                    binding.like.setText("いいね！： "+response.body()!!.data[data_num]!!.likes.size.toString())
+
+                     if(response.body()!!.data[data_num].likeCheck===true){
+                        binding.likeButton.setImageResource(R.drawable.like_new2)
+                     }else{
+                         binding.likeButton.setImageResource(R.drawable.like_new3)
+                     }
+                     println("이건 어떻게 뜨노??"+response.body()!!.data[data_num].likeCheck.toString())
+                     println("이건 어떻게 뜨노??"+response.body()!!.data[data_num])
+                     binding.like.setText("いいね！： "+response.body()!!.data[data_num]!!.likes.size.toString())
                      postID = response.body()!!.data[data_num].id
                      println(postID)
 
@@ -246,11 +255,17 @@ class SNSDetailsActivity : AppCompatActivity() {
                                 if(response.isSuccessful){
                                     binding.like.setText("いいね！："+response.body()!!.data[data_num]!!.likes.size.toString())
 
+                                    if(response.body()!!.data[data_num].likeCheck===true){
+                                        binding.likeButton.setImageResource(R.drawable.like_new2)
+                                    }else{
+                                        binding.likeButton.setImageResource(R.drawable.like_new3)
+                                    }
                                 }  else{
                                     println("실패함ㅋㅋ")
                                     println(response.body())
                                     println(response.message())
                                 }
+
                             }
 
                             override fun onFailure(call: Call<SNSResponse>, t: Throwable) {
