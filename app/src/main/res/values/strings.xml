@@ -52,6 +52,8 @@
     <string name="upload_success">업로드 성공</string>
     <string name="upload_fail">업로드 실패</string>
 
+    <string name="fcm_notification_channel_id">12345</string>
+
     <!-- Toolbar -->
     <string name="back">Back</string>
 

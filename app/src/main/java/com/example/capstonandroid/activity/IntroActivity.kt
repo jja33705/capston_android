@@ -56,12 +56,12 @@ class IntroActivity : AppCompatActivity() {
                 var token = "Bearer " + sharedPreference.getString("TOKEN","")
                 println("token: $token")
 
-                var autologin = sharedPreference.getString("autologin","")
+                var autologin = sharedPreference.getBoolean("autologin", false)
                 println("autologin : $autologin")
 
 
 
-                if(autologin=="true"){
+                if(autologin){
                     supplementService.userGet(token).enqueue(object : Callback<LoginUserResponse> {
 
                         override fun onResponse(

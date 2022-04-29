@@ -20,6 +20,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CapstonAndroid"
         android:usesCleartextTraffic="true">
+
         <activity
             android:name=".activity.GoalBikeActivity"
             android:exported="false" />
@@ -44,10 +45,6 @@
         <activity
             android:name=".activity.TrackActivity"
             android:exported="false" />
-        <activity
-            android:name=".activity.RankMatchingActivity"
-            android:exported="false"
-            android:theme="@style/Theme.AppCompat.Light.Dialog" />
         <activity
             android:name=".activity.CountDownActivity"
             android:exported="false" />
@@ -83,6 +80,13 @@
             android:enabled="true"
             android:exported="true"
             android:foregroundServiceType="location" />
+        <service
+            android:name=".MyFirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
 
         <activity
             android:name=".activity.SelectTrackActivity"
@@ -116,6 +120,14 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="${MAPS_API_KEY}" />
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@mipmap/ic_main" />
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/main_color" />
     </application>
 
 </manifest>

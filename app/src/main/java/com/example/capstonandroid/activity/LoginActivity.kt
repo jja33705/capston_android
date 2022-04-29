@@ -42,11 +42,6 @@ class LoginActivity : AppCompatActivity() {
         // 함수 초기화
         initRetrofit()
 
-
-
-        val nextIntent = Intent(this, MainActivity::class.java)
-
-
         val sharedPreference = getSharedPreferences("other", MODE_PRIVATE)
 
 //      이 타입이 디폴트 값
@@ -86,26 +81,21 @@ class LoginActivity : AppCompatActivity() {
 
             val nextIntent = Intent(this, MainActivity::class.java)
 
-            if(binding.autoLoginCheckBox.isChecked.toString().equals("true")){
-
-                var autologin: String = "true"
+            if(binding.autoLoginCheckBox.isChecked){
 
                 val sharedPreference = getSharedPreferences("other", 0)
                 val editor = sharedPreference.edit()
-                editor.putString("autologin", autologin)
-                println("여긴 자동로그인 맞나 아닌가"+ autologin)
+                editor.putBoolean("autologin", true)
+                println("여긴 자동로그인 맞음")
                 editor.apply()
-                }else {
-
-                var autologin: String = "false"
-
+            }else {
                 val sharedPreference = getSharedPreferences("other", 0)
                 val editor = sharedPreference.edit()
-                editor.putString("autologin", autologin)
-                println("여긴 자동로그인 맞나 아닌가"+ autologin)
+                editor.putBoolean("autologin", false)
+                println("여긴 자동로그인 아님")
                 editor.apply()
 
-                }
+            }
 
             binding.forgotEmail.setOnClickListener {
 
