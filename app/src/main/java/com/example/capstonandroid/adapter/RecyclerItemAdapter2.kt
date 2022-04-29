@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -77,6 +78,7 @@ class RecyclerUserAdapter2(
             println("여긴 어디인가" + item.likesize.toString())
 
             if(item.likesize>0) {
+                view.findViewById<LinearLayout>(R.id.likelayout).visibility = View.VISIBLE
                 view.findViewById<TextView>(R.id.like2).visibility = View.VISIBLE
                 view.findViewById<TextView>(R.id.like2).text = "いいね！： " + item.likesize.toString()
             }

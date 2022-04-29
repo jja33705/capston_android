@@ -108,6 +108,7 @@ class GoalBikeActivity : AppCompatActivity() {
 //           최소 날짜를 현재 시각 이후로
             dpd.datePicker.minDate = System.currentTimeMillis() - 1000;
             dpd.show()
+
         }
 
         bike_save.setOnClickListener {

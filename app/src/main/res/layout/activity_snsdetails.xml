@@ -37,62 +37,64 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:layout_gravity="center_vertical">
+                android:layout_gravity="center_vertical"
+                android:orientation="horizontal">
+
                 <ImageView
                     android:id="@+id/profile"
-                    android:src="@drawable/profile"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:layout_gravity="center_vertical"
                     android:layout_marginRight="10dp"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"></ImageView>
+                    android:src="@drawable/profile"></ImageView>
+
                 <TextView
-                    android:includeFontPadding="false"
-                    android:fontFamily="@font/noto_sans_jp_black"
-                    android:text="홍길동"
-                    android:textSize="18sp"
-                    android:layout_gravity="center_vertical"
                     android:id="@+id/username"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="10dp">
-                </TextView>
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="10dp"
+                    android:fontFamily="@font/noto_sans_jp_black"
+                    android:includeFontPadding="false"
+                    android:text="홍길동"
+                    android:textSize="18sp"></TextView>
+
                 <Button
-                    android:visibility="gone"
+                    android:id="@+id/followbutton"
+                    android:layout_width="70dp"
+                    android:layout_height="40dp"
                     android:layout_gravity="center_vertical"
                     android:text="フォロー"
                     android:textSize="10sp"
-                    android:id="@+id/followbutton"
-                    android:layout_width="70dp"
-                    android:layout_height="40dp">
+                    android:visibility="gone">
 
                 </Button>
 
                 <TextView
-                    android:includeFontPadding="false"
-                    android:fontFamily="@font/noto_sans_jp_black"
-                    android:gravity="right"
-                    android:layout_gravity="center"
-                    android:layout_marginRight="10dp"
                     android:id="@+id/createdate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="10dp"
+                    android:fontFamily="@font/noto_sans_jp_black"
+                    android:gravity="right"
+                    android:includeFontPadding="false"
                     android:text="2022-04-13T04:57:26.119Z">
 
                 </TextView>
             </LinearLayout>
-           </LinearLayout>
+        </LinearLayout>
 
         <ImageView
-            android:background="@drawable/round_border2"
-            android:padding="7.5dp"
-            android:layout_gravity="center"
-            android:layout_width="wrap_content"
             android:id="@+id/imageView"
+            android:layout_width="wrap_content"
             android:layout_height="300dp"
             android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"/>
+            android:layout_marginRight="10dp"
+            android:background="@drawable/round_border2"
+            android:padding="7.5dp" />
 
         <LinearLayout
             android:id="@+id/function_nav"
@@ -115,11 +117,11 @@
             <ImageButton
                 android:id="@+id/likeButton"
                 android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_height="35dp"
                 android:layout_marginLeft="10dp"
                 android:background="#00000000"
                 android:scaleType="fitCenter"
-                android:src="@drawable/like" />
+                android:src="@drawable/like_new3" />
 
             <TextView
                 android:id="@+id/like"
@@ -138,30 +140,32 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="10dp">
+
             <TextView
-                android:includeFontPadding="false"
                 android:id="@+id/content"
-                android:fontFamily="@font/noto_sans_jp_black"
-                android:textSize="20sp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/noto_sans_jp_black"
+                android:includeFontPadding="false"
+                android:textSize="20sp">
 
             </TextView>
 
             <TextView
-                android:fontFamily="@font/noto_sans_jp_regular"
-                android:includeFontPadding="false"
-                android:paddingTop="5dp"
-                android:visibility="gone"
                 android:id="@+id/oppenent"
-                android:gravity="right"
-                android:layout_gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="~と ~をしました">
+                android:layout_gravity="center"
+                android:fontFamily="@font/noto_sans_jp_regular"
+                android:gravity="right"
+                android:includeFontPadding="false"
+                android:paddingTop="5dp"
+                android:text="~と ~をしました"
+                android:visibility="gone">
 
             </TextView>
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -170,8 +174,9 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:orientation="vertical">
+
                 <TextView
                     android:id="@+id/time"
                     android:layout_width="wrap_content"
@@ -199,11 +204,13 @@
                     android:text="종류 : "
                     android:textSize="15sp"></TextView>
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="vertical">
+
                 <TextView
                     android:id="@+id/average_speed"
                     android:layout_width="wrap_content"
@@ -223,6 +230,7 @@
                     android:includeFontPadding="false"
                     android:text="고도 : "
                     android:textSize="15sp"></TextView>
+
                 <TextView
                     android:id="@+id/distance"
                     android:layout_width="wrap_content"
@@ -255,15 +263,15 @@
                 android:textColor="@color/white"
                 android:visibility="gone"></Button>
 
-<!--            <Button-->
-<!--                android:id="@+id/backButton"-->
-<!--                android:layout_width="90dp"-->
-<!--                android:layout_height="30dp"-->
-<!--                android:background="@drawable/login_button"-->
-<!--                android:fontFamily="@font/noto_sans_jp_regular"-->
-<!--                android:includeFontPadding="false"-->
-<!--                android:text="뒤로가기"-->
-<!--                android:textColor="@color/white"></Button>-->
+            <!--            <Button-->
+            <!--                android:id="@+id/backButton"-->
+            <!--                android:layout_width="90dp"-->
+            <!--                android:layout_height="30dp"-->
+            <!--                android:background="@drawable/login_button"-->
+            <!--                android:fontFamily="@font/noto_sans_jp_regular"-->
+            <!--                android:includeFontPadding="false"-->
+            <!--                android:text="뒤로가기"-->
+            <!--                android:textColor="@color/white"></Button>-->
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

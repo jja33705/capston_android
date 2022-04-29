@@ -1,6 +1,7 @@
 package com.example.capstonandroid.fragment
 
 import android.content.Intent
+import android.graphics.Color
 import android.graphics.Rect
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,16 +12,21 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dj.loadingdialog.LoadingDialog
 import com.example.capstonandroid.R
 import com.example.capstonandroid.activity.SNSDetailsActivity
+import com.example.capstonandroid.adapter.Box
+import com.example.capstonandroid.adapter.MagneticAdapter
 import com.example.capstonandroid.adapter.RecyclerUserAdapter2
+import com.example.capstonandroid.adapter.SimpleData
 import com.example.capstonandroid.databinding.FragmentHomeBinding
 import com.example.capstonandroid.network.RetrofitClient
 import com.example.capstonandroid.network.api.BackendApi
 import com.example.capstonandroid.network.dto.SNSResponse
 import com.example.capstonandroid.network.dto.UserData
+import com.example.capstonandroid.setMagneticMove
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.Main
@@ -157,9 +163,66 @@ class HomeFragment : Fragment()  {
         var token = "Bearer " + sharedPreference.getString("TOKEN","")
         println("홈 프레그먼트"+token)
 
-
         val list = ArrayList<UserData>()
         val adapter = RecyclerUserAdapter2(list, { data -> adapterOnClick(data) })
+
+
+
+
+
+
+
+        val lst = mutableListOf<SimpleData>()
+        val colortable = listOf(Color.RED, Color.GRAY, Color.BLUE, Color.GREEN, Color.WHITE)
+        (0..colortable.size-1).forEach {
+            val item = Box(color = colortable.get( it % colortable.size), alpha = it * 0.1f % 1.0f )
+            lst.add( item as SimpleData )
+        }
+
+// 좌측에서 이동
+//recycler.setMagneticMove(dpToPx(60f) * -1)
+        recycler.setMagneticMove()
+
+        val manager = LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
+        recycler.layoutManager = manager
+        val adt = MagneticAdapter(lst, requireContext())
+        recycler.adapter = adt
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         supplementService.SNSIndex(token, page).enqueue(object : Callback<SNSResponse>{
             override fun onResponse(
@@ -203,6 +266,8 @@ class HomeFragment : Fragment()  {
                         }
                         lstUser.adapter = adapter
                         lstUser.addItemDecoration(DistanceItemDecorator(10))
+
+
 
                         page ++
                         println(page.toString() +"찍어보자")
@@ -283,8 +348,5 @@ class HomeFragment : Fragment()  {
         super.onResume()
         println("HomeFragment: onResume 호출")
     }
-
-
-
 
 }

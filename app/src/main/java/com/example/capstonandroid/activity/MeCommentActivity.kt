@@ -80,6 +80,8 @@ class MeCommentActivity : AppCompatActivity() {
         })
 
 
+
+
         supplementService.myIndex(token,data_page
         ).enqueue(object : Callback<MySNSResponse> {
             override fun onResponse(
@@ -98,7 +100,7 @@ class MeCommentActivity : AppCompatActivity() {
                                 response.body()!!.data[data_num].comment[i].created_at,
                                 response.body()!!.data[data_num].comment[i].updated_at,
                                 response.body()!!.data[data_num].comment[i].id,
-                                        response.body()!!.data[data_num].comment[i].user.profile
+                                response.body()!!.data[data_num].comment[i].user.profile
                             )
                         )
                     }

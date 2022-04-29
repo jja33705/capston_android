@@ -34,9 +34,6 @@ interface BackendApi {
     @GET("post/myIndex") // 내 기록 불러오기!
     fun myIndex(@Header("Authorization")token: String,@Query("page") page: Int): Call<MySNSResponse>
 
-    @POST("userSearch") // 유저 검색ㅋㅋ
-    fun userSearch(@Body userSearchResponse: UserSearchResponse) : Call<UserSearchResponse>
-
     @PUT("post/update/{postID}") // 자기 게시물 수정
     fun postUpdate(@Header("Authorization") token : String, @Path("postID")postID : Int, @Body update : Update) : Call<Int>
 
@@ -52,12 +49,10 @@ interface BackendApi {
     @POST("comment/store/{postID}") // 댓글 등록..
     fun commentSend(@Header("Authorization")token: String, @Path("postID") postID:Int,@Body commentSend: CommentSend) : Call<CommentSendResponse>
 
-    @POST("follow/{userID}")
-    fun userFollow(@Header("Authorization") token : String , @Path("postID") postID : Int) : Call<FollowResponse>
+    @POST("follow/{userID}") // 팔로우하기~!
+    fun userFollow(@Header("Authorization") token : String , @Path("userID") userID : Int) : Call<FollowResponse>
 
-    @DELETE("post/{postID}")
-
-    @POST("post/image")
+    @POST("post/image") // 이미지 테스트
     fun imageTest(@Header("Authorization") token : String ,
                   @Part images : MultipartBody.Part?): Call<Image>
 
@@ -70,7 +65,11 @@ interface BackendApi {
     @POST("goal") // 댓글 등록..
     fun goal(@Header("Authorization")token: String,@Body goal: Goal) : Call<GoalResponse>
 
+    @DELETE("goal/delete/{goalID}") // 자기 게시물 삭제
+    fun goalDelete(@Header("Authorization") token: String,@Path("goalID") goalID :Int ) : Call<goalDeleteResponse>
 
+    @GET("userSearch") //유저 검색!!!!!!!!!
+    fun userSearch(@Header("Authorization")token: String,@Query("keyword") keyword: String) : Call<FollowerResponse>
 
 
 //  재현 코드

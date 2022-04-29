@@ -2,18 +2,18 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="10dp"
-    android:layout_marginRight="10dp"
-    android:layout_marginLeft="10dp"
     android:orientation="vertical"
-    android:background="@drawable/round_border">
+    android:background="@drawable/snslayout">
+
 
     <LinearLayout
         android:layout_width="match_parent"
+        android:padding="10dp"
+        android:gravity="center_vertical"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_gravity="center_vertical"
-        android:layout_margin="5dp">
+        android:background="@drawable/snslayout"
+        android:layout_gravity="center_vertical">
         <ImageView
             android:id="@+id/userImage"
             android:layout_width="30dp"
@@ -28,47 +28,48 @@
             android:includeFontPadding="false"
             android:fontFamily="@font/noto_sans_jp_black"
             android:layout_margin="5dp"
-            android:gravity="center"
+            android:gravity="center_vertical"
             android:id="@+id/txtUser_name"
-            android:layout_width="wrap_content"
+            android:layout_width="115dp"
             android:layout_height="30dp"
             android:layout_gravity="center_vertical"
             android:textColor="#666666"
             android:textSize="18dp"></TextView>
         <TextView
-            android:gravity="right"
+            android:gravity="center"
             android:layout_gravity="center|center_vertical"
             android:includeFontPadding="false"
             android:fontFamily="@font/noto_sans_jp_black"
             android:id="@+id/txtUser_created_id"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:text="날짜"
             android:layout_marginRight="10dp"
             android:textColor="#666666"
             android:textSize="15dp" />
     </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_margin="5dp">
 
-            <TextView
-                android:text="제목"
-                android:includeFontPadding="false"
-                android:fontFamily="@font/noto_sans_jp_regular"
-                android:layout_margin="5dp"
-                android:id="@+id/txtUser_title"
-                android:maxLines="1"
-                android:ellipsize="end"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="2dp"
-                android:paddingTop="3dp"
-                android:paddingBottom="3dp"
-                android:textColor="#666666"
-                android:textSize="24dp" />
+                android:layout_height="wrap_content">
+                <TextView
+                    android:text="제목"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:includeFontPadding="false"
+                    android:fontFamily="@font/noto_sans_jp_regular"
+                    android:layout_margin="5dp"
+                    android:id="@+id/txtUser_title"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingTop="3dp"
+                    android:paddingBottom="10dp"
+                    android:textColor="#666666"
+                    android:textSize="24dp" />
+
+            </LinearLayout>
             <ImageView
 
                 android:background="@drawable/round_border2"
@@ -81,18 +82,34 @@
                 android:layout_height="320dp"
                 android:layout_gravity="center"/>
 
-            <TextView
-                android:visibility="gone"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="10dp"
-                android:text="ㅇㅁㄴㅇ"
-                android:id="@+id/like2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginLeft="10dp"
-                android:fontFamily="@font/noto_sans_jp_regular"
-                android:includeFontPadding="false" />
 
-        </LinearLayout>
+    <LinearLayout
+        android:visibility="gone"
+        android:id="@+id/likelayout"
+        android:layout_width="match_parent"
+        android:padding="5dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/snslayout">
+
+        <ImageView
+            android:layout_marginLeft="10dp"
+            android:layout_gravity="center"
+            android:src="@drawable/like_new2"
+            android:layout_width="35dp"
+            android:layout_height="35dp">
+
+        </ImageView>
+        <TextView
+            android:visibility="gone"
+            android:layout_margin="10dp"
+            android:text="ㅇㅁㄴㅇ"
+            android:id="@+id/like2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:fontFamily="@font/noto_sans_jp_regular"
+            android:includeFontPadding="false" />
+
+    </LinearLayout>
     </LinearLayout>

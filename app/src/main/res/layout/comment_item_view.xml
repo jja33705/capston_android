@@ -21,6 +21,7 @@
             >
 
             <ImageView
+                android:layout_marginLeft="10dp"
                 android:id="@+id/profile_comment"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
@@ -46,7 +47,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginRight="20dp"
             android:orientation="vertical">
 
             <TextView
@@ -56,7 +57,7 @@
             </TextView>
             <TextView
                 android:id="@+id/user_content"
-                android:layout_width="280dp"
+                android:layout_width="match_parent"
                 android:layout_height="20dp"
                 android:includeFontPadding="false"
                 android:fontFamily="@font/noto_sans_jp_bold"
@@ -64,8 +65,8 @@
             <TextView
                 android:id="@+id/user_created_at"
                 android:gravity="right"
-                android:layout_marginRight="15dp"
-                android:layout_width="280dp"
+                android:layout_marginRight="35dp"
+                android:layout_width="260dp"
                 android:layout_height="20dp"
                 android:includeFontPadding="false"
                 android:fontFamily="@font/noto_sans_jp_medium"
