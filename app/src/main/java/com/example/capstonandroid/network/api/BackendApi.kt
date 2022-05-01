@@ -17,7 +17,7 @@ interface BackendApi {
 
 //   대영 코드
     @POST("login") //로그인 요청(Login) 하고 응답 받는것(LoginResponse)
-    fun loginPost(@Body login: Login): Call<LoginResponse>
+    suspend fun loginPost(@Body login: Login): Response<LoginResponse>
 
     @POST("register") //회원가입 요청(Register) 하고 응답받는것
     fun registerPost(@Body register: Register): Call<RegisterResponse>
@@ -131,4 +131,7 @@ interface BackendApi {
 
     @GET("user") // 유저확인
     suspend fun getUser(@Header("Authorization") token: String): Response<User>
+
+    @PATCH("fcmToken") // fcmToken 저장
+    suspend fun fcmToken(@Header("Authorization") token: String, @Body fcmToken: FcmToken): Response<ResponseMessage>
 }

@@ -312,7 +312,6 @@ class TrackRecordService : Service() {
         myLocationIndexOnTrack = 0
         mySumDistanceOnTrack = 0F
         myBeforeLocationChangedSecond = 0
-
         stopForeground(true)
         stopSelf()
     }

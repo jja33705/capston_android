@@ -2,14 +2,11 @@ package com.example.capstonandroid.activity
 
 // 앱 켜자마자 뜨는 액티비티
 
-import android.app.Activity
-import android.app.ActivityManager
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.widget.Toast
 import com.example.capstonandroid.R
 import com.example.capstonandroid.RecordService
 import com.example.capstonandroid.TrackPaceMakeService
@@ -18,7 +15,6 @@ import com.example.capstonandroid.databinding.ActivityLoginBinding
 import com.example.capstonandroid.network.RetrofitClient
 import com.example.capstonandroid.network.api.BackendApi
 import com.example.capstonandroid.network.dto.LoginUserResponse
-import com.example.capstonandroid.network.dto.Test
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -56,38 +52,37 @@ class IntroActivity : AppCompatActivity() {
                 var token = "Bearer " + sharedPreference.getString("TOKEN","")
                 println("token: $token")
 
-                var autologin = sharedPreference.getBoolean("autologin", false)
-                println("autologin : $autologin")
+                var autoLogin = sharedPreference.getBoolean("autoLogin", false)
+                println("autoLogin : $autoLogin")
 
-
-
-                if(autologin){
+                if(autoLogin){
                     supplementService.userGet(token).enqueue(object : Callback<LoginUserResponse> {
 
-                        override fun onResponse(
-                            call: Call<LoginUserResponse>,
-                            response: Response<LoginUserResponse>
-                        ) {
-                            if(response.isSuccessful){
+                        override fun onResponse(call: Call<LoginUserResponse>, response: Response<LoginUserResponse>) {
+                            if (response.isSuccessful) {
                                 println(response.body())
                                 println("로그인이 되버렸어요")
 //                  로그인 토큰 인증이 되면???
                                 startActivity(mainIntent)
-                            }else {
+                                finish()
+                            } else {
                                 println("로그인이 되지않아요..")
 //                  로그인 토큰 인증이 되지않으면?????
                                 println(response.message())
                                 println(response.body())
                                 startActivity(loginIntent)
+                                finish()
                             }
                         }
                         override fun onFailure(call: Call<LoginUserResponse>, t: Throwable) {
                             println("아 아예 실패해버렸어요!")
                             startActivity(loginIntent)
+                            finish()
                         }
-                    })}else{
-
+                    })
+                } else {
                     startActivity(loginIntent)
+                    finish()
                 }
             }, 500)
         }

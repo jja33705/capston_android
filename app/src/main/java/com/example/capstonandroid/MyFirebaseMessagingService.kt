@@ -29,8 +29,10 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
      */
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         println("(Firebase) From: " + remoteMessage.from)
+        println("(Firebase) Data: ${remoteMessage.data}")
 
         if(remoteMessage.notification != null) {
+            println("(Firebase) Notification Message Title: ${remoteMessage.notification?.title}")
             println("(Firebase) Notification Message Body: ${remoteMessage.notification?.body}")
             sendNotification(remoteMessage.notification?.body)
         }

@@ -4,17 +4,16 @@ package com.example.capstonandroid.activity
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.dj.loadingdialog.LoadingDialog
 import com.example.capstonandroid.databinding.ActivityLoginBinding
 import com.example.capstonandroid.network.dto.Login
 import com.example.capstonandroid.network.api.BackendApi
 import com.example.capstonandroid.network.RetrofitClient
-import com.example.capstonandroid.network.dto.LoginResponse
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.example.capstonandroid.network.dto.FcmToken
+import com.google.firebase.messaging.FirebaseMessaging
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import retrofit2.Retrofit
 
 
@@ -24,33 +23,19 @@ class LoginActivity : AppCompatActivity() {
     private  lateinit var  retrofit: Retrofit  //레트로핏
     private  lateinit var supplementService: BackendApi // api
 
+    private lateinit var token: String
+    private lateinit var fcmToken: String
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         supportActionBar?.hide()
-
-//        binding.btnRegister.setOnClickListener {
-//            println("hello")
-//            val intent : Intent = Intent(this,RegisterActivity::class.java);
-//            startActivity(intent);
-//        }
-
-        // 함수 초기화
         initRetrofit()
 
-        val sharedPreference = getSharedPreferences("other", MODE_PRIVATE)
-
-//      이 타입이 디폴트 값
-        var token = "Bearer " + sharedPreference.getString("TOKEN","")
-        println(token)
-
-
         // 변수 만들기
-
         val registerIntent = Intent(this,RegisterActivity::class.java)
 
         binding.registerbutton.setOnClickListener {
@@ -59,103 +44,66 @@ class LoginActivity : AppCompatActivity() {
             startActivity(registerIntent)
         }
 
-
-        binding.loginButton.setOnClickListener{
-
-//          edittext 이메일 값 받아 오기
-            var email = binding.emailEditText.text
-//            println(email)
-
-//          edittext 비밀번호 값 받아오기
-            var password = binding.passwordEditText.text
-//            println(password)
-
-
-//      객체 만들기
-            val login = Login(
-                email = email.toString(),
-                password = password.toString()
-            )
-
-            println(login)
-
-            val nextIntent = Intent(this, MainActivity::class.java)
-
-            if(binding.autoLoginCheckBox.isChecked){
-
-                val sharedPreference = getSharedPreferences("other", 0)
-                val editor = sharedPreference.edit()
-                editor.putBoolean("autologin", true)
-                println("여긴 자동로그인 맞음")
-                editor.apply()
-            }else {
-                val sharedPreference = getSharedPreferences("other", 0)
-                val editor = sharedPreference.edit()
-                editor.putBoolean("autologin", false)
-                println("여긴 자동로그인 아님")
-                editor.apply()
-
-            }
-
-            binding.forgotEmail.setOnClickListener {
-
-            }
-            supplementService.loginPost(login).enqueue(object : Callback<LoginResponse> {
-                override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
-
-                    if(response.isSuccessful){
-                        println("성공")
-//                  콜백 응답으로 온것
-                        println(response.body())
-
-                        nextIntent.putExtra("email",login.email)
-                        nextIntent.putExtra("password",login.password)
-
-
-                        var loginResponse = response.body()
-
-//                        데이터 클래스 USER 사용방법å
-//                        var user: User? = loginResponse!!.user
-//                        print(user!!.birth)
-
-                        var token: String = loginResponse!!.access_token
-                        println(token)
-
-                        val sharedPreference = getSharedPreferences("other", 0)
-                        val editor = sharedPreference.edit()
-                        editor.putString("TOKEN", token)
-                        println("로그인 부분 토큰 값"+ token)
-                        editor.apply()
-
-
-
-                        Toast.makeText(this@LoginActivity,"ログインしました", Toast.LENGTH_SHORT).show()
-                        startActivity(nextIntent)
-                        finish()
-                    }else {
-                        println("로그인 실패했찌만 "+ token)
-                        println("갔지만 실패")
-
-                        println(response.body())
-                        println(response.message())
-                        println(response.code())
-                        Toast.makeText(this@LoginActivity,"ログインエラー", Toast.LENGTH_SHORT).show()
-
-                    }
-                }
-
-
-                override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
-
-                    println("실패")
-                    println(t.message)
-                }
-
-            })
-
+        binding.forgotEmail.setOnClickListener {
 
         }
 
+        binding.loginButton.setOnClickListener{
+            CoroutineScope(Dispatchers.Main).launch {
+                val login = Login(binding.emailEditText.text.toString(), binding.passwordEditText.text.toString())
+                val loginResponse = supplementService.loginPost(login)
+                if (loginResponse.isSuccessful) {
+                    println("로그인 성공")
+
+                    token = loginResponse.body()!!.access_token
+                    println(token)
+
+                    // fcm 토큰 가져와서 바뀌었는지 아닌지 확인하고 로그인 처리
+                    FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+                        CoroutineScope(Dispatchers.Main).launch {
+                            if (task.isSuccessful) { // fcm 토큰 가져오기 실패했을 때
+                                fcmToken = task.result
+                                println("get fcmToken: $fcmToken")
+
+                                // fcm 토큰 바뀌었으면 갱신해줌
+                                if (fcmToken != getSharedPreferences("other", MODE_PRIVATE).getString("fcmToken", "")) {
+                                    println("fcm token 다름")
+
+                                    val fcmTokenResponse = supplementService.fcmToken("Bearer $token", FcmToken(fcmToken))
+                                    if (fcmTokenResponse.isSuccessful) {
+                                        println("백엔드에 fcmToken 갱신: ${fcmTokenResponse.body()!!.message}")
+                                        saveSharedPreferences()
+                                        loginIntent()
+                                    } else { // 실패했을 때
+
+                                    }
+                                } else {
+                                    println("fcm token 같음")
+                                    saveSharedPreferences()
+                                    loginIntent()
+                                }
+                            }
+                        }
+                    }
+                }
+
+            }
+        }
+    }
+
+    private fun loginIntent() {
+        val intent = Intent(this@LoginActivity, MainActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+
+    private fun saveSharedPreferences() {
+        val sharedPreferences = getSharedPreferences("other", MODE_PRIVATE)
+        val sharedPreferencesEdit = sharedPreferences.edit()
+        sharedPreferencesEdit.putString("TOKEN", token)
+        sharedPreferencesEdit.putBoolean("autoLogin", binding.autoLoginCheckBox.isChecked)
+        sharedPreferencesEdit.putString("fcmToken", fcmToken)
+        sharedPreferencesEdit.commit()
     }
 
     override fun onStart() {
