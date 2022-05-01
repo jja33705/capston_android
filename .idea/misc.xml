@@ -74,8 +74,11 @@
         <entry key="app/src/main/res/drawable/ic__28937_blue_flag_location_map_marker_icon.xml" value="0.2735" />
         <entry key="app/src/main/res/drawable/ic__440906_map_marker_navigation_pin_icon.xml" value="0.2075" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.2285" />
+        <entry key="app/src/main/res/drawable/ic_notifications_48px.xml" value="0.152" />
+        <entry key="app/src/main/res/drawable/icon_notification.xml" value="0.1365" />
         <entry key="app/src/main/res/drawable/icon_private.xml" value="0.2285" />
         <entry key="app/src/main/res/drawable/icon_public.xml" value="0.2285" />
+        <entry key="app/src/main/res/drawable/icon_search_person.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/image_view_background.xml" value="0.2285" />
         <entry key="app/src/main/res/drawable/login_button.xml" value="0.1815" />
         <entry key="app/src/main/res/drawable/match_type_button_background.xml" value="0.2285" />
@@ -145,6 +148,7 @@
         <entry key="app/src/main/res/menu/menu_bottom_nav.xml" value="0.21197916666666666" />
         <entry key="app/src/main/res/menu/menu_main.xml" value="0.2557291666666667" />
         <entry key="app/src/main/res/menu/menu_me_top_nav.xml" value="0.2557291666666667" />
+        <entry key="app/src/main/res/menu/search_menu.xml" value="0.2916666666666667" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.2745" />
       </map>
     </option>

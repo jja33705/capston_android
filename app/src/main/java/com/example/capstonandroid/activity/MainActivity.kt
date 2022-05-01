@@ -10,25 +10,13 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.*
 import android.widget.Button
-import android.widget.EditText
-import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
-import androidx.recyclerview.widget.RecyclerView
 import com.example.capstonandroid.R
 import com.example.capstonandroid.RecordService
 import com.example.capstonandroid.TrackPaceMakeService
 import com.example.capstonandroid.TrackRecordService
-import com.example.capstonandroid.adapter.RecyclerFollowerAdapter
 import com.example.capstonandroid.databinding.ActivityMainBinding
 import com.example.capstonandroid.fragment.HomeFragment
 import com.example.capstonandroid.fragment.MeFragment
-import com.example.capstonandroid.network.RetrofitClient
-import com.example.capstonandroid.network.api.BackendApi
-import com.example.capstonandroid.network.dto.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
 
 class MainActivity : AppCompatActivity() {
     private var _binding: ActivityMainBinding? = null
@@ -134,19 +122,24 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.search_menu, menu)
+        menuInflater.inflate(R.menu.main_activity_menu, menu)
         return super.onCreateOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
-        val mainIntent = Intent(this,FollowerActivity::class.java)
-        when (item?.itemId){
-            R.id.action_search ->
+        return when (item?.itemId){
+            R.id.action_search -> {
+                val mainIntent = Intent(this,FollowerActivity::class.java)
                 startActivity(mainIntent)
-
+                true
+            }
+            R.id.action_notification -> {
+                println("notification 버튼 누름")
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
-        return super.onOptionsItemSelected(item)
     }
 
 

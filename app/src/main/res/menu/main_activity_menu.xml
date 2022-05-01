@@ -7,7 +7,13 @@
     <item
         android:id="@+id/action_search"
         android:title="검색"
-        android:icon="@drawable/follower_plus_2"
+        android:icon="@drawable/icon_search_person"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_notification"
+        android:title="알림"
+        android:icon="@drawable/icon_notification"
         app:showAsAction="ifRoom" />
 
 
