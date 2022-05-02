@@ -64,23 +64,13 @@ class LoginActivity : AppCompatActivity() {
                             if (task.isSuccessful) { // fcm 토큰 가져오기 실패했을 때
                                 fcmToken = task.result
                                 println("get fcmToken: $fcmToken")
-
-                                // fcm 토큰 바뀌었으면 갱신해줌
-                                if (fcmToken != getSharedPreferences("other", MODE_PRIVATE).getString("fcmToken", "")) {
-                                    println("fcm token 다름")
-
-                                    val fcmTokenResponse = supplementService.fcmToken("Bearer $token", FcmToken(fcmToken))
-                                    if (fcmTokenResponse.isSuccessful) {
-                                        println("백엔드에 fcmToken 갱신: ${fcmTokenResponse.body()!!.message}")
-                                        saveSharedPreferences()
-                                        loginIntent()
-                                    } else { // 실패했을 때
-
-                                    }
-                                } else {
-                                    println("fcm token 같음")
+                                val fcmTokenResponse = supplementService.fcmToken("Bearer $token", FcmToken(fcmToken))
+                                if (fcmTokenResponse.isSuccessful) {
+                                    println("백엔드에 fcmToken 갱신: ${fcmTokenResponse.body()!!.message}")
                                     saveSharedPreferences()
                                     loginIntent()
+                                } else { // 실패했을 때
+
                                 }
                             }
                         }
@@ -102,7 +92,6 @@ class LoginActivity : AppCompatActivity() {
         val sharedPreferencesEdit = sharedPreferences.edit()
         sharedPreferencesEdit.putString("TOKEN", token)
         sharedPreferencesEdit.putBoolean("autoLogin", binding.autoLoginCheckBox.isChecked)
-        sharedPreferencesEdit.putString("fcmToken", fcmToken)
         sharedPreferencesEdit.commit()
     }
 
