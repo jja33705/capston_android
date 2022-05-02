@@ -77,7 +77,7 @@ class RecyclerUserAdapter(
 
             val defaultImage = R.drawable.map
 
-            if(item.map_image==null){
+            if(item.image==null){
                 var url = ""
 
                 Glide.with(itemView.context)
@@ -89,7 +89,7 @@ class RecyclerUserAdapter(
 
             }else {
 
-                var url = item.map_image
+                var url = item.image
 
                 Glide.with(itemView.context)
                     .load(url) // 불러올 이미지 url
