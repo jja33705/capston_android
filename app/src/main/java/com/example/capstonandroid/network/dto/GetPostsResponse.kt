@@ -1,6 +1,6 @@
 package com.example.capstonandroid.network.dto
 
-data class MySNSResponse(
+data class GetPostsResponse(
     val current_page: Int,
     val `data`: List<Post>,
     val first_page_url: String,
@@ -13,5 +13,5 @@ data class MySNSResponse(
     val per_page: Int,
     val prev_page_url: Any,
     val to: Int,
-    val total: Int
+    val total: Int,
 )

@@ -65,7 +65,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.SNSDetailsActivity"
+            android:name=".activity.PostActivity"
             android:exported="false" />
 
         <service

@@ -49,8 +49,7 @@ class FriendlyMatchingRecyclerViewAdapter(friendlyMatchingItemList: ArrayList<Fr
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is FriendlyMatchingViewHolder) {
             val item = filteredList[position]!!
-            val friendlyMatchingViewHolder = holder as FriendlyMatchingViewHolder
-            friendlyMatchingViewHolder.bind(item)
+            holder.bind(item)
         } else if (holder is LoadingViewHolder) {
 
         }

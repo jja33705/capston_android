@@ -27,12 +27,12 @@ interface BackendApi {
 
     @POST("logout") // 유저 로그아웃
     fun logOut(@Header("Authorization") token: String): Call<LogoutResponse>
-    //
-    @GET("post/index") // SNS 메인화면~
-    fun SNSIndex(@Header("Authorization") token: String,@Query("page") page: Int): Call<SNSResponse>
 
-    @GET("post/myIndex") // 내 기록 불러오기!
-    fun myIndex(@Header("Authorization")token: String,@Query("page") page: Int): Call<MySNSResponse>
+    @GET("post/index") // 메인화면 post list
+    suspend fun getPosts(@Header("Authorization") token: String,@Query("page") page: Int): Response<GetPostsResponse>
+
+    @GET("post/myIndex")
+    suspend fun getMyPosts(@Header("Authorization") token: String,@Query("page") page: Int): Response<GetPostsResponse>
 
     @PUT("post/update/{postID}") // 자기 게시물 수정
     fun postUpdate(@Header("Authorization") token : String, @Path("postID")postID : Int, @Body update : Update) : Call<Int>
@@ -50,7 +50,7 @@ interface BackendApi {
     fun commentSend(@Header("Authorization")token: String, @Path("postID") postID:Int,@Body commentSend: CommentSend) : Call<CommentSendResponse>
 
     @POST("follow/{userID}") // 팔로우하기~!
-    fun userFollow(@Header("Authorization") token : String , @Path("userID") userID : Int) : Call<FollowResponse>
+    fun userFollow(@Header("Authorization") token : String, @Path("userID") userID : Int) : Call<FollowResponse>
 
     @POST("post/image") // 이미지 테스트
     fun imageTest(@Header("Authorization") token : String ,
@@ -83,6 +83,9 @@ interface BackendApi {
 
 //  @POST("post/store") // 기록 저장
 //  fun storePost(@Body record: Track) : Call<Track>
+
+    @GET("post/show/{postId}")
+    suspend fun getPost(@Header("Authorization") token: String, @Path("postId") postId: Int): Response<Post>
 
     @Multipart
     @POST("post/store") // 포스트 작성

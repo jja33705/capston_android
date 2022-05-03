@@ -6,8 +6,6 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.location.Location
@@ -19,7 +17,6 @@ import android.view.View
 import android.view.Window
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -207,26 +204,20 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, SelectExerc
                 val token = "Bearer " + getSharedPreferences("other", MODE_PRIVATE).getString("TOKEN", "")!!
                 val friendlyMatchingResponse = supplementService.friendlyMatching(token, selectedTrackId!!, page)
                 if (friendlyMatchingResponse.isSuccessful) {
-                    when (friendlyMatchingResponse.code()) {
-                        200 -> {
-                            if (friendlyMatchingResponse.body()!!.followPostList.total == 0) {
-                                isNext = false
-                                Toast.makeText(this@SelectTrackActivity, "フォロワー, 自分の中でこのトラックを走った記録がありません", Toast.LENGTH_SHORT).show()
-                            } else {
-                                val friendlyMatchingList =
-                                    friendlyMatchingResponse.body()!!.followPostList.data
-                                for (friendlyMatch in friendlyMatchingList) {
-                                    val friendlyMatchingItem = FriendlyMatchingItem(friendlyMatch.title, friendlyMatch.img, friendlyMatch.user.name, friendlyMatch.date, friendlyMatch.time, friendlyMatch.average_speed, friendlyMatch.gps_id, friendlyMatch.id
-                                    )
-                                    friendlyMatchingItemList.add(friendlyMatchingItem)
-                                }
-                                if (friendlyMatchingResponse.body()!!.followPostList.next_page_url != null) {
-                                    page += 1
-                                    isNext = true
-                                } else {
-                                    isNext = false
-                                }
-                            }
+                    if (friendlyMatchingResponse.body()!!.followPostList.total == 0) {
+                        isNext = false
+                        Toast.makeText(this@SelectTrackActivity, "フォロワー, 自分の中でこのトラックを走った記録がありません", Toast.LENGTH_SHORT).show()
+                    } else {
+                        val friendlyMatchingList = friendlyMatchingResponse.body()!!.followPostList.data
+                        for (friendlyMatch in friendlyMatchingList) {
+                            val friendlyMatchingItem = FriendlyMatchingItem(friendlyMatch.title, friendlyMatch.img, friendlyMatch.user.name, friendlyMatch.date, friendlyMatch.time, friendlyMatch.average_speed, friendlyMatch.gps_id, friendlyMatch.id)
+                            friendlyMatchingItemList.add(friendlyMatchingItem)
+                        }
+                        if (friendlyMatchingResponse.body()!!.followPostList.next_page_url != null) {
+                            page += 1
+                            isNext = true
+                        } else {
+                            isNext = false
                         }
                     }
                 }
@@ -372,26 +363,19 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, SelectExerc
             val friendlyMatchingResponse = supplementService.friendlyMatching(token, selectedTrackId!!, page)
 
             if (friendlyMatchingResponse.isSuccessful) {
-                when (friendlyMatchingResponse.code()) {
-                    200 -> {
-                        val friendlyMatchingList = friendlyMatchingResponse.body()!!.followPostList.data
-                        for (friendlyMatching in friendlyMatchingList) {
-                            val friendlyMatchingItem = FriendlyMatchingItem(friendlyMatching.title, friendlyMatching.img, friendlyMatching.user.name, friendlyMatching.date, friendlyMatching.time, friendlyMatching.average_speed, friendlyMatching.gps_id, friendlyMatching.id)
-                            friendlyMatchingItemList.add(friendlyMatchingItem)
-                        }
+                val friendlyMatchingList = friendlyMatchingResponse.body()!!.followPostList.data
+                for (friendlyMatching in friendlyMatchingList) {
+                    val friendlyMatchingItem = FriendlyMatchingItem(friendlyMatching.title, friendlyMatching.img, friendlyMatching.user.name, friendlyMatching.date, friendlyMatching.time, friendlyMatching.average_speed, friendlyMatching.gps_id, friendlyMatching.id)
+                    friendlyMatchingItemList.add(friendlyMatchingItem)
+                }
 
-                        friendlyMatchingRecyclerViewAdapter.updateItem(friendlyMatchingItemList)
-                        friendlyMatchingRecyclerViewAdapter.notifyDataSetChanged()
-                        if (friendlyMatchingResponse.body()!!.followPostList.next_page_url != null) {
-                            page += 1
-                            isNext = true
-                        } else {
-                            isNext = false
-                        }
-                    }
-                    204 -> {
-                        isNext = false
-                    }
+                friendlyMatchingRecyclerViewAdapter.updateItem(friendlyMatchingItemList)
+                friendlyMatchingRecyclerViewAdapter.notifyDataSetChanged()
+                if (friendlyMatchingResponse.body()!!.followPostList.next_page_url != null) {
+                    page += 1
+                    isNext = true
+                } else {
+                    isNext = false
                 }
             }
         }

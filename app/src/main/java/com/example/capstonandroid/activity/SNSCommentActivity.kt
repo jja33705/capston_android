@@ -4,7 +4,6 @@ import android.graphics.Rect
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.ScrollView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.capstonandroid.R
@@ -59,64 +58,64 @@ class SNSCommentActivity : AppCompatActivity()
 //          content 값 받아오기
         println(content)
 
-        supplementService.SNSIndex(token, data_page).enqueue(object : Callback<SNSResponse>{
-            override fun onResponse(call: Call<SNSResponse>, response: Response<SNSResponse>) {
-                if(response.isSuccessful){
-                    println(response.body()!!.data[data_num].comment.size)
-                    postID = response.body()!!.data[data_num].id
-                    println("여기 포스트 아이디는?"+postID)
-                }else{
-                }
-            }
+//        supplementService.SNSIndex(token, data_page).enqueue(object : Callback<GetPostsResponse>{
+//            override fun onResponse(call: Call<GetPostsResponse>, response: Response<GetPostsResponse>) {
+//                if(response.isSuccessful){
+//                    println(response.body()!!.data[data_num].comment.size)
+//                    postID = response.body()!!.data[data_num].id
+//                    println("여기 포스트 아이디는?"+postID)
+//                }else{
+//                }
+//            }
+//
+//            override fun onFailure(call: Call<GetPostsResponse>, t: Throwable) {
+//                TODO("Not yet implemented")
+//            }
+//
+//        })
 
-            override fun onFailure(call: Call<SNSResponse>, t: Throwable) {
-                TODO("Not yet implemented")
-            }
 
-        })
-
-
-        supplementService.SNSIndex(token,data_page
-        ).enqueue(object : Callback<SNSResponse>{
-            override fun onResponse(
-                call: Call<SNSResponse>,
-                response: Response<SNSResponse>
-            ) {
-                if(response.isSuccessful) {
-
-                    println(response.body()!!.data[data_num].comment.size)
-                    for (i in 0..response.body()!!.data[data_num].comment.size-1) {
-                        list.add(
-                            CommentData(
-                                response.body()!!.data[data_num].comment[i].user.name.toString(),
-                                response.body()!!.data[data_num].comment[i].content,
-                                response.body()!!.data[data_num].comment[i].created_at,
-                                response.body()!!.data[data_num].comment[i].updated_at,
-                                response.body()!!.data[data_num].comment[i].id,
-                                response.body()!!.data[data_num].comment[i].user.profile
-
-                            )
-                        )
-                    }
-
-                    datasize = response.body()!!.data[data_num].comment.size
-                    binding.lstUser3.adapter = adapter
-                    binding.lstUser3.addItemDecoration(HomeFragment.DistanceItemDecorator(10))
-
-                    page++
-                }
-                else{
-                    println("실패함ㅋㅋ")
-                    println(response.body())
-                    println(response.message())
-                }
-            }
-
-            override fun onFailure(call: Call<SNSResponse>, t: Throwable) {
-                println("아예 가지도 않음ㅋㅋ")
-                println(t.message)
-            }
-        })
+//        supplementService.SNSIndex(token,data_page
+//        ).enqueue(object : Callback<GetPostsResponse>{
+//            override fun onResponse(
+//                call: Call<GetPostsResponse>,
+//                response: Response<GetPostsResponse>
+//            ) {
+//                if(response.isSuccessful) {
+//
+//                    println(response.body()!!.data[data_num].comment.size)
+//                    for (i in 0..response.body()!!.data[data_num].comment.size-1) {
+//                        list.add(
+//                            CommentData(
+//                                response.body()!!.data[data_num].comment[i].user.name.toString(),
+//                                response.body()!!.data[data_num].comment[i].content,
+//                                response.body()!!.data[data_num].comment[i].created_at,
+//                                response.body()!!.data[data_num].comment[i].updated_at,
+//                                response.body()!!.data[data_num].comment[i].id,
+//                                response.body()!!.data[data_num].comment[i].user.profile
+//
+//                            )
+//                        )
+//                    }
+//
+//                    datasize = response.body()!!.data[data_num].comment.size
+//                    binding.lstUser3.adapter = adapter
+//                    binding.lstUser3.addItemDecoration(HomeFragment.DistanceItemDecorator(10))
+//
+//                    page++
+//                }
+//                else{
+//                    println("실패함ㅋㅋ")
+//                    println(response.body())
+//                    println(response.message())
+//                }
+//            }
+//
+//            override fun onFailure(call: Call<GetPostsResponse>, t: Throwable) {
+//                println("아예 가지도 않음ㅋㅋ")
+//                println(t.message)
+//            }
+//        })
 
         binding.commitButton.setOnClickListener {
             var content = binding.content.text
@@ -133,45 +132,45 @@ class SNSCommentActivity : AppCompatActivity()
 
 
 
-                    supplementService.SNSIndex(token,data_page
-                    ).enqueue(object : Callback<SNSResponse> {
-                        override fun onResponse(
-                            call: Call<SNSResponse>,
-                            response: Response<SNSResponse>
-                        ) {
-                            if(response.isSuccessful) {
-
-                                datasize = response.body()!!.data[data_num].comment.size
-                                list.add(
-                                    CommentData(
-
-                                        response.body()!!.data[data_num].comment[datasize-1].user.name.toString(),
-                                        response.body()!!.data[data_num].comment[datasize-1].content,
-                                        response.body()!!.data[data_num].comment[datasize-1].created_at,
-                                        response.body()!!.data[data_num].comment[datasize-1].updated_at,
-                                        response.body()!!.data[data_num].comment[datasize-1].id,
-                                        response.body()!!.data[data_num].comment[datasize-1].user.profile
-                                    )
-                                )
-                                binding.lstUser3.adapter = adapter
-
-                                imm.hideSoftInputFromWindow(binding.content.getWindowToken(), 0);
-                                binding.content.setText(null)
-
-                                binding.lstUser3.smoothScrollToPosition(datasize)
-                            }
-                            else{
-                                println("실패함ㅋㅋ")
-                                println(response.body())
-                                println(response.message())
-                            }
-                        }
-
-                        override fun onFailure(call: Call<SNSResponse>, t: Throwable) {
-                            println("아예 가지도 않음ㅋㅋ")
-                            println(t.message)
-                        }
-                    })
+//                    supplementService.SNSIndex(token,data_page
+//                    ).enqueue(object : Callback<GetPostsResponse> {
+//                        override fun onResponse(
+//                            call: Call<GetPostsResponse>,
+//                            response: Response<GetPostsResponse>
+//                        ) {
+//                            if(response.isSuccessful) {
+//
+//                                datasize = response.body()!!.data[data_num].comment.size
+//                                list.add(
+//                                    CommentData(
+//
+//                                        response.body()!!.data[data_num].comment[datasize-1].user.name.toString(),
+//                                        response.body()!!.data[data_num].comment[datasize-1].content,
+//                                        response.body()!!.data[data_num].comment[datasize-1].created_at,
+//                                        response.body()!!.data[data_num].comment[datasize-1].updated_at,
+//                                        response.body()!!.data[data_num].comment[datasize-1].id,
+//                                        response.body()!!.data[data_num].comment[datasize-1].user.profile
+//                                    )
+//                                )
+//                                binding.lstUser3.adapter = adapter
+//
+//                                imm.hideSoftInputFromWindow(binding.content.getWindowToken(), 0);
+//                                binding.content.setText(null)
+//
+//                                binding.lstUser3.smoothScrollToPosition(datasize)
+//                            }
+//                            else{
+//                                println("실패함ㅋㅋ")
+//                                println(response.body())
+//                                println(response.message())
+//                            }
+//                        }
+//
+//                        override fun onFailure(call: Call<GetPostsResponse>, t: Throwable) {
+//                            println("아예 가지도 않음ㅋㅋ")
+//                            println(t.message)
+//                        }
+//                    })
 
                 }
 

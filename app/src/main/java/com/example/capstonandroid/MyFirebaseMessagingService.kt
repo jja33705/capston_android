@@ -9,6 +9,7 @@ import android.content.Intent
 import android.media.RingtoneManager
 import androidx.core.app.NotificationCompat
 import com.example.capstonandroid.activity.IntroActivity
+import com.example.capstonandroid.activity.PostActivity
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 
@@ -47,8 +48,20 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     private fun sendNotification(title: String, body: String, data: Map<String, String>) {
         createNotificationChannel()
 
-        val intent = Intent(this, IntroActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+        // notification type 에 따라 분기처리
+        val intent = when (data["type"]!!) {
+            "follow" -> {
+                Intent(this, IntroActivity::class.java).apply {
+                    flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+//                    putExtra("postId", data["postId"]!!.toInt())
+                }
+            }
+            else -> {
+                Intent(this, PostActivity::class.java).apply {
+                    flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                    putExtra("postId", data["postId"]!!.toInt())
+                }
+            }
         }
 
         var pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE)

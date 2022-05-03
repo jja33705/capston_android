@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.SNSDetailsActivity">
+    tools:context=".activity.PostActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -21,7 +21,7 @@
             android:layout_margin="10dp"
             android:orientation="vertical">
 
-            <EditText
+            <TextView
                 android:id="@+id/title"
                 android:layout_width="280dp"
                 android:layout_height="40dp"
@@ -86,7 +86,7 @@
         </LinearLayout>
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/image_view_map_image"
             android:layout_width="wrap_content"
             android:layout_height="300dp"
             android:layout_centerHorizontal="true"
@@ -152,7 +152,7 @@
             </TextView>
 
             <TextView
-                android:id="@+id/oppenent"
+                android:id="@+id/tv_opponent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

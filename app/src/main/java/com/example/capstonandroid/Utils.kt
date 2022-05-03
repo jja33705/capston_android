@@ -26,6 +26,17 @@ class Utils {
             }
         }
 
+        fun timeToStringText(time: Int): String {
+            return if (time == 0) {
+                "00時間00分00秒"
+            } else {
+                val h = time / 3600
+                val m = time % 3600 / 60
+                val s = time % 60
+                "%1$02d時間%2$02d分%3$02d秒".format(h, m, s)
+            }
+        }
+
         fun distanceToText(distance: Double): String {
             return "%.2f".format(distance / 1000)
         }
