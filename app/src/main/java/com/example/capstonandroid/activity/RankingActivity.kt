@@ -2,17 +2,15 @@ package com.example.capstonandroid.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.service.notification.NotificationListenerService
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.capstonandroid.R
-import com.example.capstonandroid.RankingItem
 import com.example.capstonandroid.Utils
 import com.example.capstonandroid.adapter.RankingRecyclerViewAdapter
 import com.example.capstonandroid.databinding.ActivityRankingBinding
 import com.example.capstonandroid.network.RetrofitClient
 import com.example.capstonandroid.network.api.BackendApi
+import com.example.capstonandroid.network.dto.Post
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -33,7 +31,7 @@ class RankingActivity : AppCompatActivity() {
 
     private var isLoading = false
 
-    private lateinit var rankingItemList: ArrayList<RankingItem?>
+    private lateinit var rankingItemList: ArrayList<Post?>
 
     private lateinit var rankingRecyclerViewAdapter: RankingRecyclerViewAdapter
 
@@ -81,13 +79,11 @@ class RankingActivity : AppCompatActivity() {
                     200 -> {
                         println("초기 랭킹: ${rankingResponse.body()}")
                         println("초기 개수: ${rankingResponse.body()!!.data.size}")
-                        for (i in 0 until rankingResponse.body()!!.data.size) {
-                            val activity = rankingResponse.body()!!.data[i]
-                            val rankingItem = RankingItem(i+1, "sadf", activity.user.name, activity.date, activity.time, activity.average_speed)
+                        for (rankingItem in rankingResponse.body()!!.data) {
                             rankingItemList.add(rankingItem)
                         }
 
-                        binding.trackRankFirstName.text = rankingItemList[0]!!.userName
+                        binding.trackRankFirstName.text = rankingItemList[0]!!.user.name
                         binding.trackRankFirstTime.text = Utils.timeToText(rankingItemList[0]!!.time)
 
                         if (rankingResponse.body()!!.next_page_url != null) {
@@ -131,8 +127,7 @@ class RankingActivity : AppCompatActivity() {
                 when (rankingResponse.code()) {
                     200 -> {
                         println("초기 랭킹: ${rankingResponse.body()}")
-                        for (activity in rankingResponse.body()!!.data) {
-                            val rankingItem = RankingItem(rankingItemList.size + 1, activity.img, activity.user.name, activity.date, activity.time, activity.average_speed)
+                        for (rankingItem in rankingResponse.body()!!.data) {
                             rankingItemList.add(rankingItem)
                         }
 

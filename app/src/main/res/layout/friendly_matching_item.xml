@@ -64,7 +64,7 @@
                 >
             </TextView>
             <TextView
-                android:id="@+id/tv_ranking_date"
+                android:id="@+id/tv_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="1999.99.99"
@@ -86,7 +86,7 @@
             >
 
             <TextView
-                android:id="@+id/tv_ranking_time"
+                android:id="@+id/tv_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="tt:mm:ss"
@@ -97,7 +97,7 @@
                 >
             </TextView>
             <TextView
-                android:id="@+id/tv_ranking_speed"
+                android:id="@+id/tv_speed"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="5.18km"

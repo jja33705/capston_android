@@ -28,6 +28,7 @@ import com.example.capstonandroid.databinding.ActivitySelectTrackBinding
 import com.example.capstonandroid.network.dto.Track
 import com.example.capstonandroid.network.api.BackendApi
 import com.example.capstonandroid.network.RetrofitClient
+import com.example.capstonandroid.network.dto.Post
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -66,7 +67,7 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, SelectExerc
     private var page = 1 // 현재 페이지
     private var isNext = false // 다음 페이지 있는지
     private var isLoading = false
-    private lateinit var friendlyMatchingItemList: ArrayList<FriendlyMatchingItem?>
+    private lateinit var friendlyMatchingItemList: ArrayList<Post?>
     private lateinit var friendlyMatchingRecyclerViewAdapter: FriendlyMatchingRecyclerViewAdapter
     private lateinit var friendlyMatchingRecyclerView: RecyclerView
 
@@ -210,8 +211,7 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, SelectExerc
                     } else {
                         val friendlyMatchingList = friendlyMatchingResponse.body()!!.followPostList.data
                         for (friendlyMatch in friendlyMatchingList) {
-                            val friendlyMatchingItem = FriendlyMatchingItem(friendlyMatch.title, friendlyMatch.img, friendlyMatch.user.name, friendlyMatch.date, friendlyMatch.time, friendlyMatch.average_speed, friendlyMatch.gps_id, friendlyMatch.id)
-                            friendlyMatchingItemList.add(friendlyMatchingItem)
+                            friendlyMatchingItemList.add(friendlyMatch)
                         }
                         if (friendlyMatchingResponse.body()!!.followPostList.next_page_url != null) {
                             page += 1
@@ -228,15 +228,15 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, SelectExerc
                     override fun onItemClick(position: Int) {
                         AlertDialog.Builder(this@SelectTrackActivity)
                             .setTitle("親善競技")
-                            .setMessage("${friendlyMatchingItemList[position]!!.userName}と一緒に走りますか")
+                            .setMessage("${friendlyMatchingItemList[position]!!.user.name}と一緒に走りますか")
                             .setPositiveButton("はい") { _, _ ->
                                 val intent = Intent(this@SelectTrackActivity, TrackPaceMakeActivity::class.java)
                                 intent.putExtra("matchType", "친선")
                                 intent.putExtra("exerciseKind", exerciseKind)
                                 intent.putExtra("trackId", selectedTrackId)
-                                intent.putExtra("opponentGpsDataId", friendlyMatchingItemList[position]!!.opponentGpsDataId)
-                                intent.putExtra("opponentPostId", friendlyMatchingItemList[position]!!.opponentPostId)
-                                intent.putExtra("opponentAvgSpeed", friendlyMatchingItemList[position]!!.speed)
+                                intent.putExtra("opponentGpsDataId", friendlyMatchingItemList[position]!!.gps_id)
+                                intent.putExtra("opponentPostId", friendlyMatchingItemList[position]!!.id)
+                                intent.putExtra("opponentAvgSpeed", friendlyMatchingItemList[position]!!.average_speed)
                                 intent.putExtra("opponentTime", friendlyMatchingItemList[position]!!.time)
                                 startActivity(intent)
 
@@ -365,8 +365,7 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, SelectExerc
             if (friendlyMatchingResponse.isSuccessful) {
                 val friendlyMatchingList = friendlyMatchingResponse.body()!!.followPostList.data
                 for (friendlyMatching in friendlyMatchingList) {
-                    val friendlyMatchingItem = FriendlyMatchingItem(friendlyMatching.title, friendlyMatching.img, friendlyMatching.user.name, friendlyMatching.date, friendlyMatching.time, friendlyMatching.average_speed, friendlyMatching.gps_id, friendlyMatching.id)
-                    friendlyMatchingItemList.add(friendlyMatchingItem)
+                    friendlyMatchingItemList.add(friendlyMatching)
                 }
 
                 friendlyMatchingRecyclerViewAdapter.updateItem(friendlyMatchingItemList)

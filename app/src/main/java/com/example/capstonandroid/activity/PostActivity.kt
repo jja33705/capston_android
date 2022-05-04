@@ -34,14 +34,14 @@ class PostActivity : AppCompatActivity() {
 
     private lateinit var post: Post
 
-    lateinit var binding: ActivityPostBinding
+    private var _binding: ActivityPostBinding? = null
+    private val binding get() = _binding!!
 
     @SuppressLint("NewApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_post)
 
-        binding = ActivityPostBinding.inflate(layoutInflater)
+        _binding = ActivityPostBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         supportActionBar?.title = "活動"
@@ -181,5 +181,8 @@ class PostActivity : AppCompatActivity() {
         supplementService = retrofit.create(BackendApi::class.java);
     }
 
-
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+    }
 }

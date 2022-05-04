@@ -7,17 +7,17 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.capstonandroid.PostRecyclerViewItem
 import com.example.capstonandroid.R
 import com.example.capstonandroid.databinding.ItemLoadingBinding
 import com.example.capstonandroid.databinding.PostRecyclerViewItemBinding
+import com.example.capstonandroid.network.dto.Post
 import java.time.OffsetDateTime
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.collections.ArrayList
 
-class PostRecyclerViewAdapter(postRecyclerViewItemList: ArrayList<PostRecyclerViewItem?>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class PostRecyclerViewAdapter(postRecyclerViewItemList: ArrayList<Post?>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     interface OnItemClickListener {
         fun onItemClick(position: Int)
@@ -42,7 +42,7 @@ class PostRecyclerViewAdapter(postRecyclerViewItemList: ArrayList<PostRecyclerVi
         mOnItemClickListener = onItemClickListener
     }
 
-    fun updateItem(postRecyclerViewItemList: ArrayList<PostRecyclerViewItem?>) {
+    fun updateItem(postRecyclerViewItemList: ArrayList<Post?>) {
         filteredList = postRecyclerViewItemList
     }
 
@@ -84,9 +84,9 @@ class PostRecyclerViewAdapter(postRecyclerViewItemList: ArrayList<PostRecyclerVi
         }
 
         @SuppressLint("NewApi")
-        fun bind(postRecyclerViewItem: PostRecyclerViewItem) {
+        fun bind(postRecyclerViewItem: Post) {
             binding.tvTitle.text = postRecyclerViewItem.title
-            binding.tvUserName.text = postRecyclerViewItem.userName
+            binding.tvUserName.text = postRecyclerViewItem.user.name
 
             // 타임포멧
             val date = postRecyclerViewItem.created_at // your date
@@ -99,12 +99,12 @@ class PostRecyclerViewAdapter(postRecyclerViewItemList: ArrayList<PostRecyclerVi
 //                     yyyy-MM-dd HH:mm:ss z
 
             binding.tvCreatedAt.text = dateTime.format(formatter)
-            binding.tvLikeCount.text = "いいね！： ${postRecyclerViewItem.likeCount}"
+            binding.tvLikeCount.text = "いいね！： ${postRecyclerViewItem.likes.size}"
 
             val defaultImage = R.drawable.map
 
             // 맵 이미지 띄움
-            val mapImageUrl = postRecyclerViewItem.mapImage
+            val mapImageUrl = postRecyclerViewItem.img
             Glide.with(itemView.context).load(mapImageUrl).placeholder(defaultImage).error(defaultImage).fallback(defaultImage).into(binding.imageViewMap)
 
             // 좋아요 눌렀을떄????

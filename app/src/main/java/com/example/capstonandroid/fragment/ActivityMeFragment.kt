@@ -9,12 +9,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.capstonandroid.PostRecyclerViewItem
 import com.example.capstonandroid.activity.PostActivity
 import com.example.capstonandroid.adapter.PostRecyclerViewAdapter
 import com.example.capstonandroid.databinding.FragmentHomeBinding
 import com.example.capstonandroid.network.api.BackendApi
 import com.example.capstonandroid.network.RetrofitClient
+import com.example.capstonandroid.network.dto.Post
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -27,12 +27,11 @@ class ActivityMeFragment : Fragment() {
 
     private  lateinit var retrofit: Retrofit  //레트로핏
     private  lateinit var supplementService: BackendApi // api
-    private lateinit var postRecyclerViewItemList: ArrayList<PostRecyclerViewItem?>
+    private lateinit var postRecyclerViewItemList: ArrayList<Post?>
     private lateinit var postRecyclerViewAdapter: PostRecyclerViewAdapter
     private lateinit var postRecyclerView: RecyclerView
     private var isLoading = false // 로딩 중인지
     private var isNext = false // 다음 페이지 있는지
-
 
     private var postPage = 1      // 현재 페이지
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -90,8 +89,7 @@ class ActivityMeFragment : Fragment() {
                 } else {
                     val postList = getMyPostsResponse.body()!!.data
                     for (post in postList) {
-                        val postRecyclerViewItem = PostRecyclerViewItem(post.id, post.title, post.user.name, post.created_at, post.img, post.user.profile, post.likes.size)
-                        postRecyclerViewItemList.add(postRecyclerViewItem)
+                        postRecyclerViewItemList.add(post)
                     }
                     if (getMyPostsResponse.body()!!.next_page_url != null) {
                         postPage += 1
@@ -149,8 +147,7 @@ class ActivityMeFragment : Fragment() {
             if (getMyPostsResponse.isSuccessful) {
                 val postList = getMyPostsResponse.body()!!.data
                 for (post in postList) {
-                    val postRecyclerViewItem = PostRecyclerViewItem(post.id, post.title, post.user.name, post.created_at, post.img, post.user.profile, post.likes.size)
-                    postRecyclerViewItemList.add(postRecyclerViewItem)
+                    postRecyclerViewItemList.add(post)
                 }
 
                 postRecyclerViewAdapter.updateItem(postRecyclerViewItemList)

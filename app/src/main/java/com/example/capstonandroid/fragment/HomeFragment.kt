@@ -2,8 +2,6 @@ package com.example.capstonandroid.fragment
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
-import android.graphics.Rect
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,13 +9,12 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.capstonandroid.PostRecyclerViewItem
 import com.example.capstonandroid.activity.PostActivity
 import com.example.capstonandroid.adapter.*
 import com.example.capstonandroid.databinding.FragmentHomeBinding
 import com.example.capstonandroid.network.RetrofitClient
 import com.example.capstonandroid.network.api.BackendApi
-import com.example.capstonandroid.setMagneticMove
+import com.example.capstonandroid.network.dto.Post
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -31,7 +28,7 @@ class HomeFragment : Fragment()  {
 
     private  lateinit var retrofit: Retrofit  //레트로핏
     private  lateinit var supplementService: BackendApi // api
-    private lateinit var postRecyclerViewItemList: ArrayList<PostRecyclerViewItem?>
+    private lateinit var postRecyclerViewItemList: ArrayList<Post?>
     private lateinit var postRecyclerViewAdapter: PostRecyclerViewAdapter
     private lateinit var postRecyclerView: RecyclerView
     private var isLoading = false // 로딩 중인지
@@ -94,8 +91,7 @@ class HomeFragment : Fragment()  {
                 } else {
                     val postList = getPostsResponse.body()!!.data
                     for (post in postList) {
-                        val postRecyclerViewItem = PostRecyclerViewItem(post.id, post.title, post.user.name, post.created_at, post.img, post.user.profile, post.likes.size)
-                        postRecyclerViewItemList.add(postRecyclerViewItem)
+                        postRecyclerViewItemList.add(post)
                     }
                     if (getPostsResponse.body()!!.next_page_url != null) {
                         postPage += 1
@@ -153,8 +149,7 @@ class HomeFragment : Fragment()  {
             if (getPostsResponse.isSuccessful) {
                 val postList = getPostsResponse.body()!!.data
                 for (post in postList) {
-                    val postRecyclerViewItem = PostRecyclerViewItem(post.id, post.title, post.user.name, post.created_at, post.img, post.user.profile, post.likes.size)
-                    postRecyclerViewItemList.add(postRecyclerViewItem)
+                    postRecyclerViewItemList.add(post)
                 }
 
                 postRecyclerViewAdapter.updateItem(postRecyclerViewItemList)

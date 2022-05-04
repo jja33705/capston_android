@@ -20,7 +20,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CapstonAndroid"
         android:usesCleartextTraffic="true">
-
+        <activity
+            android:name=".activity.NotificationActivity"
+            android:exported="false" />
         <activity
             android:name=".activity.FollowerActivity"
             android:exported="false" />
@@ -123,11 +125,9 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="${MAPS_API_KEY}" />
-
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@mipmap/ic_main" />
-
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/main_color" />

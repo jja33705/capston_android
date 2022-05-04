@@ -3,12 +3,12 @@ package com.example.capstonandroid.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.capstonandroid.RankingItem
 import com.example.capstonandroid.Utils
 import com.example.capstonandroid.databinding.ItemLoadingBinding
 import com.example.capstonandroid.databinding.RankingItemBinding
+import com.example.capstonandroid.network.dto.Post
 
-class RankingRecyclerViewAdapter(rankingItemList: ArrayList<RankingItem?>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class RankingRecyclerViewAdapter(rankingItemList: ArrayList<Post?>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var filteredList = rankingItemList
 
@@ -24,7 +24,7 @@ class RankingRecyclerViewAdapter(rankingItemList: ArrayList<RankingItem?>) : Rec
         }
     }
 
-    fun updateItem(rankingItemList: ArrayList<RankingItem?>) {
+    fun updateItem(rankingItemList: ArrayList<Post?>) {
         filteredList = rankingItemList
     }
 
@@ -55,12 +55,12 @@ class RankingRecyclerViewAdapter(rankingItemList: ArrayList<RankingItem?>) : Rec
     }
 
     inner class RankingViewHolder(private val binding: RankingItemBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(ranking: RankingItem) {
-            binding.tvRanking.text = ranking.ranking.toString()
+        fun bind(ranking: Post) {
+            binding.tvRanking.text = (adapterPosition + 1).toString()
             binding.tvRankingDate.text = ranking.date
-            binding.tvRankingSpeed.text = "${Utils.formatDoublePointTwo(ranking.speed)}km/h"
+            binding.tvRankingSpeed.text = "${Utils.formatDoublePointTwo(ranking.average_speed)}km/h"
             binding.tvRankingTime.text = Utils.timeToText(ranking.time)
-            binding.tvUserName.text = ranking.userName
+            binding.tvUserName.text = ranking.user.name
         }
     }
 

@@ -3,12 +3,12 @@ package com.example.capstonandroid.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.capstonandroid.FriendlyMatchingItem
 import com.example.capstonandroid.Utils
 import com.example.capstonandroid.databinding.FriendlyMatchingItemBinding
 import com.example.capstonandroid.databinding.ItemLoadingBinding
+import com.example.capstonandroid.network.dto.Post
 
-class FriendlyMatchingRecyclerViewAdapter(friendlyMatchingItemList: ArrayList<FriendlyMatchingItem?>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class FriendlyMatchingRecyclerViewAdapter(friendlyMatchingItemList: ArrayList<Post?>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     // 아이템 클릭 이벤트 처리를 위한 커스텀 리스너
     interface OnItemClickListener {
@@ -34,7 +34,7 @@ class FriendlyMatchingRecyclerViewAdapter(friendlyMatchingItemList: ArrayList<Fr
         mOnItemClickListener = onItemClickListener
     }
 
-    fun updateItem(friendlyMatchingItemList: ArrayList<FriendlyMatchingItem?>) {
+    fun updateItem(friendlyMatchingItemList: ArrayList<Post?>) {
         filteredList = friendlyMatchingItemList
     }
 
@@ -74,12 +74,12 @@ class FriendlyMatchingRecyclerViewAdapter(friendlyMatchingItemList: ArrayList<Fr
                 }
             }
         }
-        fun bind(friendlyMatching: FriendlyMatchingItem) {
-            binding.tvPostTitle.text = friendlyMatching.postTitle
-            binding.tvRankingDate.text = friendlyMatching.date
-            binding.tvRankingSpeed.text = "${Utils.formatDoublePointTwo(friendlyMatching.speed)}km/h"
-            binding.tvRankingTime.text = Utils.timeToText(friendlyMatching.time)
-            binding.tvUserName.text = friendlyMatching.userName
+        fun bind(friendlyMatching: Post) {
+            binding.tvPostTitle.text = friendlyMatching.title
+            binding.tvDate.text = friendlyMatching.date
+            binding.tvSpeed.text = "${Utils.formatDoublePointTwo(friendlyMatching.average_speed)}km/h"
+            binding.tvTime.text = Utils.timeToText(friendlyMatching.time)
+            binding.tvUserName.text = friendlyMatching.user.name
         }
     }
 }
