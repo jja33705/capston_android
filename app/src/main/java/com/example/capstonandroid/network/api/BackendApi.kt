@@ -62,7 +62,7 @@ interface BackendApi {
     @GET("goal/check")  //목표 체크
     fun userGoalCheck(@Header("Authorization") token : String) : Call<UserGoalCheckResponse>
 
-    @POST("goal") // 댓글 등록..
+    @POST("goal") // 목표 등록..
     fun goal(@Header("Authorization")token: String,@Body goal: Goal) : Call<GoalResponse>
 
     @DELETE("goal/delete/{goalID}") // 자기 게시물 삭제
@@ -71,6 +71,8 @@ interface BackendApi {
     @GET("userSearch") //유저 검색!!!!!!!!!
     fun userSearch(@Header("Authorization")token: String,@Query("keyword") keyword: String) : Call<FollowerResponse>
 
+    @GET("comment/index/{postId}") //댓글 검색!!!!!!!!!
+    suspend fun commentIndex(@Header("Authorization")token: String,@Path("postId") postId: Int) : Response<CommentIndexResponse>
 
 //  재현 코드
 //    @GET("test") // 보낼 url

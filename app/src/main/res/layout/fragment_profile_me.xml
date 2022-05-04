@@ -22,6 +22,8 @@
 
             <!--            -->
             <LinearLayout
+                android:layout_gravity="center"
+                android:gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
@@ -29,16 +31,21 @@
 
 
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:id="@+id/medal_layout"
+                    android:layout_width="110dp"
+                    android:layout_height="110dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+
+
+                    >
 
                     <ImageView
+                        android:layout_gravity="center"
                         android:id="@+id/tv_profile_me_picture"
                         android:layout_width="wrap_content"
-                        android:layout_height="110dp"
-                        android:layout_weight="1">
-                    </ImageView>
+                        android:layout_height="wrap_content"></ImageView>
                 </LinearLayout>
 
                 <LinearLayout
@@ -184,16 +191,16 @@
             android:layout_height="30dp"
             android:text="ログアウト"></Button>
 
-<!--        <Button-->
-<!--            android:layout_margin="5dp"-->
-<!--            android:background="@drawable/login_button"-->
+        <!--        <Button-->
+        <!--            android:layout_margin="5dp"-->
+        <!--            android:background="@drawable/login_button"-->
 
-<!--            android:includeFontPadding="false"-->
-<!--            android:fontFamily="@font/noto_sans_jp_regular"-->
-<!--            android:id="@+id/picTest"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="30dp"-->
-<!--            android:text="테스트"></Button>-->
+        <!--            android:includeFontPadding="false"-->
+        <!--            android:fontFamily="@font/noto_sans_jp_regular"-->
+        <!--            android:id="@+id/picTest"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="30dp"-->
+        <!--            android:text="테스트"></Button>-->
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

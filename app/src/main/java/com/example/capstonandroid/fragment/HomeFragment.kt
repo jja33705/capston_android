@@ -28,6 +28,7 @@ class HomeFragment : Fragment()  {
 
     private  lateinit var retrofit: Retrofit  //레트로핏
     private  lateinit var supplementService: BackendApi // api
+
     private lateinit var postRecyclerViewItemList: ArrayList<Post?>
     private lateinit var postRecyclerViewAdapter: PostRecyclerViewAdapter
     private lateinit var postRecyclerView: RecyclerView

@@ -3,22 +3,28 @@ package com.example.capstonandroid.activity
 // SNS 누르면 자세히 뜨는 것
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.AttributeSet
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.capstonandroid.R
 import com.example.capstonandroid.Utils
+import com.example.capstonandroid.adapter.CommentRecyclerViewAdapter
+import com.example.capstonandroid.adapter.PostRecyclerViewAdapter
 import com.example.capstonandroid.databinding.ActivityPostBinding
 import com.example.capstonandroid.network.RetrofitClient
 import com.example.capstonandroid.network.api.BackendApi
-import com.example.capstonandroid.network.dto.FollowResponse
-import com.example.capstonandroid.network.dto.LikeResponse
-import com.example.capstonandroid.network.dto.Post
+import com.example.capstonandroid.network.dto.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
@@ -36,6 +42,7 @@ class PostActivity : AppCompatActivity() {
 
     private var _binding: ActivityPostBinding? = null
     private val binding get() = _binding!!
+
 
     @SuppressLint("NewApi")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -100,13 +107,14 @@ class PostActivity : AppCompatActivity() {
                 }
 
                 if (post.opponent_post != null) {
-                    binding.tvOpponent.text = "${post.opponent_post!!.user.name}様の「${post.opponent_post!!.title}」と一緒に走りました！"
+                    binding.tvOpponent.text =
+                        "${post.opponent_post!!.user.name}様の「${post.opponent_post!!.title}」と一緒に走りました！"
                     binding.tvOpponent.visibility = View.VISIBLE
                 }
             }
         }
 
-        binding.likeButton.setOnClickListener {
+            binding.likeButton.setOnClickListener {
 //            supplementService.postLike(token, postID).enqueue(object : Callback<LikeResponse> {
 //                override fun onResponse(
 //                    call: Call<LikeResponse>,
@@ -145,22 +153,40 @@ class PostActivity : AppCompatActivity() {
 //                }
 //
 //                override fun onFailure(call: Call<LikeResponse>, t: Throwable) {
-//                    TODO("Not yet implemented")
 //                }
 //
 //            })
-        }
+            }
 
-        binding.commentButton.setOnClickListener {
+            binding.commentButton.setOnClickListener {
+
+//            supplementService.commentIndex(token,).enqueue(object : Callback<CommentIndexResponse>{
+//                override fun onResponse(
+//                    call: Call<CommentIndexResponse>,
+//                    response: Response<CommentIndexResponse>
+//                ) {
+//                    if(response.isSuccessful){
+//
+//                    }else {
+//
+//                    }
+//                }
+//
+//                override fun onFailure(call: Call<CommentIndexResponse>, t: Throwable) {
+//                }
+//
+//            })
+
+
 //
 //            println("머지? 왜 안날라가")
 //            val nextIntent = Intent(this, SNSCommentActivity::class.java)
 //            nextIntent.putExtra("data_num", data_num)
 //            nextIntent.putExtra("data_page", data_page)
 //            startActivity(nextIntent)
-        }
+            }
 
-        binding.followbutton.setOnClickListener {
+            binding.followbutton.setOnClickListener {
 //            supplementService.userFollow(token, userID).enqueue(object : Callback<FollowResponse> {
 //                override fun onResponse(
 //                    call: Call<FollowResponse>,
@@ -169,21 +195,25 @@ class PostActivity : AppCompatActivity() {
 //                    binding.followbutton.setText("언팔로우")
 //                }
 //
-//                override fun onFailure(call: Call<FollowResponse>, t: Throwable) {
-//                    TODO("Not yet implemented")
+//                override fun onFailure(call: Call<FollowResponse>, t: Throwable) {\
 //                }
 //            })
+            }
+
         }
 
-    }
+        private fun initRetrofit() {
+            retrofit = RetrofitClient.getInstance()
+            supplementService = retrofit.create(BackendApi::class.java);
+        }
 
-    private fun initRetrofit() {
-        retrofit = RetrofitClient.getInstance()
-        supplementService = retrofit.create(BackendApi::class.java);
-    }
+        override fun onDestroy() {
+            super.onDestroy()
+            _binding = null
+        }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
+        override fun onCreateView(name: String, context: Context, attrs: AttributeSet): View? {
+            return super.onCreateView(name, context, attrs)
+
+        }
     }
-}

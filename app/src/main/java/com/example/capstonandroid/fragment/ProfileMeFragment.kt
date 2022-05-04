@@ -51,7 +51,7 @@ class ProfileMeFragment : Fragment(){
     private var chart_max :Float = 0.0f;
     private var chart_min :Float = 0.0f;
 
-//    private val binding: FragmentProfileMeBinding get() = _binding!!
+    //    private val binding: FragmentProfileMeBinding get() = _binding!!
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -267,7 +267,7 @@ class ProfileMeFragment : Fragment(){
 
 
 
- supplementService.userGet(token.toString()).enqueue(object : Callback<LoginUserResponse>{
+        supplementService.userGet(token.toString()).enqueue(object : Callback<LoginUserResponse>{
             override fun onResponse(
                 call: Call<LoginUserResponse>,
                 response: Response<LoginUserResponse>
@@ -275,26 +275,38 @@ class ProfileMeFragment : Fragment(){
                 println(response.body())
                 var loginuserResponse: LoginUserResponse? = response.body()
                 var user_name = loginuserResponse?.name
-                    var user_followers = loginuserResponse?.followers?.count().toString()
-                    var user_followings = loginuserResponse?.followings?.count().toString()
-                    var user_mmr = loginuserResponse?.mmr
+                var user_followers = loginuserResponse?.followers?.count().toString()
+                var user_followings = loginuserResponse?.followings?.count().toString()
+                var user_mmr = loginuserResponse?.mmr
 
-                    binding.tvProfileMeName.setText(user_name)
-                    binding.tvProfileMeFollowers.setText("フォロワー : " + user_followers)
-                    binding.tvProfileMeFollowings.setText("フォロー中 : "+user_followings)
-                    binding.tvProfileMeMmr.setText("MMR : " + user_mmr)
+                binding.tvProfileMeName.setText(user_name)
+                binding.tvProfileMeFollowers.setText("フォロワー : " + user_followers)
+                binding.tvProfileMeFollowings.setText("フォロー中 : "+user_followings)
+                binding.tvProfileMeMmr.setText("MMR : " + user_mmr)
 
 
                 if (loginuserResponse?.profile.equals(null)||loginuserResponse?.profile.equals("img")){
-                        binding.tvProfileMePicture.setImageResource(R.drawable.main_profile)
-                    }else {
+                    binding.tvProfileMePicture.setImageResource(R.drawable.main_profile)
+                }else {
 
-                        val url = response.body()!!.profile
-                        Glide.with(this@ProfileMeFragment)
-                            .load(url)
-                            .circleCrop()
-                            .into(binding.tvProfileMePicture)
-                    }
+                    val url = response.body()!!.profile
+                    Glide.with(this@ProfileMeFragment)
+                        .load(url)
+                        .override(250, 250)
+                        .circleCrop()
+                        .into(binding.tvProfileMePicture)
+
+
+                }
+
+                if(user_mmr!! >= 0&& user_mmr!! <= 99){
+                    binding.medalLayout.setBackgroundResource(R.drawable.medal_bronze)
+                }else if (user_mmr >= 100 && user_mmr <= 199){
+                    binding.medalLayout.setBackgroundResource(R.drawable.medal_silver)
+                }else if (user_mmr >= 200){
+                    binding.medalLayout.setBackgroundResource(R.drawable.medal_gold)
+                }
+
             }
 
             override fun onFailure(call: Call<LoginUserResponse>, t: Throwable) {
@@ -401,3 +413,4 @@ class ProfileMeFragment : Fragment(){
             }
     }
 }
+
