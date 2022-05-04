@@ -57,6 +57,8 @@
     <!-- Toolbar -->
     <string name="back">Back</string>
 
+    <string name="firebase_default_notification_channel_id">FCM_NOTIFICATION_CHANNEL_ID</string>
+
     <!-- etc -->
 
     <item name="visible" type="id" />

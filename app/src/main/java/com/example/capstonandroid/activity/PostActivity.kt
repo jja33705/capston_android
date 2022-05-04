@@ -49,7 +49,8 @@ class PostActivity : AppCompatActivity() {
         initRetrofit()
 
         val intent = intent
-        val postId = intent.getIntExtra("postId", 0)
+        var postId = intent.getIntExtra("postId", -1)
+
         var token = "Bearer " + getSharedPreferences("other", MODE_PRIVATE).getString("TOKEN", "")
         CoroutineScope(Dispatchers.Main).launch {
             val getPostResponse = supplementService.getPost(token, postId)

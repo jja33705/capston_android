@@ -135,6 +135,8 @@ interface BackendApi {
     @GET("user") // 유저확인
     suspend fun getUser(@Header("Authorization") token: String): Response<User>
 
+//    @GET("")
+
     @PATCH("fcmToken") // fcmToken 저장
     suspend fun fcmToken(@Header("Authorization") token: String, @Body fcmToken: FcmToken): Response<ResponseMessage>
 }

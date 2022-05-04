@@ -1,4 +1,4 @@
-package com.example.capstonandroid
+package com.example.capstonandroid.service
 
 import android.annotation.SuppressLint
 import android.app.*
@@ -8,29 +8,22 @@ import android.os.IBinder
 import android.os.Looper
 import androidx.core.app.NotificationCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import androidx.room.Room
+import com.example.capstonandroid.R
+import com.example.capstonandroid.Utils
 import com.example.capstonandroid.activity.CompleteRecordActivity
-import com.example.capstonandroid.activity.TrackPaceMakeActivity
+import com.example.capstonandroid.activity.TrackRecordActivity
 import com.example.capstonandroid.db.AppDatabase
 import com.example.capstonandroid.db.dao.GpsDataDao
-import com.example.capstonandroid.db.dao.OpponentGpsDataDao
 import com.example.capstonandroid.db.entity.GpsData
-import com.example.capstonandroid.db.entity.OpponentGpsData
-import com.example.capstonandroid.network.RetrofitClient
-import com.example.capstonandroid.network.api.BackendApi
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.tasks.Task
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import retrofit2.Retrofit
 import java.util.*
 
-class TrackPaceMakeService : Service() {
-
-    private lateinit var retrofit: Retrofit // 레트로핏 인스턴스
-    private lateinit var supplementService: BackendApi // api
+class TrackRecordService : Service() {
 
     private lateinit var mNotificationManager: NotificationManager // 상단바에 뜨는 노티피케이션 매니저
 
@@ -38,89 +31,63 @@ class TrackPaceMakeService : Service() {
 
     private lateinit var mLocationCallback: LocationCallback // 위치 정보 업데이트 콜백
 
-    // db 사용을 위한 data access object
-    private lateinit var gpsDataDao: GpsDataDao
-    private lateinit var opponentGpsDataDao: OpponentGpsDataDao
+    private lateinit var gpsDataDao: GpsDataDao // db 사용을 위한 data access object
 
     private lateinit var beforeLocation: Location // 비교를 위한 이전 위치
 
-    // 내 관련 정보
+    private val timer = Timer() // 시간 업데이트를 위한 타이머
+
     private var sumAltitude: Double = 0.0 // 누적 상승 고도
     private var second: Int = 0 // 시간 (초)
-    private var distance = 0.0 // 거리 (km)
+    private var distance = 0.0 // 거리 (m)
     private var avgSpeed = 0.0 // 평균 속도
+
     private var calorie = 0.0 // 칼로리
-
-    // 상대 관련 데이터
-    private var opponentRecordEndSecond = 0
-    private lateinit var opponentGpsData: OpponentGpsData
-    private var opponentSpeed = 0F
-
-    private val timer = Timer() // 시간 업데이트를 위한 타이머
 
     companion object {
         var isStarted = false
         var trackName = ""
-        var trackId = ""
         var exerciseKind = ""
-        var matchType = ""
-        var opponentPostId = 0
-        var opponentGpsDataId = ""
-        var opponentUserName = ""
-        var mLocation: Location? = null // 내 위치
-        var myLocationIndexOnTrack = 0 // 내가 트랙 위에 어디쯤 존재하는지
+        var trackId = ""
+        var mLocation: Location? = null
+        var checkpointIndex = 0
+        var myLocationIndexOnTrack = 0
         var mySumDistanceOnTrack = 0F // 내가 이동한 트랙위의 거리
         var myBeforeLocationChangedSecond = 0 // 이전 내 위치 바뀐 시간
-        var checkpointIndex = 0
-        var opponentLocation: Location? = null // 상대 위치
-        var opponentLocationIndexOnTrack = 0 // 상대가 트랙 위에 어디쯤 존재하는지
-        var opponentSumDistanceOnTrack = 0F
-        var opponentBeforeLocationChangedSecond = 0 // 이전 상대 위치 바뀐 시간
-        var opponentAvgSpeed = 0.0
-        var opponentTime = 0
 
-        private const val PREFIX = "com.example.capstonandroid.trackpacemakeservice"
+        private const val PREFIX = "com.example.capstonandroid.trackrecordservice"
 
         const val NOTIFICATION_CHANNEL_ID: String = PREFIX
         const val NOTIFICATION_CHANNEL_NAME: String = PREFIX
         const val NOTIFICATION_ID: Int = 1111
 
-        const val ACTION_BROADCAST = "${PREFIX}.BROADCAST"
+        const val ACTION_BROADCAST = "$PREFIX.BROADCAST"
 
         // command
-        const val START_RECORD = "${PREFIX}.STOP_RECORD"
-        const val STOP_SERVICE = "${PREFIX}.STOP_SERVICE"
-        const val START_PROCESS = "${PREFIX}.STOP_PROCESS"
-        const val COMPLETE_RECORD = "${PREFIX}.COMPLETE_RECORD"
-        const val UPLOAD_POST = "${PREFIX}.UPLOAD_POST"
+        const val START_RECORD = "$PREFIX.STOP_RECORD"
+        const val STOP_SERVICE = "$PREFIX.STOP_SERVICE"
+        const val START_PROCESS = "$PREFIX.STOP_PROCESS"
+        const val COMPLETE_RECORD = "$PREFIX.COMPLETE_RECORD"
 
         // flag
-        const val OPPONENT_START_LAT_LNG = "${PREFIX}.OPPONENT_START_LAT_LNG"
-        const val BEFORE_START_LOCATION_UPDATE = "${PREFIX}.BEFORE_START_LOCATION_UPDATE"
+        const val BEFORE_START_LOCATION_UPDATE = "$PREFIX.BEFORE_START_LOCATION_UPDATE"
         const val AFTER_START_UPDATE = "AFTER_START_UPDATE"
-        const val RECORD_START_LAT_LNG = "${PREFIX}.RECORD_START_LAT_LNG"
+        const val RECORD_START_LAT_LNG = "$PREFIX.RECORD_START_LAT_LNG"
 
         // intent keyword
-        const val LAT_LNG = "${PREFIX}.LAT_LNG"
-        const val SECOND = "${PREFIX}.SECOND"
-        const val DISTANCE = "${PREFIX}.DISTANCE"
-        const val AVG_SPEED = "${PREFIX}.AVG_SPEED"
-        const val OPPONENT_LAT_LNG = "${PREFIX}.OPPONENT_LAT_LNG"
-        const val SPEED = "${PREFIX}.SPEED"
-        const val OPPONENT_SPEED = "${PREFIX}.OPPONENT_SPEED"
-        const val LOCATION_CHANGED = "${PREFIX}.LOCATION_CHANGED"
-        const val OPPONENT_LOCATION_CHANGED = "${PREFIX}.OPPONENT_LOCATION_CHANGED"
-        const val CALORIE = "${PREFIX}.CALORIE"
+        const val LAT_LNG = "$PREFIX.LAT_LNG"
+        const val SECOND = "$PREFIX.SECOND"
+        const val DISTANCE = "$PREFIX.DISTANCE"
+        const val AVG_SPEED = "$PREFIX.AVG_SPEED"
+        const val LOCATION_CHANGED = "$PREFIX.LOCATION_CHANGED"
+        const val CALORIE = "$PREFIX.CALORIE"
 
-        // 1초에 갈 수 있다고 생각되는 최대 거리 30미터????
         const val MAX_DISTANCE = 30F
     }
 
     // 제일 처음 호출 (1회성으로 서비스가 이미 실행중이면 호출되지 않는다)
     override fun onCreate() {
         println("service: onCreate() 호출")
-
-        initRetrofit()
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this) // 통합 위치 제공자 초기화
 
@@ -144,13 +111,14 @@ class TrackPaceMakeService : Service() {
         // db 사용 설정
         val db = AppDatabase.getInstance(applicationContext)!!
         gpsDataDao = db.gpsDataDao()
-        opponentGpsDataDao = db.opponentGpsDataDao()
 
         mNotificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager // 노티피케이션 매니저 초기롸
 
         createNotificationChannel() // 노티피케이션 채널 생성
 
         startForeground(NOTIFICATION_ID, getNotification()) // 포그라운드 서비스 시작
+
+        createLocationRequest() // 위치 업데이트 시작
     }
 
     // 타이머 시작
@@ -172,28 +140,13 @@ class TrackPaceMakeService : Service() {
 
                     beforeLocation = mLocation!!
 
-                    // 내 현재 상태 db에 저장
+                    // db에 저장
                     gpsDataDao.insertGpsData(GpsData(second, mLocation!!.latitude, mLocation!!.longitude, mLocation!!.speed, distance, mLocation!!.altitude))
                 }
 
                 //평균속도
                 if (second > 0) {
                     avgSpeed = distance / (second.toDouble() / 3600)
-                }
-
-                // 이 시간에 상대 기록된 상대 운동 데이터 있는지
-                val opponentLocationChanged = opponentGpsDataDao.isRecordExistsOpponentGpsData(second)
-                println("상대 운동 데이터 바꼈나? $opponentLocationChanged")
-
-                // 상대 운동 데이터 있으면 수행
-                if (opponentLocationChanged) {
-                    // 상대 현재 상태 가져오기
-                    opponentGpsData = opponentGpsDataDao.getOpponentGpsDataBySecond(second)
-                    opponentLocation!!.latitude = opponentGpsData.lat
-                    opponentLocation!!.longitude = opponentGpsData.lng
-
-                    // 상대방 속도
-                    opponentSpeed = opponentGpsData.speed
                 }
 
                 // 칼로리
@@ -213,15 +166,11 @@ class TrackPaceMakeService : Service() {
                 val intent = Intent(ACTION_BROADCAST)
                 intent.putExtra("flag", AFTER_START_UPDATE)
                 intent.putExtra(LAT_LNG, LatLng(mLocation!!.latitude, mLocation!!.longitude))
-                intent.putExtra(OPPONENT_LAT_LNG, LatLng(opponentLocation!!.latitude, opponentLocation!!.longitude))
                 intent.putExtra(SECOND, second)
                 intent.putExtra(DISTANCE, distance)
                 intent.putExtra(AVG_SPEED, avgSpeed)
                 intent.putExtra(CALORIE, calorie)
-                intent.putExtra(SPEED, mLocation!!.speed)
                 intent.putExtra(LOCATION_CHANGED, locationChanged)
-                intent.putExtra(OPPONENT_SPEED, opponentSpeed)
-                intent.putExtra(OPPONENT_LOCATION_CHANGED, opponentLocationChanged)
                 LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intent)
             }
 
@@ -232,19 +181,17 @@ class TrackPaceMakeService : Service() {
     private fun getNotification(): Notification {
 
         // 알람 누르면 액티비티 시작하게 하는 pendingIntent
-        val activityIntent = Intent(applicationContext, TrackPaceMakeActivity::class.java)
+        val activityIntent = Intent(applicationContext, TrackRecordActivity::class.java)
         activityIntent.putExtra("exerciseKind", exerciseKind)
-        activityIntent.putExtra("matchType", matchType)
         activityIntent.putExtra("trackId", trackId)
-        activityIntent.putExtra("opponentGpsDataId", opponentGpsDataId)
-        activityIntent.putExtra("opponentPostId", opponentPostId)
-        activityIntent.putExtra("opponentAvgSpeed", opponentAvgSpeed)
-        activityIntent.putExtra("opponentTime", opponentTime)
-
         val activityPendingIntent = PendingIntent.getActivity(this, 0, activityIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
 
         val builder = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
-            .setContentText("$trackName   ${Utils.timeToText(second)}    ${Utils.distanceToText(distance)}km")
+            .setContentText("$trackName   ${Utils.timeToText(second)}    ${
+                Utils.distanceToText(
+                    distance
+                )
+            }km")
             .setContentTitle("페이스메이커")
             .setOngoing(true) //종료 못하게 막음
             .setPriority(NotificationCompat.PRIORITY_MAX)
@@ -253,12 +200,6 @@ class TrackPaceMakeService : Service() {
             .setWhen(System.currentTimeMillis())
 
         return builder.build()
-    }
-
-    // 레트로핏 초기화
-    private fun initRetrofit() {
-        retrofit = RetrofitClient.getInstance()
-        supplementService = retrofit.create(BackendApi::class.java)
     }
 
     // notification 등록을 위한 채널 생성
@@ -274,55 +215,11 @@ class TrackPaceMakeService : Service() {
 
         when(intent?.action) {
             START_PROCESS -> { // 액티비티 실행되고 프로세스 시작
+                // intent 로 정보 받고 notification 업데이트
                 trackId = intent.getStringExtra("trackId")!!
                 trackName = intent.getStringExtra("trackName")!!
                 exerciseKind = intent.getStringExtra("exerciseKind")!!
-                matchType = intent.getStringExtra("matchType")!!
-                opponentPostId = intent.getIntExtra("opponentPostId", 0)
-                opponentGpsDataId = intent.getStringExtra("opponentGpsDataId")!!
-                opponentAvgSpeed = intent.getDoubleExtra("opponentAvgSpeed", 0.0)
-                opponentTime = intent.getIntExtra("opponentTime", 0)
-
                 mNotificationManager.notify(NOTIFICATION_ID, getNotification())
-
-                println("상대 평균속도: $opponentAvgSpeed")
-                println("상대 시간: $opponentTime")
-
-                // 상대 gps data 가져와서 db에 넣고 액티비티로 보냄
-                CoroutineScope(Dispatchers.Main).launch {
-                    // 상대 gps 데이터 가져옴
-                    val token = "Bearer " + getSharedPreferences("other", MODE_PRIVATE).getString("TOKEN", "")!!
-                    val gpsDataResponse = supplementService.getGpsData(token, opponentGpsDataId)
-                    if (gpsDataResponse.isSuccessful) {
-                        val opponentGpsData = gpsDataResponse.body()!!.gpsData
-                        opponentRecordEndSecond = opponentGpsData.totalTime
-                        opponentUserName = opponentGpsData.user.name
-
-                        launch(Dispatchers.IO) {
-                            // 모두 db에 저장
-                            opponentGpsDataDao.deleteAllOpponentGpsData()
-                            println("상대 데이터 시간: ${opponentGpsData.time} ${opponentGpsData.totalTime}")
-                            opponentGpsData.time.forEachIndexed() { i, second ->
-                                opponentGpsDataDao.insertOpponentGpsData(OpponentGpsData(second, opponentGpsData.gps.coordinates[i][1], opponentGpsData.gps.coordinates[i][0], opponentGpsData.speed[i].toFloat(), opponentGpsData.distance[i], opponentGpsData.altitude[i]))
-                            }
-
-                            // 상대 시작 위치 가져오기
-                            opponentLocation = Location("opponentLocation")
-                            val opponentStartGpsData = opponentGpsDataDao.getOpponentGpsDataBySecond(second)
-                            opponentLocation!!.latitude = opponentStartGpsData.lat
-                            opponentLocation!!.longitude = opponentStartGpsData.lng
-
-                            println("다 넣었을까: ${opponentGpsDataDao.getAllOpponentGpsData()}")
-                        }.join()
-
-                        // 상대 시작위치 보냄
-                        val intent = Intent(ACTION_BROADCAST)
-                        intent.putExtra("flag", OPPONENT_START_LAT_LNG)
-                        intent.putExtra(OPPONENT_LAT_LNG, LatLng(opponentLocation!!.latitude, opponentLocation!!.longitude))
-                        LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intent)
-                    }
-                    createLocationRequest() // 위치 업데이트 시작
-                }
             }
             START_RECORD -> { // 기록 시작
                 CoroutineScope(Dispatchers.Main).launch {
@@ -330,8 +227,8 @@ class TrackPaceMakeService : Service() {
 
                     beforeLocation = mLocation!!
 
+                    // 시작위치 db에 저장
                     launch(Dispatchers.IO) {
-                        // 시작위치 db에 저장
                         gpsDataDao.deleteAllGpsData()
                         gpsDataDao.insertGpsData(GpsData(second, mLocation!!.latitude, mLocation!!.longitude, mLocation!!.speed, distance, mLocation!!.altitude))
                     }.join()
@@ -340,7 +237,6 @@ class TrackPaceMakeService : Service() {
                     val intent = Intent(ACTION_BROADCAST)
                     intent.putExtra("flag", RECORD_START_LAT_LNG)
                     intent.putExtra(LAT_LNG, LatLng(mLocation!!.latitude, mLocation!!.longitude))
-                    intent.putExtra(OPPONENT_LAT_LNG, LatLng(opponentLocation!!.latitude, opponentLocation!!.longitude))
                     LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intent)
 
                     // 타이머 시작
@@ -348,19 +244,16 @@ class TrackPaceMakeService : Service() {
                 }
             }
             COMPLETE_RECORD -> { // 기록 끝
-                stopRecord()
-            }
-            UPLOAD_POST -> {
-                val intent = Intent(this@TrackPaceMakeService, CompleteRecordActivity::class.java)
+
+                val intent = Intent(this@TrackRecordService, CompleteRecordActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 intent.putExtra("avgSpeed", avgSpeed)
                 intent.putExtra("kcal", calorie)
                 intent.putExtra("sumAltitude", sumAltitude)
                 intent.putExtra("second", second)
-                intent.putExtra("matchType", matchType)
+                intent.putExtra("matchType", "싱글")
                 intent.putExtra("trackId", trackId)
                 intent.putExtra("exerciseKind", exerciseKind)
-                intent.putExtra("opponentPostId", opponentPostId)
                 intent.putExtra("distance", distance)
 
                 startActivity(intent)
@@ -368,13 +261,9 @@ class TrackPaceMakeService : Service() {
                 stopService()
             }
             STOP_SERVICE -> { // 서비스 종료
-                stopRecord()
                 stopService()
             }
         }
-
-
-
         return START_NOT_STICKY // 서비스 중단하면 재생성하지 않는다.
     }
 
@@ -410,34 +299,24 @@ class TrackPaceMakeService : Service() {
         }
     }
 
-    // 콜백 다 제거해서 더이상 업데이트 안되도록 수정
     private fun stopRecord() {
-        mFusedLocationClient.removeLocationUpdates(mLocationCallback) // 위치 업데이트 제거
-        timer.cancel() // 타이머 제거
+
     }
 
     private fun stopService() {
+        mFusedLocationClient.removeLocationUpdates(mLocationCallback) // 위치 업데이트 제거
+        timer.cancel() // 타이머 제거
+
         // companion object 리셋
         isStarted = false
         trackName = ""
-        trackId = ""
         exerciseKind = ""
-        matchType = ""
-        opponentPostId = 0
-        opponentGpsDataId = ""
-        opponentUserName = ""
+        trackId = ""
         mLocation = null
+        checkpointIndex = 0
         myLocationIndexOnTrack = 0
         mySumDistanceOnTrack = 0F
         myBeforeLocationChangedSecond = 0
-        opponentLocation = null
-        checkpointIndex = 0
-        opponentLocationIndexOnTrack = 0
-        opponentSumDistanceOnTrack = 0F
-        opponentBeforeLocationChangedSecond = 0
-        opponentAvgSpeed = 0.0
-        opponentTime = 0
-
         stopForeground(true)
         stopSelf()
     }

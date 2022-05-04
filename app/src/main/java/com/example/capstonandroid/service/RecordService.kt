@@ -1,4 +1,4 @@
-package com.example.capstonandroid
+package com.example.capstonandroid.service
 
 import android.annotation.SuppressLint
 import android.app.*
@@ -8,6 +8,8 @@ import android.os.IBinder
 import android.os.Looper
 import androidx.core.app.NotificationCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.example.capstonandroid.R
+import com.example.capstonandroid.Utils
 import com.example.capstonandroid.activity.CompleteRecordActivity
 import com.example.capstonandroid.activity.RecordActivity
 import com.example.capstonandroid.db.AppDatabase

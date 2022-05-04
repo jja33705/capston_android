@@ -309,9 +309,9 @@ class ProfileMeFragment : Fragment(){
 
             val builder = AlertDialog.Builder(requireContext())
             builder.setTitle("本当にログアウトしますか。")
-                .setPositiveButton("확인", DialogInterface.OnClickListener{ dialog, id->
+                .setPositiveButton("확인") { _, _->
 
-                    supplementService.logOut(token.toString()).enqueue(object : Callback<LogoutResponse> {
+                    supplementService.logOut(token).enqueue(object : Callback<LogoutResponse> {
                         override fun onResponse(
                             call: Call<LogoutResponse>,
                             response: Response<LogoutResponse>
@@ -323,6 +323,7 @@ class ProfileMeFragment : Fragment(){
 //                  콜백 응답으로 온것
                                 println(response.body())
                                 startActivity(loginActivity)
+                                activity?.finish()
 
                             } else {
                                 println("갔지만 실패")
@@ -346,10 +347,10 @@ class ProfileMeFragment : Fragment(){
                     println("여긴 자동로그인 맞나 아닌가"+ autologin)
                     editor.apply()
 
-                })
-                .setNegativeButton("취소",DialogInterface.OnClickListener{ dialog,id ->
+                }
+                .setNegativeButton("취소") { _, _ ->
                     println("취소 하셨네요")
-                })
+                }
 
             builder.show()
 

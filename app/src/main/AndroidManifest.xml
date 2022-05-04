@@ -45,9 +45,6 @@
             android:name=".activity.SNSCommentActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.MeDetailsActivity"
-            android:exported="false" />
-        <activity
             android:name=".activity.TrackActivity"
             android:exported="false" />
         <activity
@@ -62,31 +59,31 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".activity.PostActivity"
-            android:exported="false" />
+            android:exported="false">
+        </activity>
 
         <service
-            android:name=".TrackRecordService"
+            android:name=".service.TrackRecordService"
             android:enabled="true"
             android:exported="true"
             android:foregroundServiceType="location" />
         <service
-            android:name=".RecordService"
+            android:name=".service.RecordService"
             android:enabled="true"
             android:exported="true"
             android:foregroundServiceType="location" />
         <service
-            android:name=".TrackPaceMakeService"
+            android:name=".service.TrackPaceMakeService"
             android:enabled="true"
             android:exported="true"
             android:foregroundServiceType="location" />
         <service
-            android:name=".MyFirebaseMessagingService"
+            android:name=".service.MyFirebaseMessagingService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
@@ -116,6 +113,7 @@
             android:exported="true" />
         <activity
             android:name=".activity.MainActivity"
+            android:launchMode="singleTask"
             android:exported="true" />
         <activity
             android:name=".activity.RecordActivity"
@@ -131,6 +129,10 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/main_color" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="@string/firebase_default_notification_channel_id" />
+
     </application>
 
 </manifest>

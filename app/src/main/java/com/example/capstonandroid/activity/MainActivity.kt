@@ -11,9 +11,9 @@ import android.os.Bundle
 import android.view.*
 import android.widget.Button
 import com.example.capstonandroid.R
-import com.example.capstonandroid.RecordService
-import com.example.capstonandroid.TrackPaceMakeService
-import com.example.capstonandroid.TrackRecordService
+import com.example.capstonandroid.service.RecordService
+import com.example.capstonandroid.service.TrackPaceMakeService
+import com.example.capstonandroid.service.TrackRecordService
 import com.example.capstonandroid.databinding.ActivityMainBinding
 import com.example.capstonandroid.fragment.HomeFragment
 import com.example.capstonandroid.fragment.MeFragment
@@ -58,6 +58,8 @@ class MainActivity : AppCompatActivity() {
             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT) // 액티비티 스택 내에 있으면 재실행 함
             startActivity(intent)
         }
+
+        checkAndStartPostActivityFromNotification(intent)
 
         // 커스텀 다이얼로그 초기화
         selectExerciseKindDialog = Dialog(this)
@@ -148,4 +150,26 @@ class MainActivity : AppCompatActivity() {
         _binding = null
     }
 
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        checkAndStartPostActivityFromNotification(intent!!)
+    }
+
+    private fun checkAndStartPostActivityFromNotification(intent: Intent) {
+        println("onNewIntent: ${intent?.getStringExtra("type")}")
+        println("onNewIntent: ${intent?.getStringExtra("postId")}")
+        // 노티피케이션 관련된 곳으로 이동
+        if (intent.getStringExtra("type") != null) {
+            when (intent.getStringExtra("type")) {
+                "follow" -> {
+                    println("follow 임")
+                }
+                else -> {
+                    val postIntent = Intent(this, PostActivity::class.java)
+                    postIntent.putExtra("postId", intent.getStringExtra("postId")?.toInt())
+                    startActivity(postIntent)
+                }
+            }
+        }
+    }
 }

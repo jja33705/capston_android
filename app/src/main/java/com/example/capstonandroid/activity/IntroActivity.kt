@@ -8,9 +8,9 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import com.example.capstonandroid.R
-import com.example.capstonandroid.RecordService
-import com.example.capstonandroid.TrackPaceMakeService
-import com.example.capstonandroid.TrackRecordService
+import com.example.capstonandroid.service.RecordService
+import com.example.capstonandroid.service.TrackPaceMakeService
+import com.example.capstonandroid.service.TrackRecordService
 import com.example.capstonandroid.databinding.ActivityLoginBinding
 import com.example.capstonandroid.network.RetrofitClient
 import com.example.capstonandroid.network.api.BackendApi
@@ -26,14 +26,13 @@ class IntroActivity : AppCompatActivity() {
 
     private  lateinit var  retrofit: Retrofit  //레트로핏
     private  lateinit var supplementService: BackendApi // api
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_intro)
 
         supportActionBar?.hide()
 
-        val mainIntent = Intent(this,MainActivity::class.java)
+        var mainIntent = Intent(this,MainActivity::class.java)
 
 //         레코드 중이면 메인 액티비티로 이동
         if (RecordService.isStarted || TrackRecordService.isStarted || TrackPaceMakeService.isStarted) {
@@ -44,7 +43,21 @@ class IntroActivity : AppCompatActivity() {
             handler.postDelayed({
                 initRetrofit()
 
-                val loginIntent = Intent(this,LoginActivity::class.java)
+                val loginIntent = Intent(this, LoginActivity::class.java)
+
+                val bundle = intent.extras
+                println("bundle: $bundle")
+                println("bundle postId: ${bundle?.getString("postId")}")
+                println("bundle type: ${bundle?.getString("type")}")
+                println("bundle userId: ${bundle?.getString("id")}")
+
+                // 노티피케이션 눌러서 들어온거면 관련된 곳으로 보내줄 수 있게 넘겨줌
+                if (bundle != null) {
+                    mainIntent.putExtra("userId", bundle.getString("id"))
+                    mainIntent.putExtra("postId", bundle.getString("postId"))
+                    mainIntent.putExtra("type", bundle.getString("type"))
+                }
+
 
                 val sharedPreference = getSharedPreferences("other", MODE_PRIVATE)
 

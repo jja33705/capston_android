@@ -30,6 +30,7 @@ import com.example.capstonandroid.db.dao.GpsDataDao
 import com.example.capstonandroid.network.RetrofitClient
 import com.example.capstonandroid.network.api.BackendApi
 import com.example.capstonandroid.network.dto.Track
+import com.example.capstonandroid.service.TrackRecordService
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -314,7 +315,8 @@ class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.S
     // 브로드캐스트 리시버 등록
     private fun registerLocalBroadcastReceiver() {
         mBroadcastReceiver = MBroadcastReceiver()
-        LocalBroadcastManager.getInstance(this).registerReceiver(mBroadcastReceiver, IntentFilter(TrackRecordService.ACTION_BROADCAST))
+        LocalBroadcastManager.getInstance(this).registerReceiver(mBroadcastReceiver, IntentFilter(
+            TrackRecordService.ACTION_BROADCAST))
     }
 
     override fun onMapReady(googleMap: GoogleMap) {

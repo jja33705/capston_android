@@ -18,6 +18,7 @@ import com.example.capstonandroid.R
 import com.example.capstonandroid.databinding.ActivityRecordBinding
 import com.example.capstonandroid.db.AppDatabase
 import com.example.capstonandroid.db.dao.GpsDataDao
+import com.example.capstonandroid.service.RecordService
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.*
 import kotlinx.coroutines.*
@@ -208,7 +209,8 @@ class RecordActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.Snapsh
     // 브로드캐스트 리시버 등록
     private fun registerLocalBroadcastReceiver() {
         mBroadcastReceiver = MBroadcastReceiver()
-        LocalBroadcastManager.getInstance(this).registerReceiver(mBroadcastReceiver, IntentFilter(RecordService.ACTION_BROADCAST))
+        LocalBroadcastManager.getInstance(this).registerReceiver(mBroadcastReceiver, IntentFilter(
+            RecordService.ACTION_BROADCAST))
     }
 
     // 맵이 준비 됐을 때 콜백

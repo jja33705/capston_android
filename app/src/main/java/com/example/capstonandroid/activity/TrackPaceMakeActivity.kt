@@ -32,6 +32,7 @@ import com.example.capstonandroid.db.dao.OpponentGpsDataDao
 import com.example.capstonandroid.network.RetrofitClient
 import com.example.capstonandroid.network.api.BackendApi
 import com.example.capstonandroid.network.dto.Track
+import com.example.capstonandroid.service.TrackPaceMakeService
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -395,7 +396,8 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
 
     private fun registerLocalBroadcastReceiver() {
         mBroadcastReceiver = MBroadcastReceiver()
-        LocalBroadcastManager.getInstance(this@TrackPaceMakeActivity).registerReceiver(mBroadcastReceiver, IntentFilter(TrackPaceMakeService.ACTION_BROADCAST))
+        LocalBroadcastManager.getInstance(this@TrackPaceMakeActivity).registerReceiver(mBroadcastReceiver, IntentFilter(
+            TrackPaceMakeService.ACTION_BROADCAST))
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -726,7 +728,8 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
                             opponentMarkerIconTextView.text = Utils.speedToText(opponentSpeed)
                             opponentLocationMarker?.setIcon(BitmapDescriptorFactory.fromBitmap(Utils.createBitmapFromView(opponentMarkerIcon))) // 속도 변경
 
-                            val opponentLatLng = intent?.getParcelableExtra<LatLng>(TrackPaceMakeService.OPPONENT_LAT_LNG)!! // 상대 위치
+                            val opponentLatLng = intent?.getParcelableExtra<LatLng>(
+                                TrackPaceMakeService.OPPONENT_LAT_LNG)!! // 상대 위치
                             opponentLocationMarker?.position = opponentLatLng // 상대 마커 이동
 
                             // 상대 폴리라인 갱신
