@@ -33,9 +33,8 @@ class HomeFragment : Fragment()  {
     private lateinit var postRecyclerView: RecyclerView
     private var isLoading = false // 로딩 중인지
     private var isNext = false // 다음 페이지 있는지
-
-
     private var postPage = 1      // 현재 페이지
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/linear_layout_notification_recycler_view_item"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:orientation="horizontal"
+    >
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/img_user"
+        android:layout_marginHorizontal="20dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@mipmap/ic_launcher_round"
+        android:layout_gravity="center"
+        >
+    </de.hdodenhof.circleimageview.CircleImageView>
+
+    <LinearLayout
+        android:layout_weight="1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center"
+        >
+
+        <TextView
+            android:id="@+id/tv_notification_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="YYYY-MM-DD"
+            android:fontFamily="@font/noto_sans_jp_light"
+            android:includeFontPadding="false"
+            android:layout_marginBottom="2dp"
+            android:textColor="@color/date_color"
+            android:textSize="10sp"
+            >
+        </TextView>
+
+        <TextView
+            android:id="@+id/tv_notification_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="누가 뭘 했다."
+            android:fontFamily="@font/noto_sans_jp_regular"
+            android:includeFontPadding="false"
+            android:layout_marginBottom="3dp"
+            android:textColor="@color/black"
+            >
+        </TextView>
+    </LinearLayout>
+
+</LinearLayout>

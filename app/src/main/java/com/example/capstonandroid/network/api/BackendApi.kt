@@ -73,16 +73,8 @@ interface BackendApi {
 
 
 //  재현 코드
-
-
-    @GET("test") // 보낼 url
-    fun test(): Call<String>
-
-//  @POST("gps")
-//  fun uploadGpsData(@Body positions: Positions) : Call<Positions>
-
-//  @POST("post/store") // 기록 저장
-//  fun storePost(@Body record: Track) : Call<Track>
+//    @GET("test") // 보낼 url
+//    fun test(): Call<String>
 
     @GET("post/show/{postId}")
     suspend fun getPost(@Header("Authorization") token: String, @Path("postId") postId: Int): Response<Post>
@@ -135,7 +127,8 @@ interface BackendApi {
     @GET("user") // 유저확인
     suspend fun getUser(@Header("Authorization") token: String): Response<User>
 
-//    @GET("")
+    @GET("notification") // 알림 리스트
+    suspend fun getNotifications(@Header("Authorization") token: String, @Query("page") page: Int): Response<GetNotificationsResponse>
 
     @PATCH("fcmToken") // fcmToken 저장
     suspend fun fcmToken(@Header("Authorization") token: String, @Body fcmToken: FcmToken): Response<ResponseMessage>

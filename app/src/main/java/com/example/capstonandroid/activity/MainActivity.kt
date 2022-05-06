@@ -59,7 +59,7 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        checkAndStartPostActivityFromNotification(intent)
+        checkAndStartActivityFromNotification(intent)
 
         // 커스텀 다이얼로그 초기화
         selectExerciseKindDialog = Dialog(this)
@@ -132,12 +132,13 @@ class MainActivity : AppCompatActivity() {
 
         return when (item?.itemId){
             R.id.action_search -> {
-                val mainIntent = Intent(this,FollowerActivity::class.java)
-                startActivity(mainIntent)
+                val intent = Intent(this,FollowerActivity::class.java)
+                startActivity(intent)
                 true
             }
             R.id.action_notification -> {
-                println("notification 버튼 누름")
+                val intent = Intent(this, NotificationActivity::class.java)
+                startActivity(intent)
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -152,10 +153,10 @@ class MainActivity : AppCompatActivity() {
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        checkAndStartPostActivityFromNotification(intent!!)
+        checkAndStartActivityFromNotification(intent!!)
     }
 
-    private fun checkAndStartPostActivityFromNotification(intent: Intent) {
+    private fun checkAndStartActivityFromNotification(intent: Intent) {
         println("onNewIntent: ${intent?.getStringExtra("type")}")
         println("onNewIntent: ${intent?.getStringExtra("postId")}")
         // 노티피케이션 관련된 곳으로 이동
