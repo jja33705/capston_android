@@ -1,10 +1,8 @@
 package com.example.capstonandroid.activity
 
-import android.R
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.capstonandroid.adapter.RecyclerFollowerAdapter
@@ -112,66 +110,66 @@ class FollowerActivity : AppCompatActivity() {
         var token = "Bearer " + sharedPreference.getString("TOKEN","")
 
 
-        supplementService.userFollow(token,data.id).enqueue(object : Callback<FollowResponse>{
-            override fun onResponse(
-                call: Call<FollowResponse>,
-                response: Response<FollowResponse>
-            ) {
-                println("성공 했습니다")
-
-                val list = ArrayList<FollowerData>()
-                val adapter = RecyclerFollowerAdapter(list, { data -> adapterOnClick(data) })
-
-                if(!(binding.editText.text.toString()==="")){
-                    var text = binding.editText.text.toString()
-
-                    supplementService.userSearch(token,binding.editText.text.toString()).enqueue(object :
-                        Callback<FollowerResponse> {
-                        override fun onResponse(
-                            call: Call<FollowerResponse>,
-                            response: Response<FollowerResponse>
-                        ) {
-
-                            println(response.body()!!)
-
-                            if(response.body()!!.data.size==0){
-                                println("아무것도없다")
-
-                                list.clear()
-
-                                binding.followerRecyclerview.adapter = adapter
-
-                            }else {
-                                for (i in 0..response.body()!!.data.size-1) {
-                                    list.add(
-                                        FollowerData(
-                                            response.body()!!.data[i].name,
-                                            response.body()!!.data[i].profile,
-                                            response.body()!!.data[i].name,
-                                            response.body()!!.data[i].id,
-                                            response.body()!!.data[i].followCheck
-                                        )
-                                    )
-                                }
-                                binding.followerRecyclerview.adapter = adapter
-                            }
-                        }
-
-                        override fun onFailure(call: Call<FollowerResponse>, t: Throwable) {
-                            println("아 아니야")
-                        }
-                    })
-                }
-
-            }
-
-            override fun onFailure(call: Call<FollowResponse>, t: Throwable) {
-                println("실패 했습니다")
-            }
-
-            })
-
-
+//        supplementService.userFollow(token,data.id).enqueue(object : Callback<FollowResponse>{
+//            override fun onResponse(
+//                call: Call<FollowResponse>,
+//                response: Response<FollowResponse>
+//            ) {
+//                println("성공 했습니다")
+//
+//                val list = ArrayList<FollowerData>()
+//                val adapter = RecyclerFollowerAdapter(list, { data -> adapterOnClick(data) })
+//
+//                if(!(binding.editText.text.toString()==="")){
+//                    var text = binding.editText.text.toString()
+//
+//                    supplementService.userSearch(token,binding.editText.text.toString()).enqueue(object :
+//                        Callback<FollowerResponse> {
+//                        override fun onResponse(
+//                            call: Call<FollowerResponse>,
+//                            response: Response<FollowerResponse>
+//                        ) {
+//
+//                            println(response.body()!!)
+//
+//                            if(response.body()!!.data.size==0){
+//                                println("아무것도없다")
+//
+//                                list.clear()
+//
+//                                binding.followerRecyclerview.adapter = adapter
+//
+//                            }else {
+//                                for (i in 0..response.body()!!.data.size-1) {
+//                                    list.add(
+//                                        FollowerData(
+//                                            response.body()!!.data[i].name,
+//                                            response.body()!!.data[i].profile,
+//                                            response.body()!!.data[i].name,
+//                                            response.body()!!.data[i].id,
+//                                            response.body()!!.data[i].followCheck
+//                                        )
+//                                    )
+//                                }
+//                                binding.followerRecyclerview.adapter = adapter
+//                            }
+//                        }
+//
+//                        override fun onFailure(call: Call<FollowerResponse>, t: Throwable) {
+//                            println("아 아니야")
+//                        }
+//                    })
+//                }
+//
+//            }
+//
+//            override fun onFailure(call: Call<FollowResponse>, t: Throwable) {
+//                println("실패 했습니다")
+//            }
+//
+//            })
+//
+//
 
     }
     private fun initRetrofit(){

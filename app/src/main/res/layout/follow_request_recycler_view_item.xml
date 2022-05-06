@@ -52,6 +52,7 @@
     </LinearLayout>
 
     <Button
+        android:id="@+id/btn_accept_follow_request"
         android:textColor="@color/white"
         android:layout_width="60dp"
         android:layout_height="30dp"
@@ -66,6 +67,7 @@
     </Button>
 
     <Button
+        android:id="@+id/btn_delete_follow_request"
         android:textColor="@color/black"
         android:layout_width="60dp"
         android:layout_height="30dp"
@@ -73,7 +75,7 @@
         android:fontFamily="@font/noto_sans_jp_regular"
         android:includeFontPadding="false"
         android:textSize="11sp"
-        android:background="@drawable/btn_follow_request_deny"
+        android:background="@drawable/btn_follow_request_delete"
         android:layout_gravity="center"
         android:layout_marginRight="10dp"
         >

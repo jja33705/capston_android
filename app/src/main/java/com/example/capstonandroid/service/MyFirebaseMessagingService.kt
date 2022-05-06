@@ -48,7 +48,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
         // notification type 에 따라 분기처리
         val intent = when (data["type"]!!) {
-            "follow" -> {
+            "follow", "followRequest" -> {
                 Intent(this, IntroActivity::class.java).apply {
 //                    flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
 //                    putExtra("postId", data["postId"]!!.toInt())

@@ -41,15 +41,18 @@ class NotificationActivity : AppCompatActivity() {
 
         initRetrofit()
 
+        notificationRecyclerView = binding.recyclerViewNotification
+
+        initRecyclerView()
+
+        binding.swipeRefreshLayoutNotification.setOnRefreshListener {
+            initRecyclerView()
+            binding.swipeRefreshLayoutNotification.isRefreshing = false
+        }
+    }
+
+    private fun initRecyclerView() {
         CoroutineScope(Dispatchers.Main).launch {
-            // 초기화
-            notificationPage = 1
-            isNext = false
-            isLoading = false
-            notificationRecyclerViewItemList = ArrayList()
-
-            notificationRecyclerView = binding.recyclerViewNotification
-
             // 스크롤 리스너 등록
             notificationRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -66,6 +69,12 @@ class NotificationActivity : AppCompatActivity() {
                     }
                 }
             })
+
+            // 초기화
+            notificationPage = 1
+            isNext = false
+            isLoading = false
+            notificationRecyclerViewItemList = ArrayList()
 
             // 초기값 받아옴
             var token = "Bearer " + getSharedPreferences("other", Context.MODE_PRIVATE).getString("TOKEN","")
@@ -87,36 +96,43 @@ class NotificationActivity : AppCompatActivity() {
                     }
                 }
             }
+
             notificationRecyclerViewAdapter = NotificationRecyclerViewAdapter(notificationRecyclerViewItemList)
             notificationRecyclerView.adapter = notificationRecyclerViewAdapter
 
             // 아이템 클릭 리스너 등록
-            notificationRecyclerViewAdapter.setOnPostNotificationClickListener(object : NotificationRecyclerViewAdapter.OnPostNotificationClickListener {
+            notificationRecyclerViewAdapter.setOnPostNotificationClickListener(object : NotificationRecyclerViewAdapter.OnClickPostNotificationListener {
                 override fun onItemClick(position: Int) {
                     val intent = Intent(this@NotificationActivity, PostActivity::class.java)
-                        intent.putExtra("postId", notificationRecyclerViewItemList[position]!!.post_id)
-                        startActivity(intent)
+                    intent.putExtra("postId", notificationRecyclerViewItemList[position]!!.post_id)
+                    startActivity(intent)
                 }
             })
-            notificationRecyclerViewAdapter.setOnProfileNotificationClickListener(object : NotificationRecyclerViewAdapter.OnProfileNotificationClickListener {
+            notificationRecyclerViewAdapter.setOnProfileNotificationClickListener(object : NotificationRecyclerViewAdapter.OnClickProfileNotificationListener {
                 override fun onItemClick(position: Int) {
                     println("profile 로 이동해야 함")
                 }
             })
-//            notificationRecyclerViewAdapter.setOnItemClickListener(object : NotificationRecyclerViewAdapter.OnItemClickListener {
-//                override fun onItemClick(position: Int) {
-//                    when(notificationRecyclerViewItemList[position]!!.not_type) {
-//                        "follow", "followRequest" -> {
-//                            println("profile 로 넘어가야 함")
-//                        }
-//                        else -> {
-//                            val intent = Intent(this@NotificationActivity, PostActivity::class.java)
-//                            intent.putExtra("postId", notificationRecyclerViewItemList[position]!!.post_id)
-//                            startActivity(intent)
-//                        }
-//                    }
-//                }
-//            })
+            notificationRecyclerViewAdapter.setOnClickAcceptFollowRequestListener(object : NotificationRecyclerViewAdapter.OnClickAcceptFollowRequestListener {
+                override fun onItemClick(position: Int) {
+                    CoroutineScope(Dispatchers.Main).launch {
+                        val token = "Bearer ${getSharedPreferences("other", MODE_PRIVATE).getString("TOKEN", "")}"
+                        val followResponse = supplementService.follow(token, notificationRecyclerViewItemList[position]!!.target_mem_id)
+                        if (followResponse.isSuccessful) {
+                            deleteNotification(position)
+                        }
+                    }
+
+                }
+            })
+            notificationRecyclerViewAdapter.setOnClickDeleteFollowRequestListener(object : NotificationRecyclerViewAdapter.OnClickDeleteFollowRequestListener {
+                override fun onItemClick(position: Int) {
+                    CoroutineScope(Dispatchers.Main).launch {
+                        deleteNotification(position)
+                    }
+                }
+
+            })
         }
     }
 
@@ -151,6 +167,15 @@ class NotificationActivity : AppCompatActivity() {
                     isNext = false
                 }
             }
+        }
+    }
+
+    suspend fun deleteNotification(position: Int) {
+        val token = "Bearer ${getSharedPreferences("other", MODE_PRIVATE).getString("TOKEN", "")}"
+        val deleteNotificationResponse = supplementService.deleteNotification(token, notificationRecyclerViewItemList[position]!!.not_id)
+        if (deleteNotificationResponse.isSuccessful) {
+            notificationRecyclerViewItemList.removeAt(position)
+            notificationRecyclerViewAdapter.notifyItemRemoved(position)
         }
     }
 

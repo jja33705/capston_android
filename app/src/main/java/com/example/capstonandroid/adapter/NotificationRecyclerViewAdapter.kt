@@ -17,11 +17,19 @@ import kotlin.collections.ArrayList
 
 class NotificationRecyclerViewAdapter(notificationRecyclerViewItemList: ArrayList<Notification?>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    interface OnPostNotificationClickListener {
+    interface OnClickPostNotificationListener {
         fun onItemClick(position: Int)
     }
 
-    interface OnProfileNotificationClickListener {
+    interface OnClickProfileNotificationListener {
+        fun onItemClick(position: Int)
+    }
+
+    interface OnClickAcceptFollowRequestListener {
+        fun onItemClick(position: Int)
+    }
+
+    interface OnClickDeleteFollowRequestListener {
         fun onItemClick(position: Int)
     }
 
@@ -32,8 +40,10 @@ class NotificationRecyclerViewAdapter(notificationRecyclerViewItemList: ArrayLis
     }
 
     private var filteredList = notificationRecyclerViewItemList
-    private lateinit var  mOnPostNotificationClickListener: OnPostNotificationClickListener
-    private lateinit var  mOnProfileNotificationClickListener: OnProfileNotificationClickListener
+    private lateinit var  mOnPostNotificationClickListener: OnClickPostNotificationListener
+    private lateinit var  mOnProfileNotificationClickListener: OnClickProfileNotificationListener
+    private lateinit var  mOnClickAcceptFollowRequestListener: OnClickAcceptFollowRequestListener
+    private lateinit var  mOnClickDeleteFollowRequestListener: OnClickDeleteFollowRequestListener
 
     override fun getItemViewType(position: Int): Int {
         return if (filteredList[position] == null) {
@@ -50,12 +60,20 @@ class NotificationRecyclerViewAdapter(notificationRecyclerViewItemList: ArrayLis
         }
     }
 
-    fun setOnPostNotificationClickListener(onPostNotificationClickListener: OnPostNotificationClickListener) {
+    fun setOnPostNotificationClickListener(onPostNotificationClickListener: OnClickPostNotificationListener) {
         mOnPostNotificationClickListener = onPostNotificationClickListener
     }
 
-    fun setOnProfileNotificationClickListener(onProfileNotificationClickListener: OnProfileNotificationClickListener) {
+    fun setOnProfileNotificationClickListener(onProfileNotificationClickListener: OnClickProfileNotificationListener) {
         mOnProfileNotificationClickListener = onProfileNotificationClickListener
+    }
+
+    fun setOnClickAcceptFollowRequestListener(onClickAcceptFollowRequestListener: OnClickAcceptFollowRequestListener) {
+        mOnClickAcceptFollowRequestListener = onClickAcceptFollowRequestListener
+    }
+
+    fun setOnClickDeleteFollowRequestListener(onClickDenyFollowRequestListener: OnClickDeleteFollowRequestListener) {
+        mOnClickDeleteFollowRequestListener = onClickDenyFollowRequestListener
     }
 
     fun updateItem(notificationRecyclerViewItemList: ArrayList<Notification?>) {
@@ -139,6 +157,20 @@ class NotificationRecyclerViewAdapter(notificationRecyclerViewItemList: ArrayLis
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION && filteredList[position] != null && mOnProfileNotificationClickListener != null) {
                     mOnProfileNotificationClickListener.onItemClick(position)
+                }
+            }
+
+            binding.btnAcceptFollowRequest.setOnClickListener {
+                val position = adapterPosition
+                if (position != RecyclerView.NO_POSITION && filteredList[position] != null && mOnClickAcceptFollowRequestListener != null) {
+                    mOnClickAcceptFollowRequestListener.onItemClick(position)
+                }
+            }
+
+            binding.btnDeleteFollowRequest.setOnClickListener {
+                val position = adapterPosition
+                if (position != RecyclerView.NO_POSITION && filteredList[position] != null && mOnClickDeleteFollowRequestListener != null) {
+                    mOnClickDeleteFollowRequestListener.onItemClick(position)
                 }
             }
         }

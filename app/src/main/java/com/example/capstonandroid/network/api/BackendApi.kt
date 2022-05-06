@@ -49,8 +49,8 @@ interface BackendApi {
     @POST("comment/store/{postID}") // 댓글 등록..
     fun commentSend(@Header("Authorization")token: String, @Path("postID") postID:Int,@Body commentSend: CommentSend) : Call<CommentSendResponse>
 
-    @POST("follow/{userID}") // 팔로우하기~!
-    fun userFollow(@Header("Authorization") token : String, @Path("userID") userID : Int) : Call<FollowResponse>
+    @POST("follow/{userId}") // 팔로우하기~!
+    suspend fun follow(@Header("Authorization") token : String, @Path("userId") userId : Int) : Response<FollowResponse>
 
     @POST("post/image") // 이미지 테스트
     fun imageTest(@Header("Authorization") token : String ,
@@ -129,6 +129,9 @@ interface BackendApi {
 
     @GET("notification") // 알림 리스트
     suspend fun getNotifications(@Header("Authorization") token: String, @Query("page") page: Int): Response<GetNotificationsResponse>
+
+    @DELETE("notification/delete/{notificationId}") // 알림 삭제
+    suspend fun deleteNotification(@Header("Authorization") token: String, @Path("notificationId") notificationId: Int): Response<ResponseMessage>
 
     @PATCH("fcmToken") // fcmToken 저장
     suspend fun fcmToken(@Header("Authorization") token: String, @Body fcmToken: FcmToken): Response<ResponseMessage>

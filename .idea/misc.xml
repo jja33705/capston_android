@@ -55,6 +55,7 @@
         <entry key="app/src/main/res/drawable/bottom_sheet_background.xml" value="0.2185" />
         <entry key="app/src/main/res/drawable/bottom_sheet_horizontal_bar.xml" value="0.2185" />
         <entry key="app/src/main/res/drawable/btn_follow_request_accept.xml" value="0.2065" />
+        <entry key="app/src/main/res/drawable/btn_follow_request_delete.xml" value="0.117" />
         <entry key="app/src/main/res/drawable/btn_follow_request_deny.xml" value="0.2065" />
         <entry key="app/src/main/res/drawable/button_layout.xml" value="0.2065" />
         <entry key="app/src/main/res/drawable/buttonstyle.xml" value="0.2285" />
@@ -88,6 +89,7 @@
         <entry key="app/src/main/res/drawable/record_end_point.xml" value="0.189" />
         <entry key="app/src/main/res/drawable/record_start_point.xml" value="0.2125" />
         <entry key="app/src/main/res/drawable/round_background.xml" value="0.1107421875" />
+        <entry key="app/src/main/res/drawable/round_border2.xml" value="0.117" />
         <entry key="app/src/main/res/drawable/round_bottom_sheet_dialog.xml" value="0.184" />
         <entry key="app/src/main/res/drawable/round_button_background.xml" value="0.1815" />
         <entry key="app/src/main/res/drawable/run.xml" value="0.184" />
@@ -111,7 +113,7 @@
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.19791666666666666" />
         <entry key="app/src/main/res/layout/activity_me_comment.xml" value="0.36770833333333336" />
         <entry key="app/src/main/res/layout/activity_me_details.xml" value="0.36770833333333336" />
-        <entry key="app/src/main/res/layout/activity_notification.xml" value="0.34791666666666665" />
+        <entry key="app/src/main/res/layout/activity_notification.xml" value="0.2220077514648438" />
         <entry key="app/src/main/res/layout/activity_post.xml" value="0.36770833333333336" />
         <entry key="app/src/main/res/layout/activity_random_matching.xml" value="0.37604166666666666" />
         <entry key="app/src/main/res/layout/activity_rank_matching.xml" value="0.275" />
