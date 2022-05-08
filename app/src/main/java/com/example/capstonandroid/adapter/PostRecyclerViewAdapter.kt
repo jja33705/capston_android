@@ -42,10 +42,6 @@ class PostRecyclerViewAdapter(postRecyclerViewItemList: ArrayList<Post?>) : Recy
         mOnItemClickListener = onItemClickListener
     }
 
-    fun updateItem(postRecyclerViewItemList: ArrayList<Post?>) {
-        filteredList = postRecyclerViewItemList
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType == TYPE_ITEM) {
             PostRecyclerViewViewHolder(PostRecyclerViewItemBinding.inflate(LayoutInflater.from(parent.context), parent, false))

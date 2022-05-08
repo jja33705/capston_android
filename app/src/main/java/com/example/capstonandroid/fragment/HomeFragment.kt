@@ -54,31 +54,53 @@ class HomeFragment : Fragment()  {
         super.onViewCreated(view, savedInstanceState)
         println("HomeFragment 시작됨")
 
+        postRecyclerView = binding.recyclerViewPost
+
+        // 스크롤 리스너 등록
+        postRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                println("스트롤 함 $isNext $isLoading ${(recyclerView.layoutManager as LinearLayoutManager?)!!.findLastCompletelyVisibleItemPosition()} ${postRecyclerViewItemList.size}")
+                if (isNext) {
+                    if (!isLoading) {
+                        if (!recyclerView.canScrollVertically(1)) { // 최하단 끝까지 스크롤 했는지 감지
+                            println("끝에 옴")
+                            getMorePosts()
+                            isLoading = true
+                        }
+                    }
+                }
+            }
+        })
+
+        postRecyclerViewItemList = ArrayList()
+        postRecyclerViewAdapter = PostRecyclerViewAdapter(postRecyclerViewItemList)
+        postRecyclerView.adapter = postRecyclerViewAdapter
+
+        // 아이템 클릭 리스너 등록
+        postRecyclerViewAdapter.setOnItemClickListener(object : PostRecyclerViewAdapter.OnItemClickListener {
+            override fun onItemClick(position: Int) {
+                val intent = Intent(activity, PostActivity::class.java)
+                intent.putExtra("postId", postRecyclerViewItemList[position]!!.id)
+                startActivity(intent)
+            }
+        })
+
+        initRecyclerViewData()
+
+        binding.swipeRefreshLayoutPost.setOnRefreshListener {
+            initRecyclerViewData()
+            binding.swipeRefreshLayoutPost.isRefreshing = false
+        }
+    }
+
+    private fun initRecyclerViewData() {
         CoroutineScope(Dispatchers.Main).launch {
             // 초기화
             postPage = 1
             isNext = false
             isLoading = false
-            postRecyclerViewItemList = ArrayList()
-
-            postRecyclerView = binding.recyclerViewPost
-
-            // 스크롤 리스너 등록
-            postRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    super.onScrolled(recyclerView, dx, dy)
-                    println("스트롤 함 $isNext $isLoading ${(recyclerView.layoutManager as LinearLayoutManager?)!!.findLastCompletelyVisibleItemPosition()} ${postRecyclerViewItemList.size}")
-                    if (isNext) {
-                        if (!isLoading) {
-                            if (!recyclerView.canScrollVertically(1)) { // 최하단 끝까지 스크롤 했는지 감지
-                                println("끝에 옴")
-                                getMorePosts()
-                                isLoading = true
-                            }
-                        }
-                    }
-                }
-            })
+            postRecyclerViewItemList.clear()
 
             // 초기값 받아옴
             var token = "Bearer " + requireActivity().getSharedPreferences("other", Context.MODE_PRIVATE).getString("TOKEN","")
@@ -92,6 +114,7 @@ class HomeFragment : Fragment()  {
                     for (post in postList) {
                         postRecyclerViewItemList.add(post)
                     }
+                    postRecyclerViewAdapter.notifyDataSetChanged()
                     if (getPostsResponse.body()!!.next_page_url != null) {
                         postPage += 1
                         isNext = true
@@ -100,17 +123,6 @@ class HomeFragment : Fragment()  {
                     }
                 }
             }
-            postRecyclerViewAdapter = PostRecyclerViewAdapter(postRecyclerViewItemList)
-            postRecyclerView.adapter = postRecyclerViewAdapter
-
-            // 아이템 클릭 리스너 등록
-            postRecyclerViewAdapter.setOnItemClickListener(object : PostRecyclerViewAdapter.OnItemClickListener {
-                override fun onItemClick(position: Int) {
-                    val intent = Intent(activity, PostActivity::class.java)
-                    intent.putExtra("postId", postRecyclerViewItemList[position]!!.id)
-                    startActivity(intent)
-                }
-            })
         }
     }
 
@@ -150,9 +162,8 @@ class HomeFragment : Fragment()  {
                 for (post in postList) {
                     postRecyclerViewItemList.add(post)
                 }
-
-                postRecyclerViewAdapter.updateItem(postRecyclerViewItemList)
-                postRecyclerViewAdapter.notifyDataSetChanged()
+                postRecyclerViewAdapter.notifyItemRangeInserted((postPage - 1) * getPostsResponse.body()!!.per_page, getPostsResponse.body()!!.to)
+                isLoading = false
                 if (getPostsResponse.body()!!.next_page_url != null) {
                     postPage += 1
                     isNext = true
