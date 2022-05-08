@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.capstonandroid.Utils
 import com.example.capstonandroid.databinding.ItemLoadingBinding
-import com.example.capstonandroid.databinding.RankingItemBinding
+import com.example.capstonandroid.databinding.RankingRecyclerViewItemBinding
 import com.example.capstonandroid.network.dto.Post
 
 class RankingRecyclerViewAdapter(rankingItemList: ArrayList<Post?>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -24,13 +24,9 @@ class RankingRecyclerViewAdapter(rankingItemList: ArrayList<Post?>) : RecyclerVi
         }
     }
 
-    fun updateItem(rankingItemList: ArrayList<Post?>) {
-        filteredList = rankingItemList
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType == TYPE_ITEM) {
-            RankingViewHolder(RankingItemBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+            RankingViewHolder(RankingRecyclerViewItemBinding.inflate(LayoutInflater.from(parent.context), parent, false))
         } else {
             LoadingViewHolder(ItemLoadingBinding.inflate(LayoutInflater.from(parent.context), parent, false))
         }
@@ -54,7 +50,8 @@ class RankingRecyclerViewAdapter(rankingItemList: ArrayList<Post?>) : RecyclerVi
 
     }
 
-    inner class RankingViewHolder(private val binding: RankingItemBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class RankingViewHolder(private val binding: RankingRecyclerViewItemBinding) : RecyclerView.ViewHolder(binding.root) {
+
         fun bind(ranking: Post) {
             binding.tvRanking.text = (adapterPosition + 1).toString()
             binding.tvRankingDate.text = ranking.date

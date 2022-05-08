@@ -32,7 +32,6 @@ class RankingActivity : AppCompatActivity() {
     private var isLoading = false
 
     private lateinit var rankingItemList: ArrayList<Post?>
-
     private lateinit var rankingRecyclerViewAdapter: RankingRecyclerViewAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -130,9 +129,8 @@ class RankingActivity : AppCompatActivity() {
                         for (rankingItem in rankingResponse.body()!!.data) {
                             rankingItemList.add(rankingItem)
                         }
-
-                        rankingRecyclerViewAdapter.updateItem(rankingItemList)
-                        rankingRecyclerViewAdapter.notifyDataSetChanged()
+                        rankingRecyclerViewAdapter.notifyItemRangeInserted((page - 1) * rankingResponse.body()!!.per_page, rankingResponse.body()!!.to)
+                        isLoading = false
                         if (rankingResponse.body()!!.next_page_url != null) {
                             page += 1
                             isNext = true

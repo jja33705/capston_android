@@ -34,10 +34,6 @@ class FriendlyMatchingRecyclerViewAdapter(friendlyMatchingItemList: ArrayList<Po
         mOnItemClickListener = onItemClickListener
     }
 
-    fun updateItem(friendlyMatchingItemList: ArrayList<Post?>) {
-        filteredList = friendlyMatchingItemList
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType == TYPE_ITEM) {
             FriendlyMatchingViewHolder(FriendlyMatchingItemBinding.inflate(LayoutInflater.from(parent.context), parent, false))

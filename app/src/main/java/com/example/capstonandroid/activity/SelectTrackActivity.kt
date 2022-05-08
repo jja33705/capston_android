@@ -367,9 +367,8 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, SelectExerc
                 for (friendlyMatching in friendlyMatchingList) {
                     friendlyMatchingItemList.add(friendlyMatching)
                 }
-
-                friendlyMatchingRecyclerViewAdapter.updateItem(friendlyMatchingItemList)
-                friendlyMatchingRecyclerViewAdapter.notifyDataSetChanged()
+                friendlyMatchingRecyclerViewAdapter.notifyItemRangeInserted((page - 1) * friendlyMatchingResponse.body()!!.followPostList.per_page, friendlyMatchingResponse.body()!!.followPostList.to)
+                isLoading = false
                 if (friendlyMatchingResponse.body()!!.followPostList.next_page_url != null) {
                     page += 1
                     isNext = true
