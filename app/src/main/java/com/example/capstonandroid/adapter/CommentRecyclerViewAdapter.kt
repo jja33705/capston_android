@@ -11,6 +11,7 @@ import com.bumptech.glide.Glide
 import com.example.capstonandroid.R
 import com.example.capstonandroid.databinding.CommentRecyclerViewItemBinding
 import com.example.capstonandroid.databinding.ItemLoadingBinding
+import com.example.capstonandroid.network.dto.Comment
 import com.example.capstonandroid.network.dto.CommentData
 import kotlinx.android.synthetic.main.comment_item_view.view.*
 import java.time.OffsetDateTime
@@ -20,7 +21,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
-class CommentRecyclerViewAdapter(commentRecyclerViewItemList: ArrayList<CommentData>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class CommentRecyclerViewAdapter(commentRecyclerViewItemList: ArrayList<Comment?>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     interface OnItemClickListener {
         fun onItemClick(position: Int)
@@ -45,7 +46,7 @@ class CommentRecyclerViewAdapter(commentRecyclerViewItemList: ArrayList<CommentD
         mOnItemClickListener = onItemClickListener
     }
 
-    fun updateItem(commentRecyclerViewItemList: ArrayList<CommentData>) {
+    fun updateItem(commentRecyclerViewItemList: ArrayList<Comment?>) {
         filteredList = commentRecyclerViewItemList
     }
 
@@ -79,10 +80,17 @@ class CommentRecyclerViewAdapter(commentRecyclerViewItemList: ArrayList<CommentD
 
         init {
 
+//            binding.linearLayoutCommentRecyclerViewItem.setOnClickListener {
+//                val position = adapterPosition
+//                if (position != RecyclerView.NO_POSITION && filteredList[position] != null &&mOnItemClickListener != null) {
+//                    mOnItemClickListener.onItemClick(position)
+//                }
+//            }
+
         }
 
         @SuppressLint("NewApi")
-        fun bind(commentRecyclerViewItem: CommentData) {
+        fun bind(commentRecyclerViewItem: Comment) {
 //            view.user_name.text = item.username
 //            view.user_content.text = item.content
 //
@@ -133,11 +141,11 @@ class CommentRecyclerViewAdapter(commentRecyclerViewItemList: ArrayList<CommentD
 //            view.user_name.text = item.username
 //            view.user_content.text = item.content
 
-            binding.userName.text = commentRecyclerViewItem.username
+            binding.userName.text = commentRecyclerViewItem.user.name
             binding.userContent.text = commentRecyclerViewItem.content
 
             // 타임포멧
-            val date = commentRecyclerViewItem.created_at // your date
+            val date = commentRecyclerViewItem?.created_at // your date
 // date is already in Standard ISO format so you don't need custom formatted
 //                     val date = "2021-12-16T16:42:00.000000Z" // your date
             val dateTime : ZonedDateTime = OffsetDateTime.parse(date).toZonedDateTime().plusHours(9)  // parsed date
@@ -151,9 +159,9 @@ class CommentRecyclerViewAdapter(commentRecyclerViewItemList: ArrayList<CommentD
             val defaultImage = R.drawable.main_profile
 
             // 맵 이미지 띄움
-            val mapImageUrl = commentRecyclerViewItem.profile
+            val profileImageUrl = commentRecyclerViewItem.user.profile
             Glide.with(itemView.context)
-                .load(mapImageUrl)
+                .load(profileImageUrl)
                 .placeholder(defaultImage)
                 .error(defaultImage)
                 .fallback(defaultImage)

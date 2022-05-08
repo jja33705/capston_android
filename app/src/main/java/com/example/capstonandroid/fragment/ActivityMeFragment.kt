@@ -95,6 +95,22 @@ class ActivityMeFragment : Fragment() {
     }
 
     private fun initRecyclerViewData() {
+
+    }
+
+    private fun initRetrofit(){
+        retrofit = RetrofitClient.getInstance()
+        supplementService = retrofit.create(BackendApi::class.java);
+    }
+
+    override fun onDestroy() {
+        mBinding = null
+        super.onDestroy()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        println("HomeFragment: onStart 호출")
         CoroutineScope(Dispatchers.Main).launch {
             // 초기화
             postPage = 1
@@ -123,22 +139,19 @@ class ActivityMeFragment : Fragment() {
                     }
                 }
             }
+            postRecyclerViewAdapter = PostRecyclerViewAdapter(postRecyclerViewItemList)
+            postRecyclerView.adapter = postRecyclerViewAdapter
+
+            // 아이템 클릭 리스너 등록
+            postRecyclerViewAdapter.setOnItemClickListener(object : PostRecyclerViewAdapter.OnItemClickListener {
+                override fun onItemClick(position: Int) {
+                    val intent = Intent(activity, PostActivity::class.java)
+                    intent.putExtra("postId", postRecyclerViewItemList[position]!!.id)
+                    intent.putExtra("postKind",1) //1은 개인
+                    startActivity(intent)
+                }
+            })
         }
-    }
-
-    private fun initRetrofit(){
-        retrofit = RetrofitClient.getInstance()
-        supplementService = retrofit.create(BackendApi::class.java);
-    }
-
-    override fun onDestroy() {
-        mBinding = null
-        super.onDestroy()
-    }
-
-    override fun onStart() {
-        super.onStart()
-        println("HomeFragment: onStart 호출")
     }
 
     private fun getMorePosts() {

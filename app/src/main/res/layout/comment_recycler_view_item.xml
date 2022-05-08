@@ -1,87 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="70dp"
-    android:layout_marginLeft="10dp"
-    android:layout_marginRight="10dp"
-    android:layout_marginTop="5dp"
+    android:layout_height="50dp"
 
     android:orientation="horizontal">
 
-    <LinearLayout
+    <ImageView
+        android:id="@+id/profile_comment"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:src="@drawable/profile"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </ImageView>
+
+    <TextView
+        android:id="@+id/user_created_at"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:orientation="horizontal">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            >
-
-            <ImageView
-                android:layout_marginLeft="10dp"
-                android:id="@+id/profile_comment"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:src="@drawable/profile"
-
-                >
-
-            </ImageView>
-            <TextView
-                android:id="@+id/user_name"
-                android:includeFontPadding="false"
-                android:fontFamily="@font/noto_sans_jp_bold"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="닉네임"
-                android:layout_gravity="center">
-
-            </TextView>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="20dp"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-            </TextView>
-            <TextView
-                android:id="@+id/user_content"
-                android:layout_width="match_parent"
-                android:layout_height="20dp"
-                android:includeFontPadding="false"
-                android:fontFamily="@font/noto_sans_jp_bold"
-                android:text="내용"></TextView>
-            <TextView
-                android:id="@+id/user_created_at"
-                android:gravity="right"
-                android:layout_marginRight="35dp"
-                android:layout_width="260dp"
-                android:layout_height="20dp"
-                android:includeFontPadding="false"
-                android:fontFamily="@font/noto_sans_jp_medium"
-                android:text="작성일자"></TextView>
-
-        </LinearLayout>
-
-
-
-    </LinearLayout>
-
-
-
-    <Button
-        android:id="@+id/deleteButton"
-        android:layout_width="50dp"
         android:layout_height="wrap_content"
-        android:text="삭제"></Button>
-</LinearLayout>
+        android:fontFamily="@font/noto_sans_jp_medium"
+        android:includeFontPadding="false"
+        android:text="작성일자"
+        android:textSize="12sp"
+        app:layout_constraintStart_toEndOf="@+id/profile_comment"
+        app:layout_constraintTop_toBottomOf="@+id/user_name"></TextView>
+
+
+    <TextView
+        android:id="@+id/user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginStart="35dp"
+        android:fontFamily="@font/noto_sans_jp_bold"
+        android:includeFontPadding="false"
+        android:text="닉네임"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@+id/profile_comment"
+        app:layout_constraintTop_toTopOf="@+id/profile_comment">
+
+    </TextView>
+
+    <TextView
+        android:id="@+id/user_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:fontFamily="@font/noto_sans_jp_bold"
+        android:includeFontPadding="false"
+        android:text="내용"
+        android:textSize="12sp"
+        app:layout_constraintStart_toEndOf="@+id/user_name"
+        app:layout_constraintTop_toTopOf="@+id/profile_comment"></TextView>
+</androidx.constraintlayout.widget.ConstraintLayout>

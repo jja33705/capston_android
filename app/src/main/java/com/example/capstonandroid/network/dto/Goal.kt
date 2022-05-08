@@ -1,9 +1,10 @@
 package com.example.capstonandroid.network.dto
 
 data class Goal(
-    val event: String,
-    val firstDate: String,
+    val title: String,
     val goal: Int,
     val lastDate: String,
-    val title: String
+    val event: String,
+    val firstDate : String,
+
 )

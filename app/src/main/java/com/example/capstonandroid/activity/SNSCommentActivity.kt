@@ -118,17 +118,17 @@ class SNSCommentActivity : AppCompatActivity()
 //        })
 
         binding.commitButton.setOnClickListener {
-            var content = binding.content.text
-//      객체 만들기
-            val commentSend = CommentSend(
-                content = content.toString(),
-            )
-            supplementService.commentSend(token,postID,commentSend).enqueue(object :
-                Callback<CommentSendResponse> {
-                override fun onResponse(
-                    call: Call<CommentSendResponse>,
-                    response: Response<CommentSendResponse>
-                ) {
+//            var content = binding.content.text
+////      객체 만들기
+//            val commentSend = CommentSend(
+//                content = content.toString(),
+//            )
+//            supplementService.commentSend(token,postID,commentSend).enqueue(object :
+//                Callback<CommentSendResponse> {
+//                override fun onResponse(
+//                    call: Call<CommentSendResponse>,
+//                    response: Response<CommentSendResponse>
+//                ) {
 
 
 
@@ -172,12 +172,12 @@ class SNSCommentActivity : AppCompatActivity()
 //                        }
 //                    })
 
-                }
-
-                override fun onFailure(call: Call<CommentSendResponse>, t: Throwable) {
-
-                }
-            })
+//                }
+//
+//                override fun onFailure(call: Call<CommentSendResponse>, t: Throwable) {
+//
+//                }
+//            })
 
 
         }

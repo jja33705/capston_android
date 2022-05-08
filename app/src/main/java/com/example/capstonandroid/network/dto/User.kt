@@ -16,5 +16,8 @@ data class User(
     val sex: String,
     val updated_at: String,
     val weight: Int,
+    val followCheck: Boolean,
+    val fcm_token: Any,
     val pivot: Pivot,
+    val run_mmr: Int,
 )
