@@ -34,20 +34,20 @@ interface BackendApi {
     @GET("post/myIndex")
     suspend fun getMyPosts(@Header("Authorization") token: String,@Query("page") page: Int): Response<GetPostsResponse>
 
-    @PUT("post/update/{postID}") // 자기 게시물 수정
-    fun postUpdate(@Header("Authorization") token : String, @Path("postID")postID : Int, @Body update : Update) : Call<Int>
+    @PUT("post/update/{postId}") // 자기 게시물 수정
+    suspend fun postUpdate(@Header("Authorization") token : String, @Path("postId")postId : Int, @Body update : Update) : Response<Int>
 
-    @DELETE("post/{postID}") // 자기 게시물 삭제
-    fun postDelete(@Header("Authorization") token: String,@Path("postID") postID :Int ) : Call<DeleteResponse>
+    @DELETE("post/{postId}") // 자기 게시물 삭제
+    suspend fun postDelete(@Header("Authorization") token: String,@Path("postId") postId :Int ) : Response<Int>
 
     @GET("post/weekRecord") //요일별 누적거리
     fun userWeek(@Header("Authorization") token : String,@Query("event") event: String) : Call<UserWeekResponse>
 
-    @POST("like/{postID}") //좋아요 누르기
-    fun postLike(@Header("Authorization") token:String, @Path("postID") postID: Int) : Call<LikeResponse>
+//    @POST("like/{postID}") //좋아요 누르기
+//    fun postLike(@Header("Authorization") token:String, @Path("postID") postID: Int) : Call<LikeResponse>
 
     @POST("comment/store/{postID}") // 댓글 등록..
-    fun commentSend(@Header("Authorization")token: String, @Path("postID") postID:Int,@Body commentSend: CommentSend) : Call<CommentSendResponse>
+    suspend fun commentSend(@Header("Authorization")token: String, @Path("postID") postID:Int,@Body commentSend: CommentSend) : Response<CommentSendResponse>
 
     @POST("follow/{userId}") // 팔로우하기~!
     suspend fun follow(@Header("Authorization") token : String, @Path("userId") userId : Int) : Response<FollowResponse>
@@ -62,7 +62,7 @@ interface BackendApi {
     @GET("goal/check")  //목표 체크
     fun userGoalCheck(@Header("Authorization") token : String) : Call<UserGoalCheckResponse>
 
-    @POST("goal") // 댓글 등록..
+    @POST("goal") // 목표 등록..
     fun goal(@Header("Authorization")token: String,@Body goal: Goal) : Call<GoalResponse>
 
     @DELETE("goal/delete/{goalID}") // 자기 게시물 삭제
@@ -70,6 +70,12 @@ interface BackendApi {
 
     @GET("userSearch") //유저 검색!!!!!!!!!
     fun userSearch(@Header("Authorization")token: String,@Query("keyword") keyword: String) : Call<FollowerResponse>
+
+    @GET("comment/index/{postId}") //댓글 검색!!!!!!!!!
+    suspend fun commentIndex(@Header("Authorization")token: String,@Path("postId") postId: Int, @Query("page") page: Int) : Response<CommentIndexResponse>
+
+    @POST("like/{postID}") //좋아요 누르기
+    suspend fun postLike(@Header("Authorization") token:String, @Path("postID") postID: Int) : Response<LikeResponse>
 
 
 //  재현 코드

@@ -5,7 +5,7 @@ data class Comment(
     val created_at: String,
     val id: Int,
     val post_id: Int,
-    val replies: List<Any>,
+    val replies: List<Comment>,
     val updated_at: String,
     val user: User,
     val user_id: Int

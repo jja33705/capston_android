@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="#ffffff"/>
+<!--   <stroke android:width="10dp" android:color="#FFD700" android:dashWidth="20dp" android:dashGap="10dp"/> -->
+    <!--dashWidth는 선 하나하나의 크기고, dashGap은 선 하나를 그리고 얼마를 띄고 다시 그릴지를 의미-->
+    <stroke android:width="10dp" android:color="#CC6600" android:dashWidth="3dp" android:dashGap="1dp"/>
+
+    <padding android:left="1dp" android:top="1dp" android:right="1dp" android:bottom="1dp" />
+    <!--padding으로 크기를 줄여 백그라운드에 그려진 이미지를 보이게 한다.-->
+
+    <corners android:radius="500dp"/>
+</shape>
