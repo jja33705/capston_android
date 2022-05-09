@@ -21,6 +21,9 @@
         android:theme="@style/Theme.CapstonAndroid"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".activity.ProfileActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.NotificationActivity"
             android:exported="false" />
         <activity
@@ -59,13 +62,13 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".activity.PostActivity"
-            android:exported="false">
-        </activity>
+            android:exported="false"></activity>
 
         <service
             android:name=".service.TrackRecordService"
@@ -113,8 +116,8 @@
             android:exported="true" />
         <activity
             android:name=".activity.MainActivity"
-            android:launchMode="singleTask"
-            android:exported="true" />
+            android:exported="true"
+            android:launchMode="singleTask" />
         <activity
             android:name=".activity.RecordActivity"
             android:exported="false"
@@ -132,7 +135,6 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="@string/firebase_default_notification_channel_id" />
-
     </application>
 
 </manifest>

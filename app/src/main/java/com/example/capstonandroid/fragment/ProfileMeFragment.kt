@@ -275,14 +275,17 @@ class ProfileMeFragment : Fragment(){
                 println(response.body())
                 var loginuserResponse: LoginUserResponse? = response.body()
                 var user_name = loginuserResponse?.name
-                    var user_followers = loginuserResponse?.followers?.count().toString()
-                    var user_followings = loginuserResponse?.followings?.count().toString()
-                    var user_mmr = loginuserResponse?.mmr
+                var user_followers = loginuserResponse!!.followers?.count()
+                var user_followings = loginuserResponse!!.followings?.count()
+                var user_mmr = loginuserResponse!!.mmr
+                var location = loginuserResponse!!.location
 
-                    binding.tvProfileMeName.setText(user_name)
-                    binding.tvProfileMeFollowers.setText("フォロワー : " + user_followers)
-                    binding.tvProfileMeFollowings.setText("フォロー中 : "+user_followings)
-                    binding.tvProfileMeMmr.setText("MMR : " + user_mmr)
+
+                binding.tvName.text = user_name
+                binding.tvFollower.text = user_followers.toString()
+                binding.tvFollowing.text = user_followings.toString()
+                binding.tvMmr.text = user_mmr.toString()
+                binding.tvLocation.text = location
 
 
                 if (loginuserResponse?.profile.equals(null)||loginuserResponse?.profile.equals("img")){
@@ -372,8 +375,8 @@ class ProfileMeFragment : Fragment(){
     }
 
     override fun onDestroy() {
-        mBinding = null
         super.onDestroy()
+        mBinding = null
     }
 
     private fun initRetrofit(){

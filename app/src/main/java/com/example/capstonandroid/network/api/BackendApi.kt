@@ -135,4 +135,5 @@ interface BackendApi {
 
     @PATCH("fcmToken") // fcmToken 저장
     suspend fun fcmToken(@Header("Authorization") token: String, @Body fcmToken: FcmToken): Response<ResponseMessage>
+
 }
