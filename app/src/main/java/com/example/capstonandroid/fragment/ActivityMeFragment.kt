@@ -89,7 +89,8 @@ class ActivityMeFragment : Fragment() {
         initRecyclerViewData()
 
         binding.swipeRefreshLayoutPost.setOnRefreshListener {
-            initRecyclerViewData()
+//            initRecyclerViewData()
+            resetPage()
             binding.swipeRefreshLayoutPost.isRefreshing = false
         }
     }
@@ -111,47 +112,7 @@ class ActivityMeFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         println("HomeFragment: onStart 호출")
-        CoroutineScope(Dispatchers.Main).launch {
-            // 초기화
-            postPage = 1
-            isNext = false
-            isLoading = false
-            postRecyclerViewItemList.clear()
-
-            // 초기값 받아옴
-            var token = "Bearer " + requireActivity().getSharedPreferences("other", Context.MODE_PRIVATE).getString("TOKEN","")
-            println("홈 프레그먼트$token")
-            val getMyPostsResponse = supplementService.getMyPosts(token, postPage)
-            if (getMyPostsResponse.isSuccessful) {
-                if (getMyPostsResponse.body()!!.total == 0) {
-                    isNext = false
-                } else {
-                    val postList = getMyPostsResponse.body()!!.data
-                    for (post in postList) {
-                        postRecyclerViewItemList.add(post)
-                    }
-                    postRecyclerViewAdapter.notifyDataSetChanged()
-                    if (getMyPostsResponse.body()!!.next_page_url != null) {
-                        postPage += 1
-                        isNext = true
-                    } else {
-                        isNext = false
-                    }
-                }
-            }
-            postRecyclerViewAdapter = PostRecyclerViewAdapter(postRecyclerViewItemList)
-            postRecyclerView.adapter = postRecyclerViewAdapter
-
-            // 아이템 클릭 리스너 등록
-            postRecyclerViewAdapter.setOnItemClickListener(object : PostRecyclerViewAdapter.OnItemClickListener {
-                override fun onItemClick(position: Int) {
-                    val intent = Intent(activity, PostActivity::class.java)
-                    intent.putExtra("postId", postRecyclerViewItemList[position]!!.id)
-                    intent.putExtra("postKind",1) //1은 개인
-                    startActivity(intent)
-                }
-            })
-        }
+        resetPage()
     }
 
     private fun getMorePosts() {
@@ -186,7 +147,49 @@ class ActivityMeFragment : Fragment() {
             }
         }
     }
+    private fun resetPage(){
+        CoroutineScope(Dispatchers.Main).launch {
+            // 초기화
+            postPage = 1
+            isNext = false
+            isLoading = false
+            postRecyclerViewItemList.clear()
 
+            // 초기값 받아옴
+            var token = "Bearer " + requireActivity().getSharedPreferences("other", Context.MODE_PRIVATE).getString("TOKEN","")
+            println("홈 프레그먼트$token")
+            val getPostsResponse = supplementService.getPosts(token, postPage)
+            if (getPostsResponse.isSuccessful) {
+                if (getPostsResponse.body()!!.total == 0) {
+                    isNext = false
+                } else {
+                    val postList = getPostsResponse.body()!!.data
+                    for (post in postList) {
+                        postRecyclerViewItemList.add(post)
+                    }
+                    postRecyclerViewAdapter.notifyDataSetChanged()
+                    if (getPostsResponse.body()!!.next_page_url != null) {
+                        postPage += 1
+                        isNext = true
+                    } else {
+                        isNext = false
+                    }
+                }
+            }
+            postRecyclerViewAdapter = PostRecyclerViewAdapter(postRecyclerViewItemList)
+            postRecyclerView.adapter = postRecyclerViewAdapter
+
+            // 아이템 클릭 리스너 등록
+            postRecyclerViewAdapter.setOnItemClickListener(object : PostRecyclerViewAdapter.OnItemClickListener {
+                override fun onItemClick(position: Int) {
+                    val intent = Intent(activity, PostActivity::class.java)
+                    intent.putExtra("postId", postRecyclerViewItemList[position]!!.id)
+                    intent.putExtra("postKind",0) // sns는 0
+                    startActivity(intent)
+                }
+            })
+        }
+    }
     override fun onResume() {
         super.onResume()
         println("HomeFragment: onResume 호출")

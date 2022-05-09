@@ -46,10 +46,6 @@ class CommentRecyclerViewAdapter(commentRecyclerViewItemList: ArrayList<Comment?
         mOnItemClickListener = onItemClickListener
     }
 
-    fun updateItem(commentRecyclerViewItemList: ArrayList<Comment?>) {
-        filteredList = commentRecyclerViewItemList
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType == TYPE_ITEM) {
             CommentRecyclerViewViewHolder(CommentRecyclerViewItemBinding.inflate(LayoutInflater.from(parent.context), parent, false))

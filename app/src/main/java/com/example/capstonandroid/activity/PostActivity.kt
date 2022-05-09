@@ -8,7 +8,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.AttributeSet
+import android.view.MotionEvent
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,6 +23,7 @@ import com.example.capstonandroid.databinding.ActivityPostBinding
 import com.example.capstonandroid.network.RetrofitClient
 import com.example.capstonandroid.network.api.BackendApi
 import com.example.capstonandroid.network.dto.*
+import kotlinx.android.synthetic.main.activity_follower.*
 import kotlinx.android.synthetic.main.activity_post.*
 import kotlinx.android.synthetic.main.activity_post.view.*
 import kotlinx.android.synthetic.main.fragment_home.*
@@ -56,6 +59,7 @@ class PostActivity : AppCompatActivity() {
     private var content = ""
     private var title = ""
     private var range = ""
+    private var likeCount = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -96,9 +100,8 @@ class PostActivity : AppCompatActivity() {
 
         var token = "Bearer " + getSharedPreferences("other", MODE_PRIVATE).getString("TOKEN", "")
 
-        var likeBoolean : Boolean = true
 
-
+        var likeCheck = true
 
         if(postKind==0) {
             binding.deleteButton.visibility = View.GONE
@@ -120,7 +123,7 @@ class PostActivity : AppCompatActivity() {
 
                 val defaultImage = R.drawable.map
                 val mapImageUrl = post.img
-                likeBoolean = post.likeCheck
+                likeCheck = post.likeCheck
 
                 Glide.with(this@PostActivity)
                     .load(mapImageUrl)
@@ -138,8 +141,8 @@ class PostActivity : AppCompatActivity() {
                 binding.distance.text = "累積距離 : ${String.format("%.2f", post.distance)}Km"
                 binding.username.text = post.user.name
 
-                println(likeBoolean.toString())
-                if (likeBoolean == true) {
+                println(likeCheck.toString())
+                if (likeCheck == true) {
                     binding.likeButton.setImageResource(R.drawable.like_new2)
                 } else {
                     binding.likeButton.setImageResource(R.drawable.like_new3)
@@ -151,6 +154,7 @@ class PostActivity : AppCompatActivity() {
                 title = post.title
                 range = post.range
                 content = post.content
+                likeCount = post.likes.size
                 if(range =="public"){
                     binding.range.setImageResource(R.drawable.lock1)
                 }else {
@@ -291,8 +295,24 @@ class PostActivity : AppCompatActivity() {
                 val postLikeResponse = supplementService.postLike(token, postId)
                 if (postLikeResponse.isSuccessful) {
 
-                    println(postLikeResponse.message().toString())
-                        binding.like.text = "いいね！： ${post.likes.size-1}"
+
+                    if(likeCheck==true){
+                        likeCount --
+                        binding.like.text = "いいね！："+likeCount
+                        likeCheck = false
+                    }else {
+                        likeCount ++
+                        binding.like.text = "いいね！："+likeCount
+                        likeCheck = true
+                    }
+
+
+                    if (likeCheck == true) {
+                        binding.likeButton.setImageResource(R.drawable.like_new2)
+                    } else {
+                        binding.likeButton.setImageResource(R.drawable.like_new3)
+                    }
+
                 }
             }
 //            supplementService.postLike(token, postID).enqueue(object : Callback<LikeResponse> {
@@ -341,7 +361,7 @@ class PostActivity : AppCompatActivity() {
         binding.commitButton.setOnClickListener {
             CoroutineScope(Dispatchers.Main).launch {
                 var commentSend = CommentSend(
-                    binding.content.comment_content.toString()
+                    content =  binding.commentContent.text.toString()
                 )
                 val commentSendResponse =
                     supplementService.commentSend(token, postId, commentSend)
@@ -350,7 +370,71 @@ class PostActivity : AppCompatActivity() {
                     println(commentSendResponse.message().toString())
 //                        binding.like.text = "いいね！： ${post.likes.size-1}"
                 }
+
+                //                초기화 해준다 댓글창
+                CoroutineScope(Dispatchers.Main).launch {
+                    // 초기화
+                    commentPage = 1
+                    isNext = false
+                    isLoading = false
+                    commentRecyclerViewItemList = ArrayList()
+
+                    commentRecyclerView = binding.recyclerViewComment
+
+                    // 스크롤 리스너 등록
+                    commentRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                            super.onScrolled(recyclerView, dx, dy)
+                            println("스트롤 함 $isNext $isLoading ${(recyclerView.layoutManager as LinearLayoutManager?)!!.findLastCompletelyVisibleItemPosition()} ${commentRecyclerViewItemList.size}")
+                            if (isNext) {
+                                if (!isLoading) {
+                                    if (!recyclerView.canScrollVertically(1)) { // 최하단 끝까지 스크롤 했는지 감지
+                                        println("끝에 옴")
+                                        getMoreComments()
+                                        isLoading = true
+                                    }
+                                }
+                            }
+                        }
+                    })
+
+                    // 초기값 받아옴
+                    println("홈 프레그먼트$token")
+                    val getCommentIndexResponse =
+                        supplementService.commentIndex(token, postId, commentPage)
+                    if (getCommentIndexResponse.isSuccessful) {
+                        if (getCommentIndexResponse.body()!!.total == 0) {
+                            isNext = false
+                        } else {
+                            val commentList = getCommentIndexResponse.body()!!.data
+                            println("여기이거뭐ㅐ" + getCommentIndexResponse.body().toString())
+                            for (comment in commentList) {
+                                commentRecyclerViewItemList.add(comment)
+                            }
+                            if (getCommentIndexResponse.body()!!.next_page_url != null) {
+                                commentPage += 1
+                                isNext = true
+                            } else {
+                                isNext = false
+                            }
+                        }
+                    }
+                    commentRecyclerViewAdapter = CommentRecyclerViewAdapter(commentRecyclerViewItemList)
+                    commentRecyclerView.adapter = commentRecyclerViewAdapter
+
+//             아이템 클릭 리스너 등록
+                    commentRecyclerViewAdapter.setOnItemClickListener(object :
+                        CommentRecyclerViewAdapter.OnItemClickListener {
+                        override fun onItemClick(position: Int) {
+                            Toast.makeText(this@PostActivity, "いいね", Toast.LENGTH_SHORT).show()
+                        }
+                    })
+                }
+
+                binding.commentContent.setText(null)
+                softkeyboardHide()
             }
+
         }
 //
 //            supplementService.commentIndex(token,).enqueue(object : Callback<CommentIndexResponse>{
@@ -456,6 +540,16 @@ class PostActivity : AppCompatActivity() {
             finish()
         }
     }
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        val imm: InputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
+        return true
+    }
+
+    fun softkeyboardHide() {
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(binding.commentContent.windowToken, 0)
+    }
 
     private fun getMoreComments() {
         val intent = intent
@@ -484,9 +578,9 @@ class PostActivity : AppCompatActivity() {
                 for (comment in commentList) {
                     commentRecyclerViewItemList.add(comment)
                 }
+                commentRecyclerViewAdapter.notifyItemRangeInserted((commentPage - 1) * getCommentIndexResponse.body()!!.per_page, getCommentIndexResponse.body()!!.to)
+                isLoading = false
 
-                commentRecyclerViewAdapter.updateItem(commentRecyclerViewItemList)
-                commentRecyclerViewAdapter.notifyDataSetChanged()
                 if (getCommentIndexResponse.body()!!.next_page_url != null) {
                     commentPage += 1
                     isNext = true

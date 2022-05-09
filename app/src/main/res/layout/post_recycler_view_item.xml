@@ -1,116 +1,130 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/linear_layout_post_recycler_view_item"
+
+
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:background="@drawable/snslayout">
-
-
+    android:layout_marginTop="10dp"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    >
     <LinearLayout
+        android:id="@+id/linear_layout_post_recycler_view_item"
         android:layout_width="match_parent"
-        android:padding="3dp"
-        android:gravity="center_vertical"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="@drawable/snslayout"
-        android:layout_gravity="center_vertical">
-        <ImageView
-            android:id="@+id/userImage"
-            android:layout_width="30dp"
-            android:layout_gravity="center_vertical"
-            android:layout_margin="5dp"
-            android:layout_height="30dp"
-            android:src="@drawable/profile">
-
-        </ImageView>
-        <TextView
-            android:layout_weight="1"
-            android:hint="이름"
-            android:includeFontPadding="false"
-            android:fontFamily="@font/noto_sans_jp_black"
-            android:layout_margin="5dp"
-            android:gravity="center_vertical"
-            android:id="@+id/tv_user_name"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:layout_gravity="center_vertical"
-            android:textColor="#666666"
-            android:textSize="18dp"></TextView>
-        <TextView
-            android:gravity="center"
-            android:layout_gravity="center"
-            android:includeFontPadding="false"
-            android:fontFamily="@font/noto_sans_jp_black"
-            android:id="@+id/tv_created_at"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:text="날짜"
-            android:layout_marginRight="10dp"
-            android:textColor="#666666"
-            android:textSize="12dp" />
-    </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:text="제목"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:includeFontPadding="false"
-                    android:fontFamily="@font/noto_sans_jp_regular"
-                    android:layout_margin="5dp"
-                    android:id="@+id/tv_title"
-                    android:maxLines="1"
-                    android:ellipsize="end"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:paddingTop="3dp"
-                    android:paddingBottom="10dp"
-                    android:textColor="#666666"
-                    android:textSize="24dp" />
-
-            </LinearLayout>
-            <ImageView
-
-                android:background="@drawable/round_border2"
-                android:layout_marginRight="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginBottom="10dp"
-                android:id="@+id/image_view_map"
-                android:padding="7.5dp"
-                android:layout_width="wrap_content"
-                android:layout_height="320dp"
-                android:layout_gravity="center"/>
-
-
-    <LinearLayout
-        android:id="@+id/likelayout"
-        android:layout_width="match_parent"
-        android:padding="5dp"
-        android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:background="@drawable/snslayout">
 
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:padding="3dp"
+            android:gravity="center_vertical"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@drawable/snslayout"
+            android:layout_gravity="center_vertical">
+            <ImageView
+                android:id="@+id/userImage"
+                android:layout_width="30dp"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="5dp"
+                android:layout_height="30dp"
+                android:src="@drawable/profile">
+
+            </ImageView>
+            <TextView
+                android:layout_weight="1"
+                android:hint="이름"
+                android:includeFontPadding="false"
+                android:fontFamily="@font/noto_sans_jp_black"
+                android:layout_margin="5dp"
+                android:gravity="center_vertical"
+                android:id="@+id/tv_user_name"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_gravity="center_vertical"
+                android:textColor="#666666"
+                android:textSize="18dp"></TextView>
+            <TextView
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:includeFontPadding="false"
+                android:fontFamily="@font/noto_sans_jp_black"
+                android:id="@+id/tv_created_at"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:text="날짜"
+                android:layout_marginRight="10dp"
+                android:textColor="#666666"
+                android:textSize="12dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:text="제목"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:includeFontPadding="false"
+                android:fontFamily="@font/noto_sans_jp_regular"
+                android:layout_margin="5dp"
+                android:id="@+id/tv_title"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingTop="3dp"
+                android:paddingBottom="10dp"
+                android:textColor="#666666"
+                android:textSize="24dp" />
+
+        </LinearLayout>
         <ImageView
 
+            android:background="@drawable/round_border2"
+            android:layout_marginRight="10dp"
             android:layout_marginLeft="10dp"
-            android:layout_gravity="center"
-            android:src="@drawable/like_new2"
-            android:layout_width="35dp"
-            android:layout_height="35dp">
+            android:layout_marginBottom="10dp"
+            android:id="@+id/image_view_map"
+            android:padding="7.5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="320dp"
+            android:layout_gravity="center"/>
 
-        </ImageView>
-        <TextView
-            android:layout_margin="10dp"
-            android:text="ㅇㅁㄴㅇ"
-            android:id="@+id/tv_like_count"
+
+        <LinearLayout
+            android:id="@+id/likelayout"
             android:layout_width="match_parent"
+            android:padding="5dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginLeft="10dp"
-            android:fontFamily="@font/noto_sans_jp_regular"
-            android:includeFontPadding="false" />
+            android:background="@drawable/snslayout">
 
+            <!--        <ImageView-->
+            <!--            android:layout_marginLeft="10dp"-->
+            <!--            android:layout_gravity="center"-->
+            <!--            android:src="@drawable/like_new2"-->
+            <!--            android:layout_width="35dp"-->
+            <!--            android:layout_height="35dp">-->
+
+            <!--        </ImageView>-->
+            <TextView
+                android:layout_margin="10dp"
+                android:text="ㅇㅁㄴㅇ"
+                android:id="@+id/tv_like_count"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:fontFamily="@font/noto_sans_jp_regular"
+                android:includeFontPadding="false" />
+
+        </LinearLayout>
     </LinearLayout>
-    </LinearLayout>
+
+</androidx.cardview.widget.CardView>
+
