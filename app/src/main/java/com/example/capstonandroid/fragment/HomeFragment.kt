@@ -57,6 +57,7 @@ class HomeFragment : Fragment()  {
 
         postRecyclerView = binding.recyclerViewPost
 
+
         // 스크롤 리스너 등록
         postRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -90,7 +91,10 @@ class HomeFragment : Fragment()  {
         initRecyclerViewData()
 
         binding.swipeRefreshLayoutPost.setOnRefreshListener {
-            initRecyclerViewData()
+//            initRecyclerViewData()
+
+            resetPage()
+
             binding.swipeRefreshLayoutPost.isRefreshing = false
         }
     }
@@ -99,19 +103,7 @@ class HomeFragment : Fragment()  {
 
     }
 
-    private fun initRetrofit(){
-        retrofit = RetrofitClient.getInstance()
-        supplementService = retrofit.create(BackendApi::class.java);
-    }
-
-    override fun onDestroy() {
-        mBinding = null
-        super.onDestroy()
-    }
-
-    override fun onStart() {
-        super.onStart()
-        println("HomeFragment: onStart 호출")
+    private fun resetPage(){
         CoroutineScope(Dispatchers.Main).launch {
             // 초기화
             postPage = 1
@@ -153,6 +145,22 @@ class HomeFragment : Fragment()  {
                 }
             })
         }
+    }
+
+    private fun initRetrofit(){
+        retrofit = RetrofitClient.getInstance()
+        supplementService = retrofit.create(BackendApi::class.java);
+    }
+
+    override fun onDestroy() {
+        mBinding = null
+        super.onDestroy()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        println("HomeFragment: onStart 호출")
+      resetPage()
     }
 
     private fun getMorePosts() {

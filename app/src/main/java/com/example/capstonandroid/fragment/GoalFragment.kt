@@ -118,8 +118,8 @@ class PersonalMeFragment : Fragment() {
                 call: Call<UserExerciseRateResponse>,
                 response: Response<UserExerciseRateResponse>
             ) {
-//                    user_riding = response.body()!!.B
-//                    user_running = response.body()!!.R
+                    user_riding = response.body()!!.B
+                    user_running = response.body()!!.R
 
                 if(user_riding==0.0&&user_running==0.0){
                     println("정보가 없어요~")
@@ -147,7 +147,7 @@ class PersonalMeFragment : Fragment() {
                         data = pieData
                         description.isEnabled = false
                         isRotationEnabled = false
-                        centerText = "나의 운동 비율"
+                        centerText = "운동 비율"
                         setCenterTextSize(14f)
                         setEntryLabelColor(Color.BLACK)
 

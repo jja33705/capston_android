@@ -298,6 +298,14 @@ class ProfileMeFragment : Fragment(){
                             .circleCrop()
                             .into(binding.tvProfileMePicture)
                     }
+                if(user_mmr!! >= 0&& user_mmr!! <= 99){
+                    binding.medalLayout.setBackgroundResource(R.drawable.medal_bronze)
+                }else if (user_mmr >= 100 && user_mmr <= 199){
+                    binding.medalLayout.setBackgroundResource(R.drawable.medal_silver)
+                }else if (user_mmr >= 200){
+                    binding.medalLayout.setBackgroundResource(R.drawable.medal_gold)
+                }
+
             }
 
             override fun onFailure(call: Call<LoginUserResponse>, t: Throwable) {

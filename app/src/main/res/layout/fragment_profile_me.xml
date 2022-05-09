@@ -17,34 +17,46 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
-            android:layout_marginBottom="10dp"
+            android:layout_margin="10dp"
             >
             <LinearLayout
                 android:layout_marginHorizontal="20dp"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
                 >
+
+
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="80dp"
                     android:orientation="horizontal"
                     android:layout_marginBottom="20dp"
                     >
+                    <LinearLayout
+                    android:id="@+id/medal_layout"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:orientation="horizontal">
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/tv_profile_me_picture"
                         android:layout_width="60dp"
                         android:layout_height="60dp"
                         android:src="@mipmap/ic_launcher_round"
                         android:layout_gravity="center"
-                        android:layout_marginRight="20dp"
                         >
                     </de.hdodenhof.circleimageview.CircleImageView>
+
+                </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
                         android:orientation="vertical"
                         android:layout_gravity="center"
                         >
@@ -75,6 +87,28 @@
                         </TextView>
 
                     </LinearLayout>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
                 </LinearLayout>
@@ -128,7 +162,7 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/noto_sans_jp_regular"
                             android:includeFontPadding="false"
-                            android:text="フォロー中"
+                            android:text="フォロワー"
                             android:textColor="@color/main_color"
                             android:textSize="12sp"
                             >
@@ -137,7 +171,7 @@
                         <TextView
                             android:includeFontPadding="false"
                             android:fontFamily="@font/noto_sans_jp_medium"
-                            android:id="@+id/tv_following"
+                            android:id="@+id/tv_follower"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="12"
@@ -160,7 +194,7 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/noto_sans_jp_regular"
                             android:includeFontPadding="false"
-                            android:text="運動点数"
+                            android:text="フォロー中"
                             android:textColor="@color/main_color"
                             android:textSize="12sp"
                             >
@@ -169,7 +203,7 @@
                         <TextView
                             android:includeFontPadding="false"
                             android:fontFamily="@font/noto_sans_jp_medium"
-                            android:id="@+id/tv_follower"
+                            android:id="@+id/tv_following"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="10"
@@ -204,7 +238,9 @@
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:background="@color/white"
+            android:layout_marginRight="10dp"
             android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
             >
             <LinearLayout
                 android:layout_margin="10dp"
@@ -231,7 +267,9 @@
 
         <Button
             android:textColor="@color/white"
-            android:layout_margin="5dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
             android:background="@drawable/login_button"
             android:includeFontPadding="false"
             android:fontFamily="@font/noto_sans_jp_regular"

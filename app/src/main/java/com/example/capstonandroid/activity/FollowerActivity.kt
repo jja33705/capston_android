@@ -1,5 +1,6 @@
 package com.example.capstonandroid.activity
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -10,6 +11,7 @@ import com.example.capstonandroid.databinding.ActivityFollowerBinding
 import com.example.capstonandroid.network.RetrofitClient
 import com.example.capstonandroid.network.api.BackendApi
 import com.example.capstonandroid.network.dto.*
+import kotlinx.android.synthetic.main.activity_post.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -24,6 +26,9 @@ class FollowerActivity : AppCompatActivity() {
     private  lateinit var  retrofit: Retrofit  //레트로핏
     private  lateinit var supplementService: BackendApi // api
 
+
+
+    private var userId = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -109,6 +114,11 @@ class FollowerActivity : AppCompatActivity() {
 //      이 타입이 디폴트 값
         var token = "Bearer " + sharedPreference.getString("TOKEN","")
 
+
+
+        val intent = Intent(this, ProfileActivity::class.java)
+        intent.putExtra("userId", data.id)
+        startActivity(intent)
 
 //        supplementService.userFollow(token,data.id).enqueue(object : Callback<FollowResponse>{
 //            override fun onResponse(

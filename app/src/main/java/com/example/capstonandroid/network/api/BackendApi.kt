@@ -52,6 +52,9 @@ interface BackendApi {
     @POST("follow/{userId}") // 팔로우하기~!
     suspend fun follow(@Header("Authorization") token : String, @Path("userId") userId : Int) : Response<FollowResponse>
 
+    @POST("followRequest/{userId}")
+    suspend fun followRequest(@Header("Authorization")token : String,@Path("userId") userId : Int): Response<Any>
+
     @POST("post/image") // 이미지 테스트
     fun imageTest(@Header("Authorization") token : String ,
                   @Part images : MultipartBody.Part?): Call<Image>
@@ -76,6 +79,10 @@ interface BackendApi {
 
     @POST("like/{postID}") //좋아요 누르기
     suspend fun postLike(@Header("Authorization") token:String, @Path("postID") postID: Int) : Response<LikeResponse>
+
+    @GET("profile") //프로필 엿보기
+    suspend fun userProfile(@Header("Authorization")token: String,@Query("me") me: Int,@Query("id") id : Int) : Response<UserProfileResponse>
+
 
 
 //  재현 코드

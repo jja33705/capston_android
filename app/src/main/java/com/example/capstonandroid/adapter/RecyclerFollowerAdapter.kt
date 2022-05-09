@@ -63,12 +63,12 @@ class RecyclerFollowerAdapter(
 
             view.user_name.text = item.username
 
-            if(item.followcheck === true){
-
-                view.user_followcheck.text = "フォローキャンセル"
-            }else {
-                view.user_followcheck.text = "フォローする"
-            }
+//            if(item.followcheck === true){
+//
+//                view.user_followcheck.text = "フォローキャンセル"
+//            }else {
+//                view.user_followcheck.text = "フォローする"
+//            }
 
             view.setOnClickListener(listener)
 
