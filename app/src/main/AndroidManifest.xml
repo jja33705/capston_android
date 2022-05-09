@@ -21,7 +21,11 @@
         android:theme="@style/Theme.CapstonAndroid"
         android:usesCleartextTraffic="true">
         <activity
+<<<<<<< HEAD
             android:name=".activity.ProfileActivity"
+=======
+            android:name=".activity.UserProfileActivity"
+>>>>>>> 6577550 (5월 9일)
             android:exported="false" />
         <activity
             android:name=".activity.NotificationActivity"
