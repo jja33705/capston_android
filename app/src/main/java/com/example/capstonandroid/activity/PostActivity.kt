@@ -104,7 +104,7 @@ class PostActivity : AppCompatActivity() {
 
         var likeCheck = true
 
-        if(postKind==0) {
+        if(postKind==1) {
             binding.deleteButton.visibility = View.GONE
             binding.range.visibility = View.GONE
             binding.edit.visibility = View.GONE
