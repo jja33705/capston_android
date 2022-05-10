@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.capstonandroid.databinding.FragmentMeBinding
 import com.example.capstonandroid.R
+import com.example.capstonandroid.adapter.MeFragmentTopNavViewPager
+import com.google.android.material.tabs.TabLayoutMediator
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -26,6 +28,8 @@ class MeFragment : Fragment() {
 
     private var _binding: FragmentMeBinding? = null
     private val binding: FragmentMeBinding get() = _binding!!
+
+    private var tapTitleArray = arrayOf("プロフィール", "目標", "活動記録")
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,37 +55,44 @@ class MeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.meTopNav.setOnItemSelectedListener {
-            println("버튼 눌림")
-            println(it.itemId)
-            when (it.itemId) {
-                R.id.mefragment_profile -> {
-                    childFragmentManager.beginTransaction()
-                        .replace(R.id.mefragment_container, ProfileMeFragment()).commit()
+        val viewPager = binding.viewPager
+        val tabLayout = binding.meTopNav
 
-                }
-                R.id.mefragment_target -> {
-                    childFragmentManager.beginTransaction()
-                        .replace(R.id.mefragment_container, PersonalMeFragment()).commit()
+        viewPager.adapter = MeFragmentTopNavViewPager(childFragmentManager, lifecycle)
 
-                }
-                R.id.mefragment_activity -> {
-                    childFragmentManager.beginTransaction()
-                        .replace(R.id.mefragment_container, ActivityMeFragment()).commit()
-                }
-            }
-            true
-        }
+        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+            tab.text = tapTitleArray[position]
+        }.attach()
 
-//         처음 들어왔을때는 homeFragment
-        binding.meTopNav.selectedItemId = R.id.mefragment_profile
-
+//        binding.meTopNav.setOnItemSelectedListener {
+//            println("버튼 눌림")
+//            println(it.itemId)
+//            when (it.itemId) {
+//                R.id.mefragment_profile -> {
+//                    childFragmentManager.beginTransaction()
+//                        .replace(R.id.mefragment_container, ProfileMeFragment()).commit()
+//
+//                }
+//                R.id.mefragment_target -> {
+//                    childFragmentManager.beginTransaction()
+//                        .replace(R.id.mefragment_container, PersonalMeFragment()).commit()
+//
+//                }
+//                R.id.mefragment_activity -> {
+//                    childFragmentManager.beginTransaction()
+//                        .replace(R.id.mefragment_container, ActivityMeFragment()).commit()
+//                }
+//            }
+//            true
+//        }
+//
+////         처음 들어왔을때는 homeFragment
+//        binding.meTopNav.selectedItemId = R.id.mefragment_profile
     }
-    // 프래그먼트가 삭제 될 시
 
     override fun onDestroy() {
-        _binding = null
         super.onDestroy()
+        _binding = null
     }
 
 
@@ -96,12 +107,11 @@ class MeFragment : Fragment() {
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            MeFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
+        fun newInstance(param1: String, param2: String) = MeFragment().apply {
+            arguments = Bundle().apply {
+                putString(ARG_PARAM1, param1)
+                putString(ARG_PARAM2, param2)
             }
+        }
     }
 }

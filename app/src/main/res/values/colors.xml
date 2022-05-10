@@ -16,6 +16,8 @@
 
     <color name="main_color">#467ada</color>
     <color name="main_color_dark">#274377</color>
+    <color name="me_fragment_top_nav_selected_color">#3862B0</color>
+    <color name="me_fragment_top_nav_no_selected_text_color">#66FFFFFF</color>
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>
@@ -31,6 +33,7 @@
     <color name="green">#00FF00</color>
     <color name="focused">#E0E0E0</color>
     <color name="silver_color">#E1E1E1</color>
+    <color name="silver_background_color">#F7F7F7</color>
     <color name="date_color">#818181</color>
     <color name="gold_color">#ffd700</color>
     <color name="default_marker_color">#4284F4</color>

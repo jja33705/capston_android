@@ -4,7 +4,6 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../layout/custom_preview.xml" value="0.39444444444444443" />
-        <entry key="..\:/Users/User/StudioProjects/capston_android/app/src/main/res/layout/post_recycler_view_item.xml" value="0.25" />
         <entry key="..\:/Users/sakai/capston_android/app/src/main/res/drawable/search.xml" value="0.1385" />
         <entry key="..\:/Users/sakai/capston_android/app/src/main/res/layout/activity_goal_bike.xml" value="0.3645833333333333" />
         <entry key="..\:/Users/sakai/capston_android/app/src/main/res/layout/activity_goal_run.xml" value="0.3645833333333333" />
@@ -88,6 +87,7 @@
         <entry key="app/src/main/res/drawable/image_view_background.xml" value="0.2285" />
         <entry key="app/src/main/res/drawable/login_button.xml" value="0.1815" />
         <entry key="app/src/main/res/drawable/match_type_button_background.xml" value="0.2285" />
+        <entry key="app/src/main/res/drawable/me_fragment_tab_nav_background_color.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/record_end_point.xml" value="0.189" />
         <entry key="app/src/main/res/drawable/record_start_point.xml" value="0.2125" />
         <entry key="app/src/main/res/drawable/round_background.xml" value="0.1107421875" />
@@ -138,9 +138,9 @@
         <entry key="app/src/main/res/layout/fragment_activity_me.xml" value="0.36875" />
         <entry key="app/src/main/res/layout/fragment_goal.xml" value="0.34427083333333336" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.21047668457031266" />
-        <entry key="app/src/main/res/layout/fragment_me.xml" value="0.21197916666666666" />
+        <entry key="app/src/main/res/layout/fragment_me.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_my.xml" value="0.21197916666666666" />
-        <entry key="app/src/main/res/layout/fragment_profile_me.xml" value="0.41137237548828137" />
+        <entry key="app/src/main/res/layout/fragment_profile_me.xml" value="0.25550994873046873" />
         <entry key="app/src/main/res/layout/fragment_record.xml" value="0.19791666666666666" />
         <entry key="app/src/main/res/layout/fragment_riding.xml" value="0.3828125" />
         <entry key="app/src/main/res/layout/fragment_running.xml" value="0.3828125" />
@@ -170,6 +170,7 @@
         <entry key="app/src/main/res/layout/view_loader.xml" value="0.2234375" />
         <entry key="app/src/main/res/layout/view_toolbar.xml" value="0.2234375" />
         <entry key="app/src/main/res/menu/bottom_navigation_main.xml" value="0.2557291666666667" />
+        <entry key="app/src/main/res/menu/main_activity_menu.xml" value="0.34427083333333336" />
         <entry key="app/src/main/res/menu/menu_bottom_nav.xml" value="0.21197916666666666" />
         <entry key="app/src/main/res/menu/menu_main.xml" value="0.2557291666666667" />
         <entry key="app/src/main/res/menu/menu_me_top_nav.xml" value="0.2557291666666667" />

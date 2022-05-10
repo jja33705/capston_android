@@ -22,11 +22,12 @@
         android:layout_marginTop="10dp"
         >
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_select_exercise_kind"
             android:layout_width="120dp"
             android:layout_height="35dp"
             android:text="ランニング"
+            android:textColor="@color/black"
             android:textSize="12sp"
             android:drawableLeft="@drawable/run"
             android:background="@drawable/category_button_background"
@@ -34,7 +35,7 @@
             android:layout_marginLeft="10dp"
             android:fontFamily="@font/noto_sans_jp_regular"
             >
-        </Button>
+        </androidx.appcompat.widget.AppCompatButton>
     </LinearLayout>
 
     <androidx.appcompat.widget.AppCompatButton
@@ -44,6 +45,7 @@
         android:layout_gravity="top|center"
         android:layout_marginTop="70dp"
         android:paddingHorizontal="10dp"
+        android:textColor="@color/black"
         android:gravity="center"
         android:drawableLeft="@drawable/search_icon"
         android:background="@drawable/round_button_background"
@@ -115,7 +117,7 @@
                         android:layout_weight="1"
                         ></TextView>
 
-                    <Button
+                    <androidx.appcompat.widget.AppCompatButton
                         android:id="@+id/btn_track_information"
                         android:layout_width="70dp"
                         android:layout_height="35dp"
@@ -124,7 +126,7 @@
                         android:textColor="@color/white"
                         android:fontFamily="@font/noto_sans_jp_regular"
                         android:includeFontPadding="false"
-                        android:text="詳細"></Button>
+                        android:text="詳細"></androidx.appcompat.widget.AppCompatButton>
                 </LinearLayout>
 
                 <LinearLayout
@@ -192,7 +194,7 @@
                         >
                     </TextView>
 
-                    <Button
+                    <androidx.appcompat.widget.AppCompatButton
                         android:id="@+id/button_normal"
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
@@ -202,9 +204,9 @@
                         android:layout_marginBottom="15dp"
                         android:textColor="@color/white"
                         >
-                    </Button>
+                    </androidx.appcompat.widget.AppCompatButton>
 
-                    <Button
+                    <androidx.appcompat.widget.AppCompatButton
                         android:id="@+id/button_friendly"
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
@@ -213,7 +215,7 @@
                         android:fontFamily="@font/noto_sans_jp_bold"
                         android:textColor="@color/white"
                         >
-                    </Button>
+                    </androidx.appcompat.widget.AppCompatButton>
 
                     <TextView
                         android:drawableLeft="@drawable/alert_icon"
@@ -225,7 +227,7 @@
                         >
                     </TextView>
 
-                    <Button
+                    <androidx.appcompat.widget.AppCompatButton
                         android:id="@+id/button_rank"
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
@@ -234,7 +236,7 @@
                         android:text="ランクマッチ"
                         android:textColor="@color/white"
                         >
-                    </Button>
+                    </androidx.appcompat.widget.AppCompatButton>
 
                     <LinearLayout
                         android:layout_width="wrap_content"

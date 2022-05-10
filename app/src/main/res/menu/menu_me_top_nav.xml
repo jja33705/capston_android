@@ -2,20 +2,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/mefragment_profile"
-        android:icon="@drawable/profile"
         android:enabled="true"
         android:title="プロフィール"
-
         />
     <item
         android:id="@+id/mefragment_target"
         android:enabled="true"
-        android:icon="@drawable/target"
         android:title="目標" />
     <item
         android:id="@+id/mefragment_activity"
         android:enabled="true"
-        android:checkable="false"
-        android:icon="@drawable/activity"
         android:title="My活動記録" />
 </menu>

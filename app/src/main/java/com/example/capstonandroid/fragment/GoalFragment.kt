@@ -1,6 +1,5 @@
 package com.example.capstonandroid.fragment
 
-import android.R
 import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
@@ -12,7 +11,6 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
 import com.example.capstonandroid.activity.GoalBikeActivity
 import com.example.capstonandroid.activity.GoalRunActivity
 import com.example.capstonandroid.activity.SelectTrackActivity
@@ -39,7 +37,7 @@ private const val ARG_PARAM2 = "param2"
 private  lateinit var  retrofit: Retrofit  //레트로핏
 private  lateinit var supplementService: BackendApi // api
 
-class PersonalMeFragment : Fragment() {
+class GoalFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -436,7 +434,7 @@ class PersonalMeFragment : Fragment() {
 
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
-            PersonalMeFragment().apply {
+            GoalFragment().apply {
                 arguments = Bundle().apply {
                     putString(ARG_PARAM1, param1)
                     putString(ARG_PARAM2, param2)
