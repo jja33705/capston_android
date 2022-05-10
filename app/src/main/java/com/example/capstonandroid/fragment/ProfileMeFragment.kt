@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.example.capstonandroid.R
+import com.example.capstonandroid.activity.EditProfileActivity
 import com.example.capstonandroid.activity.LoginActivity
 import com.example.capstonandroid.databinding.FragmentProfileMeBinding
 import com.example.capstonandroid.network.api.BackendApi
@@ -367,19 +368,16 @@ class ProfileMeFragment : Fragment(){
 
 
         }
-
-
-
-
-
-
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
+        binding.btnEditProfile.setOnClickListener {
+            val intent = Intent(activity, EditProfileActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     override fun onDestroy() {

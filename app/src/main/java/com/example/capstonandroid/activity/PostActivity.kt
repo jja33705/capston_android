@@ -96,6 +96,7 @@ class PostActivity : AppCompatActivity() {
 
         val intent = intent
         var postId = intent.getIntExtra("postId", -1)
+        println("intent로 넘어옴: ${postId}")
         var postKind = intent.getIntExtra("postKind",-1)
 
         var token = "Bearer " + getSharedPreferences("other", MODE_PRIVATE).getString("TOKEN", "")

@@ -217,7 +217,8 @@
 
                 </LinearLayout>
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btn_edit_profile"
                     android:layout_width="match_parent"
                     android:layout_height="30dp"
                     android:text="プロフィールを編集"
@@ -229,7 +230,7 @@
                     android:textColor="@color/main_color"
                     android:background="@drawable/button_edit_profile_background"
                     >
-                </Button>
+                </androidx.appcompat.widget.AppCompatButton>
 
             </LinearLayout>
         </androidx.cardview.widget.CardView>
@@ -265,7 +266,7 @@
         </androidx.cardview.widget.CardView>
 
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:textColor="@color/white"
             android:layout_marginBottom="10dp"
             android:layout_marginRight="10dp"
@@ -276,7 +277,7 @@
             android:id="@+id/logout"
             android:layout_width="match_parent"
             android:layout_height="30dp"
-            android:text="ログアウト"></Button>
+            android:text="ログアウト"></androidx.appcompat.widget.AppCompatButton>
     </LinearLayout>
 
 </LinearLayout>

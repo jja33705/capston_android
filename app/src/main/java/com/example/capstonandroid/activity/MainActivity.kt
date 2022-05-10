@@ -164,18 +164,23 @@ class MainActivity : AppCompatActivity() {
     private fun checkAndStartActivityFromNotification(intent: Intent) {
         println("onNewIntent: ${intent?.getStringExtra("type")}")
         println("onNewIntent: ${intent?.getStringExtra("postId")}")
+        println("onNewIntent: ${intent?.getStringExtra("userId")}")
+        println("onNewIntent: ${intent?.getStringExtra("id")}")
         // 노티피케이션 관련된 곳으로 이동
         if (intent.getStringExtra("type") != null) {
-            when (intent.getStringExtra("type")) {
-                "follow" -> {
-                    println("follow 임")
+            val intent = when (intent.getStringExtra("type")) {
+                "follow", "followRequest" -> {
+                    Intent(this, ProfileActivity::class.java).apply {
+                        putExtra("userId", intent.getStringExtra("userId")?.toInt())
+                    }
                 }
                 else -> {
-                    val postIntent = Intent(this, PostActivity::class.java)
-                    postIntent.putExtra("postId", intent.getStringExtra("postId")?.toInt())
-                    startActivity(postIntent)
+                    Intent(this, PostActivity::class.java).apply {
+                        putExtra("postId", intent.getStringExtra("postId")?.toInt())
+                    }
                 }
             }
+            startActivity(intent)
         }
     }
 }

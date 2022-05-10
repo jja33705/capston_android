@@ -8,10 +8,7 @@ import com.example.capstonandroid.R
 import com.example.capstonandroid.databinding.ActivityProfileBinding
 import com.example.capstonandroid.network.RetrofitClient
 import com.example.capstonandroid.network.api.BackendApi
-import com.example.capstonandroid.network.dto.FollowResponse
 import com.example.capstonandroid.network.dto.LoginUserResponse
-import com.example.capstonandroid.network.dto.Post
-import com.example.capstonandroid.network.dto.UserProfileResponse
 import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
@@ -45,12 +42,14 @@ class ProfileActivity : AppCompatActivity() {
         _binding = ActivityProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        supportActionBar?.title = "プロフィール"
+
         initRetrofit()
 
 
         var token = "Bearer " + getSharedPreferences("other", MODE_PRIVATE).getString("TOKEN", "")
 
-        var userId = intent.getIntExtra("userId", 0)
+        var userId = intent.getIntExtra("userId", -1)
 
         var followCheck = true
 

@@ -109,6 +109,7 @@
         <entry key="app/src/main/res/layout/activity_auth.xml" value="0.3104166666666667" />
         <entry key="app/src/main/res/layout/activity_complete_record.xml" value="0.24584197998046883" />
         <entry key="app/src/main/res/layout/activity_count_down.xml" value="0.16955640128489288" />
+        <entry key="app/src/main/res/layout/activity_edit_profile.xml" value="0.2399241804821333" />
         <entry key="app/src/main/res/layout/activity_intro.xml" value="0.36875" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.3080963134765625" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.19791666666666666" />
@@ -134,10 +135,11 @@
         <entry key="app/src/main/res/layout/custom_list_item2.xml" value="0.3260416666666667" />
         <entry key="app/src/main/res/layout/follow_request_recycler_view_item.xml" value="0.3260416666666667" />
         <entry key="app/src/main/res/layout/fragment_activity_me.xml" value="0.36875" />
+        <entry key="app/src/main/res/layout/fragment_goal.xml" value="0.34427083333333336" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.21047668457031266" />
         <entry key="app/src/main/res/layout/fragment_me.xml" value="0.21197916666666666" />
         <entry key="app/src/main/res/layout/fragment_my.xml" value="0.21197916666666666" />
-        <entry key="app/src/main/res/layout/fragment_profile_me.xml" value="0.45303192138671877" />
+        <entry key="app/src/main/res/layout/fragment_profile_me.xml" value="0.41137237548828137" />
         <entry key="app/src/main/res/layout/fragment_record.xml" value="0.19791666666666666" />
         <entry key="app/src/main/res/layout/fragment_riding.xml" value="0.3828125" />
         <entry key="app/src/main/res/layout/fragment_running.xml" value="0.3828125" />

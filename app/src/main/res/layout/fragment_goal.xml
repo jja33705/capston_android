@@ -174,7 +174,7 @@
 
             </TextView>
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:layout_margin="10dp"
                 android:textColor="@color/white"
                 android:paddingRight="10dp"
@@ -190,7 +190,7 @@
                 android:text="ランニング追加">
 
 
-            </Button>
+            </androidx.appcompat.widget.AppCompatButton>
         </LinearLayout>
 
         <androidx.cardview.widget.CardView
@@ -291,7 +291,7 @@
 
             </TextView>
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:layout_margin="10dp"
                 android:textColor="@color/white"
                 android:paddingRight="10dp"
@@ -305,7 +305,7 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:text="サイクリング追加">
-            </Button>
+            </androidx.appcompat.widget.AppCompatButton>
 
             </LinearLayout>
 

@@ -11,6 +11,7 @@ import androidx.core.app.NotificationCompat
 import com.example.capstonandroid.R
 import com.example.capstonandroid.activity.IntroActivity
 import com.example.capstonandroid.activity.PostActivity
+import com.example.capstonandroid.activity.ProfileActivity
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 
@@ -49,9 +50,9 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         // notification type 에 따라 분기처리
         val intent = when (data["type"]!!) {
             "follow", "followRequest" -> {
-                Intent(this, IntroActivity::class.java).apply {
-//                    flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-//                    putExtra("postId", data["postId"]!!.toInt())
+                Intent(this, ProfileActivity::class.java).apply {
+                    println("이게 뭐고: ${data["id"]!!.toInt()}")
+                    putExtra("userId", data["id"]!!.toInt())
                 }
             }
             else -> {
