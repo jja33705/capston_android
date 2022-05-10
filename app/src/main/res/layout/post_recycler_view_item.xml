@@ -1,128 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/linear_layout_post_recycler_view_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="10dp"
-    android:layout_marginLeft="10dp"
-    android:layout_marginRight="10dp"
-    >
-    <LinearLayout
-        android:id="@+id/linear_layout_post_recycler_view_item"
+    android:clipToPadding="false"
+    android:orientation="vertical">
+
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
+        android:layout_margin="7dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="@drawable/snslayout">
-
-
-
+        card_view:cardCornerRadius="15dp">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:padding="3dp"
-            android:gravity="center_vertical"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:background="@drawable/snslayout"
-            android:layout_gravity="center_vertical">
-            <ImageView
-                android:id="@+id/userImage"
-                android:layout_width="30dp"
-                android:layout_gravity="center_vertical"
-                android:layout_margin="5dp"
-                android:layout_height="30dp"
-                android:src="@drawable/profile">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            </ImageView>
-            <TextView
-                android:layout_weight="1"
-                android:hint="이름"
-                android:includeFontPadding="false"
-                android:fontFamily="@font/noto_sans_jp_black"
-                android:layout_margin="5dp"
-                android:gravity="center_vertical"
-                android:id="@+id/tv_user_name"
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:layout_gravity="center_vertical"
-                android:textColor="#666666"
-                android:textSize="18dp"></TextView>
-            <TextView
-                android:gravity="center"
-                android:layout_gravity="center"
-                android:includeFontPadding="false"
-                android:fontFamily="@font/noto_sans_jp_black"
-                android:id="@+id/tv_created_at"
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:text="날짜"
-                android:layout_marginRight="10dp"
-                android:textColor="#666666"
-                android:textSize="12dp" />
-        </LinearLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_height="wrap_content">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/userImage"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/profile" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="15dp"
+                    android:layout_toRightOf="@+id/userImage"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_user_name"
+                        android:layout_width="wrap_content"
+                        android:includeFontPadding="false"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:layout_marginLeft="5px"
+                        android:fontFamily="@font/noto_sans_jp_bold"
+                        android:text="user_name"
+                        android:textColor="#333333"
+                        android:textSize="17sp"></TextView>
+
+                    <TextView
+                        android:id="@+id/tv_created_at"
+                        android:layout_width="wrap_content"
+                        android:includeFontPadding="false"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:layout_marginLeft="5px"
+                        android:layout_below="@id/tv_user_name"
+                        android:text="created_at"
+                        android:textColor="#999999"
+                        android:textSize="14sp"></TextView>
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+
             <TextView
                 android:text="제목"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
                 android:includeFontPadding="false"
                 android:fontFamily="@font/noto_sans_jp_regular"
-                android:layout_margin="5dp"
+                android:layout_margin="10dp"
+                android:paddingLeft="10dp"
                 android:id="@+id/tv_title"
                 android:maxLines="1"
                 android:ellipsize="end"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:paddingTop="3dp"
-                android:paddingBottom="10dp"
                 android:textColor="#666666"
                 android:textSize="24dp" />
 
-        </LinearLayout>
-        <ImageView
 
-            android:background="@drawable/round_border2"
-            android:layout_marginRight="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginBottom="10dp"
-            android:id="@+id/image_view_map"
-            android:padding="7.5dp"
-            android:layout_width="wrap_content"
-            android:layout_height="320dp"
-            android:layout_gravity="center"/>
+            <ImageView
+                android:id="@+id/image_view_map"
+                android:layout_width="wrap_content"
+                android:layout_height="200dp"
+                android:scaleType="centerCrop">
+            </ImageView>
 
 
-        <LinearLayout
-            android:id="@+id/likelayout"
-            android:layout_width="match_parent"
-            android:padding="5dp"
-            android:layout_height="wrap_content"
-            android:background="@drawable/snslayout">
-
-            <!--        <ImageView-->
-            <!--            android:layout_marginLeft="10dp"-->
-            <!--            android:layout_gravity="center"-->
-            <!--            android:src="@drawable/like_new2"-->
-            <!--            android:layout_width="35dp"-->
-            <!--            android:layout_height="35dp">-->
-
-            <!--        </ImageView>-->
             <TextView
-                android:layout_margin="10dp"
-                android:text="ㅇㅁㄴㅇ"
+                android:layout_margin="12dp"
                 android:id="@+id/tv_like_count"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
+                android:includeFontPadding="false"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginLeft="10dp"
-                android:fontFamily="@font/noto_sans_jp_regular"
-                android:includeFontPadding="false" />
+                android:layout_gravity="bottom"
+                android:layout_marginLeft="5px"
+                android:text="like_num"
+                android:textColor="#999998"
+                android:textSize="14sp"></TextView>
 
         </LinearLayout>
-    </LinearLayout>
 
-</androidx.cardview.widget.CardView>
 
+    </androidx.cardview.widget.CardView>
+
+</LinearLayout>
