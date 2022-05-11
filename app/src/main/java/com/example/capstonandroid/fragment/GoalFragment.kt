@@ -497,19 +497,18 @@ class GoalFragment : Fragment() {
             }
         })
 
-<<<<<<< HEAD
-        binding.runButton.setOnClickListener {
-
-            val nextIntent = Intent(requireContext(), GoalRunActivity::class.java)
-
-            startActivity(nextIntent)
-        }
-        binding.bikeButton.setOnClickListener {
-
-            val nextIntent = Intent(requireContext(), GoalBikeActivity::class.java)
-
-            startActivity(nextIntent)
-        }
+//        binding.runButton.setOnClickListener {
+//
+//            val nextIntent = Intent(requireContext(), GoalRunActivity::class.java)
+//
+//            startActivity(nextIntent)
+//        }
+//        binding.bikeButton.setOnClickListener {
+//
+//            val nextIntent = Intent(requireContext(), GoalBikeActivity::class.java)
+//
+//            startActivity(nextIntent)
+//        }
 
         binding.userGoalRiding.setOnLongClickListener{
 
@@ -582,8 +581,6 @@ class GoalFragment : Fragment() {
     override fun onDestroy() {
         mBinding = null
         super.onDestroy()
-=======
->>>>>>> 2e92e5a (5/10)
     }
 
     private fun initRetrofit(){

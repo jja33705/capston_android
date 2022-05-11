@@ -113,8 +113,6 @@ class PostActivity : AppCompatActivity() {
             binding.deleteButton.visibility = View.VISIBLE
             binding.range.visibility = View.VISIBLE
             binding.edit.visibility = View.VISIBLE
-            binding.linearLayout.visibility = View.GONE
-            binding.recyclerViewComment.visibility = View.GONE
         }
 
         CoroutineScope(Dispatchers.Main).launch {
