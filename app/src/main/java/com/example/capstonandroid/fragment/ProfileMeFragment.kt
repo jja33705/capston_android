@@ -38,6 +38,24 @@ private const val ARG_PARAM2 = "param2"
 private  lateinit var  retrofit: Retrofit  //레트로핏
 private  lateinit var supplementService: BackendApi // api
 
+private var chart_max :Float = 0.0f;
+private var chart_min :Float = 0.0f;
+
+var r_today :Float = 0f;
+var r_oneDayAgo :Float = 0f;
+var r_twoDayAgo :Float = 0f;
+var r_threeDayAgo :Float = 0f;
+var r_fourDayAgo :Float = 0f;
+var r_fiveDayAgo :Float = 0f;
+var r_sixDayAgo :Float = 0f;
+
+var b_today :Float = 0f;
+var b_oneDayAgo :Float = 0f;
+var b_twoDayAgo :Float = 0f;
+var b_threeDayAgo :Float = 0f;
+var b_fourDayAgo :Float = 0f;
+var b_fiveDayAgo :Float = 0f;
+var b_sixDayAgo :Float = 0f;
 class ProfileMeFragment : Fragment(){
     // TODO: Rename and change types of parameters
     private var param1: String? = null
@@ -49,8 +67,9 @@ class ProfileMeFragment : Fragment(){
     private val binding get() = mBinding!!
 
 
-    private var chart_max :Float = 0.0f;
-    private var chart_min :Float = 0.0f;
+
+
+
 
 //    private val binding: FragmentProfileMeBinding get() = _binding!!
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -79,21 +98,32 @@ class ProfileMeFragment : Fragment(){
             param2 = it.getString(ARG_PARAM2)
         }
 
-        var r_today :Float = 0f;
-        var r_oneDayAgo :Float = 0f;
-        var r_twoDayAgo :Float = 0f;
-        var r_threeDayAgo :Float = 0f;
-        var r_fourDayAgo :Float = 0f;
-        var r_fiveDayAgo :Float = 0f;
-        var r_sixDayAgo :Float = 0f;
+        return binding.root
+    }
 
-        var b_today :Float = 0f;
-        var b_oneDayAgo :Float = 0f;
-        var b_twoDayAgo :Float = 0f;
-        var b_threeDayAgo :Float = 0f;
-        var b_fourDayAgo :Float = 0f;
-        var b_fiveDayAgo :Float = 0f;
-        var b_sixDayAgo :Float = 0f;
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mBinding = null
+    }
+
+    override fun onStart() {
+
+
+
+        super.onStart()
+
+
+        binding.btnEditProfile.setOnClickListener {
+            val intent = Intent(activity, EditProfileActivity::class.java)
+            startActivity(intent)
+        }
+
+
 
 //        함수 초기화
         initRetrofit()
@@ -124,6 +154,7 @@ class ProfileMeFragment : Fragment(){
                 r_sixDayAgo = response.body()!!.sixDayAgo.toFloat()
 
                 println("라이딩"+response.body()!!)
+                println(r_sixDayAgo)
 
                 supplementService.userWeek(token,"B").enqueue(object :Callback<UserWeekResponse>{
                     override fun onResponse(
@@ -186,9 +217,10 @@ class ProfileMeFragment : Fragment(){
 
 
                         var max = arr[0]
-                        for( i in 0 until arr.lastIndex){
+                        for( i in 0..13){
                             if(max < arr[i]){   // 부호만 바꾸면 최대값이 구해진다.
                                 max = arr[i]
+                                println(max)
                             }
 
                             if (max<5)
@@ -268,7 +300,7 @@ class ProfileMeFragment : Fragment(){
 
 
 
- supplementService.userGet(token.toString()).enqueue(object : Callback<LoginUserResponse>{
+        supplementService.userGet(token.toString()).enqueue(object : Callback<LoginUserResponse>{
             override fun onResponse(
                 call: Call<LoginUserResponse>,
                 response: Response<LoginUserResponse>
@@ -290,15 +322,15 @@ class ProfileMeFragment : Fragment(){
 
 
                 if (loginuserResponse?.profile.equals(null)||loginuserResponse?.profile.equals("img")){
-                        binding.tvProfileMePicture.setImageResource(R.drawable.main_profile)
-                    }else {
+                    binding.tvProfileMePicture.setImageResource(R.drawable.main_profile)
+                }else {
 
-                        val url = response.body()!!.profile
-                        Glide.with(this@ProfileMeFragment)
-                            .load(url)
-                            .circleCrop()
-                            .into(binding.tvProfileMePicture)
-                    }
+                    val url = response.body()!!.profile
+                    Glide.with(this@ProfileMeFragment)
+                        .load(url)
+                        .circleCrop()
+                        .into(binding.tvProfileMePicture)
+                }
                 if(user_mmr!! >= 0&& user_mmr!! <= 99){
                     binding.medalLayout.setBackgroundResource(R.drawable.medal_bronze)
                 }else if (user_mmr >= 100 && user_mmr <= 199){
@@ -368,23 +400,7 @@ class ProfileMeFragment : Fragment(){
 
 
         }
-        return binding.root
     }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        binding.btnEditProfile.setOnClickListener {
-            val intent = Intent(activity, EditProfileActivity::class.java)
-            startActivity(intent)
-        }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        mBinding = null
-    }
-
     private fun initRetrofit(){
         retrofit = RetrofitClient.getInstance()
         supplementService = retrofit.create(BackendApi::class.java);

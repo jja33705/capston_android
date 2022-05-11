@@ -54,6 +54,25 @@ class ActivityMeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         println("HomeFragment 시작됨")
 
+    }
+
+    private fun initRecyclerViewData() {
+
+    }
+
+    private fun initRetrofit(){
+        retrofit = RetrofitClient.getInstance()
+        supplementService = retrofit.create(BackendApi::class.java);
+    }
+
+    override fun onDestroy() {
+        mBinding = null
+        super.onDestroy()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        println("HomeFragment: onStart 호출")
         postRecyclerView = binding.recyclerViewPost
 
         // 스크롤 리스너 등록
@@ -93,25 +112,8 @@ class ActivityMeFragment : Fragment() {
             resetPage()
             binding.swipeRefreshLayoutPost.isRefreshing = false
         }
-    }
 
-    private fun initRecyclerViewData() {
 
-    }
-
-    private fun initRetrofit(){
-        retrofit = RetrofitClient.getInstance()
-        supplementService = retrofit.create(BackendApi::class.java);
-    }
-
-    override fun onDestroy() {
-        mBinding = null
-        super.onDestroy()
-    }
-
-    override fun onStart() {
-        super.onStart()
-        println("HomeFragment: onStart 호출")
         resetPage()
     }
 
