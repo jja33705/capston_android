@@ -56,6 +56,7 @@ class ActivityMeFragment : Fragment() {
 
     }
 
+
     private fun initRecyclerViewData() {
 
     }
