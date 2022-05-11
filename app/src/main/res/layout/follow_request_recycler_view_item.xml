@@ -51,7 +51,7 @@
         </TextView>
     </LinearLayout>
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_accept_follow_request"
         android:textColor="@color/white"
         android:layout_width="60dp"
@@ -64,9 +64,9 @@
         android:layout_gravity="center"
         android:layout_marginRight="10dp"
         >
-    </Button>
+    </androidx.appcompat.widget.AppCompatButton>
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_delete_follow_request"
         android:textColor="@color/black"
         android:layout_width="60dp"
@@ -79,6 +79,6 @@
         android:layout_gravity="center"
         android:layout_marginRight="10dp"
         >
-    </Button>
+    </androidx.appcompat.widget.AppCompatButton>
 
 </LinearLayout>

@@ -245,7 +245,6 @@ class GoalFragment : Fragment() {
                 totalBikeDistance = distanceBikeResponse.body()!!.distance
 
             }
-
             val distanceRunResponse = supplementService.totalDistance(token, "R")
 
             if(distanceRunResponse.isSuccessful){
