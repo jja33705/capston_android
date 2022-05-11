@@ -497,6 +497,7 @@ class GoalFragment : Fragment() {
             }
         })
 
+<<<<<<< HEAD
         binding.runButton.setOnClickListener {
 
             val nextIntent = Intent(requireContext(), GoalRunActivity::class.java)
@@ -581,6 +582,8 @@ class GoalFragment : Fragment() {
     override fun onDestroy() {
         mBinding = null
         super.onDestroy()
+=======
+>>>>>>> 2e92e5a (5/10)
     }
 
     private fun initRetrofit(){
