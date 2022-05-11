@@ -533,6 +533,8 @@ class GoalFragment : Fragment() {
                     println("취소 하셨네요")
                 })
 
+
+
             builder.show()
             true
         }
