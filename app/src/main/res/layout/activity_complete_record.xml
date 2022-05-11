@@ -62,7 +62,7 @@
                 android:orientation="horizontal"
                 android:layout_marginTop="20dp"
                 >
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/upload_image"
                     android:layout_width="130dp"
                     android:layout_height="90dp"
@@ -71,7 +71,7 @@
                     android:textColor="@color/main_color"
                     android:background="@drawable/upload_picture_button_background"
                     >
-                </Button>
+                </androidx.appcompat.widget.AppCompatButton>
             </LinearLayout>
 
         </HorizontalScrollView>
@@ -86,7 +86,7 @@
             >
         </TextView>
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:drawableLeft="@drawable/icon_public"
             android:id="@+id/btn_range"
             android:paddingRight="10dp"
@@ -102,9 +102,9 @@
             android:drawableRight="@drawable/arrow_down"
             android:background="@drawable/category_button_background"
             >
-        </Button>
+        </androidx.appcompat.widget.AppCompatButton>
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/bt_post"
             android:layout_marginTop="30dp"
             android:layout_width="match_parent"
@@ -113,6 +113,6 @@
             android:textColor="@color/main_color"
             android:includeFontPadding="false"
             android:fontFamily="@font/noto_sans_jp_regular"
-            android:background="@drawable/upload_picture_button_background"></Button>
+            android:background="@drawable/upload_picture_button_background"></androidx.appcompat.widget.AppCompatButton>
     </LinearLayout>
 </ScrollView>
