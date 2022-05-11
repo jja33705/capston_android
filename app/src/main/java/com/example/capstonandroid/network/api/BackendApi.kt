@@ -83,7 +83,14 @@ interface BackendApi {
     @GET("profile") //프로필 엿보기
     suspend fun userProfile(@Header("Authorization")token: String,@Query("me") me: Int,@Query("id") id : Int) : Response<UserProfileResponse>
 
+    @GET("record/distance") //거리
+    suspend fun totalDistance(@Header("Authorization")token : String,@Query("event") event: String) : Response<DistanceResponse>
 
+    @GET("record/totalTime") //　총시간
+    suspend fun totalTime(@Header("Authorization")token : String) : Response<Int>
+
+    @GET("record/totalCalorie") //총 칼로리
+    suspend fun totalCalorie(@Header("Authorization")token : String) : Response<Int>
 
 //  재현 코드
 //    @GET("test") // 보낼 url

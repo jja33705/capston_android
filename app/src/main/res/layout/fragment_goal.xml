@@ -53,6 +53,7 @@
 
             </TextView>
             <TextView
+                android:id="@+id/totalDistance"
                 android:gravity="center"
 
                 android:layout_gravity="center"
@@ -78,6 +79,8 @@
                 android:includeFontPadding="false">
             </TextView>
             <TextView
+
+                android:id="@+id/totalTime"
                 android:gravity="center"
 
                 android:layout_gravity="center"
@@ -105,6 +108,7 @@
             <TextView
                 android:gravity="center"
 
+                android:id="@+id/totalCalorie"
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:text="총 달리기 거리"
