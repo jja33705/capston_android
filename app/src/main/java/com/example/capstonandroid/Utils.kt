@@ -24,16 +24,25 @@ class Utils {
                 val s = time % 60
                 "%1$02d:%2$02d:%3$02d".format(h, m, s)
             }
+
         }
 
         fun timeToStringText(time: Int): String {
-            return if (time == 0) {
-                "00時間00分00秒"
-            } else {
+            if (time == 0) {
+                return "아직 달리지 않았습니다"
+            } else if (time > 3600) {
                 val h = time / 3600
                 val m = time % 3600 / 60
                 val s = time % 60
-                "%1$02d時間%2$02d分%3$02d秒".format(h, m, s)
+                return "%1$02d時間%2$02d分%3$02d秒".format(h, m, s)
+            } else if (time < 3600 && time > 60) {
+
+                val m = time % 3600 / 60
+                val s = time % 60
+                return "%1$02d分%2$02d秒".format(m, s)
+            } else {
+                val s = time % 60
+                return "%1$02d秒".format(s)
             }
         }
 

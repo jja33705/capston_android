@@ -12,29 +12,30 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/layout_shape">
-        <EditText
+        <androidx.appcompat.widget.AppCompatEditText
             android:includeFontPadding="false"
             android:fontFamily="@font/noto_sans_jp_black"
             android:id="@+id/editText"
             android:layout_width="wrap_content"
+            android:textColor="@color/black"
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
+            android:layout_gravity="center"
             android:background="@null"
-            android:hint="友達を検索してみましょう！"></EditText>
+            android:hint="友達を検索してみましょう！"></androidx.appcompat.widget.AppCompatEditText>
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:includeFontPadding="false"
             android:fontFamily="@font/noto_sans_jp_black"
             android:id="@+id/successButton"
             android:textColor="@color/white"
-            android:layout_margin="10dp"
             android:background="@drawable/search_icon"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:text="入力">
 
-        </Button>
+        </androidx.appcompat.widget.AppCompatButton>
 
 
 

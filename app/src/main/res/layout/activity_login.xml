@@ -15,7 +15,10 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteX="10dp">
 
-        <TextView
+
+
+
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -31,7 +34,7 @@
             android:orientation="vertical"
             android:padding="20dp">
 
-            <EditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:includeFontPadding="false"
                 android:fontFamily="@font/noto_sans_jp_black"
                 android:id="@+id/emailEditText"
@@ -40,12 +43,13 @@
                 android:layout_marginBottom="15dp"
                 android:background="@drawable/textstyle"
                 android:hint="email"
+                android:textColorLink="@color/black"
                 android:inputType="textEmailAddress"
                 android:paddingLeft="10dp"
                 android:textSize="15sp"
                 android:textColor="@color/black"/>
 
-            <EditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:includeFontPadding="false"
                 android:fontFamily="@font/noto_sans_jp_black"
                 android:id="@+id/passwordEditText"
@@ -54,11 +58,12 @@
                 android:layout_marginBottom="15dp"
                 android:background="@drawable/textstyle"
                 android:hint="password"
+                android:textColor="@color/black"
                 android:inputType="textPassword"
                 android:paddingLeft="10dp"
                 android:textSize="15sp"/>
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/loginButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -69,8 +74,8 @@
                 android:text="Sign in"
                 android:textColor="@color/white"
                 >
-            </Button>
-            <CheckBox
+            </com.google.android.material.button.MaterialButton>
+            <com.google.android.material.checkbox.MaterialCheckBox
                 android:includeFontPadding="false"
                 android:fontFamily="@font/noto_sans_jp_medium"
                 android:layout_marginTop="15dp"
@@ -78,9 +83,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="自動ログイン"></CheckBox>
+                android:text="自動ログイン"></com.google.android.material.checkbox.MaterialCheckBox>
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/forgot_email"
                 android:includeFontPadding="false"
                 android:fontFamily="@font/noto_sans_jp_black"
@@ -88,17 +93,17 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="13dp"
-                android:text="アカウントを忘れましたか。"></TextView>
+                android:text="アカウントを忘れましたか。"></com.google.android.material.textview.MaterialTextView>
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:includeFontPadding="false"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="13dp"
-                android:text="または"></TextView>
+                android:text="または"></com.google.android.material.textview.MaterialTextView>
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:includeFontPadding="false"
                 android:fontFamily="@font/noto_sans_jp_bold"
                 android:id="@+id/registerbutton"

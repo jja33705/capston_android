@@ -104,7 +104,7 @@ class PostActivity : AppCompatActivity() {
 
         var likeCheck = true
 
-        if(postKind==0) {
+        if(postKind==1) {
             binding.deleteButton.visibility = View.GONE
             binding.range.visibility = View.GONE
             binding.edit.visibility = View.GONE
@@ -113,8 +113,6 @@ class PostActivity : AppCompatActivity() {
             binding.deleteButton.visibility = View.VISIBLE
             binding.range.visibility = View.VISIBLE
             binding.edit.visibility = View.VISIBLE
-            binding.linearLayout.visibility = View.GONE
-            binding.recyclerViewComment.visibility = View.GONE
         }
 
         CoroutineScope(Dispatchers.Main).launch {

@@ -227,6 +227,14 @@
                 android:background="#00000000"
                 android:scaleType="fitCenter"
                 android:src="@drawable/like_new3" />
+            <TextView
+                android:id="@+id/like"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:fontFamily="@font/noto_sans_jp_bold"
+                android:includeFontPadding="false" />
             <ImageButton
                 android:id="@+id/range"
                 android:layout_width="30dp"
@@ -255,14 +263,6 @@
                 android:src="@drawable/delete"
                 android:text="삭제"></ImageButton>
 
-            <TextView
-                android:id="@+id/like"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginLeft="10dp"
-                android:fontFamily="@font/noto_sans_jp_bold"
-                android:includeFontPadding="false" />
 
         </LinearLayout>
         <LinearLayout
@@ -305,7 +305,7 @@
             android:background="@drawable/snslayout"
             >
 
-            <EditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:includeFontPadding="false"
                 android:fontFamily="@font/noto_sans_jp_black"
                 android:id="@+id/comment_content"
@@ -314,9 +314,10 @@
                 android:layout_height="wrap_content"
                 android:background="@null"
                 android:layout_gravity="center"
-                android:hint="コメントを入力してください！"></EditText>
+                android:textColor="@color/black"
+                android:hint="コメントを入力してください！"></com.google.android.material.textfield.TextInputEditText>
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:includeFontPadding="false"
                 android:fontFamily="@font/noto_sans_jp_black"
                 android:id="@+id/commitButton"
@@ -326,7 +327,7 @@
                 android:layout_height="35dp"
                 android:text="入力">
 
-            </Button>
+            </androidx.appcompat.widget.AppCompatButton>
 
         </LinearLayout>
 <!--        <LinearLayout-->

@@ -10,7 +10,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
+import com.example.capstonandroid.GoalDialog
+import com.example.capstonandroid.MyApplication
+import com.example.capstonandroid.Utils
 import com.example.capstonandroid.activity.GoalBikeActivity
 import com.example.capstonandroid.activity.GoalRunActivity
 import com.example.capstonandroid.activity.SelectTrackActivity
@@ -25,6 +31,9 @@ import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.utils.ColorTemplate
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -42,7 +51,28 @@ class GoalFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
 
+    var user_running : Double = 0.0
+    var user_riding :Double = 0.0
 
+    var user_goal_running : Double = 0.0
+    var user_goal_riding : Double = 0.0
+
+    var user_goal_running_title : String = ""
+    var user_goal_running_Goal : Int  = 0
+    var user_goal_running_StartDate : String = ""
+    var user_goal_running_EndDate : String = ""
+    var user_goal_running_ID : Int = 0
+
+    var user_goal_riding_title : String = ""
+    var user_goal_riding_Goal : Int  = 0
+    var user_goal_riding_StartDate : String = ""
+    var user_goal_riding_EndDate : String = ""
+    var user_goal_riding_ID : Int = 0
+
+    var totalCalorie : Int = 0
+    var totalTime : Int = 0;
+    var totalBikeDistance : Int = 0
+    var totalRunDistance : Int = 0
 
     // 바인딩 객체 타입에 ?를 붙여서 null을 허용 해줘야한다. ( onDestroy 될 때 완벽하게 제거를 하기위해 )
     private var mBinding: FragmentGoalBinding? = null
@@ -82,40 +112,24 @@ class GoalFragment : Fragment() {
         }
 
 ////      토큰 불러오기
+
         val sharedPreference = requireActivity().getSharedPreferences("other", 0)
+
+
         var token = "Bearer " + sharedPreference.getString("TOKEN","")
-
-        var user_running : Double = 0.0
-        var user_riding :Double = 0.0
-
-        var user_goal_running : Double = 0.0
-        var user_goal_riding : Double = 0.0
-
-        var user_goal_running_title : String = ""
-        var user_goal_running_Goal : Int  = 0
-        var user_goal_running_StartDate : String = ""
-        var user_goal_running_EndDate : String = ""
-        var user_goal_running_ID : Int = 0
-
-        var user_goal_riding_title : String = ""
-        var user_goal_riding_Goal : Int  = 0
-        var user_goal_riding_StartDate : String = ""
-        var user_goal_riding_EndDate : String = ""
-        var user_goal_riding_ID : Int = 0
-
         binding.userExerciseChart.setUsePercentValues(true)
         binding.userGoalRiding.setUsePercentValues(true)
         binding.userGoalRunning.setUsePercentValues(true)
 
-        val entries = ArrayList<PieEntry>()
-        val entries2 = ArrayList<PieEntry>()
-        val entries3 = ArrayList<PieEntry>()
 
         supplementService.userExerciseRate(token).enqueue(object : Callback<UserExerciseRateResponse>{
             override fun onResponse(
                 call: Call<UserExerciseRateResponse>,
                 response: Response<UserExerciseRateResponse>
             ) {
+
+
+                val entries = ArrayList<PieEntry>()
                     user_riding = response.body()!!.B
                     user_running = response.body()!!.R
 
@@ -224,13 +238,132 @@ class GoalFragment : Fragment() {
         })
 
 
+        CoroutineScope(Dispatchers.Main).launch {
+            val distanceBikeResponse = supplementService.totalDistance(token, "B")
+
+            if(distanceBikeResponse.isSuccessful){
+                totalBikeDistance = distanceBikeResponse.body()!!.distance
+
+            }
+            val distanceRunResponse = supplementService.totalDistance(token, "R")
+
+            if(distanceRunResponse.isSuccessful){
+                totalRunDistance = distanceRunResponse.body()!!.distance
+            }
+
+            var totalTimeResponse = supplementService.totalTime(token)
+
+            if(totalTimeResponse.isSuccessful){
+                totalTime = totalTimeResponse.body()!!
+            }
+
+            var totalCalorieResponse = supplementService.totalCalorie(token)
+
+            if(totalCalorieResponse.isSuccessful){
+                totalCalorie = totalCalorieResponse.body()!!
+            }
+
+
+            binding.totalDistance.text = (totalBikeDistance+totalRunDistance).toString()+"Km"
+            binding.totalTime.text = Utils.timeToStringText(totalTime)
+            binding.totalCalorie.text = totalCalorie.toString()+"Cal"
+        }
+
+
+        goal()
 
 
 
 
 
+        binding.runButton.setOnClickListener {
+
+            MyApplication.prefs.setString("eventType", "R")
+            showGoalDialog()
+
+        //            val nextIntent = Intent(requireContext(), GoalRunActivity::class.java)
+
+//            startActivity(nextIntent)
+        }
+
+        binding.bikeButton.setOnClickListener {
+
+            MyApplication.prefs.setString("eventType", "B")
+            showGoalDialog()
+        }
+
+        binding.userGoalRiding.setOnLongClickListener{
+
+            val builder = AlertDialog.Builder(requireContext())
+            builder.setTitle("本当に削除しますか。")
+                .setPositiveButton("はい", DialogInterface.OnClickListener{ dialog,id->
+                    supplementService.goalDelete(token,user_goal_riding_ID).enqueue(object : Callback<goalDeleteResponse> {
+                        override fun onResponse(call: Call<goalDeleteResponse>, response: Response<goalDeleteResponse>) {
 
 
+                            binding.bikeLayout.visibility = View.GONE
+                            binding.bikeLayoutEdit.visibility = View.VISIBLE
+
+
+                           }
+                        override fun onFailure(call: Call<goalDeleteResponse>, t: Throwable) {
+
+                        }
+                    })
+                })
+                .setNegativeButton("いいえ",DialogInterface.OnClickListener{ dialog,id ->
+                    println("취소 하셨네요")
+                })
+
+            builder.show()
+            true
+        }
+        binding.userGoalRunning.setOnLongClickListener{
+            val builder = AlertDialog.Builder(requireContext())
+            builder.setTitle("本当に削除しますか。")
+                .setPositiveButton("はい", DialogInterface.OnClickListener{ dialog,id->
+                    supplementService.goalDelete(token,user_goal_running_ID).enqueue(object : Callback<goalDeleteResponse> {
+                        override fun onResponse(call: Call<goalDeleteResponse>, response: Response<goalDeleteResponse>) {
+
+
+                            binding.runLayout.visibility = View.GONE
+                            binding.runLayoutEdit.visibility = View.VISIBLE
+                        }
+                        override fun onFailure(call: Call<goalDeleteResponse>, t: Throwable) {
+
+                        }
+                    })
+                })
+                .setNegativeButton("いいえ",DialogInterface.OnClickListener{ dialog,id ->
+                    println("취소 하셨네요")
+                })
+
+            builder.show()
+            true
+        }
+
+        binding.message3.setOnLongClickListener {
+            val intent = Intent(requireContext(), SelectTrackActivity::class.java)
+            startActivity(intent)
+            true
+        }
+    }
+
+
+    private fun showGoalDialog() {
+        GoalDialog(requireContext()) {
+            if(it == "Hello"){
+            goal()
+            }
+        }.show()
+    }
+
+
+    private fun goal(){
+
+        val sharedPreference = requireActivity().getSharedPreferences("other", 0)
+
+        var token = "Bearer " + sharedPreference.getString("TOKEN","")
 
         supplementService.userGoalCheck(token).enqueue(object : Callback<UserGoalCheckResponse>{
             @RequiresApi(Build.VERSION_CODES.O)
@@ -238,7 +371,9 @@ class GoalFragment : Fragment() {
                 call: Call<UserGoalCheckResponse>,
                 response: Response<UserGoalCheckResponse>
             ) {
-
+                val entries = ArrayList<PieEntry>()
+                val entries2 = ArrayList<PieEntry>()
+                val entries3 = ArrayList<PieEntry>()
 
                 if(response.body()!!.run.size==0){
                     binding.runLayout.visibility = View.GONE
@@ -315,13 +450,13 @@ class GoalFragment : Fragment() {
                     binding.bikeLayout.visibility = View.VISIBLE
                     binding.bikeLayoutEdit.visibility = View.GONE
 
-                user_goal_riding = response.body()!!.bike[0]!!.progress.toDouble()
-                user_goal_riding_title = response.body()!!.bike[0]!!.title
+                    user_goal_riding = response.body()!!.bike[0]!!.progress.toDouble()
+                    user_goal_riding_title = response.body()!!.bike[0]!!.title
 
-                user_goal_riding_Goal = response.body()!!.bike[0]?.goalDistance
-                user_goal_riding_StartDate = response.body()!!.bike[0]!!.firstDate
-                user_goal_riding_EndDate = response.body()!!.bike[0]!!.lastDate
-                user_goal_riding_ID = response.body()!!.bike[0].id
+                    user_goal_riding_Goal = response.body()!!.bike[0]?.goalDistance
+                    user_goal_riding_StartDate = response.body()!!.bike[0]!!.firstDate
+                    user_goal_riding_EndDate = response.body()!!.bike[0]!!.lastDate
+                    user_goal_riding_ID = response.body()!!.bike[0].id
 
                 }
                 entries3.add(PieEntry(user_goal_riding.toFloat(),"자전거"))
@@ -361,18 +496,18 @@ class GoalFragment : Fragment() {
             }
         })
 
-        binding.runButton.setOnClickListener {
-
-            val nextIntent = Intent(requireContext(), GoalRunActivity::class.java)
-
-            startActivity(nextIntent)
-        }
-        binding.bikeButton.setOnClickListener {
-
-            val nextIntent = Intent(requireContext(), GoalBikeActivity::class.java)
-
-            startActivity(nextIntent)
-        }
+//        binding.runButton.setOnClickListener {
+//
+//            val nextIntent = Intent(requireContext(), GoalRunActivity::class.java)
+//
+//            startActivity(nextIntent)
+//        }
+//        binding.bikeButton.setOnClickListener {
+//
+//            val nextIntent = Intent(requireContext(), GoalBikeActivity::class.java)
+//
+//            startActivity(nextIntent)
+//        }
 
         binding.userGoalRiding.setOnLongClickListener{
 
@@ -396,6 +531,8 @@ class GoalFragment : Fragment() {
                 .setNegativeButton("いいえ",DialogInterface.OnClickListener{ dialog,id ->
                     println("취소 하셨네요")
                 })
+
+
 
             builder.show()
             true
