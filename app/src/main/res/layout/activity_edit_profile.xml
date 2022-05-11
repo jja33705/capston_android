@@ -3,36 +3,138 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:paddingTop="30dp"
     android:paddingHorizontal="20dp"
     tools:context=".activity.EditProfileActivity">
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:layout_gravity="center|center"
         android:src="@mipmap/ic_launcher"
         android:layout_marginBottom="20dp"
         >
     </de.hdodenhof.circleimageview.CircleImageView>
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        >
-    </EditText>
-
     <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:hint="名前"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
         >
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:hint="名前"
+            android:textColor="@color/black"
+            android:fontFamily="@font/noto_sans_jp_regular"
+            android:includeFontPadding="false"
             ></com.google.android.material.textfield.TextInputEditText>
     </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        >
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="住んでいる所"
+            android:textColor="@color/black"
+            android:fontFamily="@font/noto_sans_jp_regular"
+            android:includeFontPadding="false"
+            ></com.google.android.material.textfield.TextInputEditText>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        >
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_introduce"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="自己紹介"
+            android:textColor="@color/black"
+            android:fontFamily="@font/noto_sans_jp_regular"
+            android:includeFontPadding="false"
+            ></com.google.android.material.textfield.TextInputEditText>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        app:endIconMode="custom"
+        app:endIconDrawable="@drawable/edit_text_select_value"
+        >
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_birth"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="生年月日"
+            android:textColor="@color/black"
+            android:fontFamily="@font/noto_sans_jp_regular"
+            android:includeFontPadding="false"
+            android:focusable="false"
+            android:clickable="true"
+            ></com.google.android.material.textfield.TextInputEditText>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="10"
+        >
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:layout_marginRight="20dp"
+            app:endIconMode="custom"
+            app:endIconDrawable="@drawable/edit_text_select_value"
+            >
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_sex"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="性別"
+                android:textColor="@color/black"
+                android:fontFamily="@font/noto_sans_jp_regular"
+                android:includeFontPadding="false"
+                android:focusable="false"
+                android:clickable="true"
+                ></com.google.android.material.textfield.TextInputEditText>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            >
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_weight"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="体重"
+                android:textColor="@color/black"
+                android:fontFamily="@font/noto_sans_jp_regular"
+                android:includeFontPadding="false"
+                ></com.google.android.material.textfield.TextInputEditText>
+        </com.google.android.material.textfield.TextInputLayout>
+    </LinearLayout>
 
 
 

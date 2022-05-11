@@ -34,4 +34,15 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="DatePickerDialog" parent="Theme.MaterialComponents.Light.Dialog" >
+
+    </style>
+    <style name="DatePickerDialog.Spinner">
+        <item name="android:datePickerStyle">@style/DatePickerDialogSpinnerDatePickerStyle</item>
+        <item name="android:layout_margin">5dp</item>
+    </style>
+    <style name="DatePickerDialogSpinnerDatePickerStyle">
+        <item name="android:datePickerMode">spinner</item>
+    </style>
+
 </resources>
