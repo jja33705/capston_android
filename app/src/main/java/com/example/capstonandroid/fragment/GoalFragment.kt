@@ -12,14 +12,11 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
-<<<<<<< HEAD
-=======
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.example.capstonandroid.GoalDialog
 import com.example.capstonandroid.MyApplication
 import com.example.capstonandroid.Utils
->>>>>>> 2e92e5a (5/10)
 import com.example.capstonandroid.activity.GoalBikeActivity
 import com.example.capstonandroid.activity.GoalRunActivity
 import com.example.capstonandroid.activity.SelectTrackActivity
@@ -354,22 +351,6 @@ class GoalFragment : Fragment() {
     }
 
 
-    companion object {
-
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            PersonalMeFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
-    }
-    override fun onDestroy() {
-        mBinding = null
-        super.onDestroy()
-    }
-
     private fun showGoalDialog() {
         GoalDialog(requireContext()) {
             if(it == "Hello"){
@@ -516,7 +497,6 @@ class GoalFragment : Fragment() {
             }
         })
 
-<<<<<<< HEAD
         binding.runButton.setOnClickListener {
 
             val nextIntent = Intent(requireContext(), GoalRunActivity::class.java)
@@ -601,8 +581,6 @@ class GoalFragment : Fragment() {
     override fun onDestroy() {
         mBinding = null
         super.onDestroy()
-=======
->>>>>>> 2e92e5a (5/10)
     }
 
     private fun initRetrofit(){
