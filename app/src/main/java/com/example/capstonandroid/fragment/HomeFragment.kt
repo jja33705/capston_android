@@ -84,6 +84,7 @@ class HomeFragment : Fragment()  {
             override fun onItemClick(position: Int) {
                 val intent = Intent(activity, PostActivity::class.java)
                 intent.putExtra("postId", postRecyclerViewItemList[position]!!.id)
+                intent.putExtra("postKind", 0)
                 startActivity(intent)
             }
         })

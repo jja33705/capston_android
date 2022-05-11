@@ -304,7 +304,7 @@
             android:background="@drawable/snslayout"
             >
 
-            <EditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:includeFontPadding="false"
                 android:fontFamily="@font/noto_sans_jp_black"
                 android:id="@+id/comment_content"
@@ -313,9 +313,9 @@
                 android:layout_height="wrap_content"
                 android:background="@null"
                 android:layout_gravity="center"
-                android:hint="コメントを入力してください！"></EditText>
+                android:hint="コメントを入力してください！"></com.google.android.material.textfield.TextInputEditText>
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:includeFontPadding="false"
                 android:fontFamily="@font/noto_sans_jp_black"
                 android:id="@+id/commitButton"
@@ -325,7 +325,7 @@
                 android:layout_height="35dp"
                 android:text="入力">
 
-            </Button>
+            </androidx.appcompat.widget.AppCompatButton>
 
         </LinearLayout>
 <!--        <LinearLayout-->
