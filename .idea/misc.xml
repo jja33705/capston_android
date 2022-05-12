@@ -12,6 +12,7 @@
         <entry key="..\:/Users/sakai/capston_android/app/src/main/res/layout/activity_main.xml" value="0.19166666666666668" />
         <entry key="..\:/Users/sakai/capston_android/app/src/main/res/layout/activity_me_comment.xml" value="0.1398148148148148" />
         <entry key="..\:/Users/sakai/capston_android/app/src/main/res/layout/activity_me_details.xml" value="0.264" />
+        <entry key="..\:/Users/sakai/capston_android/app/src/main/res/layout/activity_post.xml" value="0.25925925925925924" />
         <entry key="..\:/Users/sakai/capston_android/app/src/main/res/layout/activity_ranking.xml" value="0.5520833333333334" />
         <entry key="..\:/Users/sakai/capston_android/app/src/main/res/layout/activity_register.xml" value="0.2175925925925926" />
         <entry key="..\:/Users/sakai/capston_android/app/src/main/res/layout/activity_select_track.xml" value="0.25833333333333336" />
@@ -29,6 +30,7 @@
         <entry key="..\:/Users/sakai/capston_android/app/src/main/res/layout/fragment_me.xml" value="0.19166666666666668" />
         <entry key="..\:/Users/sakai/capston_android/app/src/main/res/layout/fragment_profile_me.xml" value="0.19166666666666668" />
         <entry key="..\:/Users/sakai/capston_android/app/src/main/res/layout/fragment_target_me.xml" value="0.33" />
+        <entry key="..\:/Users/sakai/capston_android/app/src/main/res/layout/goal_alert_dialog.xml" value="0.234375" />
         <entry key="..\:/Users/sakai/capston_android/app/src/main/res/layout/item_loading.xml" value="0.23645833333333333" />
         <entry key="..\:/Users/sakai/capston_android/app/src/main/res/layout/item_notice.xml" value="0.23645833333333333" />
         <entry key="..\:/Users/sakai/capston_android/app/src/main/res/layout/item_recycler.xml" value="0.21666666666666667" />
@@ -71,7 +73,6 @@
         <entry key="app/src/main/res/drawable/cycle_white.xml" value="0.2045" />
         <entry key="app/src/main/res/drawable/direction_north.xml" value="0.2365" />
         <entry key="app/src/main/res/drawable/direction_south.xml" value="0.2365" />
-        <entry key="app/src/main/res/drawable/edit_text_select_value.xml" value="0.196" />
         <entry key="app/src/main/res/drawable/end_point_marker.xml" value="0.193" />
         <entry key="app/src/main/res/drawable/end_point_marker2.xml" value="0.193" />
         <entry key="app/src/main/res/drawable/exercise_kind_button_background.xml" value="0.2045" />
@@ -88,7 +89,6 @@
         <entry key="app/src/main/res/drawable/image_view_background.xml" value="0.2285" />
         <entry key="app/src/main/res/drawable/login_button.xml" value="0.1815" />
         <entry key="app/src/main/res/drawable/match_type_button_background.xml" value="0.2285" />
-        <entry key="app/src/main/res/drawable/me_fragment_tab_nav_background_color.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/record_end_point.xml" value="0.189" />
         <entry key="app/src/main/res/drawable/record_start_point.xml" value="0.2125" />
         <entry key="app/src/main/res/drawable/round_background.xml" value="0.1107421875" />
@@ -97,7 +97,6 @@
         <entry key="app/src/main/res/drawable/round_button_background.xml" value="0.1815" />
         <entry key="app/src/main/res/drawable/run.xml" value="0.184" />
         <entry key="app/src/main/res/drawable/run_white.xml" value="0.2045" />
-        <entry key="app/src/main/res/drawable/save_edit_profile_button_background.xml" value="0.186" />
         <entry key="app/src/main/res/drawable/search_icon.xml" value="0.2185" />
         <entry key="app/src/main/res/drawable/start_button.xml" value="0.2675" />
         <entry key="app/src/main/res/drawable/start_button_1.xml" value="0.3065" />
@@ -112,14 +111,13 @@
         <entry key="app/src/main/res/layout/activity_auth.xml" value="0.3104166666666667" />
         <entry key="app/src/main/res/layout/activity_complete_record.xml" value="0.24584197998046883" />
         <entry key="app/src/main/res/layout/activity_count_down.xml" value="0.16955640128489288" />
-        <entry key="app/src/main/res/layout/activity_edit_profile.xml" value="0.30789519559118983" />
         <entry key="app/src/main/res/layout/activity_intro.xml" value="0.36875" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.3080963134765625" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.19791666666666666" />
         <entry key="app/src/main/res/layout/activity_me_comment.xml" value="0.36770833333333336" />
         <entry key="app/src/main/res/layout/activity_me_details.xml" value="0.36770833333333336" />
         <entry key="app/src/main/res/layout/activity_notification.xml" value="0.2220077514648438" />
-        <entry key="app/src/main/res/layout/activity_post.xml" value="0.2972292191435768" />
+        <entry key="app/src/main/res/layout/activity_post.xml" value="0.36770833333333336" />
         <entry key="app/src/main/res/layout/activity_profile.xml" value="0.34791666666666665" />
         <entry key="app/src/main/res/layout/activity_random_matching.xml" value="0.37604166666666666" />
         <entry key="app/src/main/res/layout/activity_rank_matching.xml" value="0.275" />
@@ -127,7 +125,7 @@
         <entry key="app/src/main/res/layout/activity_record.xml" value="0.37506713867187497" />
         <entry key="app/src/main/res/layout/activity_select_match_type.xml" value="0.26979166666666665" />
         <entry key="app/src/main/res/layout/activity_select_track.xml" value="0.4033234259391542" />
-        <entry key="app/src/main/res/layout/activity_snscomment.xml" value="0.2972292191435768" />
+        <entry key="app/src/main/res/layout/activity_snscomment.xml" value="0.36770833333333336" />
         <entry key="app/src/main/res/layout/activity_snsdetails.xml" value="0.315625" />
         <entry key="app/src/main/res/layout/activity_track.xml" value="0.42370910644531257" />
         <entry key="app/src/main/res/layout/activity_track_pace_make.xml" value="0.34814814814814815" />
@@ -136,13 +134,12 @@
         <entry key="app/src/main/res/layout/checkpoint_dialog.xml" value="0.2984375" />
         <entry key="app/src/main/res/layout/complete_record_dialog.xml" value="0.34791666666666665" />
         <entry key="app/src/main/res/layout/custom_list_item2.xml" value="0.3260416666666667" />
-        <entry key="app/src/main/res/layout/follow_request_recycler_view_item.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/follow_request_recycler_view_item.xml" value="0.3260416666666667" />
         <entry key="app/src/main/res/layout/fragment_activity_me.xml" value="0.36875" />
-        <entry key="app/src/main/res/layout/fragment_goal.xml" value="0.34427083333333336" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.21047668457031266" />
-        <entry key="app/src/main/res/layout/fragment_me.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_me.xml" value="0.21197916666666666" />
         <entry key="app/src/main/res/layout/fragment_my.xml" value="0.21197916666666666" />
-        <entry key="app/src/main/res/layout/fragment_profile_me.xml" value="0.25550994873046873" />
+        <entry key="app/src/main/res/layout/fragment_profile_me.xml" value="0.45303192138671877" />
         <entry key="app/src/main/res/layout/fragment_record.xml" value="0.19791666666666666" />
         <entry key="app/src/main/res/layout/fragment_riding.xml" value="0.3828125" />
         <entry key="app/src/main/res/layout/fragment_running.xml" value="0.3828125" />
@@ -172,7 +169,6 @@
         <entry key="app/src/main/res/layout/view_loader.xml" value="0.2234375" />
         <entry key="app/src/main/res/layout/view_toolbar.xml" value="0.2234375" />
         <entry key="app/src/main/res/menu/bottom_navigation_main.xml" value="0.2557291666666667" />
-        <entry key="app/src/main/res/menu/main_activity_menu.xml" value="0.34427083333333336" />
         <entry key="app/src/main/res/menu/menu_bottom_nav.xml" value="0.21197916666666666" />
         <entry key="app/src/main/res/menu/menu_main.xml" value="0.2557291666666667" />
         <entry key="app/src/main/res/menu/menu_me_top_nav.xml" value="0.2557291666666667" />

@@ -1,5 +1,6 @@
 package com.example.capstonandroid.fragment
 
+import android.app.DatePickerDialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
@@ -10,12 +11,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat.getColor
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.example.capstonandroid.GoalDialog
 import com.example.capstonandroid.MyApplication
+import com.example.capstonandroid.R
 import com.example.capstonandroid.Utils
 import com.example.capstonandroid.activity.GoalBikeActivity
 import com.example.capstonandroid.activity.GoalRunActivity
@@ -73,6 +76,10 @@ class GoalFragment : Fragment() {
     var totalTime : Int = 0;
     var totalBikeDistance : Int = 0
     var totalRunDistance : Int = 0
+
+    var startDate : String = ""
+    var endDate : String = ""
+
 
     // 바인딩 객체 타입에 ?를 붙여서 null을 허용 해줘야한다. ( onDestroy 될 때 완벽하게 제거를 하기위해 )
     private var mBinding: FragmentGoalBinding? = null
@@ -188,7 +195,7 @@ class GoalFragment : Fragment() {
                         data = pieData
                         description.isEnabled = false
                         isRotationEnabled = false
-                        centerText = "나의 운동 비율"
+                        centerText = "운동 비율"
                         setCenterTextSize(14f)
                         setEntryLabelColor(Color.BLACK)
 
@@ -222,7 +229,7 @@ class GoalFragment : Fragment() {
                         data = pieData
                         description.isEnabled = false
                         isRotationEnabled = false
-                        centerText = "나의 운동 비율"
+                        centerText = "운동 비율"
                         setCenterTextSize(14f)
                         setEntryLabelColor(Color.BLACK)
 
@@ -430,7 +437,7 @@ class GoalFragment : Fragment() {
                     data = pieData2
                     description.isEnabled = false
                     isRotationEnabled = false
-                    centerText = "나의 달리기 목표"
+                    centerText = "달리기 목표"
                     setCenterTextSize(8f)
                     setEntryLabelColor(Color.BLACK)
                     maxAngle
@@ -478,7 +485,7 @@ class GoalFragment : Fragment() {
                     data = pieData3
                     description.isEnabled = false
                     isRotationEnabled = false
-                    centerText = "나의 달리기 목표"
+                    centerText = "자전거 목표"
                     setCenterTextSize(8f)
                     setEntryLabelColor(Color.BLACK)
 
@@ -511,7 +518,7 @@ class GoalFragment : Fragment() {
 
         binding.userGoalRiding.setOnLongClickListener{
 
-            val builder = AlertDialog.Builder(requireContext())
+            val builder = AlertDialog.Builder(requireContext(),R.style.MaterialAlertDialog_MaterialComponents_Title_Icon)
             builder.setTitle("本当に削除しますか。")
                 .setPositiveButton("はい", DialogInterface.OnClickListener{ dialog,id->
                     supplementService.goalDelete(token,user_goal_riding_ID).enqueue(object : Callback<goalDeleteResponse> {
@@ -533,12 +540,11 @@ class GoalFragment : Fragment() {
                 })
 
 
-
             builder.show()
             true
         }
         binding.userGoalRunning.setOnLongClickListener{
-            val builder = AlertDialog.Builder(requireContext())
+            val builder = AlertDialog.Builder(requireContext(),R.style.MaterialAlertDialog_MaterialComponents_Title_Icon)
             builder.setTitle("本当に削除しますか。")
                 .setPositiveButton("はい", DialogInterface.OnClickListener{ dialog,id->
                     supplementService.goalDelete(token,user_goal_running_ID).enqueue(object : Callback<goalDeleteResponse> {
@@ -555,9 +561,10 @@ class GoalFragment : Fragment() {
                 })
                 .setNegativeButton("いいえ",DialogInterface.OnClickListener{ dialog,id ->
                     println("취소 하셨네요")
-                })
+                }, )
 
             builder.show()
+
             true
         }
 

@@ -3,6 +3,7 @@ package com.example.capstonandroid
 import android.app.DatePickerDialog
 import android.app.Dialog
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -74,7 +75,7 @@ class GoalDialog(
             val day = datepickercalendar.get(Calendar.DAY_OF_MONTH)
 
             val dpd = DatePickerDialog(
-                context,
+                context,R.style.DatePickerDialog,
                 { _, year, monthOfYear, dayOfMonth ->
 //                  월이 0부터 시작하여 1을 더해주어야함
                     val month = monthOfYear + 1
@@ -90,6 +91,7 @@ class GoalDialog(
 
                     startDate = "$year-$month-$dayOfMonth"
 
+                    binding.StartDate.text = startDate
                 },
                 year,
                 month,
@@ -97,7 +99,12 @@ class GoalDialog(
             )
 //           최소 날짜를 현재 시각 이후로
             dpd.datePicker.minDate = System.currentTimeMillis() - 1000;
-            dpd.show() }
+            dpd.show()
+            dpd.getButton(DatePickerDialog.BUTTON_NEGATIVE).setTextColor(Color.BLACK)
+            dpd.getButton(DatePickerDialog.BUTTON_POSITIVE).setTextColor(Color.BLACK)
+
+
+        }
 
         binding.btnEndDate.setOnClickListener {
             val datepickercalendar = Calendar.getInstance()
@@ -106,7 +113,7 @@ class GoalDialog(
             val day = datepickercalendar.get(Calendar.DAY_OF_MONTH)
 
             val dpd = DatePickerDialog(
-                context,
+                context,R.style.DatePickerDialog,
                 { _, year, monthOfYear, dayOfMonth ->
 //                  월이 0부터 시작하여 1을 더해주어야함
                     val month = monthOfYear + 1
@@ -122,6 +129,7 @@ class GoalDialog(
 
                     endDate = "$year-$month-$dayOfMonth"
 
+                    binding.EndDate.text = endDate
                 },
                 year,
                 month,
@@ -130,6 +138,10 @@ class GoalDialog(
 //           최소 날짜를 현재 시각 이후로
             dpd.datePicker.minDate = System.currentTimeMillis() - 1000;
             dpd.show()
+
+            dpd.getButton(DatePickerDialog.BUTTON_NEGATIVE).setTextColor(Color.BLACK)
+            dpd.getButton(DatePickerDialog.BUTTON_POSITIVE).setTextColor(Color.BLACK)
+
         }
 
         binding.save.setOnClickListener {

@@ -116,6 +116,7 @@
                 android:background="@null"
                 android:focusable="false"
                 android:hint="내용"
+                android:textColor="@color/black"
                 android:textSize="20sp"/>
 
             <TextView
