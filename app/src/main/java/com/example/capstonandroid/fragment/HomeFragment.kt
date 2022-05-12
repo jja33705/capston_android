@@ -67,7 +67,6 @@ class HomeFragment : Fragment()  {
 
             // 초기값 받아옴
             var token = "Bearer " + requireActivity().getSharedPreferences("other", Context.MODE_PRIVATE).getString("TOKEN","")
-            println("홈 프레그먼트$token")
             val getPostsResponse = supplementService.getPosts(token, postPage)
             if (getPostsResponse.isSuccessful) {
                 if (getPostsResponse.body()!!.total == 0) {
@@ -104,7 +103,6 @@ class HomeFragment : Fragment()  {
         println("HomeFragment: onStart 호출")
 
         postRecyclerView = binding.recyclerViewPost
-
 
         // 스크롤 리스너 등록
         postRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {

@@ -51,8 +51,6 @@ class ProfileActivity : AppCompatActivity() {
 
         var userId = intent.getIntExtra("userId", -1)
 
-        var followCheck = true
-
         println("토큰 "+token+"유저값"+userId)
 
 
@@ -99,7 +97,7 @@ class ProfileActivity : AppCompatActivity() {
                     var user_followings = getUserProfileResponse!!.body()!!.followings!!.count()
                     var user_mmr = getUserProfileResponse!!.body()!!.mmr
                     var location = getUserProfileResponse!!.body()!!.location
-                    followCheck = getUserProfileResponse!!.body()!!.followCheck
+                    var followCheck = getUserProfileResponse!!.body()!!.followCheck
 
                     binding.tvName.text = user_name
                     binding.tvFollower.text = user_followers.toString()
@@ -248,11 +246,11 @@ class ProfileActivity : AppCompatActivity() {
                         binding.medalLayout.setBackgroundResource(R.drawable.medal_gold)
                     }
 
-                    if(followCheck ==true){
-                        binding.followButton.text = "フォロー中"
-                    }else {
-                        binding.followButton.text = "フォロー"
-                    }
+//                    if(followCheck ==true){
+//                        binding.followButton.text = "フォロー中"
+//                    }else {
+//                        binding.followButton.text = "フォロー"
+//                    }
                 }
 
 

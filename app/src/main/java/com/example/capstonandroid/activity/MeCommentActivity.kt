@@ -7,17 +7,10 @@ import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.capstonandroid.R
-import com.example.capstonandroid.adapter.RecyclerCommentAdapter
 import com.example.capstonandroid.databinding.ActivityMeCommentBinding
-import com.example.capstonandroid.fragment.ActivityMeFragment
 import com.example.capstonandroid.network.RetrofitClient
 import com.example.capstonandroid.network.api.BackendApi
 import com.example.capstonandroid.network.dto.CommentData
-import com.example.capstonandroid.network.dto.CommentSend
-import com.example.capstonandroid.network.dto.CommentSendResponse
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import retrofit2.Retrofit
 
 
@@ -55,7 +48,6 @@ class MeCommentActivity : AppCompatActivity() {
         println(token)
 
         val list = ArrayList<CommentData>()
-        val adapter = RecyclerCommentAdapter(list, { data -> adapterOnClick(data) })
 
 //          content 값 받아오기
         println(content)

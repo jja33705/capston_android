@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -12,8 +11,6 @@ import com.example.capstonandroid.R
 import com.example.capstonandroid.databinding.CommentRecyclerViewItemBinding
 import com.example.capstonandroid.databinding.ItemLoadingBinding
 import com.example.capstonandroid.network.dto.Comment
-import com.example.capstonandroid.network.dto.CommentData
-import kotlinx.android.synthetic.main.comment_item_view.view.*
 import java.time.OffsetDateTime
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter

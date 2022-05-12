@@ -3,12 +3,11 @@ package com.example.capstonandroid.activity
 import android.app.DatePickerDialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.example.capstonandroid.R
+import com.example.capstonandroid.databinding.ActivityGoalRunBinding
 import com.example.capstonandroid.network.RetrofitClient
 import com.example.capstonandroid.network.api.BackendApi
 import com.example.capstonandroid.network.dto.Goal
 import com.example.capstonandroid.network.dto.GoalResponse
-import kotlinx.android.synthetic.main.activity_goal_run.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -18,6 +17,9 @@ import java.util.*
 
 
 class GoalRunActivity : AppCompatActivity() {
+
+    private var _binding: ActivityGoalRunBinding? = null
+    private val binding get() = _binding!!
 
 
     private  lateinit var  retrofit: Retrofit  //레트로핏
@@ -32,7 +34,8 @@ class GoalRunActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.activity_goal_run)
+        _binding = ActivityGoalRunBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         initRetrofit()
         val sharedPreference = getSharedPreferences("other", MODE_PRIVATE)
@@ -42,7 +45,7 @@ class GoalRunActivity : AppCompatActivity() {
 
 
 
-        run_btnStartDate.setOnClickListener {
+        binding.runBtnStartDate.setOnClickListener {
 
             val datepickercalendar = Calendar.getInstance()
             val year = datepickercalendar.get(Calendar.YEAR)
@@ -76,7 +79,7 @@ class GoalRunActivity : AppCompatActivity() {
             dpd.show()
         }
 
-        run_btnEndDate.setOnClickListener {
+        binding.runBtnEndDate.setOnClickListener {
 
             val datepickercalendar = Calendar.getInstance()
             val year = datepickercalendar.get(Calendar.YEAR)
@@ -110,14 +113,14 @@ class GoalRunActivity : AppCompatActivity() {
             dpd.show()
         }
 
-        run_save.setOnClickListener {
+        binding.runSave.setOnClickListener {
 
             println("저장 눌렀어")
             println(startDate )
             println(endDate )
-            title = run_title.text.toString()
+            title = binding.runTitle.text.toString()
             event = "R"
-            goal = run_goal.text.toString().toInt()
+            goal = binding.runGoal.text.toString().toInt()
             println()
             println()
 
@@ -163,4 +166,8 @@ class GoalRunActivity : AppCompatActivity() {
         supplementService = retrofit.create(BackendApi::class.java);
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+    }
 }

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/linear_layout_search_user_recycler_view_item"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingVertical="15dp"
+    android:background="@drawable/follower_layout"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            >
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_marginLeft="20dp"
+                android:id="@+id/circle_image_view_profile_image"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/profile"
+                >
+
+            </de.hdodenhof.circleimageview.CircleImageView>
+            <TextView
+                android:id="@+id/text_view_name"
+                android:textSize="20sp"
+                android:layout_marginLeft="20dp"
+                android:includeFontPadding="false"
+                android:fontFamily="@font/noto_sans_jp_bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="닉네임"
+                android:layout_gravity="center">
+
+            </TextView>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

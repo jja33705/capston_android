@@ -3,9 +3,7 @@ package com.example.capstonandroid.activity
 // SNS 누르면 자세히 뜨는 것
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.util.AttributeSet
 import android.view.MotionEvent
@@ -23,17 +21,10 @@ import com.example.capstonandroid.databinding.ActivityPostBinding
 import com.example.capstonandroid.network.RetrofitClient
 import com.example.capstonandroid.network.api.BackendApi
 import com.example.capstonandroid.network.dto.*
-import kotlinx.android.synthetic.main.activity_follower.*
-import kotlinx.android.synthetic.main.activity_post.*
-import kotlinx.android.synthetic.main.activity_post.view.*
-import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import retrofit2.Retrofit
 import java.time.*
 import java.time.format.DateTimeFormatter
