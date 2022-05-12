@@ -9,7 +9,6 @@ import android.content.Intent
 import android.media.RingtoneManager
 import androidx.core.app.NotificationCompat
 import com.example.capstonandroid.R
-import com.example.capstonandroid.activity.IntroActivity
 import com.example.capstonandroid.activity.PostActivity
 import com.example.capstonandroid.activity.ProfileActivity
 import com.google.firebase.messaging.FirebaseMessagingService

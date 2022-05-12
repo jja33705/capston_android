@@ -5,17 +5,14 @@ import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.content.Context
 import android.content.ContextWrapper
-import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.TypedValue
-import android.widget.ImageView
-import android.widget.LinearLayout
 import androidx.activity.result.contract.ActivityResultContracts
 import com.example.capstonandroid.R
 import com.example.capstonandroid.databinding.ActivityEditProfileBinding
@@ -24,11 +21,19 @@ import com.example.capstonandroid.network.api.BackendApi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.Retrofit
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.OutputStream
+import java.net.HttpURLConnection
+import java.net.URL
+import java.text.DecimalFormat
 import java.util.*
 
 class EditProfileActivity : AppCompatActivity() {
@@ -38,8 +43,11 @@ class EditProfileActivity : AppCompatActivity() {
     private  lateinit var  retrofit: Retrofit  //레트로핏
     private  lateinit var supplementService: BackendApi // api
 
-    private val sexList = arrayOf("男性", "女性")
+    private val sexList = arrayOf("男性", "女性", "トランスジェンダー", "知らせたくない")
+    private val sexValueList = arrayOf("M", "F", "T", "N")
     private var selectedSexIndex = 0
+
+    private var profileImageFile: File? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,14 +68,25 @@ class EditProfileActivity : AppCompatActivity() {
                 binding.etIntroduce.setText(user.introduce)
 
                 selectedSexIndex = when (user.sex) {
-                    "male" -> 0
-                    "female" -> 1
+                    "M" -> 0
+                    "F" -> 1
+                    "T" -> 2
+                    "N" -> 3
                     else -> -1
                 }
                 binding.etSex.setText(sexList[selectedSexIndex])
 
                 binding.etBirth.setText(user.birth)
                 binding.etWeight.setText(user.weight.toString())
+
+                if (user.profile != null) {
+                    val bitmap = withContext(Dispatchers.IO) {
+                        convertBitmapFromURL(user.profile)!!
+                    }
+                    binding.circleImageViewProfileImage.setImageBitmap(bitmap)
+                    val absolutePath = bitmapToFile(bitmap)
+                    profileImageFile = File(absolutePath.path)
+                }
             }
         }
 
@@ -75,7 +94,8 @@ class EditProfileActivity : AppCompatActivity() {
         binding.etBirth.setOnClickListener {
             val calendar = Calendar.getInstance()
             val dateSetListener = DatePickerDialog.OnDateSetListener { _, year, month, day ->
-                binding.etBirth.setText("$year-${month + 1}-$day")
+                val decimalFormat = DecimalFormat("00")
+                binding.etBirth.setText("$year-${decimalFormat.format(month + 1)}-${decimalFormat.format(day)}")
             }
             val datePickerDialog = DatePickerDialog(this, R.style.DatePickerDialog_Spinner, dateSetListener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONDAY), calendar.get(Calendar.DAY_OF_MONTH))
             datePickerDialog.show()
@@ -85,7 +105,7 @@ class EditProfileActivity : AppCompatActivity() {
 
         // 성별 눌렀을 때
         binding.etSex.setOnClickListener {
-            AlertDialog.Builder(this).setTitle("성별").setSingleChoiceItems(sexList, selectedSexIndex) { dialogInterface, position ->
+            AlertDialog.Builder(this).setTitle("性別").setSingleChoiceItems(sexList, selectedSexIndex) { dialogInterface, position ->
                 selectedSexIndex = position
                 binding.etSex.setText(sexList[selectedSexIndex])
                 dialogInterface.cancel()
@@ -99,7 +119,7 @@ class EditProfileActivity : AppCompatActivity() {
             if (result.resultCode == Activity.RESULT_OK) {
                 val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, result.data!!.data!!)
                 val absolutePath = bitmapToFile(bitmap)
-                val imageFile = File(absolutePath.path)
+                profileImageFile = File(absolutePath.path)
 
                 // 미리보기 띄움
                 binding.circleImageViewProfileImage.setImageURI(result.data!!.data)
@@ -111,6 +131,29 @@ class EditProfileActivity : AppCompatActivity() {
             val intent = Intent(Intent.ACTION_GET_CONTENT)
             intent.type = "image/*"
             activityResultLauncher.launch(intent)
+        }
+
+        binding.btnSaveEditProfile.setOnClickListener {
+            CoroutineScope(Dispatchers.Main).launch {
+                val token = "Bearer ${getSharedPreferences("other", MODE_PRIVATE).getString("TOKEN", "")}"
+
+                val profileImageRequestBody = profileImageFile!!.asRequestBody("image/*".toMediaTypeOrNull())
+                val profileImageMultipartBody = MultipartBody.Part.createFormData("profile", profileImageFile!!.name, profileImageRequestBody)
+
+                val editProfileResponse = supplementService.editProfile(
+                    token,
+                    profileImageMultipartBody,
+                    binding.etName.text!!.toString().toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull()),
+                    binding.etBirth.text!!.toString().toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull()),
+                    binding.etIntroduce.text!!.toString().toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull()),
+                    binding.etLocation.text!!.toString().toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull()),
+                    sexValueList[selectedSexIndex].toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull()),
+                    binding.etWeight.text!!.toString().toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull()),
+                )
+                if (editProfileResponse.isSuccessful) {
+                    finish()
+                }
+            }
         }
     }
 
@@ -145,5 +188,20 @@ class EditProfileActivity : AppCompatActivity() {
 
         // Return the saved bitmap uri
         return Uri.parse(file.absolutePath)
+    }
+
+    private fun convertBitmapFromURL(url: String): Bitmap? {
+        try {
+            val url = URL(url)
+            val connection = url.openConnection() as HttpURLConnection
+            connection.doInput = true
+            connection.connect()
+            val input = connection.inputStream
+
+            return BitmapFactory.decodeStream(input)
+        } catch (e: IOException) {
+            println("이미지 에러")
+        }
+        return null
     }
 }

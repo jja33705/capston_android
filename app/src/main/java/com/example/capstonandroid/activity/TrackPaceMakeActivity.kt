@@ -16,6 +16,7 @@ import android.speech.tts.TextToSpeech
 import android.view.LayoutInflater
 import android.view.View
 import android.view.Window
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -38,8 +39,6 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
-import kotlinx.android.synthetic.main.checkpoint_dialog.*
-import kotlinx.android.synthetic.main.complete_record_dialog.*
 import kotlinx.coroutines.*
 import retrofit2.Retrofit
 import java.io.FileOutputStream
@@ -790,7 +789,7 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
                                         val checkpointResponse = supplementService.checkpoint(token, TrackPaceMakeService.checkpointIndex, trackId, second)
                                         if (checkpointResponse.isSuccessful) {
                                             // 다이얼로그 띄움
-                                            checkpointDialog.checkpoint_pace.text = "上位${checkpointResponse.body()!!.rank.toInt()}パーセントのペースです。"
+                                            checkpointDialog.findViewById<TextView>(R.id.checkpoint_pace).text = "上位${checkpointResponse.body()!!.rank.toInt()}パーセントのペースです。"
                                             checkpointDialog.show()
                                             checkpointDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
                                             Handler(mainLooper).postDelayed({
@@ -877,15 +876,15 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
         fileOutputStream.close()
         println("이미지 저장 끝남")
 
-        completeRecordDialog.tv_opponent_name.text = TrackPaceMakeService.opponentUserName
-        completeRecordDialog.tv_my_avg_speed.text = "${binding.tvAvgSpeed.text}km/h"
-        completeRecordDialog.tv_opponent_avg_speed.text = "${TrackPaceMakeService.opponentAvgSpeed}km/h"
-        completeRecordDialog.tv_my_time.text = Utils.timeToText(second)
-        completeRecordDialog.tv_opponent_time.text = Utils.timeToText(TrackPaceMakeService.opponentTime)
+        completeRecordDialog.findViewById<TextView>(R.id.tv_opponent_name).text = TrackPaceMakeService.opponentUserName
+        completeRecordDialog.findViewById<TextView>(R.id.tv_my_avg_speed).text = "${binding.tvAvgSpeed.text}km/h"
+        completeRecordDialog.findViewById<TextView>(R.id.tv_opponent_avg_speed).text = "${TrackPaceMakeService.opponentAvgSpeed}km/h"
+        completeRecordDialog.findViewById<TextView>(R.id.tv_my_time).text = Utils.timeToText(second)
+        completeRecordDialog.findViewById<TextView>(R.id.tv_opponent_time).text = Utils.timeToText(TrackPaceMakeService.opponentTime)
         completeRecordDialog.show()
         completeRecordDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
-        completeRecordDialog.btn_upload.setOnClickListener {
+        completeRecordDialog.findViewById<Button>(R.id.btn_upload).setOnClickListener {
             val uploadPostIntent = Intent(this@TrackPaceMakeActivity, TrackPaceMakeService::class.java)
             uploadPostIntent.action = TrackPaceMakeService.UPLOAD_POST
             startForegroundService(uploadPostIntent)

@@ -5,16 +5,11 @@ import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
 import com.example.capstonandroid.databinding.GoalAlertDialogBinding
 import com.example.capstonandroid.network.RetrofitClient
 import com.example.capstonandroid.network.api.BackendApi
 import com.example.capstonandroid.network.dto.Goal
 import com.example.capstonandroid.network.dto.GoalResponse
-import kotlinx.android.synthetic.main.activity_goal_bike.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

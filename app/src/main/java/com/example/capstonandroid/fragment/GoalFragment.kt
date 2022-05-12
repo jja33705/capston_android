@@ -249,13 +249,21 @@ class GoalFragment : Fragment() {
             val distanceBikeResponse = supplementService.totalDistance(token, "B")
 
             if(distanceBikeResponse.isSuccessful){
-                totalBikeDistance = distanceBikeResponse.body()!!.distance
-
+                when (distanceBikeResponse.code()) {
+                    200 -> {
+                        totalBikeDistance = distanceBikeResponse.body()!!.distance
+                    }
+                }
             }
             val distanceRunResponse = supplementService.totalDistance(token, "R")
 
             if(distanceRunResponse.isSuccessful){
-                totalRunDistance = distanceRunResponse.body()!!.distance
+                when (distanceRunResponse.code()) {
+                    200 -> {
+                        totalRunDistance = distanceRunResponse.body()!!.distance
+                    }
+                }
+
             }
 
             var totalTimeResponse = supplementService.totalTime(token)

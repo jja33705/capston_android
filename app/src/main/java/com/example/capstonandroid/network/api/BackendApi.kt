@@ -72,7 +72,7 @@ interface BackendApi {
     fun goalDelete(@Header("Authorization") token: String,@Path("goalID") goalID :Int ) : Call<goalDeleteResponse>
 
     @GET("userSearch") //유저 검색!!!!!!!!!
-    fun userSearch(@Header("Authorization")token: String,@Query("keyword") keyword: String) : Call<FollowerResponse>
+    fun userSearch(@Header("Authorization")token: String,@Query("keyword") keyword: String) : Call<SearchUserResponse>
 
     @GET("comment/index/{postId}") //댓글 검색!!!!!!!!!
     suspend fun commentIndex(@Header("Authorization")token: String,@Path("postId") postId: Int, @Query("page") page: Int) : Response<CommentIndexResponse>
@@ -156,4 +156,10 @@ interface BackendApi {
     @PATCH("fcmToken") // fcmToken 저장
     suspend fun fcmToken(@Header("Authorization") token: String, @Body fcmToken: FcmToken): Response<ResponseMessage>
 
+    @Multipart
+    @POST("profile") // 프로필 수정
+    suspend fun editProfile(@Header("Authorization") token: String, @Part profile: MultipartBody.Part, @Part("name") name: RequestBody, @Part("birth") birth: RequestBody, @Part("introduce") introduce: RequestBody, @Part("location") location: RequestBody, @Part("sex") sex: RequestBody, @Part("weight") weight: RequestBody): Response<User>
+
+    @GET("userSearch") // 유저 검색
+    suspend fun searchUser(@Header("Authorization") token: String, @Query("keyword") keyword: String, @Query("page") page: Int): Response<SearchUserResponse>
 }

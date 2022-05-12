@@ -30,7 +30,7 @@
             android:name=".activity.NotificationActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.FollowerActivity"
+            android:name=".activity.SearchUserActivity"
             android:exported="false" />
         <activity
             android:name=".activity.GoalBikeActivity"

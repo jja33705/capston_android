@@ -10,17 +10,13 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.*
 import android.widget.Button
-import androidx.recyclerview.widget.RecyclerView
 import com.example.capstonandroid.R
-import com.example.capstonandroid.adapter.PostRecyclerViewAdapter
 import com.example.capstonandroid.service.RecordService
 import com.example.capstonandroid.service.TrackPaceMakeService
 import com.example.capstonandroid.service.TrackRecordService
 import com.example.capstonandroid.databinding.ActivityMainBinding
 import com.example.capstonandroid.fragment.HomeFragment
 import com.example.capstonandroid.fragment.MeFragment
-import com.example.capstonandroid.network.dto.Comment
-import com.example.capstonandroid.network.dto.Post
 
 class MainActivity : AppCompatActivity() {
     private var _binding: ActivityMainBinding? = null
@@ -137,7 +133,7 @@ class MainActivity : AppCompatActivity() {
 
         return when (item?.itemId){
             R.id.action_search -> {
-                val intent = Intent(this,FollowerActivity::class.java)
+                val intent = Intent(this,SearchUserActivity::class.java)
                 startActivity(intent)
                 true
             }

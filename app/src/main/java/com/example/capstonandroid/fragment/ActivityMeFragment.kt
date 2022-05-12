@@ -50,6 +50,7 @@ class ActivityMeFragment : Fragment() {
         mBinding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         println("HomeFragment 시작됨")
@@ -161,7 +162,7 @@ class ActivityMeFragment : Fragment() {
             // 초기값 받아옴
             var token = "Bearer " + requireActivity().getSharedPreferences("other", Context.MODE_PRIVATE).getString("TOKEN","")
             println("홈 프레그먼트$token")
-            val getPostsResponse = supplementService.getPosts(token, postPage)
+            val getPostsResponse = supplementService.getMyPosts(token, postPage)
             if (getPostsResponse.isSuccessful) {
                 if (getPostsResponse.body()!!.total == 0) {
                     isNext = false

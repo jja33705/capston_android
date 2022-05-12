@@ -3,12 +3,11 @@ package com.example.capstonandroid.activity
 import android.app.DatePickerDialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.example.capstonandroid.R
+import com.example.capstonandroid.databinding.ActivityGoalBikeBinding
 import com.example.capstonandroid.network.RetrofitClient
 import com.example.capstonandroid.network.api.BackendApi
 import com.example.capstonandroid.network.dto.Goal
 import com.example.capstonandroid.network.dto.GoalResponse
-import kotlinx.android.synthetic.main.activity_goal_bike.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -18,6 +17,9 @@ import java.util.*
 
 
 class GoalBikeActivity : AppCompatActivity() {
+
+    private var _binding: ActivityGoalBikeBinding? = null
+    private val binding get() = _binding!!
 
 
     private  lateinit var  retrofit: Retrofit  //레트로핏
@@ -32,7 +34,8 @@ class GoalBikeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.activity_goal_bike)
+        _binding = ActivityGoalBikeBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         initRetrofit()
         val sharedPreference = getSharedPreferences("other", MODE_PRIVATE)
@@ -42,7 +45,7 @@ class GoalBikeActivity : AppCompatActivity() {
 
 
 
-        bike_btnStartDate.setOnClickListener {
+        binding.bikeBtnStartDate.setOnClickListener {
 
             val datepickercalendar = Calendar.getInstance()
             val year = datepickercalendar.get(Calendar.YEAR)
@@ -76,7 +79,7 @@ class GoalBikeActivity : AppCompatActivity() {
             dpd.show()
         }
 
-        bike_btnEndDate.setOnClickListener {
+        binding.bikeBtnEndDate.setOnClickListener {
 
             val datepickercalendar = Calendar.getInstance()
             val year = datepickercalendar.get(Calendar.YEAR)
@@ -111,14 +114,14 @@ class GoalBikeActivity : AppCompatActivity() {
 
         }
 
-        bike_save.setOnClickListener {
+        binding.bikeSave.setOnClickListener {
 
             println("저장 눌렀어")
             println(startDate )
             println(endDate )
-            title = bike_title.text.toString()
+            title = binding.bikeTitle.text.toString()
             event = "B"
-            goal = bike_goal.text.toString().toInt()
+            goal = binding.bikeGoal.text.toString().toInt()
             println()
             println()
 
@@ -162,6 +165,11 @@ class GoalBikeActivity : AppCompatActivity() {
     private fun initRetrofit(){
         retrofit = RetrofitClient.getInstance()
         supplementService = retrofit.create(BackendApi::class.java);
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 
 }

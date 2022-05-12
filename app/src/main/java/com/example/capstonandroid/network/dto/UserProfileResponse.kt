@@ -8,7 +8,7 @@ data class UserProfileResponse(
     val created_at: String,
     val email: String,
     val fcm_token: Any,
-    val followCheck: Boolean,
+    val followCheck: Int,
     val followers: List<User>,
     val followings: List<User>,
     val id: Int,

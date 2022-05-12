@@ -16,6 +16,7 @@ import android.os.Handler
 import android.speech.tts.TextToSpeech
 import android.view.View
 import android.view.Window
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
@@ -36,7 +37,6 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
-import kotlinx.android.synthetic.main.checkpoint_dialog.*
 import kotlinx.coroutines.*
 import retrofit2.Retrofit
 import java.io.FileOutputStream
@@ -487,7 +487,7 @@ class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.S
                     val checkpointResponse = supplementService.checkpoint(token, TrackRecordService.checkpointIndex, trackId, second)
                     if (checkpointResponse.isSuccessful) {
                         // 다이얼로그 띄움
-                        checkpointDialog.checkpoint_pace.text = "上位${checkpointResponse.body()!!.rank.toInt()}パーセントのペースです。"
+                        checkpointDialog.findViewById<TextView>(R.id.checkpoint_pace).text = "上位${checkpointResponse.body()!!.rank.toInt()}パーセントのペースです。"
                         checkpointDialog.show()
                         checkpointDialog.window?.setBackgroundDrawable(
                             ColorDrawable(Color.TRANSPARENT)
