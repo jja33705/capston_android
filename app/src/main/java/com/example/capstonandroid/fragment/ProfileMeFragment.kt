@@ -286,7 +286,6 @@ class ProfileMeFragment : Fragment(){
                     }
 
                     override fun onFailure(call: Call<UserWeekResponse>, t: Throwable) {
-                        TODO("Not yet implemented")
                     }
                 })
 
