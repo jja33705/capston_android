@@ -90,7 +90,7 @@ interface BackendApi {
     suspend fun totalTime(@Header("Authorization")token : String) : Response<Int>
 
     @GET("record/totalCalorie") //총 칼로리
-    suspend fun totalCalorie(@Header("Authorization")token : String) : Response<Int>
+    suspend fun totalCalorie(@Header("Authorization")token : String) : Response<Double>
 
 //  재현 코드
 //    @GET("test") // 보낼 url

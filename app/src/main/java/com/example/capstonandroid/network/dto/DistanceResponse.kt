@@ -1,5 +1,5 @@
 package com.example.capstonandroid.network.dto
 
 data class DistanceResponse(
-    val distance: Int
+    val distance: Double
 )

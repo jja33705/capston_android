@@ -72,10 +72,10 @@ class GoalFragment : Fragment() {
     var user_goal_riding_EndDate : String = ""
     var user_goal_riding_ID : Int = 0
 
-    var totalCalorie : Int = 0
-    var totalTime : Int = 0;
-    var totalBikeDistance : Int = 0
-    var totalRunDistance : Int = 0
+    var totalCalorie : Double = 0.0
+    var totalTime : Double = 0.0;
+    var totalBikeDistance : Double = 0.0
+    var totalRunDistance : Double = 0.0
 
     var startDate : String = ""
     var endDate : String = ""
@@ -251,7 +251,7 @@ class GoalFragment : Fragment() {
             if(distanceBikeResponse.isSuccessful){
                 when (distanceBikeResponse.code()) {
                     200 -> {
-                        totalBikeDistance = distanceBikeResponse.body()!!.distance
+                        totalBikeDistance = distanceBikeResponse.body()!!.distance.toDouble()
                     }
                 }
             }
@@ -260,7 +260,7 @@ class GoalFragment : Fragment() {
             if(distanceRunResponse.isSuccessful){
                 when (distanceRunResponse.code()) {
                     200 -> {
-                        totalRunDistance = distanceRunResponse.body()!!.distance
+                        totalRunDistance = distanceRunResponse.body()!!.distance.toDouble()
                     }
                 }
 
@@ -269,18 +269,18 @@ class GoalFragment : Fragment() {
             var totalTimeResponse = supplementService.totalTime(token)
 
             if(totalTimeResponse.isSuccessful){
-                totalTime = totalTimeResponse.body()!!
+                totalTime = totalTimeResponse.body()!!.toDouble()
             }
 
             var totalCalorieResponse = supplementService.totalCalorie(token)
 
             if(totalCalorieResponse.isSuccessful){
-                totalCalorie = totalCalorieResponse.body()!!
+                totalCalorie = totalCalorieResponse.body()!!.toDouble()
             }
 
 
             binding.totalDistance.text = (totalBikeDistance+totalRunDistance).toString()+"Km"
-            binding.totalTime.text = Utils.timeToStringText(totalTime)
+            binding.totalTime.text = Utils.timeToStringText(totalTime.toInt())
             binding.totalCalorie.text = totalCalorie.toString()+"Cal"
         }
 

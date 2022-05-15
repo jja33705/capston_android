@@ -139,7 +139,7 @@ class PostActivity : AppCompatActivity() {
                 }
                 
 
-                binding.like.text = "いいね！： ${post.likes.size}"
+                binding.like.text = "${post.likes.size}"
 
                 title = post.title
                 range = post.range
@@ -288,11 +288,11 @@ class PostActivity : AppCompatActivity() {
 
                     if(likeCheck==true){
                         likeCount --
-                        binding.like.text = "いいね！："+likeCount
+                        binding.like.text = "${likeCount}"
                         likeCheck = false
                     }else {
                         likeCount ++
-                        binding.like.text = "いいね！："+likeCount
+                        binding.like.text = "${likeCount}"
                         likeCheck = true
                     }
 

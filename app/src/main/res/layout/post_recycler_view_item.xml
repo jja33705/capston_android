@@ -74,7 +74,6 @@
                 android:includeFontPadding="false"
                 android:fontFamily="@font/noto_sans_jp_regular"
                 android:layout_margin="10dp"
-                android:paddingLeft="10dp"
                 android:id="@+id/tv_title"
                 android:maxLines="1"
                 android:ellipsize="end"
