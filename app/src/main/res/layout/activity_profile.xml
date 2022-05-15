@@ -11,11 +11,74 @@
     >
 
     <LinearLayout
-        android:id="@+id/me_profile"
-        android:visibility="visible"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_view_follow_request"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:layout_marginBottom="1dp"
+            android:visibility="gone"
+            >
+            <LinearLayout
+                android:paddingVertical="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="こまがたからフォローリクエストが届きました。"
+                    android:layout_gravity="center"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/noto_sans_jp_bold"
+                    android:includeFontPadding="false"
+                    android:layout_marginBottom="10dp"
+                    >
+                </TextView>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_gravity="center"
+                    >
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/btn_accept_follow_request"
+                        android:textColor="@color/white"
+                        android:layout_width="120dp"
+                        android:layout_height="30dp"
+                        android:text="確認"
+                        android:fontFamily="@font/noto_sans_jp_regular"
+                        android:includeFontPadding="false"
+                        android:textSize="11sp"
+                        android:background="@drawable/btn_follow_request_accept"
+                        android:layout_gravity="center"
+                        android:layout_marginRight="20dp"
+                        >
+                    </androidx.appcompat.widget.AppCompatButton>
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/btn_delete_follow_request"
+                        android:textColor="@color/black"
+                        android:layout_width="120dp"
+                        android:layout_height="30dp"
+                        android:text="削除"
+                        android:fontFamily="@font/noto_sans_jp_regular"
+                        android:includeFontPadding="false"
+                        android:textSize="11sp"
+                        android:background="@drawable/btn_follow_request_delete"
+                        android:layout_gravity="center"
+                        android:layout_marginRight="10dp"
+                        >
+                    </androidx.appcompat.widget.AppCompatButton>
+                </LinearLayout>
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
@@ -61,7 +124,7 @@
 
                     <LinearLayout
                         android:layout_marginLeft="20dp"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         android:layout_weight="0.6"
@@ -73,10 +136,10 @@
                             android:fontFamily="@font/noto_sans_jp_bold"
                             android:text="사토시"
                             android:id="@+id/tv_name"
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="20sp"
-                            android:layout_gravity="center"
+                            android:layout_gravity="start"
                             android:textColor="@color/black"
                             >
                         </TextView>
@@ -86,10 +149,10 @@
                             android:fontFamily="@font/noto_sans_jp_regular"
                             android:text="대구"
                             android:id="@+id/tv_location"
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="12sp"
-                            android:layout_gravity="center"
+                            android:layout_gravity="start"
                             >
                         </TextView>
 
@@ -98,23 +161,24 @@
 
                     <LinearLayout
                         android:layout_marginLeft="20dp"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_gravity="center"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1">
-                        <Button
-                            android:id="@+id/followButton"
+                        >
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/btn_follow"
                             android:layout_width="wrap_content"
                             android:layout_height="30dp"
                             android:textSize="10sp"
                             android:fontFamily="@font/noto_sans_jp_regular"
                             android:includeFontPadding="false"
                             android:gravity="center"
-                            android:textColor="@color/main_color"
-                            android:background="@drawable/button_edit_profile_background"
-                            android:text="フォロー">
-
-                        </Button>
+                            android:textColor="@color/white"
+                            android:background="@drawable/btn_follow_request_accept"
+                            android:text="フォロー"
+                            >
+                        </androidx.appcompat.widget.AppCompatButton>
                     </LinearLayout>
 
 

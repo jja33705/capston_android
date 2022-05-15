@@ -56,6 +56,7 @@ class IntroActivity : AppCompatActivity() {
                     mainIntent.putExtra("userId", bundle.getString("id"))
                     mainIntent.putExtra("postId", bundle.getString("postId"))
                     mainIntent.putExtra("type", bundle.getString("type"))
+                    mainIntent.putExtra("targetMemId", bundle.getString("target_mem_id"))
                 }
 
 

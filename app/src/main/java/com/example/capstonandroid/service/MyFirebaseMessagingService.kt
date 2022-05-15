@@ -50,8 +50,8 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         val intent = when (data["type"]!!) {
             "follow", "followRequest" -> {
                 Intent(this, ProfileActivity::class.java).apply {
-                    println("이게 뭐고: ${data["id"]!!.toInt()}")
-                    putExtra("userId", data["id"]!!.toInt())
+                    println("이게 뭐고: ${data["target_mem_id"]!!.toInt()}")
+                    putExtra("userId", data["target_mem_id"]!!.toInt())
                 }
             }
             else -> {
