@@ -81,7 +81,7 @@ interface BackendApi {
     suspend fun postLike(@Header("Authorization") token:String, @Path("postID") postID: Int) : Response<LikeResponse>
 
     @GET("profile") //프로필 엿보기
-    suspend fun userProfile(@Header("Authorization")token: String,@Query("me") me: Int,@Query("id") id : Int) : Response<UserProfileResponse>
+    suspend fun getProfile(@Header("Authorization")token: String,@Query("me") me: Int,@Query("id") id : Int) : Response<Profile>
 
     @GET("record/distance") //거리
     suspend fun totalDistance(@Header("Authorization")token : String,@Query("event") event: String) : Response<DistanceResponse>
@@ -162,4 +162,10 @@ interface BackendApi {
 
     @GET("userSearch") // 유저 검색
     suspend fun searchUser(@Header("Authorization") token: String, @Query("keyword") keyword: String, @Query("page") page: Int): Response<SearchUserResponse>
+
+    @POST("unFollow/{userId}") // 팔로우 취소
+    suspend fun unFollow(@Header("Authorization") token: String, @Path("userId") userId: Int): Response<ResponseMessage>
+
+    @POST("cancel/{userId}") // 팔로우 요청 취소
+    suspend fun cancelFollowRequest(@Header("Authorization") token: String, @Path("userId") userId: Int): Response<ResponseMessage>
 }

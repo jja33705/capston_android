@@ -1,5 +1,6 @@
 package com.example.capstonandroid.activity
 
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.core.content.ContextCompat
@@ -9,6 +10,7 @@ import com.example.capstonandroid.databinding.ActivityProfileBinding
 import com.example.capstonandroid.network.RetrofitClient
 import com.example.capstonandroid.network.api.BackendApi
 import com.example.capstonandroid.network.dto.LoginUserResponse
+import com.example.capstonandroid.network.dto.Profile
 import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
@@ -34,7 +36,8 @@ class ProfileActivity : AppCompatActivity() {
     private var chart_max :Float = 0.0f;
     private var chart_min :Float = 0.0f;
 
-    private var myId = 0
+    private lateinit var profile: Profile
+    private var followCheck = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,14 +48,6 @@ class ProfileActivity : AppCompatActivity() {
         supportActionBar?.title = "プロフィール"
 
         initRetrofit()
-
-
-        var token = "Bearer " + getSharedPreferences("other", MODE_PRIVATE).getString("TOKEN", "")
-
-        var userId = intent.getIntExtra("userId", -1)
-
-        println("토큰 "+token+"유저값"+userId)
-
 
         var r_today :Float = 0f;
         var r_oneDayAgo :Float = 0f;
@@ -70,60 +65,59 @@ class ProfileActivity : AppCompatActivity() {
         var b_fiveDayAgo :Float = 0f;
         var b_sixDayAgo :Float = 0f;
 
+        CoroutineScope(Dispatchers.Main).launch {
+            var token = "Bearer ${getSharedPreferences("other", MODE_PRIVATE).getString("TOKEN", "")}"
 
-        supplementService.userGet(token).enqueue(object : Callback<LoginUserResponse>{
-            override fun onResponse(
-                call: Call<LoginUserResponse>,
-                response: Response<LoginUserResponse>
-            ) {
-                if(response.isSuccessful){
-                    myId = response.body()!!.id
-                }
-            }
+            val getUserResponse = supplementService.getUser(token)
+            if (getUserResponse.isSuccessful) {
+                val myId = getUserResponse.body()!!.id
+                var userId = intent.getIntExtra("userId", -1)
 
-            override fun onFailure(call: Call<LoginUserResponse>, t: Throwable) {
-            }
-        })
+                val getProfileResponse = supplementService.getProfile(token, myId, userId)
+                if (getProfileResponse.isSuccessful) {
+                    profile = getProfileResponse.body()!!
+                    followCheck = profile.followCheck
 
+                    binding.tvName.text = profile.name
+                    binding.tvFollower.text = profile.followers.count().toString()
+                    binding.tvFollowing.text = profile.followings.count().toString()
+                    binding.tvMmr.text = profile.mmr.toString()
+                    binding.tvLocation.text = profile.location
 
-            CoroutineScope(Dispatchers.Main).launch {
-                val getUserProfileResponse = supplementService.userProfile(token, myId,userId)
+                    when (followCheck) {
+                        // 팔로우 되어있는 상태
+                        1 -> {
+                            binding.btnFollow.setBackgroundResource(R.drawable.btn_follow_request_delete)
+                            binding.btnFollow.text = "フォロー中"
+                            binding.btnFollow.setTextColor(Color.BLACK)
+                        }
 
-                println(getUserProfileResponse.body())
+                        // 팔로우 되어있지 않는 상태
+                        2 -> {
 
-                if(getUserProfileResponse.isSuccessful){
-                    var user_name = getUserProfileResponse!!.body()!!.name
-                    var user_followers = getUserProfileResponse!!.body()!!.followers!!.count()
-                    var user_followings = getUserProfileResponse!!.body()!!.followings!!.count()
-                    var user_mmr = getUserProfileResponse!!.body()!!.mmr
-                    var location = getUserProfileResponse!!.body()!!.location
-                    var followCheck = getUserProfileResponse!!.body()!!.followCheck
+                        }
 
-                    binding.tvName.text = user_name
-                    binding.tvFollower.text = user_followers.toString()
-                    binding.tvFollowing.text = user_followings.toString()
-                    binding.tvMmr.text = user_mmr.toString()
-                    binding.tvLocation.text = location
+                        // 팔로우가 요청되어 있는 상태
+                        3 -> {
+                            changeFollowButtonToFollowRequested()
+                        }
+                    }
 
-                    b_today = getUserProfileResponse.body()!!.bikeWeekData.today.toFloat()
-                    b_oneDayAgo  = getUserProfileResponse.body()!!.bikeWeekData.oneDayAgo.toFloat()
-                    b_twoDayAgo  = getUserProfileResponse.body()!!.bikeWeekData.twoDayAgo.toFloat()
-                    b_threeDayAgo  = getUserProfileResponse.body()!!.bikeWeekData.threeDayAgo.toFloat()
-                    b_fourDayAgo  = getUserProfileResponse.body()!!.bikeWeekData.fourDayAgo.toFloat()
-                    b_fiveDayAgo = getUserProfileResponse.body()!!.bikeWeekData.fiveDayAgo.toFloat()
-                    b_sixDayAgo  = getUserProfileResponse.body()!!.bikeWeekData.sixDayAgo.toFloat()
+                    b_today = getProfileResponse.body()!!.bikeWeekData.today.toFloat()
+                    b_oneDayAgo  = getProfileResponse.body()!!.bikeWeekData.oneDayAgo.toFloat()
+                    b_twoDayAgo  = getProfileResponse.body()!!.bikeWeekData.twoDayAgo.toFloat()
+                    b_threeDayAgo  = getProfileResponse.body()!!.bikeWeekData.threeDayAgo.toFloat()
+                    b_fourDayAgo  = getProfileResponse.body()!!.bikeWeekData.fourDayAgo.toFloat()
+                    b_fiveDayAgo = getProfileResponse.body()!!.bikeWeekData.fiveDayAgo.toFloat()
+                    b_sixDayAgo  = getProfileResponse.body()!!.bikeWeekData.sixDayAgo.toFloat()
 
-                    r_today = getUserProfileResponse.body()!!.runWeekData.today.toFloat()
-                    r_oneDayAgo = getUserProfileResponse.body()!!.runWeekData.oneDayAgo.toFloat()
-                    r_twoDayAgo = getUserProfileResponse.body()!!.runWeekData.twoDayAgo.toFloat()
-                    r_threeDayAgo = getUserProfileResponse.body()!!.runWeekData.threeDayAgo.toFloat()
-                    r_fourDayAgo = getUserProfileResponse.body()!!.runWeekData.fourDayAgo.toFloat()
-                    r_fiveDayAgo = getUserProfileResponse.body()!!.runWeekData.fiveDayAgo.toFloat()
-                    r_sixDayAgo = getUserProfileResponse.body()!!.runWeekData.sixDayAgo.toFloat()
-
-
-
-
+                    r_today = getProfileResponse.body()!!.runWeekData.today.toFloat()
+                    r_oneDayAgo = getProfileResponse.body()!!.runWeekData.oneDayAgo.toFloat()
+                    r_twoDayAgo = getProfileResponse.body()!!.runWeekData.twoDayAgo.toFloat()
+                    r_threeDayAgo = getProfileResponse.body()!!.runWeekData.threeDayAgo.toFloat()
+                    r_fourDayAgo = getProfileResponse.body()!!.runWeekData.fourDayAgo.toFloat()
+                    r_fiveDayAgo = getProfileResponse.body()!!.runWeekData.fiveDayAgo.toFloat()
+                    r_sixDayAgo = getProfileResponse.body()!!.runWeekData.sixDayAgo.toFloat()
 
 
                     val entries = ArrayList<BarEntry>()
@@ -218,55 +212,64 @@ class ProfileActivity : AppCompatActivity() {
                     }
 
 
-
-
-
-
-
-
-
-
-
-
-                    if (getUserProfileResponse!!.body()!!.equals(null)||getUserProfileResponse!!.body()!!.profile.equals("img")){
+                    if (getProfileResponse!!.body()!!.equals(null)||getProfileResponse!!.body()!!.profile.equals("img")){
                         binding.tvProfileMePicture.setImageResource(R.drawable.main_profile)
                     }else {
 
-                        val url = getUserProfileResponse!!.body()!!.profile
+                        val url = getProfileResponse!!.body()!!.profile
                         Glide.with(this@ProfileActivity)
                             .load(url)
                             .circleCrop()
                             .into(binding.tvProfileMePicture)
                     }
-                    if(user_mmr!! >= 0&& user_mmr!! <= 99){
+                    if(profile.mmr >= 0 && profile.mmr <= 99){
                         binding.medalLayout.setBackgroundResource(R.drawable.medal_bronze)
-                    }else if (user_mmr >= 100 && user_mmr <= 199){
+                    }else if (profile.mmr >= 100 && profile.mmr <= 199){
                         binding.medalLayout.setBackgroundResource(R.drawable.medal_silver)
-                    }else if (user_mmr >= 200){
+                    }else if (profile.mmr >= 200){
                         binding.medalLayout.setBackgroundResource(R.drawable.medal_gold)
                     }
-
-//                    if(followCheck ==true){
-//                        binding.followButton.text = "フォロー中"
-//                    }else {
-//                        binding.followButton.text = "フォロー"
-//                    }
-                }
-
-
-            }
-
-            binding.followButton.setOnClickListener {
-                CoroutineScope(Dispatchers.Main).launch {
-                    val getFollowResponse = supplementService.followRequest(token, userId)
-
-                                       if (getFollowResponse.isSuccessful){
-                                           
-                                       }
                 }
             }
+        }
 
+        binding.btnFollow.setOnClickListener {
+            val token = "Bearer ${getSharedPreferences("other", MODE_PRIVATE).getString("TOKEN", "")}"
+            when (followCheck) {
+                // 팔로우 되어있는 상태
+                1 -> {
+                    CoroutineScope(Dispatchers.Main).launch {
+                        val unFollowResponse = supplementService.unFollow(token, profile.id)
+                        if (unFollowResponse.isSuccessful) {
+                            followCheck = 2
+                            changeFollowButtonToFollow()
+                        }
+                    }
+                }
 
+                // 팔로우 되어있지 않는 상태
+                2 -> {
+                    CoroutineScope(Dispatchers.Main).launch {
+                        val followRequestResponse = supplementService.followRequest(token, profile.id)
+                        if (followRequestResponse.isSuccessful) {
+                            followCheck = 3
+                            changeFollowButtonToFollowRequested()
+                        }
+                    }
+                }
+
+                // 팔로우가 요청되어 있는 상태
+                3 -> {
+                    CoroutineScope(Dispatchers.Main).launch {
+                        val cancelFollowRequestResponse = supplementService.cancelFollowRequest(token, profile.id)
+                        if (cancelFollowRequestResponse.isSuccessful) {
+                            followCheck = 2
+                            changeFollowButtonToFollow()
+                        }
+                    }
+                }
+            }
+        }
     }
 
     override fun onDestroy() {
@@ -287,4 +290,17 @@ class ProfileActivity : AppCompatActivity() {
         supplementService = retrofit.create(BackendApi::class.java);
     }
 
+    // 팔로우 요청 보낸 상태로 바꿈
+    private fun changeFollowButtonToFollowRequested() {
+        binding.btnFollow.setBackgroundResource(R.drawable.btn_follow_request_delete)
+        binding.btnFollow.text = "リクエスト中"
+        binding.btnFollow.setTextColor(Color.BLACK)
+    }
+
+    // 팔로우 요청 보내기 버튼으로 바꿈
+    private fun changeFollowButtonToFollow() {
+        binding.btnFollow.setBackgroundResource(R.drawable.btn_follow_request_accept)
+        binding.btnFollow.text = "フォロー"
+        binding.btnFollow.setTextColor(Color.WHITE)
+    }
 }

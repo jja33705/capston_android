@@ -1,6 +1,6 @@
 package com.example.capstonandroid.network.dto
 
-data class UserProfileResponse(
+data class Profile(
     val badges: Any,
     val bikePercentage: Int,
     val bikeWeekData: UserWeekResponse,
@@ -22,5 +22,5 @@ data class UserProfileResponse(
     val run_mmr: Int,
     val sex: String,
     val updated_at: String,
-    val weight: Any
+    val weight: Int
 )

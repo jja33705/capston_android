@@ -161,13 +161,13 @@ class MainActivity : AppCompatActivity() {
         println("onNewIntent: ${intent?.getStringExtra("type")}")
         println("onNewIntent: ${intent?.getStringExtra("postId")}")
         println("onNewIntent: ${intent?.getStringExtra("userId")}")
-        println("onNewIntent: ${intent?.getStringExtra("id")}")
+        println("onNewIntent: ${intent?.getStringExtra("targetMemId")}")
         // 노티피케이션 관련된 곳으로 이동
         if (intent.getStringExtra("type") != null) {
             val intent = when (intent.getStringExtra("type")) {
                 "follow", "followRequest" -> {
                     Intent(this, ProfileActivity::class.java).apply {
-                        putExtra("userId", intent.getStringExtra("userId")?.toInt())
+                        putExtra("userId", intent.getStringExtra("targetMemId")?.toInt())
                     }
                 }
                 else -> {
