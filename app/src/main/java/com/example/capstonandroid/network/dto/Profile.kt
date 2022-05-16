@@ -2,7 +2,7 @@ package com.example.capstonandroid.network.dto
 
 data class Profile(
     val badges: Any,
-    val bikePercentage: Int,
+    val bikePercentage: Double,
     val bikeWeekData: UserWeekResponse,
     val birth: String,
     val created_at: String,
@@ -17,7 +17,7 @@ data class Profile(
     val mmr: Int,
     val name: String,
     val profile: String,
-    val runPercentage: Int,
+    val runPercentage: Double,
     val runWeekData: UserWeekResponse,
     val run_mmr: Int,
     val sex: String,
