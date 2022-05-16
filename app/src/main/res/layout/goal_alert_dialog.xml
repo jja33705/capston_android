@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
             android:ems="10"
-            android:hint="자전거 목표 제목을 입력하세요"
+            android:hint=""
             android:textColor="@color/black"
             android:inputType="textPersonName" />
 
@@ -34,7 +34,7 @@
             android:layout_marginBottom="20dp"
             android:ems="10"
             android:textColor="@color/black"
-            android:hint="목표 거리를 입력하세요"
+            android:hint="目標距離を入力してください"
             android:inputType="number" />
 
         <LinearLayout
@@ -52,7 +52,9 @@
                 android:layout_gravity="center"
                 android:textColor="@color/black"
                 android:gravity="center"
-                android:hint="Select  date "
+                android:hint="スタート日選択"
+                android:fontFamily="@font/noto_sans_jp_black"
+                android:textSize="15sp"
                 android:inputType="text"/>
 
             <com.google.android.material.textview.MaterialTextView
@@ -65,7 +67,9 @@
                 android:layout_weight="1"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:hint="Select  date "
+                android:fontFamily="@font/noto_sans_jp_black"
+                android:textSize="15sp"
+                android:hint="締め切り選択"
                 android:inputType="text"/>
 
         </LinearLayout>
@@ -88,7 +92,7 @@
             android:layout_gravity="center"
             android:gravity="center"
             android:textColor="@color/black"
-            android:hint="Select  date "
+            android:hint="スタート日"
             android:inputType="text"/>
 
         <com.google.android.material.textview.MaterialTextView
@@ -102,7 +106,7 @@
             android:textColor="@color/black"
             android:layout_gravity="center"
             android:gravity="center"
-            android:hint="Select  date "
+            android:hint="締め切り"
             android:inputType="text"/>
 
     </LinearLayout>
@@ -112,20 +116,6 @@
             android:layout_gravity="center"
             android:layout_marginBottom="20dp"
             android:orientation="horizontal">
-            <androidx.appcompat.widget.AppCompatButton
-                android:layout_gravity="center"
-                android:id="@+id/save"
-                android:layout_margin="10dp"
-                android:textColor="@color/white"
-                android:paddingRight="10dp"
-                android:paddingLeft="10dp"
-                android:background="@drawable/login_button"
-                android:includeFontPadding="false"
-                android:fontFamily="@font/noto_sans_jp_regular"
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:text="저장"></androidx.appcompat.widget.AppCompatButton>
-
             <androidx.appcompat.widget.AppCompatButton
                 android:layout_gravity="center"
                 android:id="@+id/back"
@@ -138,7 +128,22 @@
                 android:fontFamily="@font/noto_sans_jp_regular"
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
-                android:text="뒤로가게"></androidx.appcompat.widget.AppCompatButton>
+                android:text="キャンセル"></androidx.appcompat.widget.AppCompatButton>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_gravity="center"
+                android:id="@+id/save"
+                android:layout_margin="10dp"
+                android:textColor="@color/white"
+                android:paddingRight="10dp"
+                android:paddingLeft="10dp"
+                android:background="@drawable/login_button"
+                android:includeFontPadding="false"
+                android:fontFamily="@font/noto_sans_jp_regular"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:text="セーブ"></androidx.appcompat.widget.AppCompatButton>
+
 
         </LinearLayout>
 
