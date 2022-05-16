@@ -134,13 +134,15 @@
 
                         </TextView>
                     </LinearLayout>
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp">
             <LinearLayout
 
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/snslayout">
+                        android:layout_height="wrap_content">
 
                         <LinearLayout
                             android:layout_marginTop="10dp"
@@ -327,6 +329,8 @@
 
 
                     </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
 
             <LinearLayout
             android:id="@+id/function_nav"
