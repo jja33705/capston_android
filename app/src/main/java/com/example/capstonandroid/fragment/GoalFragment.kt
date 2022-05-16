@@ -279,7 +279,7 @@ class GoalFragment : Fragment() {
             }
 
 
-            binding.totalDistance.text = (totalBikeDistance+totalRunDistance).toString()+"Km"
+            binding.totalDistance.text = (totalBikeDistance+totalRunDistance).toFloat().toString()+"Km"
             binding.totalTime.text = Utils.timeToStringText(totalTime.toInt())
             binding.totalCalorie.text = totalCalorie.toString()+"Cal"
         }

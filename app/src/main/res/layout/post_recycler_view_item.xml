@@ -77,10 +77,10 @@
                 </LinearLayout>
 
             </LinearLayout>
-
             <com.google.android.material.textview.MaterialTextView
                 android:text="제목"
                 android:includeFontPadding="false"
+                android:layout_alignParentTop="true"
                 android:fontFamily="@font/noto_sans_jp_regular"
                 android:layout_margin="20dp"
                 android:id="@+id/tv_title"
@@ -88,7 +88,8 @@
                 android:ellipsize="end"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:textColor="#666666"
+                android:textColor="@color/black"
+                android:background="@null"
                 android:textSize="24dp" />
 
 
