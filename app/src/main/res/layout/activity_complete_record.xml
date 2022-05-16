@@ -14,11 +14,12 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         >
-        <EditText
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/et_title"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:hint="タイトル"
+            android:textColor="@color/black"
             android:fontFamily="@font/noto_sans_jp_regular"
             android:background="@drawable/textstyle"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -28,9 +29,10 @@
             app:layout_constraintVertical_bias="0.065"
             app:layout_constraintWidth_percent="0.8"
             android:paddingHorizontal="10dp"
-            ></EditText>
+            ></com.google.android.material.textfield.TextInputEditText>
 
-        <EditText
+        <com.google.android.material.textfield.TextInputEditText
+            android:textColor="@color/black"
             android:layout_marginTop="20dp"
             android:id="@+id/et_description"
             android:layout_width="match_parent"
@@ -48,7 +50,7 @@
             app:layout_constraintVertical_bias="0.064"
             app:layout_constraintWidth_percent="0.8"
             >
-        </EditText>
+        </com.google.android.material.textfield.TextInputEditText>
 
         <HorizontalScrollView
             android:layout_width="wrap_content"

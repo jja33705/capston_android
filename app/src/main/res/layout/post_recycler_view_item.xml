@@ -19,20 +19,29 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_marginTop="20dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:layout_height="wrap_content">
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/userImage"
+                <LinearLayout
+                    android:id="@+id/medal_layout"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:src="@drawable/profile" />
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/userImage"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/profile" />
+                </LinearLayout>
 
                 <LinearLayout
+                    android:layout_gravity="center"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
@@ -40,40 +49,40 @@
                     android:layout_toRightOf="@+id/userImage"
                     android:orientation="vertical">
 
-                    <TextView
+                    <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/tv_user_name"
                         android:layout_width="wrap_content"
-                        android:includeFontPadding="false"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
                         android:layout_marginLeft="5px"
                         android:fontFamily="@font/noto_sans_jp_bold"
+                        android:includeFontPadding="false"
                         android:text="user_name"
                         android:textColor="#333333"
-                        android:textSize="17sp"></TextView>
+                        android:textSize="17sp"></com.google.android.material.textview.MaterialTextView>
 
-                    <TextView
+                    <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/tv_created_at"
                         android:layout_width="wrap_content"
-                        android:includeFontPadding="false"
                         android:layout_height="wrap_content"
+                        android:layout_below="@id/tv_user_name"
                         android:layout_centerInParent="true"
                         android:layout_marginLeft="5px"
-                        android:layout_below="@id/tv_user_name"
+                        android:fontFamily="@font/noto_sans_jp_light"
+                        android:includeFontPadding="false"
                         android:text="created_at"
                         android:textColor="#999999"
-                        android:textSize="14sp"></TextView>
+                        android:textSize="14sp"></com.google.android.material.textview.MaterialTextView>
 
                 </LinearLayout>
 
-            </RelativeLayout>
+            </LinearLayout>
 
-
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:text="제목"
                 android:includeFontPadding="false"
                 android:fontFamily="@font/noto_sans_jp_regular"
-                android:layout_margin="10dp"
+                android:layout_margin="20dp"
                 android:id="@+id/tv_title"
                 android:maxLines="1"
                 android:ellipsize="end"
@@ -86,22 +95,25 @@
             <ImageView
                 android:id="@+id/image_view_map"
                 android:layout_width="wrap_content"
-                android:layout_height="200dp"
+                android:layout_height="300dp"
                 android:scaleType="centerCrop">
             </ImageView>
 
 
-            <TextView
-                android:layout_margin="12dp"
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
                 android:id="@+id/tv_like_count"
                 android:layout_width="wrap_content"
                 android:includeFontPadding="false"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:layout_marginLeft="5px"
                 android:text="like_num"
-                android:textColor="#999998"
-                android:textSize="14sp"></TextView>
+                android:fontFamily="@font/noto_sans_jp_bold"
+                android:textColor="@color/black"
+                android:textSize="14sp"></com.google.android.material.textview.MaterialTextView>
 
         </LinearLayout>
 

@@ -159,7 +159,16 @@ class CommentRecyclerViewAdapter(commentRecyclerViewItemList: ArrayList<Comment?
                 .error(defaultImage)
                 .fallback(defaultImage)
                 .into(binding.profileComment)
+            var user_mmr = commentRecyclerViewItem.user.mmr
 
+            println("유저 MMR" + user_mmr.toString())
+            if(user_mmr!! >= 0&& user_mmr!! <= 99){
+                binding.medalLayout.setBackgroundResource(R.drawable.medal_bronze)
+            }else if (user_mmr >= 100 && user_mmr <= 199){
+                binding.medalLayout.setBackgroundResource(R.drawable.medal_silver)
+            }else if (user_mmr >= 200){
+                binding.medalLayout.setBackgroundResource(R.drawable.medal_gold)
+            }
             // 좋아요 눌렀을떄????
 //            view.setOnClickListener(listener)
 

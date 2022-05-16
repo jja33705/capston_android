@@ -311,16 +311,17 @@ class ProfileMeFragment : Fragment(){
                 var user_followings = loginuserResponse!!.followings?.count()
                 var user_mmr = loginuserResponse!!.mmr
                 var location = loginuserResponse!!.location
-
+                var introduce = loginuserResponse.introduce
 
                 binding.tvName.text = user_name
                 binding.tvFollower.text = user_followers.toString()
                 binding.tvFollowing.text = user_followings.toString()
                 binding.tvMmr.text = user_mmr.toString()
                 binding.tvLocation.text = location
+                binding.tvIntroduce.text = introduce
 
 
-                if (loginuserResponse?.profile.equals(null)||loginuserResponse?.profile.equals("img")){
+                    if (loginuserResponse?.profile.equals(null)||loginuserResponse?.profile.equals("img")){
                     binding.tvProfileMePicture.setImageResource(R.drawable.main_profile)
                 }else {
 

@@ -83,7 +83,16 @@ class PostRecyclerViewAdapter(postRecyclerViewItemList: ArrayList<Post?>) : Recy
         fun bind(postRecyclerViewItem: Post) {
             binding.tvTitle.text = postRecyclerViewItem.title
             binding.tvUserName.text = postRecyclerViewItem.user.name
+            var user_mmr = postRecyclerViewItem.user.mmr
 
+            println("유저 MMR" + user_mmr.toString())
+            if(user_mmr!! >= 0&& user_mmr!! <= 99){
+                binding.medalLayout.setBackgroundResource(R.drawable.medal_bronze)
+            }else if (user_mmr >= 100 && user_mmr <= 199){
+                binding.medalLayout.setBackgroundResource(R.drawable.medal_silver)
+            }else if (user_mmr >= 200){
+                binding.medalLayout.setBackgroundResource(R.drawable.medal_gold)
+            }
             // 타임포멧
             val date = postRecyclerViewItem.created_at // your date
 // date is already in Standard ISO format so you don't need custom formatted
@@ -98,10 +107,28 @@ class PostRecyclerViewAdapter(postRecyclerViewItemList: ArrayList<Post?>) : Recy
             binding.tvLikeCount.text = "いいね！： ${postRecyclerViewItem.likes.size}"
 
             val defaultImage = R.drawable.map
-
+            val defaultImage2 = R.drawable.profile
             // 맵 이미지 띄움
             val mapImageUrl = postRecyclerViewItem.img
-            Glide.with(itemView.context).load(mapImageUrl).placeholder(defaultImage).error(defaultImage).fallback(defaultImage).into(binding.imageViewMap)
+            Glide.with(itemView.context)
+                .load(mapImageUrl)
+                .placeholder(defaultImage)
+                .error(defaultImage)
+                .fallback(defaultImage)
+                .into(binding.imageViewMap)
+
+
+            val profileImageUrl = postRecyclerViewItem.user.profile
+
+            Glide.with(itemView.context)
+                    .load(profileImageUrl) // 불러올 이미지 url
+                    .placeholder(defaultImage2) // 이미지 로딩 시작하기 전 표시할 이미지
+                    .error(defaultImage2) // 로딩 에러 발생 시 표시할 이미지
+                    .fallback(defaultImage2) // 로드할 url 이 비어있을(null 등) 경우 표시할 이미지
+                    .circleCrop()
+                    .into(binding.userImage)
+
+
 
             // 좋아요 눌렀을떄????
 //            view.setOnClickListener(listener)
@@ -138,8 +165,8 @@ class PostRecyclerViewAdapter(postRecyclerViewItemList: ArrayList<Post?>) : Recy
 //                    .into(itemView.imageView)
 //            }
 //
-//            val defaultImage2 = R.drawable.profile
-//
+
+
 //            if(item.profile==null||item.profile.equals("")){
 //                var url = ""
 //

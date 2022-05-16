@@ -15,100 +15,82 @@
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
+            android:layout_height="match_parent"
             android:layout_marginBottom="10dp"
+            android:background="@color/white"
+            android:layout_weight="1"
             >
+
             <LinearLayout
-                android:layout_marginHorizontal="20dp"
-                android:layout_marginTop="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                >
-
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="20dp"
+                android:orientation="vertical">
 
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="80dp"
-                    android:orientation="horizontal"
                     android:layout_marginBottom="20dp"
-                    >
-                    <LinearLayout
-                    android:id="@+id/medal_layout"
-                    android:layout_width="70dp"
-                    android:layout_height="70dp"
-                    android:layout_gravity="center"
-                    android:gravity="center"
                     android:orientation="horizontal">
-                    <de.hdodenhof.circleimageview.CircleImageView
-                        android:id="@+id/tv_profile_me_picture"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:src="@mipmap/ic_launcher_round"
-                        android:layout_gravity="center"
-                        >
-                    </de.hdodenhof.circleimageview.CircleImageView>
 
-                </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/medal_layout"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/tv_profile_me_picture"
+                            android:layout_width="57dp"
+                            android:layout_height="57dp"
+                            android:layout_gravity="center"
+                            android:src="@mipmap/ic_launcher_round"></de.hdodenhof.circleimageview.CircleImageView>
+
+                    </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:orientation="vertical"
                         android:layout_gravity="center"
-                        >
+                        android:layout_marginLeft="20dp"
+                        android:orientation="vertical">
 
-                        <TextView
-                            android:includeFontPadding="false"
-                            android:fontFamily="@font/noto_sans_jp_bold"
-                            android:text="사토시"
+                        <com.google.android.material.textview.MaterialTextView
                             android:id="@+id/tv_name"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textSize="20sp"
                             android:layout_gravity="center"
+                            android:fontFamily="@font/noto_sans_jp_bold"
+                            android:includeFontPadding="false"
+                            android:text="사토시"
                             android:textColor="@color/black"
-                            >
-                        </TextView>
+                            android:textSize="22sp"></com.google.android.material.textview.MaterialTextView>
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tv_introduce"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:fontFamily="@font/noto_sans_jp_medium"
+                            android:includeFontPadding="false"
+                            android:text="나는 나다"
+                            android:textSize="15sp"></com.google.android.material.textview.MaterialTextView>
 
                         <TextView
-                            android:includeFontPadding="false"
-                            android:fontFamily="@font/noto_sans_jp_regular"
-                            android:text="대구"
                             android:id="@+id/tv_location"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textSize="12sp"
                             android:layout_gravity="center"
-                            >
-                        </TextView>
+                            android:fontFamily="@font/noto_sans_jp_light"
+                            android:includeFontPadding="false"
+                            android:text="대구"
+                            android:textSize="12sp"></TextView>
 
                     </LinearLayout>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
                 </LinearLayout>
@@ -116,103 +98,94 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
                     android:layout_marginBottom="20dp"
-                    >
+                    android:orientation="horizontal">
+
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
                         android:layout_marginRight="20dp"
-                        >
-                        <TextView
+                        android:orientation="vertical">
+
+                        <com.google.android.material.textview.MaterialTextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/noto_sans_jp_regular"
                             android:includeFontPadding="false"
                             android:text="運動点数"
                             android:textColor="@color/main_color"
-                            android:textSize="12sp"
-                            >
-                        </TextView>
+                            android:textSize="12sp"></com.google.android.material.textview.MaterialTextView>
 
-                        <TextView
-                            android:includeFontPadding="false"
-                            android:fontFamily="@font/noto_sans_jp_medium"
+                        <com.google.android.material.textview.MaterialTextView
                             android:id="@+id/tv_mmr"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:fontFamily="@font/noto_sans_jp_medium"
+                            android:gravity="center"
+                            android:includeFontPadding="false"
                             android:text="1234"
-                            android:gravity="start"
-                            android:textSize="20sp"
                             android:textColor="@color/black"
-                            >
+                            android:textSize="20sp">
 
-                        </TextView>
+                        </com.google.android.material.textview.MaterialTextView>
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
                         android:layout_marginRight="20dp"
-                        >
-                        <TextView
+                        android:orientation="vertical">
+
+                        <com.google.android.material.textview.MaterialTextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/noto_sans_jp_regular"
                             android:includeFontPadding="false"
                             android:text="フォロワー"
                             android:textColor="@color/main_color"
-                            android:textSize="12sp"
-                            >
-                        </TextView>
+                            android:textSize="12sp"></com.google.android.material.textview.MaterialTextView>
 
-                        <TextView
-                            android:includeFontPadding="false"
-                            android:fontFamily="@font/noto_sans_jp_medium"
+                        <com.google.android.material.textview.MaterialTextView
                             android:id="@+id/tv_follower"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/noto_sans_jp_medium"
+                            android:gravity="center"
+                            android:includeFontPadding="false"
                             android:text="12"
-                            android:gravity="start"
-                            android:textSize="20sp"
                             android:textColor="@color/black"
-                            >
+                            android:textSize="20sp">
 
-                        </TextView>
+                        </com.google.android.material.textview.MaterialTextView>
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:layout_weight="1"
-                        >
-                        <TextView
+                        android:orientation="vertical">
+
+                        <com.google.android.material.textview.MaterialTextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/noto_sans_jp_regular"
                             android:includeFontPadding="false"
                             android:text="フォロー中"
                             android:textColor="@color/main_color"
-                            android:textSize="12sp"
-                            >
-                        </TextView>
+                            android:textSize="12sp"></com.google.android.material.textview.MaterialTextView>
 
-                        <TextView
-                            android:includeFontPadding="false"
-                            android:fontFamily="@font/noto_sans_jp_medium"
+                        <com.google.android.material.textview.MaterialTextView
                             android:id="@+id/tv_following"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/noto_sans_jp_medium"
+                            android:gravity="center"
+                            android:includeFontPadding="false"
                             android:text="10"
-                            android:gravity="start"
-                            android:textSize="20sp"
                             android:textColor="@color/black"
-                            >
+                            android:textSize="20sp">
 
-                        </TextView>
+                        </com.google.android.material.textview.MaterialTextView>
                     </LinearLayout>
 
                 </LinearLayout>
@@ -221,23 +194,22 @@
                     android:id="@+id/btn_edit_profile"
                     android:layout_width="match_parent"
                     android:layout_height="30dp"
-                    android:text="プロフィールを編集"
-                    android:fontFamily="@font/noto_sans_jp_regular"
-                    android:includeFontPadding="false"
-                    android:textSize="13dp"
                     android:layout_marginBottom="15dp"
-                    android:gravity="center"
-                    android:textColor="@color/main_color"
                     android:background="@drawable/button_edit_profile_background"
-                    >
-                </androidx.appcompat.widget.AppCompatButton>
+                    android:fontFamily="@font/noto_sans_jp_regular"
+                    android:gravity="center"
+                    android:includeFontPadding="false"
+                    android:text="プロフィールを編集"
+                    android:textColor="@color/main_color"
+                    android:textSize="13dp"></androidx.appcompat.widget.AppCompatButton>
 
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
             android:background="@color/white"
             android:layout_marginBottom="10dp"
             >

@@ -111,6 +111,15 @@ class PostActivity : AppCompatActivity() {
             if (getPostResponse.isSuccessful) {
                 post = getPostResponse.body()!!
 
+                if(post.comment?.size == 0 ){
+                    binding.commentAlert.visibility = View.VISIBLE
+                    binding.recyclerViewComment.visibility = View.GONE
+                }else {
+                    binding.commentAlert.visibility = View.GONE
+                    binding.recyclerViewComment.visibility = View.VISIBLE
+                }
+
+
                 val defaultImage = R.drawable.map
                 val mapImageUrl = post.img
                 likeCheck = post.likeCheck
@@ -124,20 +133,29 @@ class PostActivity : AppCompatActivity() {
 
                 binding.title.setText( post.title)
                 binding.content.setText (post.content)
-                binding.time.text = Utils.timeToStringText(post.time)
+                binding.time.text = "時間 : "+Utils.timeToStringText(post.time).toString()
                 binding.calorie.text = "カロリー : ${post.calorie}Kcal"
                 binding.averageSpeed.text = "平均速度 : ${post.average_speed}Km/h"
                 binding.altitude.text = "累積高度 : ${String.format("%.0f", post.altitude)}m"
                 binding.distance.text = "累積距離 : ${String.format("%.2f", post.distance)}Km"
                 binding.username.text = post.user.name
 
+                var user_mmr = post.user.mmr
+
+                println("유저 MMR" + user_mmr.toString())
+                if(user_mmr!! >= 0&& user_mmr!! <= 99){
+                    binding.medalLayout.setBackgroundResource(R.drawable.medal_bronze)
+                }else if (user_mmr >= 100 && user_mmr <= 199){
+                    binding.medalLayout.setBackgroundResource(R.drawable.medal_silver)
+                }else if (user_mmr >= 200){
+                    binding.medalLayout.setBackgroundResource(R.drawable.medal_gold)
+                }
                 println(likeCheck.toString())
                 if (likeCheck == true) {
                     binding.likeButton.setImageResource(R.drawable.like_new2)
                 } else {
                     binding.likeButton.setImageResource(R.drawable.like_new3)
                 }
-                
 
                 binding.like.text = "${post.likes.size}"
 
@@ -174,6 +192,17 @@ class PostActivity : AppCompatActivity() {
                         "${post.opponent_post!!.user.name}様の「${post.opponent_post!!.title}」と一緒に走りました！"
                     binding.tvOpponent.visibility = View.VISIBLE
                 }
+
+                val profileImageUrl = post.user.profile
+                val defaultImage2 = R.drawable.profile
+                Glide.with(this@PostActivity)
+                    .load(profileImageUrl) // 불러올 이미지 url
+                    .placeholder(defaultImage2) // 이미지 로딩 시작하기 전 표시할 이미지
+                    .error(defaultImage2) // 로딩 에러 발생 시 표시할 이미지
+                    .fallback(defaultImage2) // 로드할 url 이 비어있을(null 등) 경우 표시할 이미지
+                    .circleCrop()
+                    .into(binding.userImage)
+
             }
         }
 
