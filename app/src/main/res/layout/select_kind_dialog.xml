@@ -26,34 +26,36 @@
         android:layout_marginTop="20dp"
         >
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/bt_running"
             android:layout_width="120dp"
             android:layout_height="80dp"
             android:text="ランニング"
-            android:textSize="12dp"
+            android:textSize="11dp"
             android:fontFamily="@font/noto_sans_jp_bold"
             android:drawableLeft="@drawable/run_white"
             android:layout_marginRight="20dp"
             android:background="@drawable/exercise_kind_button_background"
             android:textColor="@color/white"
+            android:layout_gravity="center"
             android:paddingHorizontal="10dp"
             >
-        </Button>
+        </com.google.android.material.button.MaterialButton>
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/bt_riding"
             android:layout_width="120dp"
             android:layout_height="80dp"
             android:text="サイクリング"
+            android:layout_gravity="center"
             android:textColor="@color/white"
             android:drawableLeft="@drawable/cycle_white"
             android:fontFamily="@font/noto_sans_jp_bold"
-            android:textSize="12dp"
+            android:textSize="11dp"
             android:paddingHorizontal="10dp"
             android:background="@drawable/exercise_kind_button_background"
             >
-        </Button>
+        </com.google.android.material.button.MaterialButton>
 
     </LinearLayout>
 

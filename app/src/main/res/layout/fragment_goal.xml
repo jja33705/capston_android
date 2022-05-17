@@ -178,7 +178,7 @@
                     android:id="@+id/userGoalRunning"
                     android:layout_width="match_parent"
                     android:layout_weight="1"
-                    android:layout_height="250dp"
+                    android:layout_height="220dp"
                     android:layout_margin="20dp" />
 
                 <TextView
@@ -322,7 +322,7 @@
                     android:id="@+id/userGoalRiding"
                     android:layout_width="match_parent"
                     android:layout_weight="1"
-                    android:layout_height="250dp"
+                    android:layout_height="220dp"
                     android:layout_margin="20dp" />
 
 

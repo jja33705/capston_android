@@ -58,10 +58,10 @@ class GoalDialog(
          event = MyApplication.prefs.getString("eventType", "")
 
         if(event == "B"){
-            binding.title.hint = "자전거 목표 제목"
+            binding.title.hint = "サイクリング目標タイトル"
         }else {
 
-            binding.title.hint = "달리기 목표 제목"
+            binding.title.hint = "ランニング目標タイトル"
         }
         binding.btnStartDate.setOnClickListener {
             val datepickercalendar = Calendar.getInstance()
