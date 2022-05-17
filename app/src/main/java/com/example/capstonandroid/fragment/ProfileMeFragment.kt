@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.example.capstonandroid.R
+import com.example.capstonandroid.activity.BadgeActivity
 import com.example.capstonandroid.activity.EditProfileActivity
 import com.example.capstonandroid.activity.LoginActivity
 import com.example.capstonandroid.databinding.FragmentProfileMeBinding
@@ -347,6 +348,10 @@ class ProfileMeFragment : Fragment(){
 
         val loginActivity = Intent(requireContext(), LoginActivity::class.java)
 
+        binding.btnBadgeActivity.setOnClickListener{
+            val intent = Intent(activity, BadgeActivity::class.java)
+            startActivity(intent)
+        }
         binding.logout.setOnClickListener {
 
 
