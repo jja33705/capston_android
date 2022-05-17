@@ -203,6 +203,19 @@
                     android:textColor="@color/main_color"
                     android:textSize="13dp"></androidx.appcompat.widget.AppCompatButton>
 
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btn_badge_activity"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:layout_marginBottom="15dp"
+                    android:background="@drawable/button_edit_profile_background"
+                    android:fontFamily="@font/noto_sans_jp_regular"
+                    android:gravity="center"
+                    android:includeFontPadding="false"
+                    android:text="バッジリスト"
+                    android:textColor="@color/main_color"
+                    android:textSize="13dp"></androidx.appcompat.widget.AppCompatButton>
+
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
