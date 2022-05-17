@@ -351,6 +351,7 @@ class ProfileMeFragment : Fragment(){
         binding.btnBadgeActivity.setOnClickListener{
             val intent = Intent(requireContext(), BadgeActivity::class.java)
             startActivity(intent)
+            true
         }
         binding.logout.setOnClickListener {
 
