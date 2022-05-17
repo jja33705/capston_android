@@ -214,7 +214,7 @@ class PostActivity : AppCompatActivity() {
                     viewPager_idol.adapter = ViewPagerAdapter(getIdolList()) // 어댑터 생성
                     viewPager_idol.orientation = ViewPager2.ORIENTATION_HORIZONTAL // 방향을 가로로
                     viewPager_idol.setPageTransformer(ZoomOutPageTransformer()) // 애니메이션 적용
-
+                    binding.wormDotsIndicator.setViewPager2(viewPager_idol)
 //                    추가 사진이 있다면
                 }
                 println(mapImageUrl)

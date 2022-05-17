@@ -27,7 +27,7 @@ class ViewPagerAdapter(idolList: ArrayList<String>) : RecyclerView.Adapter<ViewP
     println("너는 누구냐" + mapImageUrl)
     Glide.with(holder.itemView.getContext())
         .load(mapImageUrl)
-        .override(1500,1500)
+        .override(1500,1300)
         .placeholder(R.drawable.post_picture_loading)
         .error(R.drawable.post_picture_loading)
         .fallback(R.drawable.post_picture_loading)

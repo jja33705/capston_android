@@ -112,6 +112,8 @@ dependencies {
 
     implementation 'de.hdodenhof:circleimageview:3.1.0'
 
+//  뷰페이저
     implementation 'androidx.viewpager2:viewpager2:1.0.0-alpha01'
-
+//   밑에 아이콘 등장
+    implementation("com.tbuonomo:dotsindicator:4.3")
 }
