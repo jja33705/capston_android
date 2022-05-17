@@ -46,7 +46,7 @@ class BadgeActivity : AppCompatActivity() {
                 if (response.isSuccessful) {
 
 
-                    if (response.body()!!.Badges.first_exercise == 1) {
+                    if (response.body()?.Badges?.first_exercise == 1) {
                         binding.startExer.setImageResource(R.drawable.start_exer)
                     }
 //                    if (response.body()!!.Badges.altitude == true) {
@@ -58,31 +58,31 @@ class BadgeActivity : AppCompatActivity() {
 //                    if (response.body()!!.Badges.altitude3 == true) {
 //                        binding.altitude1.setImageResource(R.drawable.altitude3)
 //                    }
-                    if (response.body()!!.Badges.bike_distance == 1) {
+                    if (response.body()?.Badges?.bike_distance == 1) {
                         binding.bike1.setImageResource(R.drawable.bike1)
                     }
-                    if (response.body()!!.Badges.bike_distance2 == 1) {
+                    if (response.body()?.Badges?.bike_distance2 == 1) {
                         binding.bike2.setImageResource(R.drawable.bike2)
                     }
-                    if (response.body()!!.Badges.bike_distance3 == 1) {
+                    if (response.body()?.Badges?.bike_distance3 == 1) {
                         binding.bike3.setImageResource(R.drawable.bike3)
                     }
-                    if (response.body()!!.Badges.run_distance == 1) {
+                    if (response.body()?.Badges?.run_distance == 1) {
                         binding.bike1.setImageResource(R.drawable.run1)
                     }
-                    if (response.body()!!.Badges.run_distance2 == 1) {
+                    if (response.body()?.Badges?.run_distance2 == 1) {
                         binding.bike2.setImageResource(R.drawable.run2)
                     }
-                    if (response.body()!!.Badges.run_distance3 == 1) {
+                    if (response.body()?.Badges?.run_distance3 == 1) {
                         binding.bike3.setImageResource(R.drawable.run3)
                     }
-                    if (response.body()!!.Badges.make_track == 1) {
+                    if (response.body()?.Badges?.make_track == 1) {
                         binding.bike1.setImageResource(R.drawable.track1)
                     }
-                    if (response.body()!!.Badges.make_track2 == 1) {
+                    if (response.body()?.Badges?.make_track2 == 1) {
                         binding.bike2.setImageResource(R.drawable.track2)
                     }
-                    if (response.body()!!.Badges.make_track3 == 1) {
+                    if (response.body()?.Badges?.make_track3 == 1) {
                         binding.bike3.setImageResource(R.drawable.track3)
                     }
                 }
