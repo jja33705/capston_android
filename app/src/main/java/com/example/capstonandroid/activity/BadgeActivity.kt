@@ -46,7 +46,7 @@ class BadgeActivity : AppCompatActivity() {
                 if (response.isSuccessful) {
 
 
-                    if (response.body()?.Badges?.first_exercise == 1) {
+                    if (response.body()?.Badges?.first_exercise == 0) {
                         binding.startExer.setImageResource(R.drawable.start_exer)
                     }
 //                    if (response.body()!!.Badges.altitude == true) {

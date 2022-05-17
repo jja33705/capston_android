@@ -16,7 +16,6 @@
         android:padding="10dp">
         <ImageView
             android:id="@+id/start_exer"
-            android:src="@drawable/start_exer"
             android:layout_weight="1"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
