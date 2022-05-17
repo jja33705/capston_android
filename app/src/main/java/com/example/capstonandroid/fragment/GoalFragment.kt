@@ -148,7 +148,7 @@ class GoalFragment : Fragment() {
                 }
 //              라이딩 정보가 없을떄?
                 else if(user_riding==0.0){
-                    entries.add(PieEntry(user_running.toFloat(),"달리기"))
+                    entries.add(PieEntry(user_running.toFloat(),"ランニング"))
 
                     val colorsItems = ArrayList<Int>()
                     colorsItems.add(ColorTemplate.rgb("#6fcdcd"))
@@ -177,13 +177,13 @@ class GoalFragment : Fragment() {
 
 //              러닝 정보가 없을때..
                 }else if(user_running==0.0){
-                    entries.add(PieEntry(user_riding.toFloat(),"자전거"))
+                    entries.add(PieEntry(user_riding.toFloat(),"サイクリング"))
 
                     val colorsItems = ArrayList<Int>()
                     colorsItems.add(ColorTemplate.rgb("#5db5ef"))
                     colorsItems.add(ColorTemplate.getHoloBlue())
 
-                    val pieDataSet = PieDataSet(entries,"")
+                    val pieDataSet = PieDataSet(entries,"サイクリング")
                     pieDataSet.apply {
                         colors = colorsItems
                         valueTextColor = Color.BLACK
@@ -195,7 +195,7 @@ class GoalFragment : Fragment() {
                         data = pieData
                         description.isEnabled = false
                         isRotationEnabled = false
-                        centerText = "운동 비율"
+                        centerText = "運動割合"
                         setCenterTextSize(14f)
                         setEntryLabelColor(Color.BLACK)
 
@@ -207,8 +207,8 @@ class GoalFragment : Fragment() {
 //              다 있을때 !
                 else {
 
-                    entries.add(PieEntry(user_riding.toFloat(), "자전거"))
-                    entries.add(PieEntry(user_running.toFloat(), "달리기"))
+                    entries.add(PieEntry(user_riding.toFloat(), "サイクリング"))
+                    entries.add(PieEntry(user_running.toFloat(), "ランニング"))
 //
 //                    entries.add(PieEntry(80f, "자전거"))
 //                    entries.add(PieEntry(20f, "달리기"))
@@ -229,7 +229,7 @@ class GoalFragment : Fragment() {
                         data = pieData
                         description.isEnabled = false
                         isRotationEnabled = false
-                        centerText = "운동 비율"
+                        centerText = "運動割合"
                         setCenterTextSize(14f)
                         setEntryLabelColor(Color.BLACK)
 
@@ -420,13 +420,13 @@ class GoalFragment : Fragment() {
 //
 //                println(date.format(formatter).toString())
                 binding.RunningTitle.setText(user_goal_running_title)
-                binding.RunningGoal.setText("목표 거리 : "+user_goal_running_Goal.toString()+"km")
-                binding.RunningStartDate.setText("시작 : "+user_goal_running_StartDate)
-                binding.RunningEndDate.setText("종료 : "+user_goal_running_EndDate)
+                binding.RunningGoal.setText("目標距離 : "+user_goal_running_Goal.toString()+"km")
+                binding.RunningStartDate.setText("スタート日 : "+user_goal_running_StartDate)
+                binding.RunningEndDate.setText("締め切り : "+user_goal_running_EndDate)
 
 
-                entries2.add(PieEntry(user_goal_running.toFloat(),"달리기"))
-                entries2.add(PieEntry(100-user_goal_running.toFloat(),"남은 목표"))
+                entries2.add(PieEntry(user_goal_running.toFloat(),"ランニング"))
+                entries2.add(PieEntry(100-user_goal_running.toFloat(),"目標まで"))
                 val colorsItems2 = ArrayList<Int>()
                 colorsItems2.add(ColorTemplate.rgb("#6fcdcd"))
                 colorsItems2.add(ColorTemplate.rgb("#dcdcdc"))
@@ -445,7 +445,7 @@ class GoalFragment : Fragment() {
                     data = pieData2
                     description.isEnabled = false
                     isRotationEnabled = false
-                    centerText = "달리기 목표"
+                    centerText = "ランニング"
                     setCenterTextSize(8f)
                     setEntryLabelColor(Color.BLACK)
                     maxAngle
@@ -474,8 +474,8 @@ class GoalFragment : Fragment() {
                     user_goal_riding_ID = response.body()!!.bike[0].id
 
                 }
-                entries3.add(PieEntry(user_goal_riding.toFloat(),"자전거"))
-                entries3.add(PieEntry(100-user_goal_riding.toFloat(),"남은 목표"))
+                entries3.add(PieEntry(user_goal_riding.toFloat(),"サイクリング"))
+                entries3.add(PieEntry(100-user_goal_riding.toFloat(),"目標まで"))
                 val colorsItems3 = ArrayList<Int>()
                 colorsItems3.add(ColorTemplate.rgb("#5db5ef"))
                 colorsItems3.add(ColorTemplate.rgb("#dcdcdc"))
@@ -493,7 +493,7 @@ class GoalFragment : Fragment() {
                     data = pieData3
                     description.isEnabled = false
                     isRotationEnabled = false
-                    centerText = "자전거 목표"
+                    centerText = "サイクリング"
                     setCenterTextSize(8f)
                     setEntryLabelColor(Color.BLACK)
 
@@ -502,9 +502,9 @@ class GoalFragment : Fragment() {
                     animate()
                 }
                 binding.RidingTitle.setText(user_goal_riding_title)
-                binding.RidingGoal.setText("목표 거리 : "+user_goal_riding_Goal.toString()+"km")
-                binding.RidingStartDate.setText("시작 : "+user_goal_riding_StartDate)
-                binding.RidingEndDate.setText("종료 : "+user_goal_riding_EndDate)
+                binding.RidingGoal.setText("目標距離 : "+user_goal_riding_Goal.toString()+"km")
+                binding.RidingStartDate.setText("スタート日 : "+user_goal_riding_StartDate)
+                binding.RidingEndDate.setText("締め切り : "+user_goal_riding_EndDate)
             }
 
             override fun onFailure(call: Call<UserGoalCheckResponse>, t: Throwable) {
@@ -526,7 +526,7 @@ class GoalFragment : Fragment() {
 
         binding.userGoalRiding.setOnLongClickListener{
 
-            val builder = AlertDialog.Builder(requireContext(),R.style.MaterialAlertDialog_MaterialComponents_Title_Icon)
+            val builder = AlertDialog.Builder(requireContext(),R.style.Widget_Design_BottomNavigationView)
             builder.setTitle("本当に削除しますか。")
                 .setPositiveButton("はい", DialogInterface.OnClickListener{ dialog,id->
                     supplementService.goalDelete(token,user_goal_riding_ID).enqueue(object : Callback<goalDeleteResponse> {
@@ -552,7 +552,7 @@ class GoalFragment : Fragment() {
             true
         }
         binding.userGoalRunning.setOnLongClickListener{
-            val builder = AlertDialog.Builder(requireContext(),R.style.MaterialAlertDialog_MaterialComponents_Title_Icon)
+            val builder = AlertDialog.Builder(requireContext(),R.style.Widget_Design_BottomNavigationView)
             builder.setTitle("本当に削除しますか。")
                 .setPositiveButton("はい", DialogInterface.OnClickListener{ dialog,id->
                     supplementService.goalDelete(token,user_goal_running_ID).enqueue(object : Callback<goalDeleteResponse> {

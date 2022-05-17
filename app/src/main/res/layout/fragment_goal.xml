@@ -45,7 +45,7 @@
                 android:layout_marginRight="10dp"
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
-                android:text="총 달린 거리"
+                android:text="走った距離"
                 android:textSize="22sp"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/noto_sans_jp_bold"
@@ -73,7 +73,7 @@
                 android:layout_marginRight="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="총 달린 시간"
+                android:text="走った時間"
                 android:textSize="22sp"
                 android:fontFamily="@font/noto_sans_jp_bold"
                 android:includeFontPadding="false">
@@ -100,7 +100,7 @@
                 android:layout_marginRight="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="총 소모 칼로리"
+                android:text="消費カロリー"
                 android:textSize="22sp"
                 android:fontFamily="@font/noto_sans_jp_bold"
                 android:includeFontPadding="false">
@@ -178,39 +178,48 @@
                     android:id="@+id/userGoalRunning"
                     android:layout_width="match_parent"
                     android:layout_weight="1"
-                    android:layout_height="220dp"
-                    android:layout_margin="20dp" />
+                    android:layout_height="200dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"/>
 
                 <TextView
-                    android:textSize="12sp"
+                    android:textSize="18sp"
                     android:id="@+id/RunningTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="제목"
+                    android:includeFontPadding="false"
+                    android:fontFamily="@font/noto_sans_jp_bold"
                     android:gravity="center">
                 </TextView>
                 <TextView
-                    android:textSize="12sp"
+                    android:textSize="16sp"
                     android:id="@+id/RunningGoal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:includeFontPadding="false"
+                    android:fontFamily="@font/noto_sans_jp_medium"
                     android:text="목표 : 10km"
                     android:gravity="center">
                 </TextView>
 
                 <TextView
-                    android:textSize="10sp"
+                    android:textSize="14sp"
                     android:id="@+id/RunningStartDate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/noto_sans_jp_light"
+                    android:includeFontPadding="false"
                     android:gravity="center"
                     android:text="시작일 : 2022-04-17"></TextView>
 
             <TextView
-                android:textSize="10sp"
+                android:textSize="14sp"
                 android:id="@+id/RunningEndDate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/noto_sans_jp_light"
+                android:includeFontPadding="false"
                 android:text="종료일 : 2022-04-23"
                 android:gravity="center">
             </TextView>
@@ -254,6 +263,7 @@
 
             </androidx.appcompat.widget.AppCompatButton>
         </LinearLayout>
+
 
         </androidx.cardview.widget.CardView>
 
@@ -322,39 +332,48 @@
                     android:id="@+id/userGoalRiding"
                     android:layout_width="match_parent"
                     android:layout_weight="1"
-                    android:layout_height="220dp"
-                    android:layout_margin="20dp" />
+                    android:layout_height="200dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp" />
 
 
                 <TextView
-                    android:textSize="12sp"
+                    android:textSize="18sp"
                     android:id="@+id/RidingTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:includeFontPadding="false"
+                    android:fontFamily="@font/noto_sans_jp_bold"
                     android:text="제목"
                     android:gravity="center">
                 </TextView>
                 <TextView
-                    android:textSize="10sp"
+                    android:textSize="16sp"
                     android:id="@+id/RidingGoal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="목표 : 10km"
+                    android:fontFamily="@font/noto_sans_jp_medium"
+                    android:includeFontPadding="false"
                     android:gravity="center">
                 </TextView>
                 <TextView
-                    android:textSize="10sp"
+                    android:textSize="14sp"
                     android:id="@+id/RidingStartDate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="시작일 : 2022-04-17"
+                    android:fontFamily="@font/noto_sans_jp_light"
+                    android:includeFontPadding="false"
                     android:gravity="center">
                 </TextView>
                 <TextView
-                    android:textSize="10sp"
+                    android:textSize="14sp"
                     android:id="@+id/RidingEndDate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/noto_sans_jp_light"
+                    android:includeFontPadding="false"
                     android:text="종료일 : 2022-04-23"
                     android:gravity="center">
                 </TextView>
