@@ -6,15 +6,15 @@
     android:layout_width="wrap_content"
     >
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/marker_icon_image"
         android:layout_width="25dp"
         android:layout_height="25dp"
-        android:src="@drawable/ic_my_location_marker"
+        android:src="@drawable/profile"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linear_layout"></ImageView>
+        app:layout_constraintTop_toBottomOf="@+id/linear_layout"></de.hdodenhof.circleimageview.CircleImageView>
 
         <LinearLayout
             android:id="@+id/linear_layout"
