@@ -148,7 +148,7 @@ interface BackendApi {
     suspend fun getUser(@Header("Authorization") token: String): Response<User>
 
     @GET("notification") // 알림 리스트
-    suspend fun getNotifications(@Header("Authorization") token: String, @Query("page") page: Int): Response<GetNotificationsResponse>
+    suspend fun getNotifications(@Header("Authorization") token: String): Response<GetNotificationsResponse>
 
     @DELETE("notification/delete/{notificationId}") // 알림 삭제
     suspend fun deleteNotification(@Header("Authorization") token: String, @Path("notificationId") notificationId: Int): Response<ResponseMessage>

@@ -27,9 +27,6 @@ class NotificationActivity : AppCompatActivity() {
     private lateinit var notificationRecyclerViewItemList: ArrayList<Notification?>
     private lateinit var notificationRecyclerViewAdapter: NotificationRecyclerViewAdapter
     private lateinit var notificationRecyclerView: RecyclerView
-    private var isLoading = false // 로딩 중인지
-    private var isNext = false // 다음 페이지 있는지
-    private var notificationPage = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,23 +39,6 @@ class NotificationActivity : AppCompatActivity() {
         initRetrofit()
 
         notificationRecyclerView = binding.recyclerViewNotification
-
-        // 스크롤 리스너 등록
-        notificationRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                println("스트롤 함 $isNext $isLoading ${(recyclerView.layoutManager as LinearLayoutManager?)!!.findLastCompletelyVisibleItemPosition()} ${notificationRecyclerViewItemList.size}")
-                if (isNext) {
-                    if (!isLoading) {
-                        if (!recyclerView.canScrollVertically(1)) { // 최하단 끝까지 스크롤 했는지 감지
-                            println("끝에 옴")
-                            getMoreNotifications()
-                            isLoading = true
-                        }
-                    }
-                }
-            }
-        })
 
         notificationRecyclerViewItemList = ArrayList()
         notificationRecyclerViewAdapter = NotificationRecyclerViewAdapter(notificationRecyclerViewItemList)
@@ -75,6 +55,9 @@ class NotificationActivity : AppCompatActivity() {
         notificationRecyclerViewAdapter.setOnProfileNotificationClickListener(object : NotificationRecyclerViewAdapter.OnClickProfileNotificationListener {
             override fun onItemClick(position: Int) {
                 println("profile 로 이동해야 함")
+                val intent = Intent(this@NotificationActivity, ProfileActivity::class.java)
+                intent.putExtra("userId", notificationRecyclerViewItemList[position]!!.target_mem_id)
+                startActivity(intent)
             }
         })
         notificationRecyclerViewAdapter.setOnClickAcceptFollowRequestListener(object : NotificationRecyclerViewAdapter.OnClickAcceptFollowRequestListener {
@@ -110,63 +93,18 @@ class NotificationActivity : AppCompatActivity() {
     private fun initRecyclerViewData() {
         CoroutineScope(Dispatchers.Main).launch {
             // 초기화
-            notificationPage = 1
-            isNext = false
-            isLoading = false
             notificationRecyclerViewItemList.clear()
 
             // 초기값 받아옴
             var token = "Bearer " + getSharedPreferences("other", Context.MODE_PRIVATE).getString("TOKEN","")
             println("홈 프레그먼트$token")
-            val getNotificationsResponse = supplementService.getNotifications(token, notificationPage)
+            val getNotificationsResponse = supplementService.getNotifications(token)
             if (getNotificationsResponse.isSuccessful) {
-                if (getNotificationsResponse.body()!!.total == 0) {
-                    isNext = false
-                } else {
-                    val notificationList = getNotificationsResponse.body()!!.data
-                    for (notification in notificationList) {
+                if (getNotificationsResponse.body()!!.isNotEmpty()) {
+                    for (notification in getNotificationsResponse.body()!!) {
                         notificationRecyclerViewItemList.add(notification)
                     }
                     notificationRecyclerViewAdapter.notifyDataSetChanged()
-                    if (getNotificationsResponse.body()!!.next_page_url != null) {
-                        notificationPage += 1
-                        isNext = true
-                    } else {
-                        isNext = false
-                    }
-                }
-            }
-        }
-    }
-
-    private fun getMoreNotifications() {
-        val runnable = Runnable {
-            notificationRecyclerViewItemList.add(null)
-            notificationRecyclerViewAdapter.notifyItemInserted(notificationRecyclerViewItemList.size - 1)
-        }
-        notificationRecyclerView.post(runnable)
-
-        CoroutineScope(Dispatchers.Main).launch {
-            delay(2000)
-
-            notificationRecyclerViewItemList.removeAt(notificationRecyclerViewItemList.size - 1)
-            notificationRecyclerViewAdapter.notifyItemRemoved(notificationRecyclerViewItemList.size)
-
-            val token = "Bearer " + getSharedPreferences("other", Context.MODE_PRIVATE).getString("TOKEN", "")!!
-            val getNotificationsResponse = supplementService.getNotifications(token, notificationPage)
-
-            if (getNotificationsResponse.isSuccessful) {
-                val notificationList = getNotificationsResponse.body()!!.data
-                for (notification in notificationList) {
-                    notificationRecyclerViewItemList.add(notification)
-                }
-                notificationRecyclerViewAdapter.notifyItemRangeInserted((notificationPage - 1) * getNotificationsResponse.body()!!.per_page, getNotificationsResponse.body()!!.to)
-                isLoading = false
-                if (getNotificationsResponse.body()!!.next_page_url != null) {
-                    notificationPage += 1
-                    isNext = true
-                } else {
-                    isNext = false
                 }
             }
         }
