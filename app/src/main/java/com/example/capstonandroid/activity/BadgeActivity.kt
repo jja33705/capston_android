@@ -34,6 +34,7 @@ class BadgeActivity : AppCompatActivity() {
 
         initRetrofit()
 
+        val intent = intent
 
         var token = "Bearer " + getSharedPreferences("other", MODE_PRIVATE).getString("TOKEN", "")
 
