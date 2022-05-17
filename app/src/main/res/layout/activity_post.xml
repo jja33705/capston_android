@@ -179,29 +179,29 @@
                                 android:id="@+id/time"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:fontFamily="@font/noto_sans_jp_medium"
+                                android:fontFamily="@font/noto_sans_jp_bold"
                                 android:includeFontPadding="false"
                                 android:text="시간 : "
-                                android:textSize="16sp"></TextView>
+                                android:textSize="17sp"></TextView>
 
                             <TextView
                                 android:layout_marginBottom="5dp"
                                 android:id="@+id/calorie"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:fontFamily="@font/noto_sans_jp_medium"
+                                android:fontFamily="@font/noto_sans_jp_bold"
                                 android:includeFontPadding="false"
                                 android:text="칼로리 : "
-                                android:textSize="16sp"></TextView>
+                                android:textSize="17sp"></TextView>
 
                             <TextView
                                 android:id="@+id/kind"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:fontFamily="@font/noto_sans_jp_medium"
+                                android:fontFamily="@font/noto_sans_jp_bold"
                                 android:includeFontPadding="false"
                                 android:text="종류 : "
-                                android:textSize="16sp"></TextView>
+                                android:textSize="17sp"></TextView>
                         </LinearLayout>
 
                         <LinearLayout
@@ -218,10 +218,10 @@
                                 android:id="@+id/average_speed"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:fontFamily="@font/noto_sans_jp_medium"
+                                android:fontFamily="@font/noto_sans_jp_bold"
                                 android:includeFontPadding="false"
                                 android:text="평균 속도 : "
-                                android:textSize="16sp">
+                                android:textSize="17sp">
 
                             </TextView>
 
@@ -230,19 +230,19 @@
                                 android:layout_marginBottom="5dp"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:fontFamily="@font/noto_sans_jp_medium"
+                                android:fontFamily="@font/noto_sans_jp_bold"
                                 android:includeFontPadding="false"
                                 android:text="고도 : "
-                                android:textSize="16sp"></TextView>
+                                android:textSize="17sp"></TextView>
 
                             <TextView
                                 android:id="@+id/distance"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:fontFamily="@font/noto_sans_jp_medium"
+                                android:fontFamily="@font/noto_sans_jp_bold"
                                 android:includeFontPadding="false"
                                 android:text="거리 : "
-                                android:textSize="16sp"></TextView>
+                                android:textSize="17sp"></TextView>
 
                         </LinearLayout>
 

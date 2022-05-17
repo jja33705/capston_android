@@ -34,7 +34,7 @@
 
         <LinearLayout
             android:layout_margin="10dp"
-            android:layout_width="140dp"
+            android:layout_width="160dp"
             android:layout_height="match_parent"
             android:layout_gravity="right"
             android:gravity="center"
@@ -46,7 +46,7 @@
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:text="총 달린 거리"
-                android:textSize="18sp"
+                android:textSize="22sp"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/noto_sans_jp_bold"
                 android:includeFontPadding="false">
@@ -60,7 +60,7 @@
                 android:layout_width="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:text="총 달린 거리"
-                android:textSize="13sp"
+                android:textSize="18sp"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/noto_sans_jp_regular"
                 android:includeFontPadding="false">
@@ -74,7 +74,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="총 달린 시간"
-                android:textSize="18sp"
+                android:textSize="22sp"
                 android:fontFamily="@font/noto_sans_jp_bold"
                 android:includeFontPadding="false">
             </TextView>
@@ -86,7 +86,7 @@
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:text="총 소모 칼로리"
-                android:textSize="13sp"
+                android:textSize="18sp"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:fontFamily="@font/noto_sans_jp_regular"
@@ -101,7 +101,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="총 소모 칼로리"
-                android:textSize="18sp"
+                android:textSize="22sp"
                 android:fontFamily="@font/noto_sans_jp_bold"
                 android:includeFontPadding="false">
             </TextView>
@@ -112,7 +112,7 @@
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:text="총 달리기 거리"
-                android:textSize="13sp"
+                android:textSize="18sp"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/noto_sans_jp_regular"
                 android:includeFontPadding="false">
