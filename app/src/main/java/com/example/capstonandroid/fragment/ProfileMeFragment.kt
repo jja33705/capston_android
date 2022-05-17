@@ -349,7 +349,7 @@ class ProfileMeFragment : Fragment(){
         val loginActivity = Intent(requireContext(), LoginActivity::class.java)
 
         binding.btnBadgeActivity.setOnClickListener{
-            val intent = Intent(activity, BadgeActivity::class.java)
+            val intent = Intent(requireContext(), BadgeActivity::class.java)
             startActivity(intent)
         }
         binding.logout.setOnClickListener {
