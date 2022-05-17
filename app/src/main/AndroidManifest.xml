@@ -21,7 +21,7 @@
         android:theme="@style/Theme.CapstonAndroid"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".BadgeActivity"
+            android:name=".activity.BadgeActivity"
             android:exported="false" />
         <activity
             android:name=".activity.EditProfileActivity"
