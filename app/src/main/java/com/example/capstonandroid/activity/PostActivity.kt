@@ -181,7 +181,7 @@ class PostActivity : AppCompatActivity() {
                     binding.viewPagerIdol.visibility = View.GONE
 
 
-                    val defaultImage = R.drawable.map
+                    val defaultImage = R.drawable.post_picture_loading
                     Glide.with(this@PostActivity)
                         .load(mapImageUrl)
                         .placeholder(defaultImage)
@@ -210,6 +210,7 @@ class PostActivity : AppCompatActivity() {
 
                     val viewPager_idol : ViewPager2 = findViewById(R.id.viewPager_idol)
 
+                    viewPager_idol.offscreenPageLimit = 5 // 몇 개의 페이지를 미리 로드 해둘것인지
                     viewPager_idol.adapter = ViewPagerAdapter(getIdolList()) // 어댑터 생성
                     viewPager_idol.orientation = ViewPager2.ORIENTATION_HORIZONTAL // 방향을 가로로
                     viewPager_idol.setPageTransformer(ZoomOutPageTransformer()) // 애니메이션 적용
