@@ -179,7 +179,7 @@ class PostActivity : AppCompatActivity() {
 
                     binding.imageViewMapImage.visibility = View.VISIBLE
                     binding.viewPagerIdol.visibility = View.GONE
-
+                    binding.wormDotsIndicator.visibility =View.GONE
 
                     val defaultImage = R.drawable.post_picture_loading
                     Glide.with(this@PostActivity)
