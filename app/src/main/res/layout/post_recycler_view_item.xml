@@ -124,7 +124,7 @@
                     android:layout_width="wrap_content"
                     android:includeFontPadding="false"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="top"
+                    android:layout_gravity="center"
                     android:gravity="center"
                     android:text="like_num"
                     android:fontFamily="@font/noto_sans_jp_bold"
