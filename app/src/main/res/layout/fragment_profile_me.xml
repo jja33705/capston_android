@@ -56,40 +56,60 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
+
                         android:layout_marginLeft="20dp"
-                        android:orientation="vertical">
+                        android:orientation="horizontal">
 
-                        <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/tv_name"
+                        <LinearLayout
+                            android:layout_weight="1"
+                            android:layout_gravity="center"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:fontFamily="@font/noto_sans_jp_bold"
-                            android:includeFontPadding="false"
-                            android:text="사토시"
-                            android:textColor="@color/black"
-                            android:textSize="22sp"></com.google.android.material.textview.MaterialTextView>
+                            android:orientation="vertical">
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/tv_name"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:fontFamily="@font/noto_sans_jp_bold"
+                                android:includeFontPadding="false"
+                                android:text="사토시"
+                                android:textColor="@color/black"
+                                android:textSize="22sp"></com.google.android.material.textview.MaterialTextView>
 
-                        <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/tv_introduce"
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/tv_introduce"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:fontFamily="@font/noto_sans_jp_medium"
+                                android:includeFontPadding="false"
+                                android:text="나는 나다"
+                                android:textSize="15sp"></com.google.android.material.textview.MaterialTextView>
+
+                            <TextView
+                                android:id="@+id/tv_location"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:fontFamily="@font/noto_sans_jp_light"
+                                android:includeFontPadding="false"
+                                android:text="대구"
+                                android:textSize="12sp"></TextView>
+
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_weight="1.3"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:fontFamily="@font/noto_sans_jp_medium"
-                            android:includeFontPadding="false"
-                            android:text="나는 나다"
-                            android:textSize="15sp"></com.google.android.material.textview.MaterialTextView>
+                            android:layout_height="wrap_content">
 
-                        <TextView
-                            android:id="@+id/tv_location"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:fontFamily="@font/noto_sans_jp_light"
-                            android:includeFontPadding="false"
-                            android:text="대구"
-                            android:textSize="12sp"></TextView>
-
+                            <ImageView
+                                android:id="@+id/badge_image"
+                                android:visibility="gone"
+                                android:src="@drawable/start_exer"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"></ImageView>
+                        </LinearLayout>
                     </LinearLayout>
 
 
@@ -194,6 +214,7 @@
                     android:id="@+id/btn_edit_profile"
                     android:layout_width="match_parent"
                     android:layout_height="30dp"
+                    android:visibility="gone"
                     android:layout_marginBottom="15dp"
                     android:background="@drawable/button_edit_profile_background"
                     android:fontFamily="@font/noto_sans_jp_regular"
@@ -201,7 +222,6 @@
                     android:includeFontPadding="false"
                     android:text="プロフィールを編集"
                     android:textColor="@color/main_color"
-                    android:visibility="gone"
                     android:textSize="13dp"></androidx.appcompat.widget.AppCompatButton>
 
                 <androidx.appcompat.widget.AppCompatButton

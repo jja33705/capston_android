@@ -10,7 +10,6 @@ import com.example.capstonandroid.network.dto.GetTracksResponse
 import com.example.capstonandroid.network.dto.Track
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import retrofit2.Callback
 import retrofit2.Response
 
 // 사용할 api 목록 정의하는 곳
@@ -103,6 +102,9 @@ interface BackendApi {
     @GET("badge")
     fun getBadges(@Header("Authorization") token : String) : Call<Int>
 
+
+    @PUT("profileBadge")
+    suspend fun putBadge(@Header("Authorization") token: String,@Query("badge") badge: String): Response<PutBadgeResponse>
 
 //  재현 코드
 //    @GET("test") // 보낼 url

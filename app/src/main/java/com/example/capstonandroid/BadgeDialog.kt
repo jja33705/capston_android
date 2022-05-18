@@ -8,6 +8,7 @@ import android.graphics.Color
 import android.graphics.Color.rgb
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import com.example.capstonandroid.databinding.BadgeDialogBinding
 import com.example.capstonandroid.databinding.GoalAlertDialogBinding
 import com.example.capstonandroid.network.RetrofitClient
@@ -17,6 +18,7 @@ import com.example.capstonandroid.network.dto.GoalResponse
 import com.example.capstonandroid.network.dto.LoginUserResponse
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
@@ -39,7 +41,7 @@ class BadgeDialog(
 
     private lateinit var binding: BadgeDialogBinding
 
-
+    private var badge : String = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // 만들어놓은 dialog_profile.xml 뷰를 띄운다.
@@ -76,6 +78,33 @@ class BadgeDialog(
         var token = "Bearer "+MyApplication.prefs.getString("TOKEN", "")
 
         var badgeType = MyApplication.prefs.getString("badgeType", "")
+        if(badgeType=="0"){
+            badge = "first_exercise"
+        }else if (badgeType=="1"){
+            badge = "altitude"
+        }else if (badgeType=="2"){
+            badge = "altitude2"
+        }else if (badgeType=="3"){
+            badge = "altitude3"
+        }else if (badgeType=="4"){
+            badge = "bike_distance"
+        }else if (badgeType=="5"){
+            badge = "bike_distance2"
+        }else if (badgeType=="6"){
+            badge = "bike_distance3"
+        }else if (badgeType=="7"){
+            badge = "run_distance"
+        }else if (badgeType=="8"){
+            badge = "run_distance2"
+        }else if (badgeType=="9"){
+            badge = "run_distance3"
+        }else if (badgeType=="10"){
+            badge = "make_track"
+        }else if (badgeType=="11"){
+            badge = "make_track"
+        }else if (badgeType=="12"){
+            badge = "make_track"
+        }
 
         supplementService.userGet(token).enqueue(object : Callback<LoginUserResponse> {
             override fun onResponse(
@@ -314,6 +343,16 @@ class BadgeDialog(
         binding.back.setOnClickListener {
             dismiss()
         }
+
+
+        binding.set.setOnClickListener {
+            CoroutineScope(Dispatchers.Main).launch {
+                val getMyPostsResponse = supplementService.putBadge(token, badge)
+            }
+            Toast.makeText(context,"バッジ設定ができました",Toast.LENGTH_SHORT).show()
+            dismiss()
+            }
+
     }
 
 
