@@ -100,6 +100,7 @@ class BadgeDialog(
                     binding.title.text = "新しい出発"
                     binding.content.text = "走りましょう！"
                     binding.number.visibility = View.GONE
+                    binding.badgeImage.setImageResource(R.drawable.start_exer)
                     if(btn_0==0){
                         binding.set.isEnabled = false
                         binding.set.text = "未取得"
