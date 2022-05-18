@@ -39,40 +39,35 @@
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:layout_gravity="center"
             android:orientation="horizontal">
-            <com.google.android.material.textview.MaterialTextView
+
+            <Button
                 android:id="@+id/btnStartDate"
-                android:background="@drawable/snslayout"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
+                android:layout_marginRight="10dp"
                 android:layout_weight="1"
                 android:layout_gravity="center"
-                android:textColor="@color/black"
                 android:gravity="center"
                 android:text="スタート日選択"
                 android:fontFamily="@font/noto_sans_jp_black"
-                android:textSize="15sp"
-                android:inputType="text"/>
+                android:textSize="10sp"/>
 
-            <com.google.android.material.textview.MaterialTextView
+            <Button
                 android:id="@+id/btnEndDate"
-                android:layout_width="match_parent"
-                android:background="@drawable/snslayout"
-                android:layout_height="40dp"
-                android:layout_marginLeft="30dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
                 android:layout_marginRight="30dp"
-                android:textColor="@color/black"
                 android:layout_weight="1"
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:fontFamily="@font/noto_sans_jp_black"
-                android:textSize="15sp"
-                android:text="締め切り選択"
-                android:inputType="text"/>
+                android:textSize="10sp"
+                android:text="締め切り選択"/>
 
         </LinearLayout>
 

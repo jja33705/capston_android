@@ -169,7 +169,7 @@ class GoalFragment : Fragment() {
                                 data = pieData
                                 description.isEnabled = false
                                 isRotationEnabled = false
-                                centerText = "운동 비율"
+                                centerText = "運動割合"
                                 setCenterTextSize(14f)
                                 setEntryLabelColor(Color.BLACK)
 
