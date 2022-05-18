@@ -44,6 +44,7 @@
             android:orientation="horizontal">
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/btnStartDate"
+                android:background="@drawable/snslayout"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginLeft="30dp"
@@ -52,7 +53,7 @@
                 android:layout_gravity="center"
                 android:textColor="@color/black"
                 android:gravity="center"
-                android:hint="スタート日選択"
+                android:text="スタート日選択"
                 android:fontFamily="@font/noto_sans_jp_black"
                 android:textSize="15sp"
                 android:inputType="text"/>
@@ -60,6 +61,7 @@
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/btnEndDate"
                 android:layout_width="match_parent"
+                android:background="@drawable/snslayout"
                 android:layout_height="40dp"
                 android:layout_marginLeft="30dp"
                 android:layout_marginRight="30dp"
@@ -69,7 +71,7 @@
                 android:gravity="center"
                 android:fontFamily="@font/noto_sans_jp_black"
                 android:textSize="15sp"
-                android:hint="締め切り選択"
+                android:text="締め切り選択"
                 android:inputType="text"/>
 
         </LinearLayout>

@@ -5,6 +5,7 @@ package com.example.capstonandroid.activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.example.capstonandroid.MyApplication
 import com.example.capstonandroid.databinding.ActivityLoginBinding
 import com.example.capstonandroid.network.dto.Login
 import com.example.capstonandroid.network.api.BackendApi

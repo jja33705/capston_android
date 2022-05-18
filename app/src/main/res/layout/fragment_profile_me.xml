@@ -201,6 +201,7 @@
                     android:includeFontPadding="false"
                     android:text="プロフィールを編集"
                     android:textColor="@color/main_color"
+                    android:visibility="gone"
                     android:textSize="13dp"></androidx.appcompat.widget.AppCompatButton>
 
                 <androidx.appcompat.widget.AppCompatButton

@@ -137,107 +137,114 @@ class GoalFragment : Fragment() {
 
 
                 val entries = ArrayList<PieEntry>()
-                    user_riding = response.body()!!.B
-                    user_running = response.body()!!.R
 
-                if(user_riding==0.0&&user_running==0.0){
-                    println("정보가 없어요~")
-                    binding.userExerciseChart.visibility = View.GONE
-                    binding.message3.visibility = View.VISIBLE
+                when (response.code()) {
+                    200 -> {
+                        user_riding = response.body()!!.B
+                        user_running = response.body()!!.R
 
-                }
+                        if(user_riding==0.0&&user_running==0.0){
+                            println("정보가 없어요~")
+                            binding.userExerciseChart.visibility = View.GONE
+                            binding.message3.visibility = View.VISIBLE
+
+                        }
 //              라이딩 정보가 없을떄?
-                else if(user_riding==0.0){
-                    entries.add(PieEntry(user_running.toFloat(),"ランニング"))
+                        else if(user_riding==0.0){
+                            entries.add(PieEntry(user_running.toFloat(),"ランニング"))
 
-                    val colorsItems = ArrayList<Int>()
-                    colorsItems.add(ColorTemplate.rgb("#6fcdcd"))
-                    colorsItems.add(ColorTemplate.getHoloBlue())
+                            val colorsItems = ArrayList<Int>()
+                            colorsItems.add(ColorTemplate.rgb("#6fcdcd"))
+                            colorsItems.add(ColorTemplate.getHoloBlue())
 
-                    val pieDataSet = PieDataSet(entries,"")
-                    pieDataSet.apply {
-                        colors = colorsItems
-                        valueTextColor = Color.BLACK
-                        valueTextSize = 14f
+                            val pieDataSet = PieDataSet(entries,"")
+                            pieDataSet.apply {
+                                colors = colorsItems
+                                valueTextColor = Color.BLACK
+                                valueTextSize = 14f
 
-                    }
-                    val pieData = PieData(pieDataSet)
-                    binding.userExerciseChart.apply {
-                        data = pieData
-                        description.isEnabled = false
-                        isRotationEnabled = false
-                        centerText = "운동 비율"
-                        setCenterTextSize(14f)
-                        setEntryLabelColor(Color.BLACK)
+                            }
+                            val pieData = PieData(pieDataSet)
+                            binding.userExerciseChart.apply {
+                                data = pieData
+                                description.isEnabled = false
+                                isRotationEnabled = false
+                                centerText = "운동 비율"
+                                setCenterTextSize(14f)
+                                setEntryLabelColor(Color.BLACK)
 
-                        setTouchEnabled(false) // 그래프 터치해도 아무 변화없게 막음
-                        animateY(1000,Easing.EaseInOutQuad)
-                        animate()
-                    }
+                                setTouchEnabled(false) // 그래프 터치해도 아무 변화없게 막음
+                                animateY(1000,Easing.EaseInOutQuad)
+                                animate()
+                            }
 
 //              러닝 정보가 없을때..
-                }else if(user_running==0.0){
-                    entries.add(PieEntry(user_riding.toFloat(),"サイクリング"))
+                        }else if(user_running==0.0){
+                            entries.add(PieEntry(user_riding.toFloat(),"サイクリング"))
 
-                    val colorsItems = ArrayList<Int>()
-                    colorsItems.add(ColorTemplate.rgb("#5db5ef"))
-                    colorsItems.add(ColorTemplate.getHoloBlue())
+                            val colorsItems = ArrayList<Int>()
+                            colorsItems.add(ColorTemplate.rgb("#5db5ef"))
+                            colorsItems.add(ColorTemplate.getHoloBlue())
 
-                    val pieDataSet = PieDataSet(entries,"サイクリング")
-                    pieDataSet.apply {
-                        colors = colorsItems
-                        valueTextColor = Color.BLACK
-                        valueTextSize = 14f
+                            val pieDataSet = PieDataSet(entries,"サイクリング")
+                            pieDataSet.apply {
+                                colors = colorsItems
+                                valueTextColor = Color.BLACK
+                                valueTextSize = 14f
 
-                    }
-                    val pieData = PieData(pieDataSet)
-                    binding.userExerciseChart.apply {
-                        data = pieData
-                        description.isEnabled = false
-                        isRotationEnabled = false
-                        centerText = "運動割合"
-                        setCenterTextSize(14f)
-                        setEntryLabelColor(Color.BLACK)
+                            }
+                            val pieData = PieData(pieDataSet)
+                            binding.userExerciseChart.apply {
+                                data = pieData
+                                description.isEnabled = false
+                                isRotationEnabled = false
+                                centerText = "運動割合"
+                                setCenterTextSize(14f)
+                                setEntryLabelColor(Color.BLACK)
 
-                        setTouchEnabled(false) // 그래프 터치해도 아무 변화없게 막음
-                        animateY(1000,Easing.EaseInOutQuad)
-                        animate()
-                    }
-                }
+                                setTouchEnabled(false) // 그래프 터치해도 아무 변화없게 막음
+                                animateY(1000,Easing.EaseInOutQuad)
+                                animate()
+                            }
+                        }
 //              다 있을때 !
-                else {
+                        else {
 
-                    entries.add(PieEntry(user_riding.toFloat(), "サイクリング"))
-                    entries.add(PieEntry(user_running.toFloat(), "ランニング"))
+                            entries.add(PieEntry(user_riding.toFloat(), "サイクリング"))
+                            entries.add(PieEntry(user_running.toFloat(), "ランニング"))
 //
 //                    entries.add(PieEntry(80f, "자전거"))
 //                    entries.add(PieEntry(20f, "달리기"))
-                    val colorsItems = ArrayList<Int>()
-                    colorsItems.add(ColorTemplate.rgb("#5db5ef"))
-                    colorsItems.add(ColorTemplate.rgb("#6fcdcd"))
-                    colorsItems.add(ColorTemplate.getHoloBlue())
+                            val colorsItems = ArrayList<Int>()
+                            colorsItems.add(ColorTemplate.rgb("#5db5ef"))
+                            colorsItems.add(ColorTemplate.rgb("#6fcdcd"))
+                            colorsItems.add(ColorTemplate.getHoloBlue())
 
-                    val pieDataSet = PieDataSet(entries, "")
-                    pieDataSet.apply {
-                        colors = colorsItems
-                        valueTextColor = Color.BLACK
-                        valueTextSize = 14f
+                            val pieDataSet = PieDataSet(entries, "")
+                            pieDataSet.apply {
+                                colors = colorsItems
+                                valueTextColor = Color.BLACK
+                                valueTextSize = 14f
 
-                    }
-                    val pieData = PieData(pieDataSet)
-                    binding.userExerciseChart.apply {
-                        data = pieData
-                        description.isEnabled = false
-                        isRotationEnabled = false
-                        centerText = "運動割合"
-                        setCenterTextSize(14f)
-                        setEntryLabelColor(Color.BLACK)
+                            }
+                            val pieData = PieData(pieDataSet)
+                            binding.userExerciseChart.apply {
+                                data = pieData
+                                description.isEnabled = false
+                                isRotationEnabled = false
+                                centerText = "運動割合"
+                                setCenterTextSize(14f)
+                                setEntryLabelColor(Color.BLACK)
 
-                        setTouchEnabled(false) // 그래프 터치해도 아무 변화없게 막음
-                        animateY(1000, Easing.EaseInOutQuad)
-                        animate()
+                                setTouchEnabled(false) // 그래프 터치해도 아무 변화없게 막음
+                                animateY(1000, Easing.EaseInOutQuad)
+                                animate()
+                            }
+                        }
                     }
                 }
+
+
             }
             override fun onFailure(call: Call<UserExerciseRateResponse>, t: Throwable) {
 //                TODO("Not yet implemented")
@@ -269,13 +276,25 @@ class GoalFragment : Fragment() {
             var totalTimeResponse = supplementService.totalTime(token)
 
             if(totalTimeResponse.isSuccessful){
-                totalTime = totalTimeResponse.body()!!.toDouble()
-            }
+
+                when (distanceRunResponse.code()) {
+                    200 -> {
+                        totalTime = totalTimeResponse.body()!!.toDouble()
+                    }
+                    204 -> {
+                        totalTime = 0.0
+                    }
+                }
+                 }
 
             var totalCalorieResponse = supplementService.totalCalorie(token)
 
             if(totalCalorieResponse.isSuccessful){
-                totalCalorie = totalCalorieResponse.body()!!.toDouble()
+                when (distanceRunResponse.code()) {
+                    200 -> {
+                        totalCalorie = totalCalorieResponse.body()!!.toDouble()
+                    }
+                }
             }
 
 

@@ -70,6 +70,7 @@ class HomeFragment : Fragment()  {
             val getPostsResponse = supplementService.getPosts(token, postPage)
             if (getPostsResponse.isSuccessful) {
                 if (getPostsResponse.body()!!.total == 0) {
+                    binding.message.text = "リストがありません。"
                     isNext = false
                 } else {
                     val postList = getPostsResponse.body()!!.data

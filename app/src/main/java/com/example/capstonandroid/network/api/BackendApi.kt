@@ -10,6 +10,7 @@ import com.example.capstonandroid.network.dto.GetTracksResponse
 import com.example.capstonandroid.network.dto.Track
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import retrofit2.Callback
 import retrofit2.Response
 
 // 사용할 api 목록 정의하는 곳
@@ -91,6 +92,17 @@ interface BackendApi {
 
     @GET("record/totalCalorie") //총 칼로리
     suspend fun totalCalorie(@Header("Authorization")token : String) : Response<Double>
+
+
+    @GET("record/altitude") // 총 고도
+    suspend fun totalAltitude(@Header("Authorization")token : String) : Response<Double>
+
+    @GET("record/trackCount") // 총 작성한 트랙 갯수
+    fun  totalTrackCoutn(@Header("Authorization") token : String) : Call<Int>
+
+    @GET("badge")
+    fun getBadges(@Header("Authorization") token : String) : Call<Int>
+
 
 //  재현 코드
 //    @GET("test") // 보낼 url
