@@ -39,19 +39,6 @@ class BadgeDialog(
 
     private lateinit var binding: BadgeDialogBinding
 
-    private var btn_0 : Int = 0
-    private var btn_1 : Int = 0
-    private var btn_2 : Int = 0
-    private var btn_3 : Int = 0
-    private var btn_4 : Int = 0
-    private var btn_5 : Int = 0
-    private var btn_6 : Int = 0
-    private var btn_7 : Int = 0
-    private var btn_8 : Int = 0
-    private var btn_9 : Int = 0
-    private var btn_10 : Int = 0
-    private var btn_11 : Int = 0
-    private var btn_12 : Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,8 +46,8 @@ class BadgeDialog(
         binding = BadgeDialogBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initRetrofit()
-
         initViews()
+
     }
 
     private fun initViews() = with(binding) {
@@ -73,6 +60,19 @@ class BadgeDialog(
 
         // OK Button 클릭에 대한 Callback 처리. 이 부분은 상황에 따라 자유롭게!
 
+        var btn_0 : Int = 0
+       var btn_1 : Int = 0
+         var btn_2 : Int = 0
+        var btn_3 : Int = 0
+         var btn_4 : Int = 0
+         var btn_5 : Int = 0
+         var btn_6 : Int = 0
+         var btn_7 : Int = 0
+         var btn_8 : Int = 0
+        var btn_9 : Int = 0
+         var btn_10 : Int = 0
+         var btn_11 : Int = 0
+         var btn_12 : Int = 0
         var token = "Bearer "+MyApplication.prefs.getString("TOKEN", "")
 
         var badgeType = MyApplication.prefs.getString("badgeType", "")
@@ -96,16 +96,23 @@ class BadgeDialog(
                 btn_11 = response.body()!!.badges.make_track2
                 btn_12 = response.body()!!.badges.make_track3
 
-                if(badgeType=="0"){
-                    binding.title.text = "新しい出発"
-                    binding.content.text = "走りましょう！"
-                    binding.number.visibility = View.GONE
-                    if(btn_0==0){
-                        binding.set.isEnabled = false
-                        binding.set.text = "未取得"
-                    }
-                }
-                else if(badgeType=="1"||badgeType=="2"||badgeType=="3"){
+            }
+
+            override fun onFailure(call: Call<LoginUserResponse>, t: Throwable) {
+            }
+
+
+        })
+        if(badgeType=="0"){
+            binding.title.text = "新しい出発"
+            binding.content.text = "走りましょう！"
+            binding.number.visibility = View.GONE
+            if(btn_0==0){
+                binding.set.isEnabled = false
+                binding.set.text = "未取得"
+            }
+        }
+        else if(badgeType=="1"||badgeType=="2"||badgeType=="3"){
 //            supplementService.totalAltitude(token).enqueue(object : Callback<Int>{
 //                override fun onResponse(call: Call<Int>, response: Response<Int>) {
 //                    if (response.isSuccessful) {
@@ -115,169 +122,163 @@ class BadgeDialog(
 //                override fun onFailure(call: Call<Int>, t: Throwable) {
 //                }
 //            })
-                    var myAltitude : Double = 0.0
-                    CoroutineScope(Dispatchers.Main).launch {
-                        val altitudeResponse = supplementService.totalAltitude(token)
-                        if(altitudeResponse.isSuccessful){
-                            myAltitude = altitudeResponse.body()!!
-                            if(badgeType == "1"){
-                                binding.title.text = "高度初心者"
-                                binding.content.text = "どんどん慣れますよ"
-                                binding.number.text = "${myAltitude}m / 10000m"
-                                if(btn_1==0){
-                                    binding.set.isEnabled = false
-                                    binding.set.text = "未取得"
-                                }
-                            }else if (badgeType == "2"){
-                                binding.title.text = "高度中級者"
-                                binding.content.text = "結構慣れましたね！"
-                                binding.number.text = "${myAltitude}m / 20000m"
-                                if(btn_2==0){
-                                    binding.set.isEnabled = false
-                                    binding.set.text = "未取得"
-                                }
-                            }else if (badgeType == "3"){
-                                binding.title.text = "高度マスター"
-                                binding.content.text = "高度マスターになりました！"
-                                binding.number.text = "${myAltitude}m / 30000m"
-                                if(btn_3==0){
-                                    binding.set.isEnabled = false
-                                    binding.set.text = "未取得"
-                                }
-                            }
+            var myAltitude : Double = 0.0
+            CoroutineScope(Dispatchers.Main).launch {
+                val altitudeResponse = supplementService.totalAltitude(token)
+                if(altitudeResponse.isSuccessful){
+                    myAltitude = altitudeResponse.body()!!
+                    if(badgeType == "1"){
+                        binding.title.text = "高度初心者"
+                        binding.content.text = "どんどん慣れますよ"
+                        binding.number.text = "${myAltitude}m / 10000m"
+                        if(btn_1==0){
+                            binding.set.isEnabled = false
+                            binding.set.text = "未取得"
+                        }
+                    }else if (badgeType == "2"){
+                        binding.title.text = "高度中級者"
+                        binding.content.text = "結構慣れましたね！"
+                        binding.number.text = "${myAltitude}m / 20000m"
+                        if(btn_2==0){
+                            binding.set.isEnabled = false
+                            binding.set.text = "未取得"
+                        }
+                    }else if (badgeType == "3"){
+                        binding.title.text = "高度マスター"
+                        binding.content.text = "高度マスターになりました！"
+                        binding.number.text = "${myAltitude}m / 30000m"
+                        if(btn_3==0){
+                            binding.set.isEnabled = false
+                            binding.set.text = "未取得"
                         }
                     }
-
-
-
-                }else if (badgeType=="4"||badgeType=="5"||badgeType=="6"){
-                    CoroutineScope(Dispatchers.Main).launch {
-                        val distanceBikeResponse = supplementService.totalDistance(token, "B")
-                        if(distanceBikeResponse.isSuccessful){
-
-                            var myBikeDistance : Double = 0.0
-                            if(distanceBikeResponse.isSuccessful){
-                                when (distanceBikeResponse.code()) {
-                                    200 -> {
-                                        myBikeDistance = distanceBikeResponse.body()!!.distance.toDouble()
-                                    }
-                                }
-                            }
-                            if(badgeType == "4"){
-                                binding.title.text = "サイクリング初心者"
-                                binding.content.text = "どんどん慣れますよ"
-                                binding.number.text = "${myBikeDistance}km / 1000km"
-                                if(btn_4==0){
-                                    binding.set.isEnabled = false
-                                    binding.set.text = "未取得"
-                                }
-                            }else if (badgeType == "5"){
-                                binding.title.text = "サイクリング中級者"
-                                binding.content.text = "結構慣れましたね！"
-                                binding.number.text = "${myBikeDistance}km / 5000km"
-                                if(btn_5==0){
-                                    binding.set.isEnabled = false
-                                    binding.set.text = "未取得"
-                                }
-                            }else if (badgeType == "6"){
-                                binding.title.text = "サイクリングマスター"
-                                binding.content.text = "サイクリングマスターになりました！"
-                                binding.number.text = "${myBikeDistance}km / 10000km"
-                                if(btn_6==0){
-                                    binding.set.isEnabled = false
-                                    binding.set.text = "未取得"
-                                }
-                            }
-                        }
-                    }
-
-
-
-                }else if (badgeType=="7"||badgeType=="8"||badgeType=="9"){
-                    CoroutineScope(Dispatchers.Main).launch {
-                        val distanceRunResponse = supplementService.totalDistance(token, "R")
-                        if(distanceRunResponse.isSuccessful) {
-                            var myRunDistance : Double = 0.0
-
-                            when (distanceRunResponse.code()) {
-                                200 -> {
-                                    myRunDistance = distanceRunResponse.body()!!.distance
-                                }
-                            }
-                            if(badgeType == "7"){
-                                binding.title.text = "ランニング初心者"
-                                binding.content.text = "どんどん慣れますよ"
-                                binding.number.text = "${myRunDistance}km / 100km"
-                                if(btn_7==0){
-                                    binding.set.isEnabled = false
-                                    binding.set.text = "未取得"
-                                }
-                            }else if (badgeType == "8"){
-                                binding.title.text = "ランニング中級者"
-                                binding.content.text = "結構慣れましたね！"
-                                binding.number.text = "${myRunDistance}km / 500km"
-                                if(btn_8==0){
-                                    binding.set.isEnabled = false
-                                    binding.set.text = "未取得"
-                                }
-                            }else if (badgeType == "9"){
-                                binding.title.text = "ランニングマスター"
-                                binding.content.text = "ランニングマスターになりました！"
-                                binding.number.text = "${myRunDistance}km / 1000km"
-                                if(btn_9==0){
-                                    binding.set.isEnabled = false
-                                    binding.set.text = "未取得"
-                                }
-                            }
-                        }
-                    }
-
-
-                }else if (badgeType=="10"||badgeType=="11"||badgeType=="12"){
-                    supplementService.totalTrackCoutn(token).enqueue(object : Callback<Int> {
-                        @SuppressLint("ResourceAsColor")
-                        override fun onResponse(call: Call<Int>, response: Response<Int>) {
-                            if (response.isSuccessful){
-                                var myTrackCount : Int = 0
-                                myTrackCount = response.body()!!
-                                if(badgeType == "10"){
-                                    binding.title.text = "コースメーカ初心者"
-                                    binding.content.text = "どんどん慣れますよ"
-                                    binding.number.text = "${myTrackCount}回 / 3回"
-                                    if(btn_10==0){
-                                        binding.set.isEnabled = false
-                                        binding.set.text = "未取得"
-                                    }
-                                }else if (badgeType == "11"){
-                                    binding.title.text = "コースメーカ中級者"
-                                    binding.content.text = "結構慣れましたね！"
-                                    binding.number.text = "${myTrackCount}回 / 20回"
-                                    if(btn_11==0){
-                                        binding.set.isEnabled = false
-                                        binding.set.text = "未取得"
-                                    }
-                                }else if (badgeType == "12"){
-                                    binding.title.text = "コースメーカマスター"
-                                    binding.content.text = "コースメーカマスターになりました！"
-                                    binding.number.text = "${myTrackCount}回 / 50回"
-                                    if(btn_12==0){
-                                        binding.set.isEnabled = false
-                                        binding.set.text = "未取得"
-                                    }
-                                }
-                            }
-                        }
-                        override fun onFailure(call: Call<Int>, t: Throwable) {
-                        }
-                    })
-
                 }
             }
 
-            override fun onFailure(call: Call<LoginUserResponse>, t: Throwable) {
-            }
-        })
 
+
+        }else if (badgeType=="4"||badgeType=="5"||badgeType=="6"){
+            CoroutineScope(Dispatchers.Main).launch {
+                val distanceBikeResponse = supplementService.totalDistance(token, "B")
+                if(distanceBikeResponse.isSuccessful){
+
+                    var myBikeDistance : Double = 0.0
+                    if(distanceBikeResponse.isSuccessful){
+                        when (distanceBikeResponse.code()) {
+                            200 -> {
+                                myBikeDistance = distanceBikeResponse.body()!!.distance.toDouble()
+                            }
+                        }
+                    }
+                    if(badgeType == "4"){
+                        binding.title.text = "サイクリング初心者"
+                        binding.content.text = "どんどん慣れますよ"
+                        binding.number.text = "${myBikeDistance}km / 1000km"
+                        if(btn_4==0){
+                            binding.set.isEnabled = false
+                            binding.set.text = "未取得"
+                        }
+                    }else if (badgeType == "5"){
+                        binding.title.text = "サイクリング中級者"
+                        binding.content.text = "結構慣れましたね！"
+                        binding.number.text = "${myBikeDistance}km / 5000km"
+                        if(btn_5==0){
+                            binding.set.isEnabled = false
+                            binding.set.text = "未取得"
+                        }
+                    }else if (badgeType == "6"){
+                        binding.title.text = "サイクリングマスター"
+                        binding.content.text = "サイクリングマスターになりました！"
+                        binding.number.text = "${myBikeDistance}km / 10000km"
+                        if(btn_6==0){
+                            binding.set.isEnabled = false
+                            binding.set.text = "未取得"
+                        }
+                    }
+                }
+            }
+
+
+
+        }else if (badgeType=="7"||badgeType=="8"||badgeType=="9"){
+            CoroutineScope(Dispatchers.Main).launch {
+                val distanceRunResponse = supplementService.totalDistance(token, "R")
+                if(distanceRunResponse.isSuccessful) {
+                    var myRunDistance : Double = 0.0
+
+                    when (distanceRunResponse.code()) {
+                        200 -> {
+                            myRunDistance = distanceRunResponse.body()!!.distance
+                        }
+                    }
+                    if(badgeType == "7"){
+                        binding.title.text = "ランニング初心者"
+                        binding.content.text = "どんどん慣れますよ"
+                        binding.number.text = "${myRunDistance}km / 100km"
+                        if(btn_7==0){
+                            binding.set.isEnabled = false
+                            binding.set.text = "未取得"
+                        }
+                    }else if (badgeType == "8"){
+                        binding.title.text = "ランニング中級者"
+                        binding.content.text = "結構慣れましたね！"
+                        binding.number.text = "${myRunDistance}km / 500km"
+                        if(btn_8==0){
+                            binding.set.isEnabled = false
+                            binding.set.text = "未取得"
+                        }
+                    }else if (badgeType == "9"){
+                        binding.title.text = "ランニングマスター"
+                        binding.content.text = "ランニングマスターになりました！"
+                        binding.number.text = "${myRunDistance}km / 1000km"
+                        if(btn_9==0){
+                            binding.set.isEnabled = false
+                            binding.set.text = "未取得"
+                        }
+                    }
+                }
+            }
+
+
+        }else if (badgeType=="10"||badgeType=="11"||badgeType=="12"){
+            supplementService.totalTrackCoutn(token).enqueue(object : Callback<Int> {
+                @SuppressLint("ResourceAsColor")
+                override fun onResponse(call: Call<Int>, response: Response<Int>) {
+                    if (response.isSuccessful){
+                        var myTrackCount : Int = 0
+                        myTrackCount = response.body()!!
+                        if(badgeType == "10"){
+                            binding.title.text = "コースメーカ初心者"
+                            binding.content.text = "どんどん慣れますよ"
+                            binding.number.text = "${myTrackCount}回 / 3回"
+                            if(btn_10==0){
+                                binding.set.isEnabled = false
+                                binding.set.text = "未取得"
+                            }
+                        }else if (badgeType == "11"){
+                            binding.title.text = "コースメーカ中級者"
+                            binding.content.text = "結構慣れましたね！"
+                            binding.number.text = "${myTrackCount}回 / 20回"
+                            if(btn_11==0){
+                                binding.set.isEnabled = false
+                                binding.set.text = "未取得"
+                            }
+                        }else if (badgeType == "12"){
+                            binding.title.text = "コースメーカマスター"
+                            binding.content.text = "コースメーカマスターになりました！"
+                            binding.number.text = "${myTrackCount}回 / 50回"
+                            if(btn_12==0){
+                                binding.set.isEnabled = false
+                                binding.set.text = "未取得"
+                            }
+                        }
+                    }
+                }
+                override fun onFailure(call: Call<Int>, t: Throwable) {
+                }
+            })
+
+        }
 
 
 
