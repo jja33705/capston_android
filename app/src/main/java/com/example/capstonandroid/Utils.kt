@@ -29,7 +29,7 @@ class Utils {
 
         fun timeToStringText(time: Int): String {
             if (time == 0) {
-                return "아직 달리지 않았습니다"
+                return "0秒"
             } else if (time > 3600) {
                 val h = time / 3600
                 val m = time % 3600 / 60

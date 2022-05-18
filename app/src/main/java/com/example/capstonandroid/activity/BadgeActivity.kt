@@ -2,6 +2,10 @@ package com.example.capstonandroid.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
+import com.example.capstonandroid.BadgeDialog
+import com.example.capstonandroid.GoalDialog
+import com.example.capstonandroid.MyApplication
 import com.example.capstonandroid.R
 import com.example.capstonandroid.databinding.ActivityBadgeBinding
 import com.example.capstonandroid.databinding.ActivityPostBinding
@@ -26,6 +30,7 @@ class BadgeActivity : AppCompatActivity() {
     private var _binding: ActivityBadgeBinding? = null
     private val binding get() = _binding!!
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = ActivityBadgeBinding.inflate(layoutInflater)
@@ -38,6 +43,16 @@ class BadgeActivity : AppCompatActivity() {
 
         var token = "Bearer " + getSharedPreferences("other", MODE_PRIVATE).getString("TOKEN", "")
 
+
+        supplementService.getBadges(token).enqueue(object :Callback<Int>{
+            override fun onResponse(call: Call<Int>, response: Response<Int>) {
+                println("ok")
+            }
+            override fun onFailure(call: Call<Int>, t: Throwable) {
+            }
+        })
+
+
         supplementService.userGet(token).enqueue(object : Callback<LoginUserResponse> {
             override fun onResponse(
                 call: Call<LoginUserResponse>,
@@ -45,45 +60,48 @@ class BadgeActivity : AppCompatActivity() {
             ) {
                 if (response.isSuccessful) {
 
+                    println("userP " +response.body()!!.badges)
 
-                    if (response.body()?.Badges?.first_exercise == 1) {
+
+
+                    if (response.body()?.badges?.first_exercise == 1) {
                         binding.startExer.setImageResource(R.drawable.start_exer)
                     }
-//                    if (response.body()!!.Badges.altitude == true) {
-//                        binding.altitude1.setImageResource(R.drawable.altitude1)
-//                    }
-//                    if (response.body()!!.Badges.altitude2 == true) {
-//                        binding.altitude1.setImageResource(R.drawable.altitude2)
-//                    }
-//                    if (response.body()!!.Badges.altitude3 == true) {
-//                        binding.altitude1.setImageResource(R.drawable.altitude3)
-//                    }
-                    if (response.body()?.Badges?.bike_distance == 1) {
+                    if (response.body()?.badges?.altitude == 1) {
+                        binding.altitude1.setImageResource(R.drawable.altitude1)
+                    }
+                    if (response.body()?.badges?.altitude2 == 1) {
+                        binding.altitude1.setImageResource(R.drawable.altitude2)
+                    }
+                    if (response.body()?.badges?.altitude3 == 1) {
+                        binding.altitude1.setImageResource(R.drawable.altitude3)
+                    }
+                    if (response.body()?.badges?.bike_distance == 1) {
                         binding.bike1.setImageResource(R.drawable.bike1)
                     }
-                    if (response.body()?.Badges?.bike_distance2 == 1) {
+                    if (response.body()?.badges?.bike_distance2 == 1) {
                         binding.bike2.setImageResource(R.drawable.bike2)
                     }
-                    if (response.body()?.Badges?.bike_distance3 == 1) {
+                    if (response.body()?.badges?.bike_distance3 ==1) {
                         binding.bike3.setImageResource(R.drawable.bike3)
                     }
-                    if (response.body()?.Badges?.run_distance == 1) {
-                        binding.bike1.setImageResource(R.drawable.run1)
+                    if (response.body()?.badges?.run_distance == 1) {
+                        binding.running1.setImageResource(R.drawable.run1)
                     }
-                    if (response.body()?.Badges?.run_distance2 == 1) {
-                        binding.bike2.setImageResource(R.drawable.run2)
+                    if (response.body()?.badges?.run_distance2 == 1) {
+                        binding.running2.setImageResource(R.drawable.run2)
                     }
-                    if (response.body()?.Badges?.run_distance3 == 1) {
-                        binding.bike3.setImageResource(R.drawable.run3)
+                    if (response.body()?.badges?.run_distance3 == 1) {
+                        binding.running3.setImageResource(R.drawable.run3)
                     }
-                    if (response.body()?.Badges?.make_track == 1) {
-                        binding.bike1.setImageResource(R.drawable.track1)
+                    if (response.body()?.badges?.make_track == 1) {
+                        binding.track1.setImageResource(R.drawable.track1)
                     }
-                    if (response.body()?.Badges?.make_track2 == 1) {
-                        binding.bike2.setImageResource(R.drawable.track2)
+                    if (response.body()?.badges?.make_track2 ==1) {
+                        binding.track2.setImageResource(R.drawable.track2)
                     }
-                    if (response.body()?.Badges?.make_track3 == 1) {
-                        binding.bike3.setImageResource(R.drawable.track3)
+                    if (response.body()?.badges?.make_track3 == 1) {
+                        binding.track3.setImageResource(R.drawable.track3)
                     }
                 }
             }
@@ -92,9 +110,90 @@ class BadgeActivity : AppCompatActivity() {
             }
         })
 
+
+
+        binding.startExer.setOnClickListener{
+            MyApplication.prefs.setString("badgeType", "0")
+            MyApplication.prefs.setString("TOKEN",token)
+            showBadgeDialog()
         }
+        binding.altitude1.setOnClickListener{
+            MyApplication.prefs.setString("badgeType", "1")
+            MyApplication.prefs.setString("TOKEN",token)
+            showBadgeDialog()
+        }
+        binding.altitude2.setOnClickListener{
+
+            MyApplication.prefs.setString("badgeType", "2")
+            MyApplication.prefs.setString("TOKEN",token)
+            showBadgeDialog()
+        }
+        binding.altitude3.setOnClickListener {
 
 
+            MyApplication.prefs.setString("badgeType", "3")
+            MyApplication.prefs.setString("TOKEN",token)
+            showBadgeDialog()
+        }
+        binding.bike1.setOnClickListener {
+
+            MyApplication.prefs.setString("badgeType", "4")
+            MyApplication.prefs.setString("TOKEN",token)
+            showBadgeDialog()
+        }
+        binding.bike2.setOnClickListener {
+
+            MyApplication.prefs.setString("badgeType", "5")
+            MyApplication.prefs.setString("TOKEN",token)
+            showBadgeDialog()
+        }
+        binding.bike3.setOnClickListener {
+            MyApplication.prefs.setString("badgeType", "6")
+            MyApplication.prefs.setString("TOKEN",token)
+            showBadgeDialog()
+        }
+        binding.running1.setOnClickListener {
+            MyApplication.prefs.setString("badgeType", "7")
+            MyApplication.prefs.setString("TOKEN",token)
+
+            showBadgeDialog()
+        }
+        binding.running2.setOnClickListener {
+            MyApplication.prefs.setString("badgeType", "8")
+            MyApplication.prefs.setString("TOKEN",token)
+
+            showBadgeDialog()
+        }
+        binding.running3.setOnClickListener {
+            MyApplication.prefs.setString("badgeType", "9")
+            MyApplication.prefs.setString("TOKEN",token)
+
+            showBadgeDialog()
+        }
+        binding.track1.setOnClickListener {
+            MyApplication.prefs.setString("badgeType", "10")
+            MyApplication.prefs.setString("TOKEN",token)
+
+            showBadgeDialog()
+        }
+        binding.track2.setOnClickListener {
+            MyApplication.prefs.setString("badgeType", "11")
+            MyApplication.prefs.setString("TOKEN",token)
+
+            showBadgeDialog()
+        }
+        binding.track3.setOnClickListener {
+            MyApplication.prefs.setString("badgeType", "12")
+            MyApplication.prefs.setString("TOKEN",token)
+
+            showBadgeDialog()
+        }
+    }
+
+    private fun showBadgeDialog() {
+        BadgeDialog(this) {
+        }.show()
+    }
 
 
     private fun initRetrofit() {

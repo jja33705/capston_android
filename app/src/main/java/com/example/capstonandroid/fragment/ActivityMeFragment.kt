@@ -165,6 +165,7 @@ class ActivityMeFragment : Fragment() {
             val getPostsResponse = supplementService.getMyPosts(token, postPage)
             if (getPostsResponse.isSuccessful) {
                 if (getPostsResponse.body()!!.total == 0) {
+                    binding.message.text = "リストがありません"
                     isNext = false
                 } else {
                     val postList = getPostsResponse.body()!!.data

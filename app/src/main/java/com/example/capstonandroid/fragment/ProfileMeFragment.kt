@@ -313,7 +313,7 @@ class ProfileMeFragment : Fragment(){
                 var user_mmr = loginuserResponse!!.mmr
                 var location = loginuserResponse!!.location
                 var introduce = loginuserResponse.introduce
-
+                var badge_image = loginuserResponse.badge
                 binding.tvName.text = user_name
                 binding.tvFollower.text = user_followers.toString()
                 binding.tvFollowing.text = user_followings.toString()
@@ -322,7 +322,48 @@ class ProfileMeFragment : Fragment(){
                 binding.tvIntroduce.text = introduce
 
 
-                    if (loginuserResponse?.profile.equals(null)||loginuserResponse?.profile.equals("img")){
+                if (badge_image=="first_exercise"){
+                    binding.badgeImage.setImageResource(R.drawable.start_exer)
+                    binding.badgeImage.visibility = View.VISIBLE
+                }else if (badge_image=="altitude"){
+                    binding.badgeImage.setImageResource(R.drawable.altitude1)
+                    binding.badgeImage.visibility = View.VISIBLE
+                }else if (badge_image=="altitude2"){
+                    binding.badgeImage.setImageResource(R.drawable.altitude2)
+                    binding.badgeImage.visibility = View.VISIBLE
+                }else if (badge_image=="altitude3"){
+                    binding.badgeImage.setImageResource(R.drawable.altitude3)
+                    binding.badgeImage.visibility = View.VISIBLE
+                }else if (badge_image=="bike_distance"){
+                    binding.badgeImage.setImageResource(R.drawable.bike1)
+                    binding.badgeImage.visibility = View.VISIBLE
+                }else if (badge_image=="bike_distance2"){
+                    binding.badgeImage.setImageResource(R.drawable.bike2)
+                    binding.badgeImage.visibility = View.VISIBLE
+                }else if (badge_image=="bike_distance3"){
+                    binding.badgeImage.setImageResource(R.drawable.bike3)
+                    binding.badgeImage.visibility = View.VISIBLE
+                }else if (badge_image=="run_distance"){
+                    binding.badgeImage.setImageResource(R.drawable.run1)
+                    binding.badgeImage.visibility = View.VISIBLE
+                }else if (badge_image=="run_distance2"){
+                    binding.badgeImage.setImageResource(R.drawable.run2)
+                    binding.badgeImage.visibility = View.VISIBLE
+                }else if (badge_image=="run_distance3"){
+                    binding.badgeImage.setImageResource(R.drawable.run3)
+                    binding.badgeImage.visibility = View.VISIBLE
+                }else if (badge_image=="make_track"){
+                    binding.badgeImage.setImageResource(R.drawable.track1)
+                    binding.badgeImage.visibility = View.VISIBLE
+                }else if (badge_image=="make_track2"){
+                    binding.badgeImage.setImageResource(R.drawable.track2)
+                    binding.badgeImage.visibility = View.VISIBLE
+                }else if (badge_image=="make_track3"){
+                    binding.badgeImage.setImageResource(R.drawable.track3)
+                    binding.badgeImage.visibility = View.VISIBLE
+                }
+
+                if (loginuserResponse?.profile.equals(null)||loginuserResponse?.profile.equals("img")){
                     binding.tvProfileMePicture.setImageResource(R.drawable.main_profile)
                 }else {
 
@@ -339,6 +380,7 @@ class ProfileMeFragment : Fragment(){
                 }else if (user_mmr >= 200){
                     binding.medalLayout.setBackgroundResource(R.drawable.medal_gold)
                 }
+
 
             }
 

@@ -92,6 +92,20 @@ interface BackendApi {
     @GET("record/totalCalorie") //총 칼로리
     suspend fun totalCalorie(@Header("Authorization")token : String) : Response<Double>
 
+
+    @GET("record/altitude") // 총 고도
+    suspend fun totalAltitude(@Header("Authorization")token : String) : Response<Double>
+
+    @GET("record/trackCount") // 총 작성한 트랙 갯수
+    fun  totalTrackCoutn(@Header("Authorization") token : String) : Call<Int>
+
+    @GET("badge")
+    fun getBadges(@Header("Authorization") token : String) : Call<Int>
+
+
+    @PUT("profileBadge")
+    suspend fun putBadge(@Header("Authorization") token: String,@Query("badge") badge: String): Response<PutBadgeResponse>
+
 //  재현 코드
 //    @GET("test") // 보낼 url
 //    fun test(): Call<String>
