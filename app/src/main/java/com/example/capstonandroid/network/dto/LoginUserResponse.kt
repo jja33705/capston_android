@@ -17,4 +17,5 @@ data class LoginUserResponse(
     val updated_at: String,
     val weight: String,
     val badges : Badges,
+    val badge : String
 )

@@ -95,13 +95,13 @@ class BadgeActivity : AppCompatActivity() {
                         binding.running3.setImageResource(R.drawable.run3)
                     }
                     if (response.body()?.badges?.make_track == 1) {
-                        binding.bike1.setImageResource(R.drawable.track1)
+                        binding.track1.setImageResource(R.drawable.track1)
                     }
                     if (response.body()?.badges?.make_track2 ==1) {
-                        binding.bike2.setImageResource(R.drawable.track2)
+                        binding.track2.setImageResource(R.drawable.track2)
                     }
                     if (response.body()?.badges?.make_track3 == 1) {
-                        binding.bike3.setImageResource(R.drawable.track3)
+                        binding.track3.setImageResource(R.drawable.track3)
                     }
                 }
             }

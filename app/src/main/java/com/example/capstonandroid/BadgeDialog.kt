@@ -121,9 +121,6 @@ class BadgeDialog(
                                 binding.title.text = "高度初心者"
                                 binding.content.text = "どんどん慣れますよ"
                                 binding.number.text = "${myAltitude}m / 10000m"
-                                if(btn_1==0){
-                                    binding.set.visibility = View.GONE
-                                }
                             }else if (badgeType == "2"){
                                 binding.title.text = "高度中級者"
                                 binding.content.text = "結構慣れましたね！"
