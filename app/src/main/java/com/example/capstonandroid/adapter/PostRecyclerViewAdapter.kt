@@ -104,7 +104,7 @@ class PostRecyclerViewAdapter(postRecyclerViewItemList: ArrayList<Post?>) : Recy
 //                     yyyy-MM-dd HH:mm:ss z
 
             binding.tvCreatedAt.text = dateTime.format(formatter)
-            binding.tvLikeCount.text = "${postRecyclerViewItem.likes.size}"
+            binding.tvLikeCount.text = " ${postRecyclerViewItem.likes.size}"
 
             val defaultImage = R.drawable.map
             val defaultImage2 = R.drawable.profile
