@@ -100,21 +100,38 @@
                 android:scaleType="centerCrop">
             </ImageView>
 
-
-            <com.google.android.material.textview.MaterialTextView
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:id="@+id/tv_like_count"
-                android:layout_width="wrap_content"
-                android:includeFontPadding="false"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:text="like_num"
-                android:fontFamily="@font/noto_sans_jp_bold"
-                android:textColor="@color/black"
-                android:textSize="14sp"></com.google.android.material.textview.MaterialTextView>
+                android:layout_gravity="center"
+                android:layout_marginRight="20dp">
+
+
+                <ImageView
+
+                    android:layout_gravity="center"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/like_new2">
+
+                </ImageView>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_like_count"
+                    android:layout_width="wrap_content"
+                    android:includeFontPadding="false"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:gravity="center"
+                    android:text="like_num"
+                    android:fontFamily="@font/noto_sans_jp_bold"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"></com.google.android.material.textview.MaterialTextView>
+
+            </LinearLayout>
 
         </LinearLayout>
 
