@@ -182,13 +182,14 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
         myMarkerUserNameTextView = myMarkerIcon.findViewById(R.id.marker_user_name) as TextView
         myMarkerUserNameTextView.text = "나"
         val myMarkerIconImageView = myMarkerIcon.findViewById(R.id.marker_icon_image) as ImageView
-        myMarkerIconImageView.setImageResource(R.drawable.ic_my_location_marker)
+//        myMarkerIconImageView.setImageResource(R.drawable.ic_my_location_marker)
+
 
         opponentMarkerIcon = LayoutInflater.from(this).inflate(R.layout.user_icon, null)!!
         opponentMarkerIconTextView = opponentMarkerIcon.findViewById(R.id.marker_icon_speed) as TextView
         opponentMarkerUserNameTextView = opponentMarkerIcon.findViewById(R.id.marker_user_name) as TextView
         val opponentMarkerIconImageView = opponentMarkerIcon.findViewById(R.id.marker_icon_image) as ImageView
-        opponentMarkerIconImageView.setImageResource(R.drawable.ic_opponent_location_marker)
+//        opponentMarkerIconImageView.setImageResource(R.drawable.ic_opponent_location_marker)
 
         // 액티비티 이동 후 답을 받는 콜백
         val activityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->

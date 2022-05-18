@@ -26,7 +26,7 @@
         android:layout_marginTop="20dp"
         >
 
-        <com.google.android.material.button.MaterialButton
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/bt_running"
             android:layout_width="120dp"
             android:layout_height="80dp"
@@ -40,9 +40,9 @@
             android:layout_gravity="center"
             android:paddingHorizontal="10dp"
             >
-        </com.google.android.material.button.MaterialButton>
+        </androidx.appcompat.widget.AppCompatButton>
 
-        <com.google.android.material.button.MaterialButton
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/bt_riding"
             android:layout_width="120dp"
             android:layout_height="80dp"
@@ -55,7 +55,7 @@
             android:paddingHorizontal="10dp"
             android:background="@drawable/exercise_kind_button_background"
             >
-        </com.google.android.material.button.MaterialButton>
+        </androidx.appcompat.widget.AppCompatButton>
 
     </LinearLayout>
 
