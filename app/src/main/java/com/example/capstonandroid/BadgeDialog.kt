@@ -1,9 +1,11 @@
 package com.example.capstonandroid
 
+import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
+import android.graphics.Color.rgb
 import android.os.Bundle
 import android.view.View
 import com.example.capstonandroid.databinding.BadgeDialogBinding
@@ -233,6 +235,7 @@ class BadgeDialog(
 
                 }else if (badgeType=="10"||badgeType=="11"||badgeType=="12"){
                     supplementService.totalTrackCoutn(token).enqueue(object : Callback<Int> {
+                        @SuppressLint("ResourceAsColor")
                         override fun onResponse(call: Call<Int>, response: Response<Int>) {
                             if (response.isSuccessful){
                                 var myTrackCount : Int = 0
