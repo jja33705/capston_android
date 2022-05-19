@@ -124,5 +124,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/et_register_location"
         app:layout_constraintTop_toBottomOf="@+id/et_register_location"
- />
+        />
 </androidx.constraintlayout.widget.ConstraintLayout>
