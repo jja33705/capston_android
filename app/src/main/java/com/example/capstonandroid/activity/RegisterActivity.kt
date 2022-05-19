@@ -2,9 +2,13 @@ package com.example.capstonandroid.activity
 
 // 회원가입 액티비티
 
+import android.app.AlertDialog
+import android.app.DatePickerDialog
 import android.content.Intent
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.example.capstonandroid.R
 import com.example.capstonandroid.databinding.ActivityRegisterBinding
 import com.example.capstonandroid.network.dto.Register
 import com.example.capstonandroid.network.dto.RegisterResponse
@@ -14,6 +18,8 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
+import java.text.DecimalFormat
+import java.util.*
 
 class RegisterActivity : AppCompatActivity() {
 
@@ -23,6 +29,11 @@ class RegisterActivity : AppCompatActivity() {
 
     private  lateinit var  retrofit: Retrofit  //레트로핏
     private  lateinit var supplementService: BackendApi // api
+
+
+    private val sexList = arrayOf("男性", "女性", "トランスジェンダー", "知らせたくない")
+    private val sexValueList = arrayOf("M", "F", "T", "N")
+    private var selectedSexIndex = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -39,8 +50,25 @@ class RegisterActivity : AppCompatActivity() {
         binding.backButton.setOnClickListener {
             finish()
         }
-
-
+        binding.etRegisterSex.setOnClickListener {
+            AlertDialog.Builder(this).setTitle("性別").setSingleChoiceItems(sexList, selectedSexIndex) { dialogInterface, position ->
+                selectedSexIndex = position
+                binding.etRegisterSex.setText(sexList[selectedSexIndex])
+                dialogInterface.cancel()
+            }.show()
+        }
+        binding.etRegisterBirth.setOnClickListener {
+            val calendar = Calendar.getInstance()
+            val dateSetListener = DatePickerDialog.OnDateSetListener { _, year, month, day ->
+                val decimalFormat = DecimalFormat("00")
+                binding.etRegisterBirth.setText("$year-${decimalFormat.format(month + 1)}-${decimalFormat.format(day)}")
+            }
+            val datePickerDialog = DatePickerDialog(this, R.style.DatePickerDialog_Spinner, dateSetListener, calendar.get(
+                Calendar.YEAR), calendar.get(Calendar.MONDAY), calendar.get(Calendar.DAY_OF_MONTH))
+            datePickerDialog.show()
+            datePickerDialog.getButton(DatePickerDialog.BUTTON_NEGATIVE).setTextColor(Color.BLACK)
+            datePickerDialog.getButton(DatePickerDialog.BUTTON_POSITIVE).setTextColor(Color.BLACK)
+        }
         binding.btnRegister.setOnClickListener {
             //        edittext 이름 값 받아 오기
             var name : String  = binding.etRegisterName.text.toString()

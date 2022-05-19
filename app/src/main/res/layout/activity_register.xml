@@ -1,135 +1,256 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <EditText
-        android:layout_marginTop="50dp"
-        android:id="@+id/et_register_name"
-        android:layout_width="200dp"
-        android:layout_height="45dp"
-        android:ems="10"
-        android:textColor="@color/black"
-        android:hint="이름"
-        android:inputType="textPersonName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-    <EditText
-        android:layout_marginTop="5dp"
-        android:id="@+id/et_register_email"
-        android:layout_width="200dp"
-        android:layout_height="45dp"
-        android:textColor="@color/black"
-        android:ems="10"
-        android:hint="이메일 unique()"
-        android:inputType="textPersonName"
-        app:layout_constraintEnd_toEndOf="@+id/et_register_name"
-        app:layout_constraintStart_toStartOf="@+id/et_register_name"
-        app:layout_constraintTop_toBottomOf="@+id/et_register_name" />
-
-    <EditText
-        android:id="@+id/et_register_password"
-
-        android:layout_marginTop="5dp"
-        android:layout_width="200dp"
-        android:layout_height="45dp"
-        android:textColor="@color/black"
-        android:ems="10"
-        android:hint="패스워드"
-        android:inputType="textPersonName"
-        app:layout_constraintEnd_toEndOf="@+id/et_register_email"
-        app:layout_constraintStart_toStartOf="@+id/et_register_email"
-        app:layout_constraintTop_toBottomOf="@+id/et_register_email" />
-
-    <EditText
-        android:id="@+id/et_register_sex"
-        android:layout_marginTop="5dp"
-        android:layout_width="200dp"
-        android:layout_height="45dp"
-        android:textColor="@color/black"
-        android:ems="10"
-        android:hint="성별 M/W/T/N"
-        android:inputType="textPersonName"
-        app:layout_constraintEnd_toEndOf="@+id/et_register_password"
-        app:layout_constraintStart_toStartOf="@+id/et_register_password"
-        app:layout_constraintTop_toBottomOf="@+id/et_register_password" />
-
-    <EditText
-        android:id="@+id/et_register_weight"
-        android:layout_marginTop="5dp"
-        android:layout_width="200dp"
-        android:layout_height="45dp"
-        android:ems="10"
-        android:textColor="@color/black"
-        android:hint="몸무게"
-        android:inputType="textPersonName"
-        app:layout_constraintEnd_toEndOf="@+id/et_register_sex"
-        app:layout_constraintStart_toStartOf="@+id/et_register_sex"
-        app:layout_constraintTop_toBottomOf="@+id/et_register_sex" />
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
 
-    <EditText
-        android:id="@+id/et_register_birth"
-        android:layout_marginTop="5dp"
-        android:layout_width="200dp"
-        android:layout_height="45dp"
-        android:ems="10"
-        android:hint="생년 YYYY-MM-DD"
-        android:inputType="textPersonName"
-        app:layout_constraintEnd_toEndOf="@+id/et_register_weight"
-        app:layout_constraintStart_toStartOf="@+id/et_register_weight"
-        app:layout_constraintTop_toBottomOf="@+id/et_register_weight" />
-    <EditText
-        android:id="@+id/et_register_introduce"
-        android:layout_marginTop="5dp"
-        android:layout_width="200dp"
-        android:textColor="@color/black"
-        android:layout_height="45dp"
-        android:ems="10"
-        android:hint="자기소개 (nullable)"
-        android:inputType="textPersonName"
-        app:layout_constraintEnd_toEndOf="@+id/et_register_birth"
-        app:layout_constraintStart_toStartOf="@+id/et_register_birth"
-        app:layout_constraintTop_toBottomOf="@+id/et_register_birth" />
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:text="会員登録"
+            android:textSize="36dp"
+            android:textColor="@color/black"
+            android:fontFamily="@font/noto_sans_jp_regular"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    <EditText
-        android:id="@+id/et_register_location"
-        android:layout_marginTop="5dp"
-        android:layout_width="200dp"
-        android:layout_height="45dp"
-        android:ems="10"
-        android:hint="지역"
-        android:textColor="@color/black"
-        android:inputType="textPersonName"
-        app:layout_constraintEnd_toEndOf="@+id/et_register_introduce"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/et_register_introduce"
-        app:layout_constraintTop_toBottomOf="@+id/et_register_introduce" />
+        </com.google.android.material.textview.MaterialTextView>
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="10dp"
+
+            >
+            <EditText
+                android:paddingLeft="10dp"
+                android:layout_gravity="center"
+                android:id="@+id/et_register_name"
+                android:fontFamily="@font/noto_sans_jp_regular"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:ems="10"
+
+                android:textColor="@color/black"
+                android:hint="* お名前"
+                android:inputType="textPersonName" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="10dp"    >
+
+            <EditText
+                android:paddingLeft="10dp"
+                android:id="@+id/et_register_email"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:textColor="@color/black"
+                android:ems="10"
+                android:fontFamily="@font/noto_sans_jp_regular"
+                android:hint="* イーメール"
+                android:layout_gravity="center"
+                android:inputType="textPersonName"
+                app:layout_constraintEnd_toEndOf="@+id/et_register_name"
+                app:layout_constraintStart_toStartOf="@+id/et_register_name"
+                app:layout_constraintTop_toBottomOf="@+id/et_register_name" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="10dp"  >
+
+            <EditText
+
+                android:id="@+id/et_register_password"
+                android:paddingLeft="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:fontFamily="@font/noto_sans_jp_regular"
+                android:textColor="@color/black"
+                android:layout_gravity="center"
+                android:ems="10"
+
+                android:hint="* パスワード"
+                android:inputType="textPassword"
+                app:layout_constraintEnd_toEndOf="@+id/et_register_email"
+                app:layout_constraintStart_toStartOf="@+id/et_register_email"
+                app:layout_constraintTop_toBottomOf="@+id/et_register_email" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            app:endIconMode="custom"
+            app:endIconDrawable="@drawable/edit_text_select_value"
+
+            android:layout_marginBottom="10dp"     >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_register_sex"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:hint="性別"
+                android:textColor="@color/black"
+                android:fontFamily="@font/noto_sans_jp_regular"
+                android:includeFontPadding="false"
+                android:focusable="false"
+                android:clickable="true"
+                ></com.google.android.material.textfield.TextInputEditText>
+
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="10dp"  >
+
+            <EditText
+
+                android:paddingLeft="10dp"
+                android:id="@+id/et_register_weight"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:ems="10"
+                android:textColor="@color/black"
+                android:layout_gravity="center"
+                android:hint="体重"
+                android:fontFamily="@font/noto_sans_jp_regular"
+
+                android:inputType="number"
+                app:layout_constraintEnd_toEndOf="@+id/et_register_sex"
+                app:layout_constraintStart_toStartOf="@+id/et_register_sex"
+                app:layout_constraintTop_toBottomOf="@+id/et_register_sex" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="10dp"
+            app:endIconMode="custom"
+            app:endIconDrawable="@drawable/edit_text_select_value"
+            >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_register_birth"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:hint="生年月日"
+                android:textColor="@color/black"
+                android:fontFamily="@font/noto_sans_jp_regular"
+                android:includeFontPadding="false"
+                android:focusable="false"
+                android:clickable="true"
+                ></com.google.android.material.textfield.TextInputEditText>
+
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="10dp"    >
+
+            <EditText
+
+                android:paddingLeft="10dp"
+                android:fontFamily="@font/noto_sans_jp_regular"
+                android:id="@+id/et_register_introduce"
+                android:layout_width="match_parent"
+                android:textColor="@color/black"
+                android:layout_gravity="center"
+                android:layout_height="60dp"
+                android:ems="10"
+                android:hint="自己紹介"
+                android:inputType="textPersonName" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="10dp"  >
+
+            <EditText
+                android:paddingLeft="10dp"
+                android:fontFamily="@font/noto_sans_jp_regular"
+
+                android:id="@+id/et_register_location"
+
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:ems="10"
+                android:layout_gravity="center"
+                android:hint="地域"
+                android:textColor="@color/black"
+                android:inputType="textPersonName"
+                />
+        </com.google.android.material.textfield.TextInputLayout>
 
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btn_register"
-        android:layout_width="100dp"
-        android:layout_height="50dp"
-        android:layout_marginRight="50dp"
-        android:text="회원가입"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/et_register_location"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_register_location"/>
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_height="wrap_content">
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/backButton"
-        android:layout_width="100dp"
-        android:layout_height="50dp"
-        android:layout_marginLeft="50dp"
-        android:text="뒤로가기"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/et_register_location"
-        app:layout_constraintTop_toBottomOf="@+id/et_register_location"
-        />
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.appcompat.widget.AppCompatButton
+                android:background="@drawable/login_button"
+                android:layout_marginRight="10dp"
+                android:id="@+id/backButton"
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+                android:fontFamily="@font/noto_sans_jp_regular"
+                android:layout_marginLeft="50dp"
+                android:text="バック"
+                />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:background="@drawable/login_button"
+                android:id="@+id/btn_register"
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+
+                android:fontFamily="@font/noto_sans_jp_regular"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="50dp"
+                android:text="登録" />
+        </LinearLayout>
+    </LinearLayout>
+
+
+</ScrollView>
