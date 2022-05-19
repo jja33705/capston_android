@@ -11,6 +11,7 @@
         android:layout_width="200dp"
         android:layout_height="45dp"
         android:ems="10"
+        android:textColor="@color/black"
         android:hint="이름"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
@@ -21,6 +22,7 @@
         android:id="@+id/et_register_email"
         android:layout_width="200dp"
         android:layout_height="45dp"
+        android:textColor="@color/black"
         android:ems="10"
         android:hint="이메일 unique()"
         android:inputType="textPersonName"
@@ -34,6 +36,7 @@
         android:layout_marginTop="5dp"
         android:layout_width="200dp"
         android:layout_height="45dp"
+        android:textColor="@color/black"
         android:ems="10"
         android:hint="패스워드"
         android:inputType="textPersonName"
@@ -46,6 +49,7 @@
         android:layout_marginTop="5dp"
         android:layout_width="200dp"
         android:layout_height="45dp"
+        android:textColor="@color/black"
         android:ems="10"
         android:hint="성별"
         android:inputType="textPersonName"
@@ -59,6 +63,7 @@
         android:layout_width="200dp"
         android:layout_height="45dp"
         android:ems="10"
+        android:textColor="@color/black"
         android:hint="몸무게"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="@+id/et_register_sex"
@@ -81,6 +86,7 @@
         android:id="@+id/et_register_introduce"
         android:layout_marginTop="5dp"
         android:layout_width="200dp"
+        android:textColor="@color/black"
         android:layout_height="45dp"
         android:ems="10"
         android:hint="자기소개 (nullable)"
@@ -96,6 +102,7 @@
         android:layout_height="45dp"
         android:ems="10"
         android:hint="지역"
+        android:textColor="@color/black"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="@+id/et_register_introduce"
         app:layout_constraintHorizontal_bias="0.0"
@@ -103,7 +110,7 @@
         app:layout_constraintTop_toBottomOf="@+id/et_register_introduce" />
 
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_register"
         android:layout_width="100dp"
         android:layout_height="50dp"
@@ -114,7 +121,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/et_register_location"/>
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/backButton"
         android:layout_width="100dp"
         android:layout_height="50dp"
