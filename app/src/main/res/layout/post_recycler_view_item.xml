@@ -120,6 +120,7 @@
                 </ImageView>
 
                 <com.google.android.material.textview.MaterialTextView
+                    android:layout_marginLeft="5dp"
                     android:id="@+id/tv_like_count"
                     android:layout_width="wrap_content"
                     android:includeFontPadding="false"
@@ -127,6 +128,27 @@
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:text="like_num"
+                    android:fontFamily="@font/noto_sans_jp_bold"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"></com.google.android.material.textview.MaterialTextView>
+
+                <ImageView
+                    android:layout_marginLeft="10dp"
+                    android:layout_gravity="center"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:src="@drawable/comment_11">
+                </ImageView>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_marginLeft="5dp"
+                    android:id="@+id/tv_comment_count"
+                    android:layout_width="wrap_content"
+                    android:includeFontPadding="false"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="0"
                     android:fontFamily="@font/noto_sans_jp_bold"
                     android:textColor="@color/black"
                     android:textSize="14sp"></com.google.android.material.textview.MaterialTextView>
