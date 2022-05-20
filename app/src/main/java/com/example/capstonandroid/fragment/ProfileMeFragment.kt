@@ -74,7 +74,6 @@ class ProfileMeFragment : Fragment(){
 
 //    private val binding: FragmentProfileMeBinding get() = _binding!!
     override fun onCreate(savedInstanceState: Bundle?) {
-
         super.onCreate(savedInstanceState)
 
     }

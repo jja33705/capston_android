@@ -139,12 +139,6 @@ class RegisterActivity : AppCompatActivity() {
 
     }
 
-
-
-    override fun onStart() {
-        super.onStart()
-    }
-
     private fun initRetrofit(){
         retrofit = RetrofitClient.getInstance()
         supplementService = retrofit.create(BackendApi::class.java);

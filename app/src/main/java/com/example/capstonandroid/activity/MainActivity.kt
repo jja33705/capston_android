@@ -99,7 +99,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.meFragment -> {
                     supportFragmentManager.beginTransaction().replace(R.id.fragment_container, MeFragment()).commit()
-                    supportActionBar?.title = "나"
+                    supportActionBar?.title = "ユーザー"
                 }
             }
             true

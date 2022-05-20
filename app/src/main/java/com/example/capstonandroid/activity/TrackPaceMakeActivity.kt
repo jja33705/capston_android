@@ -162,7 +162,6 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
         textToSpeech = TextToSpeech(this) {
             if (it == TextToSpeech.SUCCESS) {
                 textToSpeech.language = Locale.JAPANESE
-
                 textToSpeechInitialized = true
             }
         }
