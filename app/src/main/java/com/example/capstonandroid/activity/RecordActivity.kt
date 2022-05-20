@@ -103,18 +103,20 @@ class RecordActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.Snapsh
 
         // 종료 버튼 초기화
         binding.stopButton.setOnClickListener {
-            println("종료 버튼 클릭함")
+            CoroutineScope(Dispatchers.Main).launch {
+                println("종료 버튼 클릭함")
 
-            // 종료하기전 스냅샷 찍음
-            val builder: LatLngBounds.Builder = LatLngBounds.Builder() // 카메라 이동을 위한 빌더
-            for (latLng in latLngList) {
-                builder.include(latLng) // 카메라안에 들어와야 하는 지점들 추가
+                // 종료하기전 스냅샷 찍음
+                val builder: LatLngBounds.Builder = LatLngBounds.Builder() // 카메라 이동을 위한 빌더
+                for (latLng in latLngList) {
+                    builder.include(latLng) // 카메라안에 들어와야 하는 지점들 추가
+                }
+                // 카메라 업데이트
+                val bounds: LatLngBounds = builder.build()
+                mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 200))
+                delay(500)
+                mGoogleMap.snapshot(this@RecordActivity)
             }
-            // 카메라 업데이트
-            val bounds: LatLngBounds = builder.build()
-            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 200))
-
-            mGoogleMap.snapshot(this)
         }
 
         val mapFragment = supportFragmentManager

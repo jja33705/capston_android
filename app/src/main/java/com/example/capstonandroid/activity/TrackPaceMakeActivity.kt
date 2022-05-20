@@ -779,7 +779,7 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
                                     // 카메라 업데이트
                                     val bounds: LatLngBounds = builder.build()
                                     mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 200))
-
+                                    delay(500) // 지도 어느정도 로딩되면 스냅샷 찍음.
                                     mGoogleMap.snapshot(this@TrackPaceMakeActivity)
                                 }
 

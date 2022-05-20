@@ -473,7 +473,7 @@ class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.S
                 // 카메라 업데이트
                 val bounds: LatLngBounds = builder.build()
                 mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 200))
-
+                delay(500)
                 mGoogleMap.snapshot(this@TrackRecordActivity)
             }
 
