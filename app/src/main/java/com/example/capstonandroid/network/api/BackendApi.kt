@@ -132,7 +132,7 @@ interface BackendApi {
         @Part("track_id") trackId: RequestBody?,
         @Part("opponent_id") opponentId: RequestBody?,
         @Part("gpsData") gpsData: RequestBody
-        ): Response<ResponseMessage>
+        ): Response<PostRecordActivityResponse>
 
     @GET("match/rank") // 랭크 랜덤 매칭
     suspend fun rankMatching(@Header("Authorization") token: String, @Query("track_id") trackId: String): Response<RankMatchingResponse>

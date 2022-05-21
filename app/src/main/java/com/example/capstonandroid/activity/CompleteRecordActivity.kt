@@ -256,6 +256,9 @@ class CompleteRecordActivity : AppCompatActivity(), SelectPostRangeBottomSheetCl
                         println(postActivityResponse.body())
                         println(postActivityResponse.message())
                         println(postActivityResponse.errorBody())
+                        val intent = Intent(this@CompleteRecordActivity, PostActivity::class.java)
+                        intent.putExtra("postId", postActivityResponse.body()!!.postId)
+                        startActivity(intent)
                         finish()
                     } else {
                         println(postActivityResponse.message())

@@ -441,7 +441,6 @@ class ProfileMeFragment : Fragment(){
                 .setNegativeButton("취소") { _, _ ->
                     println("취소 하셨네요")
                 }
-
             builder.show()
 
 

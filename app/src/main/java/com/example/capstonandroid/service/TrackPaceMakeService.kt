@@ -79,6 +79,7 @@ class TrackPaceMakeService : Service() {
         var opponentBeforeLocationChangedSecond = 0 // 이전 상대 위치 바뀐 시간
         var opponentAvgSpeed = 0.0
         var opponentTime = 0
+        var opponentProfileImage = ""
 
         private const val PREFIX = "com.example.capstonandroid.trackpacemakeservice"
 
@@ -241,6 +242,7 @@ class TrackPaceMakeService : Service() {
         activityIntent.putExtra("opponentPostId", opponentPostId)
         activityIntent.putExtra("opponentAvgSpeed", opponentAvgSpeed)
         activityIntent.putExtra("opponentTime", opponentTime)
+        activityIntent.putExtra("opponentProfileImage", opponentProfileImage)
 
         val activityPendingIntent = PendingIntent.getActivity(this, 0, activityIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
 
@@ -287,6 +289,7 @@ class TrackPaceMakeService : Service() {
                 opponentGpsDataId = intent.getStringExtra("opponentGpsDataId")!!
                 opponentAvgSpeed = intent.getDoubleExtra("opponentAvgSpeed", 0.0)
                 opponentTime = intent.getIntExtra("opponentTime", 0)
+                opponentProfileImage = intent.getStringExtra("opponentProfileImage")!!
 
                 mNotificationManager.notify(NOTIFICATION_ID, getNotification())
 
@@ -442,6 +445,7 @@ class TrackPaceMakeService : Service() {
         opponentBeforeLocationChangedSecond = 0
         opponentAvgSpeed = 0.0
         opponentTime = 0
+        opponentProfileImage = ""
 
         stopForeground(true)
         stopSelf()

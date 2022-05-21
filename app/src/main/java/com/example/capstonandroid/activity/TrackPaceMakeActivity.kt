@@ -25,6 +25,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.bumptech.glide.Glide
 import com.example.capstonandroid.*
 import com.example.capstonandroid.databinding.ActivityTrackPaceMakeBinding
 import com.example.capstonandroid.db.AppDatabase
@@ -57,6 +58,7 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
     private var opponentPostId = 0 // 상대방 post id
     private var opponentAvgSpeed = 0.0
     private var opponentTime = 0
+    private lateinit var opponentProfileImage: String
 
     private lateinit var retrofit: Retrofit // 레트로핏 인스턴스
     private lateinit var supplementService: BackendApi // api
@@ -153,11 +155,13 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
         opponentPostId = intent.getIntExtra("opponentPostId", 0)!!
         opponentAvgSpeed = intent.getDoubleExtra("opponentAvgSpeed", 0.0)
         opponentTime = intent.getIntExtra("opponentTime", 0)
+        opponentProfileImage = intent.getStringExtra("opponentProfileImage")!!
         println(" (TrackPaceMake) exerciseKind $exerciseKind")
         println(" (TrackPaceMake) matchType $matchType")
         println(" (TrackPaceMake) trackId $trackId")
         println(" (TrackPaceMake) opponentGpsDataId $opponentGpsDataId")
         println(" (TrackPaceMake) opponentPostId $opponentPostId")
+        println(" (TrackPaceMake) opponentProfileImage $opponentProfileImage")
 
         textToSpeech = TextToSpeech(this) {
             if (it == TextToSpeech.SUCCESS) {
@@ -175,20 +179,9 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
 
         initRetrofit()
 
-        // 마커 아이콘 초기화
-        myMarkerIcon = LayoutInflater.from(this).inflate(R.layout.user_icon, null)!!
-        myMarkerIconTextView = myMarkerIcon.findViewById(R.id.marker_icon_speed) as TextView
-        myMarkerUserNameTextView = myMarkerIcon.findViewById(R.id.marker_user_name) as TextView
-        myMarkerUserNameTextView.text = "나"
-        val myMarkerIconImageView = myMarkerIcon.findViewById(R.id.marker_icon_image) as ImageView
-//        myMarkerIconImageView.setImageResource(R.drawable.ic_my_location_marker)
-
-
-        opponentMarkerIcon = LayoutInflater.from(this).inflate(R.layout.user_icon, null)!!
-        opponentMarkerIconTextView = opponentMarkerIcon.findViewById(R.id.marker_icon_speed) as TextView
-        opponentMarkerUserNameTextView = opponentMarkerIcon.findViewById(R.id.marker_user_name) as TextView
-        val opponentMarkerIconImageView = opponentMarkerIcon.findViewById(R.id.marker_icon_image) as ImageView
-//        opponentMarkerIconImageView.setImageResource(R.drawable.ic_opponent_location_marker)
+        CoroutineScope(Dispatchers.Main).launch {
+            setImage() // 이미지 세팅
+        }
 
         // 액티비티 이동 후 답을 받는 콜백
         val activityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -335,6 +328,7 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
                 intent.putExtra("opponentGpsDataId", opponentGpsDataId)
                 intent.putExtra("opponentAvgSpeed", opponentAvgSpeed)
                 intent.putExtra("opponentTime", opponentTime)
+                intent.putExtra("opponentProfileImage", opponentProfileImage)
                 startForegroundService(intent)
             }
         }
@@ -852,6 +846,47 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
         }
     }
 
+    private suspend fun setImage() {
+        // 마커 아이콘 초기화
+        myMarkerIcon = LayoutInflater.from(this).inflate(R.layout.user_icon, null)!!
+        myMarkerIconTextView = myMarkerIcon.findViewById(R.id.marker_icon_speed) as TextView
+        myMarkerUserNameTextView = myMarkerIcon.findViewById(R.id.marker_user_name) as TextView
+        myMarkerUserNameTextView.text = "나"
+        val myMarkerIconImageView = myMarkerIcon.findViewById(R.id.marker_icon_image) as ImageView
+//        myMarkerIconImageView.setImageResource(R.drawable.ic_my_location_marker)
+
+        opponentMarkerIcon = LayoutInflater.from(this).inflate(R.layout.user_icon, null)!!
+        opponentMarkerIconTextView = opponentMarkerIcon.findViewById(R.id.marker_icon_speed) as TextView
+        opponentMarkerUserNameTextView = opponentMarkerIcon.findViewById(R.id.marker_user_name) as TextView
+        val opponentMarkerIconImageView = opponentMarkerIcon.findViewById(R.id.marker_icon_image) as ImageView
+//        opponentMarkerIconImageView.setImageResource(R.drawable.ic_opponent_location_marker)
+
+        val defaultImage = R.drawable.profile
+
+        val token = getSharedPreferences("other", MODE_PRIVATE).getString("TOKEN", "")!!
+        val getUserResponse = supplementService.getUser(token)
+        if (getUserResponse.isSuccessful) {
+            val myProfileImage = getUserResponse.body()!!.profile!!
+
+
+            Glide.with(this@TrackPaceMakeActivity)
+                .load(myProfileImage) // 불러올 이미지 url
+                .placeholder(defaultImage) // 이미지 로딩 시작하기 전 표시할 이미지
+                .error(defaultImage) // 로딩 에러 발생 시 표시할 이미지
+                .fallback(defaultImage) // 로드할 url 이 비어있을(null 등) 경우 표시할 이미지
+                .circleCrop()
+                .into(myMarkerIconImageView)
+        }
+
+        Glide.with(this@TrackPaceMakeActivity)
+            .load(opponentProfileImage) // 불러올 이미지 url
+            .placeholder(defaultImage) // 이미지 로딩 시작하기 전 표시할 이미지
+            .error(defaultImage) // 로딩 에러 발생 시 표시할 이미지
+            .fallback(defaultImage) // 로드할 url 이 비어있을(null 등) 경우 표시할 이미지
+            .circleCrop()
+            .into(opponentMarkerIconImageView)
+    }
+
     // 스냅샷 찍었을 때 콜백
     @SuppressLint("NewApi")
     override fun onSnapshotReady(snapshot: Bitmap?) {
@@ -890,7 +925,5 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
             startForegroundService(uploadPostIntent)
             finish()
         }
-
-
     }
 }
