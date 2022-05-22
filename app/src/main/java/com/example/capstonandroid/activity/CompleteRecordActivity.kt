@@ -12,6 +12,7 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.text.Html
 import android.util.TypedValue
 import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
@@ -116,8 +117,8 @@ class CompleteRecordActivity : AppCompatActivity(), SelectPostRangeBottomSheetCl
             }
             if (gpsDataList.size < 2) {
                 var alertDialog = AlertDialog.Builder(this@CompleteRecordActivity)
-                    .setTitle("안내")
-                    .setMessage("움직임이 감지되지 않습니다.")
+                    .setTitle(Html.fromHtml("<font color='#000000'>インフォメーション</font>'>"))
+                    .setMessage(Html.fromHtml("<font color='#000000'>動きがないです。</font>'>"))
                     .setPositiveButton("확인") { _, _ ->
                         finish()
                     }

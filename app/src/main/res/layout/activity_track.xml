@@ -461,7 +461,7 @@
                         >
                     </ImageView>
 
-                    <Button
+                    <androidx.appcompat.widget.AppCompatButton
                         android:id="@+id/button_all_rank"
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
@@ -474,7 +474,7 @@
                         android:background="@drawable/all_ranking_button_background"
                         android:drawableRight="@drawable/arrow_forward"
                         >
-                    </Button>
+                    </androidx.appcompat.widget.AppCompatButton>
 
                 </LinearLayout>
 

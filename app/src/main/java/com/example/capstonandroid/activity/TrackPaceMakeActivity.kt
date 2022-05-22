@@ -675,9 +675,12 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
                     mLocation.latitude = latLng.latitude
                     mLocation.longitude = latLng.longitude
 
-//                    inCanStartArea = mLocation.distanceTo(startPoint) < 20.0
-                    inCanStartArea = true
+                    inCanStartArea = mLocation.distanceTo(startPoint) < 20.0
+
+                    // 테스트용
+//                    inCanStartArea = true
                     println("시작 가능 위치 내인지: $inCanStartArea")
+
                     if (inCanStartArea) {
                         binding.tvInformation.visibility = View.GONE
                     } else {
@@ -759,6 +762,7 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
                                     predictLocation()
                                 }.join()
 
+                                // 테스트용
                                  // 예상 지점
 //                                mGoogleMap.addMarker(MarkerOptions().position(LatLng(track.gps.coordinates[TrackPaceMakeService.myLocationIndexOnTrack][1], track.gps.coordinates[TrackPaceMakeService.myLocationIndexOnTrack][0])))
 
@@ -863,10 +867,11 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
 
         val defaultImage = R.drawable.profile
 
-        val token = getSharedPreferences("other", MODE_PRIVATE).getString("TOKEN", "")!!
+        val token = "Bearer ${getSharedPreferences("other", MODE_PRIVATE).getString("TOKEN", "")!!}"
         val getUserResponse = supplementService.getUser(token)
         if (getUserResponse.isSuccessful) {
             val myProfileImage = getUserResponse.body()!!.profile!!
+            println("프로필 이미지: $myProfileImage")
 
 
             Glide.with(this@TrackPaceMakeActivity)
@@ -878,6 +883,7 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
                 .into(myMarkerIconImageView)
         }
 
+        println("상대 프로필 이미지: $opponentProfileImage")
         Glide.with(this@TrackPaceMakeActivity)
             .load(opponentProfileImage) // 불러올 이미지 url
             .placeholder(defaultImage) // 이미지 로딩 시작하기 전 표시할 이미지

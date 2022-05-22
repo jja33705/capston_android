@@ -3,6 +3,7 @@ package com.example.capstonandroid.fragment
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -398,7 +399,7 @@ class ProfileMeFragment : Fragment(){
 
 
             val builder = AlertDialog.Builder(requireContext())
-            builder.setTitle("本当にログアウトしますか。")
+            builder.setTitle(Html.fromHtml("<font color='#000000'>本当にログアウトしますか</font>'>"))
                 .setPositiveButton("확인") { _, _->
 
                     supplementService.logOut(token).enqueue(object : Callback<LogoutResponse> {

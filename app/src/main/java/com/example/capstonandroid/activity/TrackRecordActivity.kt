@@ -14,6 +14,7 @@ import android.location.Location
 import android.os.Bundle
 import android.os.Handler
 import android.speech.tts.TextToSpeech
+import android.text.Html
 import android.view.View
 import android.view.Window
 import android.widget.TextView
@@ -177,8 +178,8 @@ class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.S
         binding.stopButton.setOnClickListener {
             println("종료 버튼 클릭함")
             AlertDialog.Builder(this)
-                .setTitle("기록 종료")
-                .setMessage("정말로 기록을 종료하시겠습니까")
+                .setTitle(Html.fromHtml("<font color='#000000'>기록종료</font>'>"))
+                .setMessage(Html.fromHtml("<font color='#000000'>정말로 기록을 종료하시갰습니까</font>'>"))
                 .setPositiveButton("취소") { _, _ ->
                 }
                 .setNegativeButton("종료") { _, _ ->
@@ -459,6 +460,7 @@ class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.S
                 TrackRecordService.myLocationIndexOnTrack = myPredictedLocation // 내 예상 지점 갱신
             }.join()
 
+            // 테스트용
 //            // 예상 지점
 //            mGoogleMap.addMarker(MarkerOptions().position(LatLng(track.gps.coordinates[TrackRecordService.myLocationIndexOnTrack][1], track.gps.coordinates[TrackRecordService.myLocationIndexOnTrack][0])))
 
@@ -599,9 +601,11 @@ class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.S
                     mLocation.latitude = latLng.latitude
                     mLocation.longitude = latLng.longitude
 
+                    // 테스트용
                     inCanStartArea = mLocation.distanceTo(startPoint) < 20.0
 //                    inCanStartArea = true
                     println("시작 가능 위치 내인지: $inCanStartArea")
+
                     if (inCanStartArea) {
                         binding.tvInformation.visibility = View.GONE
                     } else {
