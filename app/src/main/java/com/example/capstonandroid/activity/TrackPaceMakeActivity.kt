@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.speech.tts.TextToSpeech
+import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.Window
@@ -226,8 +227,8 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
         binding.stopButton.setOnClickListener {
             println("종료 버튼 클릭함")
             AlertDialog.Builder(this)
-                .setTitle("기록 종료")
-                .setMessage("정말로 기록을 종료하시겠습니까")
+                .setTitle(Html.fromHtml("<font color='#000000'>기록종료</font>'>"))
+                .setMessage(Html.fromHtml("<font color='#000000'>정말로 기록을 종료하시갰습니까</font>'>"))
                 .setPositiveButton("취소") { _, _ ->
                 }
                 .setNegativeButton("종료") { _, _ ->

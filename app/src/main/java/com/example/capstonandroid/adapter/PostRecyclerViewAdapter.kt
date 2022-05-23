@@ -1,6 +1,7 @@
 package com.example.capstonandroid.adapter
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -8,6 +9,7 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.capstonandroid.R
+import com.example.capstonandroid.activity.PostActivity
 import com.example.capstonandroid.databinding.ItemLoadingBinding
 import com.example.capstonandroid.databinding.PostRecyclerViewItemBinding
 import com.example.capstonandroid.network.dto.Post
@@ -117,7 +119,6 @@ class PostRecyclerViewAdapter(postRecyclerViewItemList: ArrayList<Post?>) : Recy
                 .fallback(defaultImage)
                 .into(binding.imageViewMap)
 
-
             val profileImageUrl = postRecyclerViewItem.user.profile
 
             Glide.with(itemView.context)
@@ -128,68 +129,6 @@ class PostRecyclerViewAdapter(postRecyclerViewItemList: ArrayList<Post?>) : Recy
                     .circleCrop()
                     .into(binding.userImage)
 
-
-
-            // 좋아요 눌렀을떄????
-//            view.setOnClickListener(listener)
-
         }
-
-
-//        @RequiresApi(Build.VERSION_CODES.O)
-//        fun bind(listener: View.OnClickListener, item: UserData) {
-//
-//
-//
-//            val defaultImage = R.drawable.map
-//
-//            if(item.image==null){
-//                var url = ""
-//
-//                Glide.with(itemView.context)
-//                    .load(url) // 불러올 이미지 url
-//                    .placeholder(defaultImage) // 이미지 로딩 시작하기 전 표시할 이미지
-//                    .error(defaultImage) // 로딩 에러 발생 시 표시할 이미지
-//                    .fallback(defaultImage) // 로드할 url 이 비어있을(null 등) 경우 표시할 이미지
-//                    .into(itemView.imageView)
-//
-//            }else {
-//
-//                var url = item.image
-//
-//                Glide.with(itemView.context)
-//                    .load(url) // 불러올 이미지 url
-//                    .placeholder(defaultImage) // 이미지 로딩 시작하기 전 표시할 이미지
-//                    .error(defaultImage) // 로딩 에러 발생 시 표시할 이미지
-//                    .fallback(defaultImage) // 로드할 url 이 비어있을(null 등) 경우 표시할 이미지
-//                    .into(itemView.imageView)
-//            }
-//
-
-
-//            if(item.profile==null||item.profile.equals("")){
-//                var url = ""
-//
-//                Glide.with(itemView.context)
-//                    .load(url) // 불러올 이미지 url
-//                    .placeholder(defaultImage2) // 이미지 로딩 시작하기 전 표시할 이미지
-//                    .error(defaultImage2) // 로딩 에러 발생 시 표시할 이미지
-//                    .fallback(defaultImage2) // 로드할 url 이 비어있을(null 등) 경우 표시할 이미지
-//                    .circleCrop()
-//                    .into(itemView.userImage)
-//
-//            }else {
-//
-//                var url = item.profile
-//
-//                Glide.with(itemView.context)
-//                    .load(url) // 불러올 이미지 url
-//                    .placeholder(defaultImage2) // 이미지 로딩 시작하기 전 표시할 이미지
-//                    .error(defaultImage2) // 로딩 에러 발생 시 표시할 이미지
-//                    .fallback(defaultImage2) // 로드할 url 이 비어있을(null 등) 경우 표시할 이미지
-//                    .circleCrop()
-//                    .into(itemView.userImage)
-//            }
-//        }
     }
 }

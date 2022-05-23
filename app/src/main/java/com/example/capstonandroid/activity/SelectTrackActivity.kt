@@ -289,6 +289,7 @@ class SelectTrackActivity : AppCompatActivity(), OnMapReadyCallback, SelectExerc
                             intent.putExtra("opponentPostId", post.id)
                             intent.putExtra("opponentAvgSpeed", post.average_speed)
                             intent.putExtra("opponentTime", post.time)
+                            intent.putExtra("opponentProfileImage", user.profile)
                             startActivity(intent)
 
                             rankMatchingDialog.dismiss()

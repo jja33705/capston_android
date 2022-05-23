@@ -47,7 +47,7 @@
                             android:layout_width="57dp"
                             android:layout_height="57dp"
                             android:layout_gravity="center"
-                            android:src="@mipmap/ic_launcher_round"></de.hdodenhof.circleimageview.CircleImageView>
+                            android:src="@drawable/profile"></de.hdodenhof.circleimageview.CircleImageView>
 
                     </LinearLayout>
 
@@ -72,7 +72,7 @@
                                 android:layout_gravity="center"
                                 android:fontFamily="@font/noto_sans_jp_bold"
                                 android:includeFontPadding="false"
-                                android:text="사토시"
+                                android:text=""
                                 android:textColor="@color/black"
                                 android:textSize="22sp"></com.google.android.material.textview.MaterialTextView>
 
@@ -83,7 +83,7 @@
                                 android:layout_gravity="center"
                                 android:fontFamily="@font/noto_sans_jp_medium"
                                 android:includeFontPadding="false"
-                                android:text="나는 나다"
+                                android:text=""
                                 android:textSize="15sp"></com.google.android.material.textview.MaterialTextView>
 
                             <TextView
@@ -93,7 +93,7 @@
                                 android:layout_gravity="center"
                                 android:fontFamily="@font/noto_sans_jp_light"
                                 android:includeFontPadding="false"
-                                android:text="대구"
+                                android:text=""
                                 android:textSize="12sp"></TextView>
 
                         </LinearLayout>
@@ -143,7 +143,7 @@
                             android:fontFamily="@font/noto_sans_jp_medium"
                             android:gravity="center"
                             android:includeFontPadding="false"
-                            android:text="1234"
+                            android:text=""
                             android:textColor="@color/black"
                             android:textSize="20sp">
 
@@ -172,7 +172,7 @@
                             android:fontFamily="@font/noto_sans_jp_medium"
                             android:gravity="center"
                             android:includeFontPadding="false"
-                            android:text="12"
+                            android:text=""
                             android:textColor="@color/black"
                             android:textSize="20sp">
 
@@ -200,7 +200,7 @@
                             android:fontFamily="@font/noto_sans_jp_medium"
                             android:gravity="center"
                             android:includeFontPadding="false"
-                            android:text="10"
+                            android:text=""
                             android:textColor="@color/black"
                             android:textSize="20sp">
 

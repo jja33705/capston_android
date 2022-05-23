@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/linear_layout_ranking_recycler_view_item"
+    android:clickable="true"
     android:layout_width="match_parent"
     android:layout_height="60dp"
     android:orientation="horizontal"
+    android:background="@drawable/ripple_effect_background"
     >
     <TextView
         android:id="@+id/tv_ranking"
@@ -21,7 +24,7 @@
         android:layout_marginRight="15dp"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:src="@mipmap/ic_launcher_round"
+        android:src="@drawable/profile"
         android:layout_gravity="center"
         >
     </de.hdodenhof.circleimageview.CircleImageView>
@@ -38,7 +41,7 @@
             android:id="@+id/tv_user_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="홍길동"
+            android:text=""
             android:fontFamily="@font/noto_sans_jp_regular"
             android:includeFontPadding="false"
             android:layout_marginBottom="3dp"
@@ -49,7 +52,7 @@
             android:id="@+id/tv_ranking_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="1999.99.99"
+            android:text=""
             android:fontFamily="@font/noto_sans_jp_light"
             android:includeFontPadding="false"
             android:textColor="@color/black"
@@ -69,7 +72,7 @@
             android:id="@+id/tv_ranking_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="tt:mm:ss"
+            android:text=""
             android:fontFamily="@font/noto_sans_jp_regular"
             android:includeFontPadding="false"
             android:layout_marginBottom="3dp"
@@ -80,7 +83,7 @@
             android:id="@+id/tv_ranking_speed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="5.18km"
+            android:text=""
             android:fontFamily="@font/noto_sans_jp_light"
             android:includeFontPadding="false"
             android:textColor="@color/black"

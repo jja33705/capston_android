@@ -3,6 +3,8 @@ package com.example.capstonandroid.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.example.capstonandroid.R
 import com.example.capstonandroid.Utils
 import com.example.capstonandroid.databinding.FriendlyMatchingItemBinding
 import com.example.capstonandroid.databinding.ItemLoadingBinding
@@ -76,6 +78,17 @@ class FriendlyMatchingRecyclerViewAdapter(friendlyMatchingItemList: ArrayList<Po
             binding.tvSpeed.text = "${Utils.formatDoublePointTwo(friendlyMatching.average_speed)}km/h"
             binding.tvTime.text = Utils.timeToText(friendlyMatching.time)
             binding.tvUserName.text = friendlyMatching.user.name
+
+            val defaultImage = R.drawable.profile
+            val profileImageUrl = friendlyMatching.user.profile
+
+            Glide.with(itemView.context)
+                .load(profileImageUrl) // 불러올 이미지 url
+                .placeholder(defaultImage) // 이미지 로딩 시작하기 전 표시할 이미지
+                .error(defaultImage) // 로딩 에러 발생 시 표시할 이미지
+                .fallback(defaultImage) // 로드할 url 이 비어있을(null 등) 경우 표시할 이미지
+                .circleCrop()
+                .into(binding.imgUser)
         }
     }
 }

@@ -5,6 +5,7 @@ package com.example.capstonandroid.activity
 import ViewPagerAdapter
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.AttributeSet
 import android.view.MotionEvent
@@ -294,6 +295,12 @@ class PostActivity : AppCompatActivity() {
                     .circleCrop()
                     .into(binding.userImage)
 
+
+                binding.userImage.setOnClickListener {
+                    val intent = Intent(this@PostActivity, ProfileActivity::class.java)
+                    intent.putExtra("userId", post.user.id)
+                    startActivity(intent)
+                }
             }
         }
 

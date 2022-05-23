@@ -1,11 +1,15 @@
 package com.example.capstonandroid.activity
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.example.capstonandroid.R
 import com.example.capstonandroid.Utils
+import com.example.capstonandroid.adapter.PostRecyclerViewAdapter
 import com.example.capstonandroid.adapter.RankingRecyclerViewAdapter
 import com.example.capstonandroid.databinding.ActivityRankingBinding
 import com.example.capstonandroid.network.RetrofitClient
@@ -85,6 +89,17 @@ class RankingActivity : AppCompatActivity() {
                         binding.trackRankFirstName.text = rankingItemList[0]!!.user.name
                         binding.trackRankFirstTime.text = Utils.timeToText(rankingItemList[0]!!.time)
 
+                        val defaultImage = R.drawable.profile
+                        val profileImageUrl = rankingItemList[0]!!.user.profile
+
+                        Glide.with(this@RankingActivity)
+                            .load(profileImageUrl) // 불러올 이미지 url
+                            .placeholder(defaultImage) // 이미지 로딩 시작하기 전 표시할 이미지
+                            .error(defaultImage) // 로딩 에러 발생 시 표시할 이미지
+                            .fallback(defaultImage) // 로드할 url 이 비어있을(null 등) 경우 표시할 이미지
+                            .circleCrop()
+                            .into(binding.trackRankFirstUserImage)
+
                         if (rankingResponse.body()!!.next_page_url != null) {
                             page += 1
 
@@ -102,6 +117,16 @@ class RankingActivity : AppCompatActivity() {
                 // 리사이클러뷰 설정
                 rankingRecyclerViewAdapter = RankingRecyclerViewAdapter(rankingItemList)
                 binding.recyclerViewRanking.adapter = rankingRecyclerViewAdapter
+
+                // 아이템 클릭 리스너 등록
+                rankingRecyclerViewAdapter.setOnItemClickListener(object : RankingRecyclerViewAdapter.OnItemClickListener {
+                    override fun onItemClick(position: Int) {
+                        val intent = Intent(this@RankingActivity, PostActivity::class.java)
+                        intent.putExtra("postId", rankingItemList[position]!!.id)
+                        intent.putExtra("postKind", 1)
+                        startActivity(intent)
+                    }
+                })
             }
         }
     }

@@ -112,7 +112,7 @@
                             android:id="@+id/tv_profile_me_picture"
                             android:layout_width="60dp"
                             android:layout_height="60dp"
-                            android:src="@mipmap/ic_launcher_round"
+                            android:src="@drawable/profile"
                             android:layout_gravity="center"
                             >
                         </de.hdodenhof.circleimageview.CircleImageView>
@@ -134,7 +134,7 @@
                         <TextView
                             android:includeFontPadding="false"
                             android:fontFamily="@font/noto_sans_jp_bold"
-                            android:text="사토시"
+                            android:text=""
                             android:id="@+id/tv_name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -145,9 +145,20 @@
                         </TextView>
 
                         <TextView
+                            android:id="@+id/tv_introduce"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:fontFamily="@font/noto_sans_jp_medium"
+                            android:includeFontPadding="false"
+                            android:text=""
+                            android:textSize="15sp">
+                        </TextView>
+
+                        <TextView
                             android:includeFontPadding="false"
                             android:fontFamily="@font/noto_sans_jp_regular"
-                            android:text="대구"
+                            android:text=""
                             android:id="@+id/tv_location"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -213,7 +224,7 @@
                             android:id="@+id/tv_mmr"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="1234"
+                            android:text=""
                             android:gravity="start"
                             android:textSize="20sp"
                             android:textColor="@color/black"
@@ -233,7 +244,7 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/noto_sans_jp_regular"
                             android:includeFontPadding="false"
-                            android:text="フォロー中"
+                            android:text="フォロワー"
                             android:textColor="@color/main_color"
                             android:textSize="12sp"
                             >
@@ -245,7 +256,7 @@
                             android:id="@+id/tv_following"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="12"
+                            android:text=""
                             android:gravity="start"
                             android:textSize="20sp"
                             android:textColor="@color/black"
@@ -265,7 +276,7 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/noto_sans_jp_regular"
                             android:includeFontPadding="false"
-                            android:text="運動点数"
+                            android:text="フォロー中"
                             android:textColor="@color/main_color"
                             android:textSize="12sp"
                             >
@@ -277,7 +288,7 @@
                             android:id="@+id/tv_follower"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="10"
+                            android:text=""
                             android:gravity="start"
                             android:textSize="20sp"
                             android:textColor="@color/black"

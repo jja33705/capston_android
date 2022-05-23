@@ -79,6 +79,7 @@ class ProfileActivity : AppCompatActivity() {
                     binding.tvFollowing.text = profile.followings.count().toString()
                     binding.tvMmr.text = profile.mmr.toString()
                     binding.tvLocation.text = profile.location
+                    binding.tvIntroduce.text = profile.introduce
 
                     when (followCheck) {
                         // 팔로우 되어있는 상태

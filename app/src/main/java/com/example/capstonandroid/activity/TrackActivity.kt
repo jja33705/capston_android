@@ -8,11 +8,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import com.bumptech.glide.Glide
 import com.example.capstonandroid.R
 import com.example.capstonandroid.Utils
 import com.example.capstonandroid.databinding.ActivityTrackBinding
 import com.example.capstonandroid.network.RetrofitClient
 import com.example.capstonandroid.network.api.BackendApi
+import com.example.capstonandroid.network.dto.MyRankingResponse
 import com.example.capstonandroid.network.dto.Post
 import com.example.capstonandroid.network.dto.Track
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -117,6 +119,17 @@ class TrackActivity : AppCompatActivity(), OnMapReadyCallback {
 
                         binding.trackRankFirstName.text = firstRank.user.name
                         binding.trackRankFirstTime.text = Utils.timeToText(firstRank.time)
+
+                        val defaultImage = R.drawable.profile
+                        val profileImageUrl = firstRank.user.profile
+
+                        Glide.with(this@TrackActivity)
+                            .load(profileImageUrl) // 불러올 이미지 url
+                            .placeholder(defaultImage) // 이미지 로딩 시작하기 전 표시할 이미지
+                            .error(defaultImage) // 로딩 에러 발생 시 표시할 이미지
+                            .fallback(defaultImage) // 로드할 url 이 비어있을(null 등) 경우 표시할 이미지
+                            .circleCrop()
+                            .into(binding.trackRankFirstUserImage)
                     }
                     204 -> { // 아직 달린 사람 아무도 없을 때
                         binding.trackRankFirstLinearLayout.visibility = View.GONE
@@ -131,7 +144,7 @@ class TrackActivity : AppCompatActivity(), OnMapReadyCallback {
                 when (myRankingResponse.code()) {
                     200 -> {
                         val myRankingPost = myRankingResponse.body()!!.post
-                        binding.tvMyAvgSpeed.text = "${myRankingPost.average_speed}km/h"
+                        binding.tvMyAvgSpeed.text = "${Utils.formatDoublePointTwo(myRankingPost.average_speed)}km/h"
                         binding.tvMyDate.text = myRankingPost.date
                         binding.tvMyTime.text = Utils.timeToText(myRankingPost.time)
                         binding.tvMyRank.text = myRankingResponse.body()!!.rank.toString()
