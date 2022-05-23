@@ -13,10 +13,10 @@
     <application
         android:name=".MyApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_main"
+        android:icon="@mipmap/pace_maker_logo"
         android:label="@string/app_name"
         android:requestLegacyExternalStorage="true"
-        android:roundIcon="@mipmap/ic_main"
+        android:roundIcon="@mipmap/pace_maker_logo_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.CapstonAndroid"
         android:usesCleartextTraffic="true">
@@ -40,9 +40,6 @@
             android:exported="false" />
         <activity
             android:name=".activity.GoalRunActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.UserActivity"
             android:exported="false" />
         <activity
             android:name=".activity.RankingActivity"
@@ -134,7 +131,7 @@
             android:value="${MAPS_API_KEY}" />
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
-            android:resource="@mipmap/ic_main" />
+            android:resource="@mipmap/pace_maker_logo_foreground" />
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/main_color" />

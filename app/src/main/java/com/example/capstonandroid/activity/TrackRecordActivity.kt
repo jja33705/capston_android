@@ -1,7 +1,5 @@
 package com.example.capstonandroid.activity
 
-
-
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Dialog
@@ -43,7 +41,6 @@ import retrofit2.Retrofit
 import java.io.FileOutputStream
 import java.util.*
 import kotlin.collections.ArrayList
-
 
 class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.SnapshotReadyCallback {
     private var _binding: ActivityTrackRecordBinding? = null
