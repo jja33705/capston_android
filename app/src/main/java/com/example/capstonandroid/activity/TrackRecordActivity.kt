@@ -493,9 +493,9 @@ class TrackRecordActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.S
                         )
                         Handler(mainLooper).postDelayed({
                             checkpointDialog.dismiss()
-                        }, 6000)
+                        }, 5000)
                         if (textToSpeechInitialized) {
-                            textToSpeech.speak("上位${checkpointResponse.body()!!.rank.toInt()}パーセントです。", TextToSpeech.QUEUE_ADD, null, "abc")
+                            textToSpeech.speak("チェックポイントを通過しました。上位${checkpointResponse.body()!!.rank.toInt()}パーセントのペースです。", TextToSpeech.QUEUE_ADD, null, "abc")
                         }
                     }
                     checkpointMarkerList[TrackRecordService.checkpointIndex].setIcon(Utils.getMarkerIconFromDrawable(resources.getDrawable(R.drawable.checkpoint_after,null)))

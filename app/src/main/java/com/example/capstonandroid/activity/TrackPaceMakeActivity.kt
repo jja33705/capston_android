@@ -793,7 +793,7 @@ class TrackPaceMakeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap
                                             checkpointDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
                                             Handler(mainLooper).postDelayed({
                                                 checkpointDialog.dismiss()
-                                            }, 6000)
+                                            }, 5000)
                                             if (textToSpeechInitialized) {
                                                 textToSpeech.speak("チェックポイントを通過しました。上位${checkpointResponse.body()!!.rank.toInt()}パーセントのペースです。", TextToSpeech.QUEUE_ADD, null, "abc")
                                             }
