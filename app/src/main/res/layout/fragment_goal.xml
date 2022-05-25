@@ -19,7 +19,7 @@
             android:id="@+id/userExerciseChart"
             android:layout_width="220dp"
             android:layout_height="210dp"
-            android:layout_margin="10dp" />
+            android:layout_marginVertical="10dp"/>
         <TextView
             android:visibility="gone"
             android:id="@+id/message3"
@@ -42,7 +42,6 @@
             <TextView
                 android:gravity="center"
                 android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:text="走った距離"
@@ -55,7 +54,7 @@
             <TextView
                 android:id="@+id/totalDistance"
                 android:gravity="center"
-
+                android:layout_marginLeft="10dp"
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_marginBottom="10dp"
@@ -70,7 +69,6 @@
             <TextView
                 android:gravity="center"
                 android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="走った時間"
@@ -82,7 +80,7 @@
 
                 android:id="@+id/totalTime"
                 android:gravity="center"
-
+                android:layout_marginLeft="10dp"
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:text="총 소모 칼로리"
@@ -97,7 +95,6 @@
             <TextView
                 android:gravity="center"
                 android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="消費カロリー"
@@ -107,7 +104,7 @@
             </TextView>
             <TextView
                 android:gravity="center"
-
+                android:layout_marginLeft="10dp"
                 android:id="@+id/totalCalorie"
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
