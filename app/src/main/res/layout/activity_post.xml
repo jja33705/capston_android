@@ -3,7 +3,6 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:clipToPadding="false"
     android:orientation="vertical">
 
@@ -98,11 +97,11 @@
 
 
             <ImageView
-                        android:id="@+id/image_view_map_image"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_gravity="center" />
+                android:id="@+id/image_view_map_image"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center" />
 
 
             <androidx.viewpager2.widget.ViewPager2
@@ -124,263 +123,263 @@
                 android:layout_height="wrap_content"
                 />
             <LinearLayout
-                        android:layout_margin="20dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                android:layout_margin="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:textColor="@color/black"
-                            android:includeFontPadding="false"
-                            android:fontFamily="@font/noto_sans_jp_black"
-                            android:id="@+id/content"
-                            android:layout_width="match_parent"
-                            android:layout_height="40dp"
-                            android:layout_below="@id/function_nav"
-                            android:layout_alignParentTop="true"
-                            android:background="@null"
-                            android:focusable="false"
-                            android:hint="내용"
-                            android:textSize="20sp"/>
+                <com.google.android.material.textfield.TextInputEditText
+                    android:textColor="@color/black"
+                    android:includeFontPadding="false"
+                    android:fontFamily="@font/noto_sans_jp_black"
+                    android:id="@+id/content"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_below="@id/function_nav"
+                    android:layout_alignParentTop="true"
+                    android:background="@null"
+                    android:focusable="false"
+                    android:hint="내용"
+                    android:textSize="20sp"/>
 
-                        <TextView
-                            android:id="@+id/tv_opponent"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:fontFamily="@font/noto_sans_jp_regular"
-                            android:gravity="right"
-                            android:includeFontPadding="false"
-                            android:paddingTop="5dp"
-                            android:text="~と ~をしました"
-                            android:visibility="gone">
+                <TextView
+                    android:id="@+id/tv_opponent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:fontFamily="@font/noto_sans_jp_regular"
+                    android:gravity="right"
+                    android:includeFontPadding="false"
+                    android:paddingTop="5dp"
+                    android:text="~と ~をしました"
+                    android:visibility="gone">
 
-                        </TextView>
-                    </LinearLayout>
+                </TextView>
+            </LinearLayout>
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp">
-            <LinearLayout
+                <LinearLayout
 
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginLeft="10dp"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
 
-                        <LinearLayout
-                            android:layout_marginTop="10dp"
-                            android:layout_marginBottom="10dp"
-                            android:layout_marginLeft="10dp"
-                            android:layout_width="match_parent"
+                        <TextView
+                            android:layout_marginBottom="5dp"
+                            android:id="@+id/time"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
+                            android:fontFamily="@font/noto_sans_jp_bold"
+                            android:includeFontPadding="false"
+                            android:text="시간 : "
+                            android:textSize="14sp"></TextView>
 
-                            <TextView
-                                android:layout_marginBottom="5dp"
-                                android:id="@+id/time"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:fontFamily="@font/noto_sans_jp_bold"
-                                android:includeFontPadding="false"
-                                android:text="시간 : "
-                                android:textSize="17sp"></TextView>
-
-                            <TextView
-                                android:layout_marginBottom="5dp"
-                                android:id="@+id/calorie"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:fontFamily="@font/noto_sans_jp_bold"
-                                android:includeFontPadding="false"
-                                android:text="칼로리 : "
-                                android:textSize="17sp"></TextView>
-
-                            <TextView
-                                android:id="@+id/kind"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:fontFamily="@font/noto_sans_jp_bold"
-                                android:includeFontPadding="false"
-                                android:text="종류 : "
-                                android:textSize="17sp"></TextView>
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_marginTop="10dp"
-                            android:layout_marginBottom="10dp"
-                            android:layout_marginLeft="10dp"
-                            android:layout_width="match_parent"
+                        <TextView
+                            android:layout_marginBottom="5dp"
+                            android:id="@+id/calorie"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
+                            android:fontFamily="@font/noto_sans_jp_bold"
+                            android:includeFontPadding="false"
+                            android:text="칼로리 : "
+                            android:textSize="14sp"></TextView>
 
-                            <TextView
-                                android:layout_marginBottom="5dp"
-                                android:id="@+id/average_speed"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:fontFamily="@font/noto_sans_jp_bold"
-                                android:includeFontPadding="false"
-                                android:text="평균 속도 : "
-                                android:textSize="17sp">
+                        <TextView
+                            android:id="@+id/kind"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/noto_sans_jp_bold"
+                            android:includeFontPadding="false"
+                            android:text="종류 : "
+                            android:textSize="14sp"></TextView>
+                    </LinearLayout>
 
-                            </TextView>
+                    <LinearLayout
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
 
-                            <TextView
-                                android:id="@+id/altitude"
-                                android:layout_marginBottom="5dp"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:fontFamily="@font/noto_sans_jp_bold"
-                                android:includeFontPadding="false"
-                                android:text="고도 : "
-                                android:textSize="17sp"></TextView>
+                        <TextView
+                            android:layout_marginBottom="5dp"
+                            android:id="@+id/average_speed"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/noto_sans_jp_bold"
+                            android:includeFontPadding="false"
+                            android:text="평균 속도 : "
+                            android:textSize="14sp">
 
-                            <TextView
-                                android:id="@+id/distance"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:fontFamily="@font/noto_sans_jp_bold"
-                                android:includeFontPadding="false"
-                                android:text="거리 : "
-                                android:textSize="17sp"></TextView>
+                        </TextView>
 
-                        </LinearLayout>
+                        <TextView
+                            android:id="@+id/altitude"
+                            android:layout_marginBottom="5dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/noto_sans_jp_bold"
+                            android:includeFontPadding="false"
+                            android:text="고도 : "
+                            android:textSize="14sp"></TextView>
 
-
-
-
-
-                <!--        <LinearLayout-->
-                <!--            android:layout_width="match_parent"-->
-                <!--            android:layout_height="match_parent"-->
-                <!--            android:layout_below="@+id/content"-->
-                <!--            android:layout_marginLeft="10dp"-->
-                <!--            android:layout_marginRight="10dp"-->
-                <!--            android:gravity="center">-->
-
-                <!--            <Button-->
-                <!--                android:id="@+id/editButton"-->
-                <!--                android:layout_width="90dp"-->
-                <!--                android:layout_height="30dp"-->
-                <!--                android:layout_marginRight="10dp"-->
-                <!--                android:background="@drawable/login_button"-->
-                <!--                android:fontFamily="@font/noto_sans_jp_regular"-->
-                <!--                android:includeFontPadding="false"-->
-                <!--                android:text="수정"-->
-                <!--                android:textColor="@color/white"-->
-                <!--                android:visibility="gone"></Button>-->
-
-                <!--            &lt;!&ndash;            <Button&ndash;&gt;-->
-                <!--            &lt;!&ndash;                android:id="@+id/backButton"&ndash;&gt;-->
-                <!--            &lt;!&ndash;                android:layout_width="90dp"&ndash;&gt;-->
-                <!--            &lt;!&ndash;                android:layout_height="30dp"&ndash;&gt;-->
-                <!--            &lt;!&ndash;                android:background="@drawable/login_button"&ndash;&gt;-->
-                <!--            &lt;!&ndash;                android:fontFamily="@font/noto_sans_jp_regular"&ndash;&gt;-->
-                <!--            &lt;!&ndash;                android:includeFontPadding="false"&ndash;&gt;-->
-                <!--            &lt;!&ndash;                android:text="뒤로가기"&ndash;&gt;-->
-                <!--            &lt;!&ndash;                android:textColor="@color/white"></Button>&ndash;&gt;-->
-
-
-                <!--        </LinearLayout>-->
-                <!--        <LinearLayout-->
-                <!--            android:id="@+id/linearLayout"-->
-                <!--            android:layout_width="match_parent"-->
-                <!--            android:layout_height="wrap_content"-->
-                <!--            android:orientation="horizontal"-->
-                <!--            android:background="@drawable/snslayout"-->
-                <!--            >-->
-
-                <!--            <com.google.android.material.textfield.TextInputEditText-->
-                <!--                android:includeFontPadding="false"-->
-                <!--                android:fontFamily="@font/noto_sans_jp_black"-->
-                <!--                android:id="@+id/comment_content"-->
-                <!--                android:layout_width="wrap_content"-->
-                <!--                android:layout_weight="1"-->
-                <!--                android:layout_height="wrap_content"-->
-                <!--                android:background="@null"-->
-                <!--                android:layout_gravity="center"-->
-                <!--                android:textColor="@color/black"-->
-                <!--                android:hint="コメントを入力してください！"></com.google.android.material.textfield.TextInputEditText>-->
-
-                <!--            <androidx.appcompat.widget.AppCompatButton-->
-                <!--                android:includeFontPadding="false"-->
-                <!--                android:fontFamily="@font/noto_sans_jp_black"-->
-                <!--                android:id="@+id/commitButton"-->
-                <!--                android:textColor="@color/white"-->
-                <!--                android:background="@drawable/login_button"-->
-                <!--                android:layout_width="35dp"-->
-                <!--                android:layout_height="35dp"-->
-                <!--                android:text="入力">-->
-
-                <!--            </androidx.appcompat.widget.AppCompatButton>-->
-
-                <!--        </LinearLayout>-->
-                <!--        &lt;!&ndash;        <LinearLayout&ndash;&gt;-->
-                <!--        &lt;!&ndash;            android:layout_width="match_parent"&ndash;&gt;-->
-                <!--        &lt;!&ndash;            android:layout_height="wrap_content"&ndash;&gt;-->
-                <!--        &lt;!&ndash;            android:orientation="vertical"&ndash;&gt;-->
-                <!--        &lt;!&ndash;           >&ndash;&gt;-->
-                <!--        <androidx.recyclerview.widget.RecyclerView-->
-
-                <!--            android:id="@+id/recycler_view_comment"-->
-                <!--            android:layout_width="match_parent"-->
-                <!--            android:layout_height="match_parent"-->
-                <!--            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>-->
-
-                <!--        &lt;!&ndash;        </LinearLayout>&ndash;&gt;-->
-                <!--        &lt;!&ndash;            <Button&ndash;&gt;-->
-
-                <!--        &lt;!&ndash;                android:includeFontPadding="false"&ndash;&gt;-->
-                <!--        &lt;!&ndash;                android:fontFamily="@font/noto_sans_jp_regular"&ndash;&gt;-->
-                <!--        &lt;!&ndash;                android:background="@drawable/login_button"&ndash;&gt;-->
-                <!--        &lt;!&ndash;                android:textColor="@color/white"&ndash;&gt;-->
-                <!--        &lt;!&ndash;                android:id="@+id/backButton"&ndash;&gt;-->
-                <!--        &lt;!&ndash;                android:layout_width="90dp"&ndash;&gt;-->
-                <!--        &lt;!&ndash;                android:layout_height="30dp"&ndash;&gt;-->
-                <!--        &lt;!&ndash;                android:text="뒤로가기"></Button>&ndash;&gt;-->
-
-                <!--    </LinearLayout>-->
-
-
-
-
-
-
-
-
+                        <TextView
+                            android:id="@+id/distance"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/noto_sans_jp_bold"
+                            android:includeFontPadding="false"
+                            android:text="거리 : "
+                            android:textSize="14sp"></TextView>
 
                     </LinearLayout>
+
+
+
+
+
+                    <!--        <LinearLayout-->
+                    <!--            android:layout_width="match_parent"-->
+                    <!--            android:layout_height="match_parent"-->
+                    <!--            android:layout_below="@+id/content"-->
+                    <!--            android:layout_marginLeft="10dp"-->
+                    <!--            android:layout_marginRight="10dp"-->
+                    <!--            android:gravity="center">-->
+
+                    <!--            <Button-->
+                    <!--                android:id="@+id/editButton"-->
+                    <!--                android:layout_width="90dp"-->
+                    <!--                android:layout_height="30dp"-->
+                    <!--                android:layout_marginRight="10dp"-->
+                    <!--                android:background="@drawable/login_button"-->
+                    <!--                android:fontFamily="@font/noto_sans_jp_regular"-->
+                    <!--                android:includeFontPadding="false"-->
+                    <!--                android:text="수정"-->
+                    <!--                android:textColor="@color/white"-->
+                    <!--                android:visibility="gone"></Button>-->
+
+                    <!--            &lt;!&ndash;            <Button&ndash;&gt;-->
+                    <!--            &lt;!&ndash;                android:id="@+id/backButton"&ndash;&gt;-->
+                    <!--            &lt;!&ndash;                android:layout_width="90dp"&ndash;&gt;-->
+                    <!--            &lt;!&ndash;                android:layout_height="30dp"&ndash;&gt;-->
+                    <!--            &lt;!&ndash;                android:background="@drawable/login_button"&ndash;&gt;-->
+                    <!--            &lt;!&ndash;                android:fontFamily="@font/noto_sans_jp_regular"&ndash;&gt;-->
+                    <!--            &lt;!&ndash;                android:includeFontPadding="false"&ndash;&gt;-->
+                    <!--            &lt;!&ndash;                android:text="뒤로가기"&ndash;&gt;-->
+                    <!--            &lt;!&ndash;                android:textColor="@color/white"></Button>&ndash;&gt;-->
+
+
+                    <!--        </LinearLayout>-->
+                    <!--        <LinearLayout-->
+                    <!--            android:id="@+id/linearLayout"-->
+                    <!--            android:layout_width="match_parent"-->
+                    <!--            android:layout_height="wrap_content"-->
+                    <!--            android:orientation="horizontal"-->
+                    <!--            android:background="@drawable/snslayout"-->
+                    <!--            >-->
+
+                    <!--            <com.google.android.material.textfield.TextInputEditText-->
+                    <!--                android:includeFontPadding="false"-->
+                    <!--                android:fontFamily="@font/noto_sans_jp_black"-->
+                    <!--                android:id="@+id/comment_content"-->
+                    <!--                android:layout_width="wrap_content"-->
+                    <!--                android:layout_weight="1"-->
+                    <!--                android:layout_height="wrap_content"-->
+                    <!--                android:background="@null"-->
+                    <!--                android:layout_gravity="center"-->
+                    <!--                android:textColor="@color/black"-->
+                    <!--                android:hint="コメントを入力してください！"></com.google.android.material.textfield.TextInputEditText>-->
+
+                    <!--            <androidx.appcompat.widget.AppCompatButton-->
+                    <!--                android:includeFontPadding="false"-->
+                    <!--                android:fontFamily="@font/noto_sans_jp_black"-->
+                    <!--                android:id="@+id/commitButton"-->
+                    <!--                android:textColor="@color/white"-->
+                    <!--                android:background="@drawable/login_button"-->
+                    <!--                android:layout_width="35dp"-->
+                    <!--                android:layout_height="35dp"-->
+                    <!--                android:text="入力">-->
+
+                    <!--            </androidx.appcompat.widget.AppCompatButton>-->
+
+                    <!--        </LinearLayout>-->
+                    <!--        &lt;!&ndash;        <LinearLayout&ndash;&gt;-->
+                    <!--        &lt;!&ndash;            android:layout_width="match_parent"&ndash;&gt;-->
+                    <!--        &lt;!&ndash;            android:layout_height="wrap_content"&ndash;&gt;-->
+                    <!--        &lt;!&ndash;            android:orientation="vertical"&ndash;&gt;-->
+                    <!--        &lt;!&ndash;           >&ndash;&gt;-->
+                    <!--        <androidx.recyclerview.widget.RecyclerView-->
+
+                    <!--            android:id="@+id/recycler_view_comment"-->
+                    <!--            android:layout_width="match_parent"-->
+                    <!--            android:layout_height="match_parent"-->
+                    <!--            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>-->
+
+                    <!--        &lt;!&ndash;        </LinearLayout>&ndash;&gt;-->
+                    <!--        &lt;!&ndash;            <Button&ndash;&gt;-->
+
+                    <!--        &lt;!&ndash;                android:includeFontPadding="false"&ndash;&gt;-->
+                    <!--        &lt;!&ndash;                android:fontFamily="@font/noto_sans_jp_regular"&ndash;&gt;-->
+                    <!--        &lt;!&ndash;                android:background="@drawable/login_button"&ndash;&gt;-->
+                    <!--        &lt;!&ndash;                android:textColor="@color/white"&ndash;&gt;-->
+                    <!--        &lt;!&ndash;                android:id="@+id/backButton"&ndash;&gt;-->
+                    <!--        &lt;!&ndash;                android:layout_width="90dp"&ndash;&gt;-->
+                    <!--        &lt;!&ndash;                android:layout_height="30dp"&ndash;&gt;-->
+                    <!--        &lt;!&ndash;                android:text="뒤로가기"></Button>&ndash;&gt;-->
+
+                    <!--    </LinearLayout>-->
+
+
+
+
+
+
+
+
+
+                </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
 
             <LinearLayout
-            android:id="@+id/function_nav"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/imageView"
+                android:id="@+id/function_nav"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/imageView"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
-            android:orientation="horizontal">
+                android:orientation="horizontal">
 
 
-            <ImageButton
-                android:id="@+id/likeButton"
-                android:layout_width="40dp"
-                android:layout_height="35dp"
-                android:layout_marginLeft="10dp"
-                android:background="#00000000"
-                android:scaleType="fitCenter"
-                android:src="@drawable/like_new3" />
-            <TextView
-                android:id="@+id/like"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginLeft="10dp"
-                android:fontFamily="@font/noto_sans_jp_bold"
-                android:includeFontPadding="false" />
+                <ImageButton
+                    android:id="@+id/likeButton"
+                    android:layout_width="40dp"
+                    android:layout_height="35dp"
+                    android:layout_marginLeft="10dp"
+                    android:background="#00000000"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/like_new3" />
+                <TextView
+                    android:id="@+id/like"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:fontFamily="@font/noto_sans_jp_bold"
+                    android:includeFontPadding="false" />
 
 
                 <ImageView
@@ -403,68 +402,68 @@
 
 
                 <ImageButton
-                android:id="@+id/range"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginLeft="10dp"
-                android:background="#00000000"
-                android:scaleType="fitCenter"
-                android:src="@drawable/lock1" />
+                    android:id="@+id/range"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginLeft="10dp"
+                    android:background="#00000000"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/lock1" />
 
-            <ImageButton
-                android:id="@+id/edit"
-                android:layout_width="28dp"
-                android:layout_height="30dp"
-                android:layout_alignParentRight="true"
-                android:layout_marginLeft="10dp"
-                android:background="#00000000"
-                android:scaleType="fitCenter"
-                android:src="@drawable/edit" />
-            <ImageButton
-                android:id="@+id/deleteButton"
-                android:layout_width="30dp"
-                android:background="#00000000"
-                android:scaleType="fitCenter"
-                android:layout_marginLeft="10dp"
-                android:layout_height="30dp"
-                android:src="@drawable/delete"
-                android:text="삭제"></ImageButton>
+                <ImageButton
+                    android:id="@+id/edit"
+                    android:layout_width="28dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginLeft="10dp"
+                    android:background="#00000000"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/edit" />
+                <ImageButton
+                    android:id="@+id/deleteButton"
+                    android:layout_width="30dp"
+                    android:background="#00000000"
+                    android:scaleType="fitCenter"
+                    android:layout_marginLeft="10dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/delete"
+                    android:text="삭제"></ImageButton>
 
 
-        </LinearLayout>
+            </LinearLayout>
 
             <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:gravity="center">
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/editButton"
-                android:layout_width="90dp"
-                android:layout_height="30dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/content"
+                android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:background="@drawable/login_button"
-                android:fontFamily="@font/noto_sans_jp_regular"
-                android:includeFontPadding="false"
-                android:text="수정"
-                android:textColor="@color/white"
-                android:visibility="gone"></androidx.appcompat.widget.AppCompatButton>
+                android:gravity="center">
 
-            <androidx.appcompat.widget.AppCompatButton
-                android:visibility="gone"
-                android:id="@+id/backButton"
-                android:layout_width="90dp"
-                android:layout_height="30dp"
-                android:background="@drawable/login_button"
-                android:fontFamily="@font/noto_sans_jp_regular"
-                android:includeFontPadding="false"
-                android:text="뒤로가기"
-                android:textColor="@color/white"></androidx.appcompat.widget.AppCompatButton>
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/editButton"
+                    android:layout_width="90dp"
+                    android:layout_height="30dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/login_button"
+                    android:fontFamily="@font/noto_sans_jp_regular"
+                    android:includeFontPadding="false"
+                    android:text="수정"
+                    android:textColor="@color/white"
+                    android:visibility="gone"></androidx.appcompat.widget.AppCompatButton>
 
-        </LinearLayout>
+                <androidx.appcompat.widget.AppCompatButton
+                    android:visibility="gone"
+                    android:id="@+id/backButton"
+                    android:layout_width="90dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/login_button"
+                    android:fontFamily="@font/noto_sans_jp_regular"
+                    android:includeFontPadding="false"
+                    android:text="뒤로가기"
+                    android:textColor="@color/white"></androidx.appcompat.widget.AppCompatButton>
+
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -532,358 +531,3 @@
     </com.google.android.material.card.MaterialCardView>
 
 </ScrollView>
-
-
-
-
-
-
-    <!--<?xml version="1.0" encoding="utf-8"?>-->
-    <!--<ScrollView-->
-    <!--    xmlns:android="http://schemas.android.com/apk/res/android"-->
-    <!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
-    <!--    xmlns:tools="http://schemas.android.com/tools"-->
-    <!--    android:layout_width="match_parent"-->
-    <!--    android:layout_height="match_parent"-->
-    <!--    tools:context=".activity.PostActivity">-->
-
-    <!--    <LinearLayout-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="match_parent"-->
-    <!--        android:orientation="vertical"-->
-    <!--        android:background="@drawable/snslayout">-->
-
-    <!--        <LinearLayout-->
-    <!--            android:layout_width="match_parent"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:orientation="vertical">-->
-
-
-    <!--            <LinearLayout-->
-    <!--                android:layout_width="match_parent"-->
-    <!--                android:layout_height="match_parent"-->
-    <!--                android:layout_gravity="center_vertical"-->
-    <!--                android:orientation="horizontal"-->
-    <!--                android:background="@drawable/snslayout">-->
-
-    <!--                <ImageView-->
-    <!--                    android:id="@+id/profile"-->
-    <!--                    android:layout_width="30dp"-->
-    <!--                    android:layout_height="30dp"-->
-    <!--                    android:layout_gravity="center_vertical"-->
-    <!--                    android:layout_marginRight="10dp"-->
-    <!--                    android:src="@drawable/profile"></ImageView>-->
-
-    <!--                <TextView-->
-    <!--                    android:id="@+id/username"-->
-    <!--                    android:layout_width="wrap_content"-->
-    <!--                    android:layout_height="wrap_content"-->
-    <!--                    android:layout_gravity="center_vertical"-->
-    <!--                    android:layout_marginRight="10dp"-->
-    <!--                    android:fontFamily="@font/noto_sans_jp_black"-->
-    <!--                    android:includeFontPadding="false"-->
-    <!--                    android:text="홍길동"-->
-    <!--                    android:textSize="18sp"></TextView>-->
-
-
-    <!--                <TextView-->
-    <!--                    android:id="@+id/createdate"-->
-    <!--                    android:layout_width="match_parent"-->
-    <!--                    android:layout_height="wrap_content"-->
-    <!--                    android:layout_gravity="center"-->
-    <!--                    android:layout_marginRight="10dp"-->
-    <!--                    android:fontFamily="@font/noto_sans_jp_black"-->
-    <!--                    android:gravity="right"-->
-    <!--                    android:includeFontPadding="false"-->
-    <!--                    android:text="2022-04-13T04:57:26.119Z">-->
-
-    <!--                </TextView>-->
-    <!--            </LinearLayout>-->
-
-
-    <!--            <EditText-->
-    <!--                android:includeFontPadding="false"-->
-    <!--                android:fontFamily="@font/noto_sans_jp_black"-->
-    <!--                android:id="@+id/title"-->
-    <!--                android:textColor="@color/black"-->
-    <!--                android:layout_width="280dp"-->
-    <!--                android:layout_height="40dp"-->
-    <!--                android:layout_below="@id/function_nav"-->
-    <!--                android:layout_alignParentTop="true"-->
-    <!--                android:layout_marginLeft="10dp"-->
-    <!--                android:background="@null"-->
-    <!--                android:focusable="false"-->
-    <!--                android:hint="제목"-->
-    <!--                android:textSize="24dp" /></LinearLayout>-->
-
-    <!--        <ImageView-->
-    <!--            android:id="@+id/image_view_map_image"-->
-    <!--            android:layout_width="wrap_content"-->
-    <!--            android:layout_height="300dp"-->
-    <!--            android:layout_centerHorizontal="true"-->
-    <!--            android:layout_gravity="center"-->
-    <!--            android:layout_marginLeft="10dp"-->
-    <!--            android:layout_marginRight="10dp"-->
-    <!--            android:background="@drawable/round_border2"-->
-    <!--            android:padding="7.5dp" />-->
-
-
-
-
-    <!--        <LinearLayout-->
-    <!--            android:layout_width="match_parent"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:orientation="vertical">-->
-
-    <!--            <EditText-->
-    <!--                android:includeFontPadding="false"-->
-    <!--                android:fontFamily="@font/noto_sans_jp_black"-->
-    <!--                android:id="@+id/content"-->
-    <!--                android:layout_width="match_parent"-->
-    <!--                android:layout_height="40dp"-->
-    <!--                android:layout_below="@id/function_nav"-->
-    <!--                android:layout_alignParentTop="true"-->
-    <!--                android:background="@null"-->
-    <!--                android:focusable="false"-->
-    <!--                android:hint="내용"-->
-    <!--                android:textSize="20sp"/>-->
-
-    <!--            <TextView-->
-    <!--                android:id="@+id/tv_opponent"-->
-    <!--                android:layout_width="match_parent"-->
-    <!--                android:layout_height="wrap_content"-->
-    <!--                android:layout_gravity="center"-->
-    <!--                android:fontFamily="@font/noto_sans_jp_regular"-->
-    <!--                android:gravity="right"-->
-    <!--                android:includeFontPadding="false"-->
-    <!--                android:paddingTop="5dp"-->
-    <!--                android:text="~と ~をしました"-->
-    <!--                android:visibility="gone">-->
-
-    <!--            </TextView>-->
-    <!--        </LinearLayout>-->
-
-    <!--        <LinearLayout-->
-    <!--            android:layout_width="match_parent"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:background="@drawable/snslayout">-->
-
-    <!--            <LinearLayout-->
-    <!--                android:layout_width="match_parent"-->
-    <!--                android:layout_height="wrap_content"-->
-    <!--                android:layout_weight="1"-->
-    <!--                android:orientation="vertical">-->
-
-    <!--                <TextView-->
-    <!--                    android:id="@+id/time"-->
-    <!--                    android:layout_width="wrap_content"-->
-    <!--                    android:layout_height="wrap_content"-->
-    <!--                    android:fontFamily="@font/noto_sans_jp_regular"-->
-    <!--                    android:includeFontPadding="false"-->
-    <!--                    android:text="시간 : "-->
-    <!--                    android:textSize="15sp"></TextView>-->
-
-    <!--                <TextView-->
-    <!--                    android:id="@+id/calorie"-->
-    <!--                    android:layout_width="wrap_content"-->
-    <!--                    android:layout_height="wrap_content"-->
-    <!--                    android:fontFamily="@font/noto_sans_jp_regular"-->
-    <!--                    android:includeFontPadding="false"-->
-    <!--                    android:text="칼로리 : "-->
-    <!--                    android:textSize="15sp"></TextView>-->
-
-    <!--                <TextView-->
-    <!--                    android:id="@+id/kind"-->
-    <!--                    android:layout_width="wrap_content"-->
-    <!--                    android:layout_height="wrap_content"-->
-    <!--                    android:fontFamily="@font/noto_sans_jp_regular"-->
-    <!--                    android:includeFontPadding="false"-->
-    <!--                    android:text="종류 : "-->
-    <!--                    android:textSize="15sp"></TextView>-->
-    <!--            </LinearLayout>-->
-
-    <!--            <LinearLayout-->
-    <!--                android:layout_width="match_parent"-->
-    <!--                android:layout_height="wrap_content"-->
-    <!--                android:layout_weight="1"-->
-    <!--                android:orientation="vertical">-->
-
-    <!--                <TextView-->
-    <!--                    android:id="@+id/average_speed"-->
-    <!--                    android:layout_width="wrap_content"-->
-    <!--                    android:layout_height="wrap_content"-->
-    <!--                    android:fontFamily="@font/noto_sans_jp_regular"-->
-    <!--                    android:includeFontPadding="false"-->
-    <!--                    android:text="평균 속도 : "-->
-    <!--                    android:textSize="15sp">-->
-
-    <!--                </TextView>-->
-
-    <!--                <TextView-->
-    <!--                    android:id="@+id/altitude"-->
-    <!--                    android:layout_width="wrap_content"-->
-    <!--                    android:layout_height="wrap_content"-->
-    <!--                    android:fontFamily="@font/noto_sans_jp_regular"-->
-    <!--                    android:includeFontPadding="false"-->
-    <!--                    android:text="고도 : "-->
-    <!--                    android:textSize="15sp"></TextView>-->
-
-    <!--                <TextView-->
-    <!--                    android:id="@+id/distance"-->
-    <!--                    android:layout_width="wrap_content"-->
-    <!--                    android:layout_height="wrap_content"-->
-    <!--                    android:fontFamily="@font/noto_sans_jp_regular"-->
-    <!--                    android:includeFontPadding="false"-->
-    <!--                    android:text="거리 : "-->
-    <!--                    android:textSize="15sp"></TextView>-->
-
-    <!--            </LinearLayout>-->
-    <!--        </LinearLayout>-->
-    <!--        <LinearLayout-->
-    <!--            android:id="@+id/function_nav"-->
-    <!--            android:layout_width="match_parent"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:layout_below="@id/imageView"-->
-    <!--            android:layout_marginLeft="10dp"-->
-    <!--            android:layout_marginRight="10dp"-->
-    <!--            android:orientation="horizontal">-->
-
-
-    <!--            <ImageButton-->
-    <!--                android:id="@+id/likeButton"-->
-    <!--                android:layout_width="40dp"-->
-    <!--                android:layout_height="35dp"-->
-    <!--                android:layout_marginLeft="10dp"-->
-    <!--                android:background="#00000000"-->
-    <!--                android:scaleType="fitCenter"-->
-    <!--                android:src="@drawable/like_new3" />-->
-    <!--            <TextView-->
-    <!--                android:id="@+id/like"-->
-    <!--                android:layout_width="wrap_content"-->
-    <!--                android:layout_height="wrap_content"-->
-    <!--                android:layout_gravity="center"-->
-    <!--                android:layout_marginLeft="10dp"-->
-    <!--                android:fontFamily="@font/noto_sans_jp_bold"-->
-    <!--                android:includeFontPadding="false" />-->
-    <!--            <ImageButton-->
-    <!--                android:id="@+id/range"-->
-    <!--                android:layout_width="30dp"-->
-    <!--                android:layout_height="30dp"-->
-    <!--                android:layout_marginLeft="10dp"-->
-    <!--                android:background="#00000000"-->
-    <!--                android:scaleType="fitCenter"-->
-    <!--                android:src="@drawable/lock1" />-->
-
-    <!--            <ImageButton-->
-    <!--                android:id="@+id/edit"-->
-    <!--                android:layout_width="28dp"-->
-    <!--                android:layout_height="30dp"-->
-    <!--                android:layout_alignParentRight="true"-->
-    <!--                android:layout_marginLeft="10dp"-->
-    <!--                android:background="#00000000"-->
-    <!--                android:scaleType="fitCenter"-->
-    <!--                android:src="@drawable/edit" />-->
-    <!--            <ImageButton-->
-    <!--                android:id="@+id/deleteButton"-->
-    <!--                android:layout_width="30dp"-->
-    <!--                android:background="#00000000"-->
-    <!--                android:scaleType="fitCenter"-->
-    <!--                android:layout_marginLeft="10dp"-->
-    <!--                android:layout_height="30dp"-->
-    <!--                android:src="@drawable/delete"-->
-    <!--                android:text="삭제"></ImageButton>-->
-
-
-    <!--        </LinearLayout>-->
-    <!--        <LinearLayout-->
-    <!--            android:layout_width="match_parent"-->
-    <!--            android:layout_height="match_parent"-->
-    <!--            android:layout_below="@+id/content"-->
-    <!--            android:layout_marginLeft="10dp"-->
-    <!--            android:layout_marginRight="10dp"-->
-    <!--            android:gravity="center">-->
-
-    <!--            <Button-->
-    <!--                android:id="@+id/editButton"-->
-    <!--                android:layout_width="90dp"-->
-    <!--                android:layout_height="30dp"-->
-    <!--                android:layout_marginRight="10dp"-->
-    <!--                android:background="@drawable/login_button"-->
-    <!--                android:fontFamily="@font/noto_sans_jp_regular"-->
-    <!--                android:includeFontPadding="false"-->
-    <!--                android:text="수정"-->
-    <!--                android:textColor="@color/white"-->
-    <!--                android:visibility="gone"></Button>-->
-
-    <!--            &lt;!&ndash;            <Button&ndash;&gt;-->
-    <!--            &lt;!&ndash;                android:id="@+id/backButton"&ndash;&gt;-->
-    <!--            &lt;!&ndash;                android:layout_width="90dp"&ndash;&gt;-->
-    <!--            &lt;!&ndash;                android:layout_height="30dp"&ndash;&gt;-->
-    <!--            &lt;!&ndash;                android:background="@drawable/login_button"&ndash;&gt;-->
-    <!--            &lt;!&ndash;                android:fontFamily="@font/noto_sans_jp_regular"&ndash;&gt;-->
-    <!--            &lt;!&ndash;                android:includeFontPadding="false"&ndash;&gt;-->
-    <!--            &lt;!&ndash;                android:text="뒤로가기"&ndash;&gt;-->
-    <!--            &lt;!&ndash;                android:textColor="@color/white"></Button>&ndash;&gt;-->
-
-
-    <!--        </LinearLayout>-->
-    <!--        <LinearLayout-->
-    <!--            android:id="@+id/linearLayout"-->
-    <!--            android:layout_width="match_parent"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:orientation="horizontal"-->
-    <!--            android:background="@drawable/snslayout"-->
-    <!--            >-->
-
-    <!--            <com.google.android.material.textfield.TextInputEditText-->
-    <!--                android:includeFontPadding="false"-->
-    <!--                android:fontFamily="@font/noto_sans_jp_black"-->
-    <!--                android:id="@+id/comment_content"-->
-    <!--                android:layout_width="wrap_content"-->
-    <!--                android:layout_weight="1"-->
-    <!--                android:layout_height="wrap_content"-->
-    <!--                android:background="@null"-->
-    <!--                android:layout_gravity="center"-->
-    <!--                android:textColor="@color/black"-->
-    <!--                android:hint="コメントを入力してください！"></com.google.android.material.textfield.TextInputEditText>-->
-
-    <!--            <androidx.appcompat.widget.AppCompatButton-->
-    <!--                android:includeFontPadding="false"-->
-    <!--                android:fontFamily="@font/noto_sans_jp_black"-->
-    <!--                android:id="@+id/commitButton"-->
-    <!--                android:textColor="@color/white"-->
-    <!--                android:background="@drawable/login_button"-->
-    <!--                android:layout_width="35dp"-->
-    <!--                android:layout_height="35dp"-->
-    <!--                android:text="入力">-->
-
-    <!--            </androidx.appcompat.widget.AppCompatButton>-->
-
-    <!--        </LinearLayout>-->
-    <!--        &lt;!&ndash;        <LinearLayout&ndash;&gt;-->
-    <!--        &lt;!&ndash;            android:layout_width="match_parent"&ndash;&gt;-->
-    <!--        &lt;!&ndash;            android:layout_height="wrap_content"&ndash;&gt;-->
-    <!--        &lt;!&ndash;            android:orientation="vertical"&ndash;&gt;-->
-    <!--        &lt;!&ndash;           >&ndash;&gt;-->
-    <!--        <androidx.recyclerview.widget.RecyclerView-->
-
-    <!--            android:id="@+id/recycler_view_comment"-->
-    <!--            android:layout_width="match_parent"-->
-    <!--            android:layout_height="match_parent"-->
-    <!--            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>-->
-
-    <!--        &lt;!&ndash;        </LinearLayout>&ndash;&gt;-->
-    <!--        &lt;!&ndash;            <Button&ndash;&gt;-->
-
-    <!--        &lt;!&ndash;                android:includeFontPadding="false"&ndash;&gt;-->
-    <!--        &lt;!&ndash;                android:fontFamily="@font/noto_sans_jp_regular"&ndash;&gt;-->
-    <!--        &lt;!&ndash;                android:background="@drawable/login_button"&ndash;&gt;-->
-    <!--        &lt;!&ndash;                android:textColor="@color/white"&ndash;&gt;-->
-    <!--        &lt;!&ndash;                android:id="@+id/backButton"&ndash;&gt;-->
-    <!--        &lt;!&ndash;                android:layout_width="90dp"&ndash;&gt;-->
-    <!--        &lt;!&ndash;                android:layout_height="30dp"&ndash;&gt;-->
-    <!--        &lt;!&ndash;                android:text="뒤로가기"></Button>&ndash;&gt;-->
-
-    <!--    </LinearLayout>-->
-
-    <!--</ScrollView>-->

@@ -6,6 +6,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -329,7 +330,7 @@ class GoalFragment : Fragment() {
         binding.userGoalRiding.setOnLongClickListener{
 
             val builder = AlertDialog.Builder(requireContext())
-            builder.setTitle("本当に削除しますか。")
+            builder.setTitle(Html.fromHtml("<font color='#000000'>本当に削除しますか。</font>'>"))
                 .setPositiveButton("はい", DialogInterface.OnClickListener{ dialog,id->
                     supplementService.goalDelete(token,user_goal_riding_ID).enqueue(object : Callback<goalDeleteResponse> {
                         override fun onResponse(call: Call<goalDeleteResponse>, response: Response<goalDeleteResponse>) {
