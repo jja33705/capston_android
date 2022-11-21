@@ -1,4 +1,5 @@
 # capston_android
+<img src="https://user-images.githubusercontent.com/71811692/202941948-008517ae-fb40-46dd-97d5-824fccca10e0.png" width="300px" title="logo"></img>
 ### 달리기나 사이클링을 하는 사람들이 실시간으로 다른 사람의 운동 기록과 비교하며 운동할 수 있는 서비스
 </br></br>
 
@@ -22,4 +23,7 @@
 - 획득한 뱃지는 프로필에 장식할 수 있다.
 </br></br>
 
-## 
+## 설치 방법
+#### 1. 프로젝트 설치
+    
+    git clone 
