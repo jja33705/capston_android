@@ -28,7 +28,7 @@
     
     git clone https://github.com/jja33705/capston_android.git
 
-#### 2. Firebase 프로젝트 생성 후 android 앱을 등록하고 구성 파일인 google-services.json을 프로젝트 최상단의 app폴더안에 추가
+#### 2. Firebase 프로젝트 생성 후 android 앱을 등록하고 구성 파일인 google-services.json파일을 프로젝트 최상단의 app폴더안에 추가
 #### 3. local.properties파일에 구글맵 API 키 추가
 
     MAPS_API_KEY=example
