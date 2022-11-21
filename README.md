@@ -26,4 +26,11 @@
 ## 설치 방법
 #### 1. 프로젝트 설치
     
-    git clone 
+    git clone https://github.com/jja33705/capston_android.git
+
+#### 2. Firebase 설정 정보 파일인 google-services.json을 프로젝트 최상단의 app폴더안에 추가
+#### 3. local.properties파일에 구글맵 API 키 추가
+
+    MAPS_API_KEY=example
+
+#### 4. 에뮬레이터를 이용하여 실행
